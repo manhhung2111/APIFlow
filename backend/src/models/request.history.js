@@ -3,10 +3,15 @@ import mongoose from "mongoose";
 const schema = new mongoose.Schema({
     user_id: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
     workspace_id: {type: mongoose.Schema.Types.ObjectId, ref: "Workspace", required: true},
-    collection_id: {type: mongoose.Schema.Types.ObjectId, ref: "Collection", required: true},
 
-    name: {type: String, required: true},
-    content: String,
+    request: mongoose.Schema.Types.Mixed,
+    response: {
+        headers: mongoose.Schema.Types.Mixed,
+        body: mongoose.Schema.Types.Mixed,
+        status_code: Number,
+        response_time: Number,
+        size: Number,
+    },
 
     data: mongoose.Schema.Types.Mixed,
     token: {type: String, required: true},
@@ -17,5 +22,5 @@ const schema = new mongoose.Schema({
 });
 
 
-const Folder = mongoose.model("Folder", schema);
-export default Folder;
+const RequestHistory = mongoose.model("RequestHistory", schema);
+export default RequestHistory;
