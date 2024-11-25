@@ -2,15 +2,20 @@ import express from "express";
 
 const router = express.Router();
 
-const {
-  handleLoginUser,
-  handleGetParcelById,
-  handleVerifyUser,
-} = require("../controllers/user");
+import {
+    handleLoginUser,
+    handleRegisterUser,
+    handleLogoutUser,
+    handleForgetPassword,
+    handleResetPassword
+} from "../controllers/user";
 
 
 router.post("/login", handleLoginUser);
-router.post("/register", handleGetParcelById); 
-router.delete("/logout", )
+router.post("/register", handleRegisterUser);
+router.delete("/logout", handleLogoutUser);
+
+router.post("/password/forgot", handleForgetPassword);
+router.post("/password/reset", handleResetPassword);
 
 export default router;

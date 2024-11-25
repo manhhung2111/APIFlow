@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const schema = new mongoose.Schema({
     user_id: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
-    metatype: String,
+    meta_type: String,
 
     name: String,
     action: String,

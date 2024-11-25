@@ -1,11 +1,11 @@
-import Response from "../ap/response";
+import Code from "../ap/code";
 
 const workspaceViewable = async (req, res, next) => {
   const { acl } = req.user;
 
-  if (!acl.viewable) {
+  if (!acl?.viewable) {
     return res.status(403).json({
-      ...Response.error("You dont have permisson to access this resource"),
+      ...Code.error("You don't have permission to access this resource"),
     });
   }
 
@@ -15,9 +15,9 @@ const workspaceViewable = async (req, res, next) => {
 const workspaceCommentable = async (req, res, next) => {
   const { acl } = req.user;
 
-  if (!acl.commentable) {
+  if (!acl?.commentable) {
     return res.status(403).json({
-      ...Response.error("You dont have permisson to access this resource"),
+      ...Code.error("You don't have permission to access this resource"),
     });
   }
 
@@ -27,9 +27,9 @@ const workspaceCommentable = async (req, res, next) => {
 const workspaceEditable = async (req, res, next) => {
   const { acl } = req.user;
 
-  if (!acl.editable) {
+  if (!acl?.editable) {
     return res.status(403).json({
-      ...Response.error("You dont have permisson to access this resource"),
+      ...Code.error("You don't have permission to access this resource"),
     });
   }
 
@@ -39,9 +39,9 @@ const workspaceEditable = async (req, res, next) => {
 const workspaceAdmin = async (req, res, next) => {
   const { acl } = req.user;
 
-  if (!acl.full_access) {
+  if (!acl?.full_access) {
     return res.status(403).json({
-      ...Response.error("You dont have permisson to access this resource"),
+      ...Code.error("You don't have permission to access this resource"),
     });
   }
 
