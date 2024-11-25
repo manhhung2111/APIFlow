@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 
 const schema = new mongoose.Schema({
-    user_id: {type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    workspace_id: {type: mongoose.Schema.Types.ObjectId, ref: "Workspace"},
+    user_id: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
+    workspace_id: {type: mongoose.Schema.Types.ObjectId, ref: "Workspace", required: true},
 
     name: {type: String, required: true},
     content: String,
