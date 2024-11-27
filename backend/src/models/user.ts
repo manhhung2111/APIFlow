@@ -8,7 +8,7 @@ const schema = new mongoose.Schema({
 
     oauth_provider: {type: String, enum: ['', 'google', 'github'], default: ''},
     oauth_id: {type: String},
-    remember_token: {type: String, unique: true},
+    remember_token: {type: String},
 }, {
     timestamps: true,
     createdAt: 'created_at',

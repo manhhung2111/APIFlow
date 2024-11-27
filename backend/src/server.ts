@@ -1,10 +1,9 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
+import user_router from './routes/user';
 require("dotenv").config();
 
-import user_router from './routes/user';
-import User from './models/user';
 const app = express()
 const port = process.env.SERVER_PORT || 8080;
 const db_username = process.env.DB_USERNAME;
@@ -13,8 +12,6 @@ const db_name = process.env.DB_NAME;
 
 const corsOptions = {
     origin: "http://localhost:5763",
-    // credentials:true,
-    // access-control-allow-credentials:true,
     optionSuccessStatus: 200,
 };
 
@@ -24,14 +21,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// routers
+// Routers
 app.use("/users", user_router);
 
-
-app.get("/", (req, res) => {
-    const userSchema = User.schema.obj; // Extract schema definition as a plain object
-    res.json(userSchema); // Send as JSON response
-});
 
 (async function () {
     try {

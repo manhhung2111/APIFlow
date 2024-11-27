@@ -12,6 +12,7 @@ import {
 
 
 router.post("/login", handleLoginUser);
+// @ts-ignore
 router.post("/register", handleRegisterUser);
 router.delete("/logout", handleLogoutUser);
 
