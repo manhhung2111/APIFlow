@@ -1,6 +1,5 @@
-import {Application, Request, Response} from "express";
+import {Request, Response} from "express";
 import DBUser from "../entities/user/user";
-import Code from '../ap/code';
 
 export const handleLoginUser = async (request: Request, response: Response) => {
 
@@ -8,18 +7,19 @@ export const handleLoginUser = async (request: Request, response: Response) => {
 
 export const handleRegisterUser = async (request: Request, response: Response): Promise<Response> => {
     const db_user = new DBUser();
-    const user = await db_user.findOne();
-    console.log(JSON.stringify(user));
+    const user = await db_user.newDocument();
 
-    user.reader()?.read();
-
-    console.log(JSON.stringify(user));
-    let result = await user.save();
-    if (!result) {
-        return response.status(400).json(Code.error("Register unsuccessfully"));
+    let read_result = await user.reader()?.read(request.body);
+    if (!read_result || !read_result.good()) {
+        return response.status(400).json(read_result);
     }
 
-    return response.status(201).json(Code.success("Register successfully"))
+    let save_result = await user.save();
+    if (!save_result.good()) {
+        return response.status(500).json(save_result);
+    }
+
+    return response.status(201).json(save_result)
 }
 
 export const handleLogoutUser = async (request: Request, response: Response) => {

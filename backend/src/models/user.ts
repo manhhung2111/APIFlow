@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 const schema = new mongoose.Schema({
     email: {type: String, unique: true, required: true},
-    password: String,
+    password: {type: String, required: true},
     first_name: {type: String, default: ""},
     last_name: {type: String, default: ""},
 
     oauth_provider: {type: String, enum: ['', 'google', 'github'], default: ''},
-    oauth_id: {type: String},
-    remember_token: {type: String},
+    oauth_id: {type: String, default: ''},
+    remember_token: {type: String, default: ''},
 }, {
     timestamps: true,
     createdAt: 'created_at',
@@ -16,5 +16,5 @@ const schema = new mongoose.Schema({
 });
 
 
-const User = mongoose.model("User", schema);
-export default User;
+const UserModel = mongoose.model("User", schema);
+export default UserModel;

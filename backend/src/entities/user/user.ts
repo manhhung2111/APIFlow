@@ -1,14 +1,11 @@
 import DBModel from "../base/DBModel";
-import User from "../../models/user";
-import {Model, Document} from "mongoose";
+import UserModel from "../../models/user";
 import Reader from "./reader";
 
-
-
-class DBUser extends DBModel<typeof User> {
+class DBUser extends DBModel<typeof UserModel> {
 
     constructor() {
-        super(User);
+        super(UserModel);
     }
 
     release(): object {
@@ -23,7 +20,7 @@ class DBUser extends DBModel<typeof User> {
 
     reader() {
         if(!this._object) return null;
-        return new Reader(this._object);
+        return new Reader(this._object, this);
     }
 }
 
