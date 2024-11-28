@@ -1,13 +1,12 @@
 import { Document } from "mongoose";
 import DBModel from "./DBModel";
+import Code from "../../ap/code";
 
 abstract class DBReader {
   protected _obj: Document;
-  protected _db_model: DBModel<any>;
 
-  protected constructor(obj: Document, db: DBModel<any>) {
+  protected constructor(obj: Document) {
     this._obj = obj;
-    this._db_model = db;
   }
 
   protected isCreating(): boolean {

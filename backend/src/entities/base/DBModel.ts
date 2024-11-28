@@ -2,24 +2,19 @@ import { Model, Document } from "mongoose";
 import DBCondition from "./DBCondition";
 import Code from "../../ap/code";
 
-abstract class DBModel<T extends Model<any>> {
-    protected _db: Model<T>;
+abstract class DBModel {
+    protected abstract _db: Model<any>;
     protected _object: Document | null = null;
-
-    protected constructor() {
-        this._db = this.db;
-    }
 
     abstract release(): object;
     abstract releaseCompact(): object;
-    
-    public setObject(object: Document){
-        this._object = object;
-        return this;
-    }
 
-    public initialize(){
-        this._object = new this._db();
+    public async initialize(_id: string = ""){
+        if (!_id) {
+            this._object = new this._db();
+            return;
+        }
+        this._object = await this.findById(_id);
     }
 
     public good(): boolean {
@@ -36,12 +31,15 @@ abstract class DBModel<T extends Model<any>> {
         }
     }
 
-    public async findOne(where: DBCondition): Promise<Document | null> {
+    public async findOne(condition: DBCondition): Promise<Document | null> {
         try {
-            where.limit = where.limit ?? 1;
-            return await this._db.findOne(where).exec();
+            condition.limit = condition.limit ?? 1;
+            return await this._db.findOne(condition.filter).exec();
         } catch (error) {
-            throw new Code(error instanceof Error ? error.message : Code.UNKNOWN_ERROR);
+            if (error instanceof Error) {
+                throw new Code(error.message);
+            }
+            throw new Code(Code.UNKNOWN_ERROR);
         }
     }
 
@@ -51,18 +49,27 @@ abstract class DBModel<T extends Model<any>> {
         }
 
         try {
-            this._object = await this._object.save();
+            await this._object.save();
         } catch (error) {
-            throw new Code(error instanceof Error ? error.message : Code.UNKNOWN_ERROR);
+            if (error instanceof Error) {
+                throw new Code(error.message);
+            }
+            throw new Code(Code.UNKNOWN_ERROR);
         }
     }
 
-    public async find(where: DBCondition): Promise<Document[]> {
+    public async find(condition: DBCondition): Promise<Document[]> {
         try {
-            where.limit = where.limit ?? 30;
-            return await this._db.find(where).exec();
+            condition.limit = condition.limit ?? 30;
+            if (!condition.filter) {
+                throw new Code("Please add filter for query")
+            }
+            return await this._db.find(condition.filter).exec();
         } catch (error) {
-            throw new Code(error instanceof Error ? error.message : Code.UNKNOWN_ERROR);
+            if (error instanceof Error) {
+                throw new Code(error.message);
+            }
+            throw new Code(Code.UNKNOWN_ERROR);
         }
     }
 }

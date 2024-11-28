@@ -1,4 +1,4 @@
-class Validation {
+export default class Validation {
 
     /**
      * Checks if a variable is empty. Supports strings, arrays, objects, and null/undefined.
@@ -35,5 +35,3 @@ class Validation {
         return email_regex.test(email);
     }
 }
-
-export default Validation;

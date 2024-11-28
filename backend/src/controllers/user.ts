@@ -1,21 +1,27 @@
 import {Request, Response} from "express";
-import DBUser from "../entities/user/user";
-import Code from '../ap/code';
+import {Code, JWT} from "../ap";
+import {User} from "../entities/user";
+import UserService from "../services/user";
 
 export const handleLoginUser = async (request: Request, response: Response) => {
-    const db_user = new DBUser();
-    const user = await db_user.newDocument();
+    try {
+        const user = await UserService.login(request.body);
 
-    let read_result = await user.reader()?.readLogin(request.body);
-    if (!read_result || !read_result.good()) {
-        return response.status(400).json(read_result);
+        let access_token = await JWT.signToken({user_id: user._id});
+
+        return response.status(200).json(Code.success("Login successful", {access_token: access_token}));
+    } catch (error) {
+        if (error instanceof Error) {
+            return response.status(500).json(Code.error(error.message));
+        }
+        response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
     }
 };
 
 export const handleRegisterUser = async (request: Request, response: Response) => {
     try {
-        const user = new DBUser();
-        user.initialize();
+        const user = new User();
+        await user.initialize();
 
         await user.reader().read(request.body);
 
@@ -23,7 +29,7 @@ export const handleRegisterUser = async (request: Request, response: Response) =
 
         return response.status(201).json(Code.success("Register new account successfully!"));
     } catch (error) {
-        if (error instanceof Error){
+        if (error instanceof Error) {
             return response.status(500).json(Code.error(error.message));
         }
         response.status(500).json(Code.error(Code.UNKNOWN_ERROR));

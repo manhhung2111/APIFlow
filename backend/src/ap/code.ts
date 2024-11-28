@@ -1,28 +1,28 @@
-class Code extends Error {
+export default class Code extends Error {
   static ERROR = -1;
   static SUCCESS = 0;
 
   static UNKNOWN_ERROR = "Unknown error...";
   private code: number;
-  private _data: object;
+  private data: object;
 
   constructor(message: string) {
     super(message);
     this.code = Code.ERROR;
-    this._data = {};
+    this.data = {};
   }
 
   static success(message = "", data = {}) {
     const code = new Code(message);
     code.code = Code.SUCCESS;
-    code._data = data;
+    code.data = data;
     return code;
   }
 
   static error(message = "", data = {}) {
     const code = new Code(message);
     code.code = Code.ERROR;
-    code._data = data;
+    code.data = data;
     return code;
   }
 
@@ -30,9 +30,11 @@ class Code extends Error {
     return this.code === Code.SUCCESS;
   }
 
-  public data(): object {
-    return this._data;
+  toJSON() {
+    return {
+      code: this.code,
+      data: this.data,
+      message: this.message,
+    };
   }
 }
-
-export default Code;

@@ -1,15 +1,14 @@
 import jwt from "jsonwebtoken";
 import Code from "./code";
 
-class JWTToken {
+export default class JWT {
     private static _TOKEN_MAX_AGE = "7d"; // 7 days
 
     static async signToken(payload: object) {
         const secret = process.env.JWT_SECRET || "";
 
         try {
-            let token = await jwt.sign(payload, secret, { algorithm: 'RS256',  expiresIn: this._TOKEN_MAX_AGE});
-            return token;
+            return jwt.sign(payload, secret, {algorithm: 'HS256', expiresIn: this._TOKEN_MAX_AGE});
         } catch (error) {
             if (error instanceof Error) {
                 throw new Code(error.message)
@@ -22,8 +21,7 @@ class JWTToken {
         const secret = process.env.JWT_SECRET || "";
 
         try {
-            let payload = await jwt.verify(token, secret);
-            return payload
+            return jwt.verify(token, secret)
         } catch (error) {
             if (error instanceof Error) {
                 throw new Code(error.message)
@@ -32,5 +30,3 @@ class JWTToken {
         }
     }
 }
-
-export default JWTToken;
