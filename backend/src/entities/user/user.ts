@@ -1,11 +1,12 @@
 import DBModel from "../base/DBModel";
 import UserModel from "../../models/user";
 import Reader from "./reader";
+import Code from "../../ap/code";
 
 class DBUser extends DBModel<typeof UserModel> {
 
-    constructor() {
-        super(UserModel);
+    constructor(_id: string = "") {
+        super(UserModel, _id);
     }
 
     release(): object {
@@ -19,7 +20,9 @@ class DBUser extends DBModel<typeof UserModel> {
     }
 
     reader() {
-        if(!this._object) return null;
+        if(!this._object){
+            throw new Code("Invalid data");
+        }
         return new Reader(this._object, this);
     }
 }

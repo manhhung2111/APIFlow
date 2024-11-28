@@ -2,46 +2,36 @@ class Code extends Error {
   static ERROR = -1;
   static SUCCESS = 0;
 
+  static UNKNOWN_ERROR = "Unknown error...";
   private code: number;
-  private data?: object;
+  private _data: object;
 
-  constructor() {
-    super("");
-    this.code = Code.SUCCESS;
-    this.message = "";
-    this.data = {};
-    this.name = "";
+  constructor(message: string) {
+    super(message);
+    this.code = Code.ERROR;
+    this._data = {};
   }
 
-  static success(name = "", message = "", data = {}) {
-    const code = new Code();
-    code.name = name;
+  static success(message = "", data = {}) {
+    const code = new Code(message);
     code.code = Code.SUCCESS;
-    code.message = message;
-    code.data = data;
+    code._data = data;
     return code;
   }
 
-  static error(name = "", message = "", data = {}) {
-    const code = new Code();
-    code.name = name;
+  static error(message = "", data = {}) {
+    const code = new Code(message);
     code.code = Code.ERROR;
-    code.message = message;
-    code.data = data;
-    return code;
-  }
-
-  static unknownError(){
-    const code = new Code();
-    code.name = "UnknownError";
-    code.code = Code.ERROR;
-    code.message = "An unknown error occurred...";
-    code.data = {};
+    code._data = data;
     return code;
   }
 
   public good(): boolean {
     return this.code === Code.SUCCESS;
+  }
+
+  public data(): object {
+    return this._data;
   }
 }
 

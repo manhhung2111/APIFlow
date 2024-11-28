@@ -3,14 +3,14 @@ import express from "express";
 const router = express.Router();
 
 import {
-    handleLoginUser,
-    handleRegisterUser,
-    handleLogoutUser,
-    handleForgetPassword,
-    handleResetPassword
+  handleLoginUser,
+  handleRegisterUser,
+  handleLogoutUser,
+  handleForgetPassword,
+  handleResetPassword,
 } from "../controllers/user";
 
-
+// @ts-ignore
 router.post("/login", handleLoginUser);
 // @ts-ignore
 router.post("/register", handleRegisterUser);

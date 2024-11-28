@@ -1,78 +1,68 @@
-import {Model, Document} from "mongoose";
+import { Model, Document } from "mongoose";
 import DBCondition from "./DBCondition";
 import Code from "../../ap/code";
 
 abstract class DBModel<T extends Model<any>> {
     protected _db: Model<T>;
-    protected _object: Document | undefined;
+    protected _object: Document | null = null;
 
-    protected constructor(db: Model<any>) {
-        this._db = db;
+    protected constructor() {
+        this._db = this.db;
     }
 
     abstract release(): object;
-
     abstract releaseCompact(): object;
-
-    async newDocument() {
-        this._object = new this._db();
+    
+    public setObject(object: Document){
+        this._object = object;
         return this;
     }
 
-    async findById(_id: string) {
+    public initialize(){
+        this._object = new this._db();
+    }
+
+    public good(): boolean {
+        return this._object !== null;
+    }
+
+    public async findById(_id: string): Promise<Document | null> {
         if (!_id) return null;
 
         try {
-            let document = await this._db.findById(_id).exec();
-            if (!document) return null;
-
-            this._object = document;
-            return this;
+            return await this._db.findById(_id).exec();
         } catch (error) {
-            return null;
+            throw new Code(error instanceof Error ? error.message : Code.UNKNOWN_ERROR);
         }
     }
 
-    async findOne(where: DBCondition) {
+    public async findOne(where: DBCondition): Promise<Document | null> {
         try {
-            if (!where.limit) where.limit = 1;
-
-            return this._db.findOne(where).exec();
+            where.limit = where.limit ?? 1;
+            return await this._db.findOne(where).exec();
         } catch (error) {
-            return null;
+            throw new Code(error instanceof Error ? error.message : Code.UNKNOWN_ERROR);
         }
     }
 
-    async save(): Promise<Code> {
+    public async save(): Promise<void> {
         if (!this._object || !this._object._id) {
-            return Code.error("Undefined object", "Please initialize object before saving.");
+            throw new Code("Invalid object to be saved.");
         }
 
         try {
-            let updated = await this._object.save()
-
-            if (!updated) {
-                return Code.error("Undefined object", "Please initialize object before save.");
-            }
-
-            this._object = updated;
-            return Code.success("User created", "Register successfully.");
+            this._object = await this._object.save();
         } catch (error) {
-            if (error instanceof Error) {
-                return Code.error(error.name, error.message);
-            }
-
-            return Code.unknownError();
+            throw new Code(error instanceof Error ? error.message : Code.UNKNOWN_ERROR);
         }
     }
 
-    async find(where: DBCondition): Promise<Document[]> {
+    public async find(where: DBCondition): Promise<Document[]> {
         try {
-            if (!where.limit) where.limit = 30;
-
-            return this._db.find(where).exec();
+            where.limit = where.limit ?? 30;
+            return await this._db.find(where).exec();
         } catch (error) {
-            return [];
+            throw new Code(error instanceof Error ? error.message : Code.UNKNOWN_ERROR);
         }
     }
 }
