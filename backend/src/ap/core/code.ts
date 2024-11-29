@@ -2,9 +2,11 @@ export default class Code extends Error {
     static ERROR = -1;
     static SUCCESS = 0;
 
-    static UNKNOWN_ERROR = "Unknown error...";
-    private code: number;
-    private data: object;
+    static UNKNOWN_ERROR = "Unknown error.";
+    static INVALID_AUTHORIZATION_ERROR = "You don't have permission to access this resource.";
+
+    protected code: number;
+    protected data: object;
 
     constructor(message: string) {
         super(message);
@@ -24,10 +26,6 @@ export default class Code extends Error {
         code.code = Code.ERROR;
         code.data = data;
         return code;
-    }
-
-    public good(): boolean {
-        return this.code === Code.SUCCESS;
     }
 
     toJSON() {

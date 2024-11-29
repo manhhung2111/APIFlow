@@ -1,4 +1,6 @@
 import express from "express";
+import authentication from "@middleware/authentication";
+import {workspaceViewable} from "@middleware/workspace";
 
 import {
     createNewRequest,
@@ -15,8 +17,10 @@ import {
 
 const router = express.Router();
 
+router.use(authentication);
+
 // Get routes
-router.get("/", getAllRequests)
+router.get("/", workspaceViewable, getAllRequests)
 router.get("/:id", getRequestById);
 
 // Edit routes

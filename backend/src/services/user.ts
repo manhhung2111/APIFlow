@@ -14,7 +14,7 @@ export default class UserService {
             throw new Code("Invalid Email or Password!");
         }
 
-        let correct_password = await bcrypt.compare(data.password, user.get("password"));
+        let correct_password = await bcrypt.compare(data.password, user.password);
         if (!correct_password) {
             throw new Code("Invalid Email or Password!");
         }
