@@ -1,13 +1,13 @@
-import DBReader from "../base/DBReader";
-import {Document, HydratedDocument} from "mongoose";
 import bcrypt from "bcrypt";
-import {UserLoader} from "./index";
-import {Validation, Code} from "../../ap";
-import {IUser} from "../../../database";
+import {HydratedDocument} from "mongoose";
+import {DBReader} from "@ap/db";
+import {Code, Validation} from "@ap/core";
+import {UserLoader} from "@entities/user";
+import {DUser} from "@db-schemas";
 
 
-class Reader extends DBReader<IUser> {
-    constructor(obj: HydratedDocument<IUser>) {
+class Reader extends DBReader<DUser> {
+    constructor(obj: HydratedDocument<DUser>) {
         super(obj);
     }
 
@@ -30,14 +30,13 @@ class Reader extends DBReader<IUser> {
 
 
     public async readPrimary() {
-        
-    }
-
-    public async readPassword(){
 
     }
 
-    
+    public async readPassword() {
+
+    }
+
 
     private async hashPassword(password: string) {
         let salt = await bcrypt.genSalt(10);

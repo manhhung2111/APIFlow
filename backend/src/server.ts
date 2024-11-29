@@ -20,7 +20,7 @@ app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
 
 // Body form data
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 
 // Routers
 app.use("/users", UserRoute);

@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {Code, JWT} from "@ap";
+import {Code, JWT} from "@ap/core";
 import {User} from "@entities/user";
 import UserService from "@services/user";
 
@@ -37,7 +37,7 @@ export const handleRegisterUser = async (request: Request, response: Response) =
 }
 
 export const handleLogoutUser = async (request: Request, response: Response) => {
-    
+
 }
 
 export const handleForgetPassword = async (request: Request, response: Response) => {

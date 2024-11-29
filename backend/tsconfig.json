@@ -34,12 +34,13 @@
      "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
      "paths": {
        "@services/*": ["src/services/*"],
-       "@ap": ["src/ap/index.ts"],
+       "@ap/*": ["src/ap/*"],
        "@controllers/*": ["src/controllers/*"],
        "@entities/*": ["src/entities/*"],
        "@middleware/*": ["src/middleware/*"],
        "@models/*": ["src/models/*"],
-       "@routes": ["src/routes/index.ts"]
+       "@routes": ["src/routes/index.ts"],
+       "@db-schemas": ["database.d.ts"]
      },                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */

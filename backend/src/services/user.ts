@@ -1,5 +1,5 @@
-import {Code, Validation} from "../ap";
-import {UserLoader} from "../entities/user";
+import {Code, Validation} from "@ap/core";
+import {UserLoader} from "@entities/user";
 import bcrypt from "bcrypt";
 
 export default class UserService {

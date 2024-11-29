@@ -1,10 +1,10 @@
 import express from "express";
 
 import {
-    handleLoginUser,
-    handleRegisterUser,
-    handleLogoutUser,
     handleForgetPassword,
+    handleLoginUser,
+    handleLogoutUser,
+    handleRegisterUser,
     handleResetPassword,
 } from "@controllers/user";
 

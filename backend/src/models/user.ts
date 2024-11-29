@@ -1,7 +1,7 @@
-import { Schema, model } from 'mongoose';
-import {IUser} from "database";
+import {model, Schema} from 'mongoose';
+import {DUser} from "@db-schemas";
 
-const schema = new Schema<IUser>({
+const schema = new Schema<DUser>({
     email: {type: String, unique: true, required: true},
     password: {type: String, required: true},
     first_name: {type: String, default: ""},
@@ -16,6 +16,7 @@ const schema = new Schema<IUser>({
     timestamps: {
         createdAt: 'created_at',
         updatedAt: 'updated_at',
+        currentTime: () => Date.now()
     },
 });
 
