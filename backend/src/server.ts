@@ -2,10 +2,9 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from 'dotenv';
 import cors from 'cors';
-import {UserRoute} from '@routes';
-import UserModel from "@models/user";
+import {UserRoute, RequestRoute, WorkspaceRoute} from '@routes';
 
-dotenv.config();  // Load environment variables from .env file
+dotenv.config();
 const app = express()
 const port = process.env.SERVER_PORT || 8080;
 const db_username = process.env.DB_USERNAME;
@@ -20,12 +19,12 @@ app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
 
 // Body form data
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 
-// Routers
+// Routes
 app.use("/users", UserRoute);
-
-console.log(UserModel.schema);
+app.use("/requests", RequestRoute);
+app.use("/workspaces", WorkspaceRoute);
 
 (async function () {
     try {
@@ -41,6 +40,7 @@ console.log(UserModel.schema);
             console.info(`Server is running on port ${port}`);
         });
     } catch (error) {
-        console.log(error);
+        // @ts-ignore
+        console.error(error.message);
     }
 })();

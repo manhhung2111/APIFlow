@@ -1,4 +1,4 @@
-import { SortOrder } from 'mongoose';
+import {SortOrder} from 'mongoose';
 
 /**
  * Comprehensive type for MongoDB query operators
@@ -83,7 +83,7 @@ export interface DBConditionOptions {
 /**
  * Utility class for constructing database queries
  */
-export default class DBCondition implements DBConditionOptions {
+export default class DbCondition implements DBConditionOptions {
     public limit?: number;
     public skip?: number;
     public sort?: { [field: string]: SortOrder };

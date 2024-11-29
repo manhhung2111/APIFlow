@@ -1,5 +1,5 @@
-import {Code, Validation} from "../ap";
-import {UserLoader} from "../entities/user";
+import {Code, Validation} from "@ap/core";
+import {UserLoader} from "@entities/user";
 import bcrypt from "bcrypt";
 
 export default class UserService {
@@ -9,7 +9,7 @@ export default class UserService {
             throw new Code("Invalid email address.");
         }
 
-        let user = await UserLoader.findByEmail(data.email);
+        let user = await UserLoader.byEmail(data.email);
         if (!user) {
             throw new Code("Invalid Email or Password!");
         }

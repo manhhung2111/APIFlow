@@ -1,22 +1,24 @@
 import express from "express";
 
 import {
-    handleLoginUser,
-    handleRegisterUser,
-    handleLogoutUser,
-    handleForgetPassword,
-    handleResetPassword,
+    forgotPassword,
+    loginUser,
+    logoutUser,
+    registerUser,
+    resetPassword,
 } from "@controllers/user";
 
 const router = express.Router();
 
-// @ts-ignore
-router.post("/login", handleLoginUser);
-// @ts-ignore
-router.post("/register", handleRegisterUser);
-router.delete("/logout", handleLogoutUser);
+// Authentication routes
+router.post("/login", loginUser);
+router.post("/register", registerUser);
+router.delete("/logout", logoutUser);
 
-router.post("/password/forgot", handleForgetPassword);
-router.post("/password/reset", handleResetPassword);
+// Forgot password routes
+router.post("/password/forgot", forgotPassword);
+router.post("/password/reset", resetPassword);
+
+
 
 export default router;

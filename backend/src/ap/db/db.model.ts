@@ -1,7 +1,6 @@
-import {Model, HydratedDocument, FilterQuery} from "mongoose";
-
-import DBCondition from "./DBCondition";
-import Code from "../../ap/code";
+import {FilterQuery, HydratedDocument, Model} from "mongoose";
+import {DBCondition} from "@ap/db";
+import {Code} from "@ap/core";
 
 abstract class DBModel<T> {
     protected abstract _db: Model<T>;

@@ -1,10 +1,10 @@
-import DBModel from "../base/DBModel";
-import UserModel from "../../models/user";
-import Reader from "./reader";
-import Code from "../../ap/code";
-import {IUser} from "../../../database";
+import {DBModel} from "@ap/db";
+import UserModel from "@models/user";
+import {Code} from "@ap/core";
+import {DUser} from "@db-schemas";
+import {UserReader} from "@entities/user";
 
-class DBUser extends DBModel<IUser> {
+class DBUser extends DBModel<DUser> {
     protected _db = UserModel;
 
     constructor() {
@@ -30,7 +30,7 @@ class DBUser extends DBModel<IUser> {
         if (!this._object) {
             throw new Code('Invalid document');
         }
-        return new Reader(this._object);
+        return new UserReader(this._object);
     }
 }
 
