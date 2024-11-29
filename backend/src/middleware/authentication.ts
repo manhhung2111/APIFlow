@@ -5,17 +5,17 @@ export default async function authentication(request: Request, response: Respons
     try {
         const token = request.headers.authorization?.split(" ")[1];
         if (!token) {
-            return response.status(401).json(Code.error("Authorization token required"));
+            response.status(401).json(Code.error("Authorization token required"));
+            return;
         }
 
-        //@ts-ignore
-        request.user = await JWT.verifyToken(token);
+        response.locals.user = await JWT.verifyToken(token);
         next();
     } catch (error) {
         if (error instanceof Error) {
-            return response.status(500).json(Code.error(error.message));
+            response.status(500).json(Code.error(error.message));
         }
-        return response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+        response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
     }
 };
 
