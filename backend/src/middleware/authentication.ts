@@ -1,5 +1,5 @@
 import {JWT, Code} from "../ap";
-import {Request, Response, NextFunction, request} from 'express';
+import {Request, Response, NextFunction} from 'express';
 
 export default async function authentication(request: Request, response: Response, next: NextFunction) {
   try {

@@ -1,13 +1,13 @@
 import {Request, Response} from "express";
-import {Code, JWT} from "../ap";
-import {User} from "../entities/user";
-import UserService from "../services/user";
+import {Code, JWT} from "@ap";
+import {User} from "@entities/user";
+import UserService from "@services/user";
 
 export const handleLoginUser = async (request: Request, response: Response) => {
     try {
         const user = await UserService.login(request.body);
 
-        let access_token = await JWT.signToken({user_id: user._id});
+        const access_token = await JWT.signToken({user_id: user._id});
 
         return response.status(200).json(Code.success("Login successful", {access_token: access_token}));
     } catch (error) {
@@ -37,7 +37,7 @@ export const handleRegisterUser = async (request: Request, response: Response) =
 }
 
 export const handleLogoutUser = async (request: Request, response: Response) => {
-
+    
 }
 
 export const handleForgetPassword = async (request: Request, response: Response) => {

@@ -1,6 +1,7 @@
-import mongoose from "mongoose";
+import { Schema, model } from 'mongoose';
+import {IUser} from "database";
 
-const schema = new mongoose.Schema({
+const schema = new Schema<IUser>({
     email: {type: String, unique: true, required: true},
     password: {type: String, required: true},
     first_name: {type: String, default: ""},
@@ -9,12 +10,15 @@ const schema = new mongoose.Schema({
     oauth_provider: {type: String, enum: ['', 'google', 'github'], default: ''},
     oauth_id: {type: String, default: ''},
     remember_token: {type: String, default: ''},
+
+    data: Schema.Types.Mixed,
 }, {
-    timestamps: true,
-    createdAt: 'created_at',
-    updatedAt: 'updated_at',
+    timestamps: {
+        createdAt: 'created_at',
+        updatedAt: 'updated_at',
+    },
 });
 
 
-const UserModel = mongoose.model("User", schema);
+const UserModel = model("User", schema);
 export default UserModel;

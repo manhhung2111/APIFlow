@@ -1,9 +1,9 @@
-import {Document} from "mongoose";
+import {HydratedDocument} from "mongoose";
 
-abstract class DBListener {
-    protected _obj: Document;
+abstract class DBListener<T> {
+    protected _obj: HydratedDocument<T>;
 
-    protected constructor(obj: Document) {
+    protected constructor(obj: HydratedDocument<T>) {
         this._obj = obj;
     }
 }

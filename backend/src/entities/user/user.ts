@@ -2,8 +2,9 @@ import DBModel from "../base/DBModel";
 import UserModel from "../../models/user";
 import Reader from "./reader";
 import Code from "../../ap/code";
+import {IUser} from "../../../database";
 
-class DBUser extends DBModel {
+class DBUser extends DBModel<IUser> {
     protected _db = UserModel;
 
     constructor() {
@@ -12,8 +13,12 @@ class DBUser extends DBModel {
     }
 
     release(): object {
-        if (!this._object) return {};
-        return this._object;
+        if (!this.good()) return {};
+        return {
+            "email": this._object?.email,
+            "first_name": this._object?.first_name,
+            "last_name": this._object?.last_name,
+        }
     }
 
     releaseCompact(): object {

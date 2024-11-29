@@ -1,9 +1,10 @@
 import DBListener from "../base/DBListener";
-import {Document} from "mongoose";
+import {Document, HydratedDocument} from "mongoose";
+import {IUser} from "../../../database";
 
-export default class Listener extends DBListener {
+export default class Listener extends DBListener<IUser> {
 
-    constructor(obj: Document) {
+    constructor(obj: HydratedDocument<IUser>) {
         super(obj);
     }
 }

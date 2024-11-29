@@ -1,11 +1,9 @@
-import { Document } from "mongoose";
-import DBModel from "./DBModel";
-import Code from "../../ap/code";
+import {HydratedDocument} from "mongoose";
 
-abstract class DBReader {
-  protected _obj: Document;
+abstract class DBReader<T> {
+  protected _obj: HydratedDocument<T>;
 
-  protected constructor(obj: Document) {
+  protected constructor(obj: HydratedDocument<T>) {
     this._obj = obj;
   }
 
