@@ -3,16 +3,16 @@ import authentication from "@middleware/authentication";
 import {workspaceViewable} from "@middleware/workspace";
 
 import {
-    createNewRequest,
-    deleteRequest,
-    duplicateRequest,
-    getAllRequests,
-    getRequestById,
-    moveRequest,
-    sendRequest,
-    updateRequest,
-    updateRequestContent,
-    updateRequestName
+	createNewRequest,
+	deleteRequest,
+	duplicateRequest,
+	getAllRequests,
+	getRequestById,
+	moveRequest,
+	sendRequest,
+	updateRequest,
+	updateRequestContent,
+	updateRequestName,
 } from "@controllers/request";
 
 const router = express.Router();
@@ -20,7 +20,7 @@ const router = express.Router();
 router.use(authentication);
 
 // Get routes
-router.get("/", workspaceViewable, getAllRequests)
+router.get("/", workspaceViewable, getAllRequests);
 router.get("/:id", getRequestById);
 
 // Edit routes

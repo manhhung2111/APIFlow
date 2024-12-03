@@ -1,12 +1,6 @@
 import express from "express";
 
-import {
-    forgotPassword,
-    loginUser,
-    logoutUser,
-    registerUser,
-    resetPassword,
-} from "@controllers/user";
+import {forgotPassword, loginUser, logoutUser, registerUser, resetPassword} from "@controllers/user";
 
 const router = express.Router();
 
@@ -18,7 +12,6 @@ router.delete("/logout", logoutUser);
 // Forgot password routes
 router.post("/password/forgot", forgotPassword);
 router.post("/password/reset", resetPassword);
-
 
 
 export default router;

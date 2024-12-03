@@ -1,12 +1,12 @@
 import express from "express";
 
 import {
-    createNewWorkspace,
-    deleteWorkspace,
-    getAllWorkspaces,
-    getWorkspaceById,
-    updateWorkspaceContent,
-    updateWorkspaceName
+	createNewWorkspace,
+	deleteWorkspace,
+	getAllWorkspaces,
+	getWorkspaceById,
+	updateWorkspaceContent,
+	updateWorkspaceName,
 } from "@controllers/workspace";
 
 const router = express.Router();
