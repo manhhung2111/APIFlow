@@ -207,3 +207,23 @@ export interface DActivityLog {
     created_at?: number;
     updated_at?: number;
 }
+
+export interface DExample {
+    user_id: Types.ObjectId;
+
+    name: string,
+
+    request: object;
+    response: object;
+
+    request_id: Types.ObjectId;
+    folder_id: Types.ObjectId | null;
+    collection_id: Types.ObjectId;
+    workspace_id: Types.ObjectId;
+
+    data?: object | {};
+
+    token: string;
+    created_at?: number;
+    updated_at?: number;
+}
