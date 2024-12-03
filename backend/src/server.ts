@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import {CollectionRoute, EnvironmentRoute, FolderRoute, RequestRoute, UserRoute, WorkspaceRoute} from "@routes";
+import {HTMLInput} from "@ap/core";
 
 dotenv.config();
 const app = express();
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 // Routes
+app.use(HTMLInput.readRequest);
 app.use("/users", UserRoute);
 app.use("/requests", RequestRoute);
 app.use("/workspaces", WorkspaceRoute);

@@ -5,7 +5,7 @@ import UserService from "@services/user";
 
 export const loginUser = async (request: Request, response: Response) => {
 	try{
-		const user = await UserService.login(request.body);
+		const user = await UserService.login();
 
 		const access_token = await JWT.signToken({user_id: user._id});
 
@@ -23,7 +23,7 @@ export const registerUser = async (request: Request, response: Response) => {
 		const user = new User();
 		await user.initialize();
 
-		await user.reader().read(request.body);
+		await user.reader().read();
 
 		await user.save();
 

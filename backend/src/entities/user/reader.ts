@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import {HydratedDocument} from "mongoose";
 import {DBReader} from "@ap/db";
-import {Code, Validation} from "@ap/core";
+import {Code, HTMLInput, Validation} from "@ap/core";
 import {UserLoader} from "@entities/user";
 import {DUser} from "@db-schemas";
 
@@ -10,15 +10,22 @@ export default class Reader extends DBReader<DUser>{
 		super(obj);
 	}
 
-	public async read(data: any){
-		let {email, password, first_name, last_name} = data;
+	public async read(){
+		let email = HTMLInput.inputInline("email");
+		let password = HTMLInput.inputInline("password");
+		let first_name = HTMLInput.inputInline("first_name");
+		let last_name = HTMLInput.inputInline("last_name");
 
 		if (!Validation.validEmail(email)){
 			throw new Code("Invalid email address.");
 		}
 
 		if (await UserLoader.byEmail(email)){
-			throw new Code("This email is taken by another account");
+			throw new Code("This email is taken by another account.");
+		}
+
+		if (!Validation.isEmpty(password)){
+			throw new Code("Password must not be empty.");
 		}
 
 		this._obj.email = email;
