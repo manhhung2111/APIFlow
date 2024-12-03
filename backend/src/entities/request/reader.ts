@@ -8,7 +8,7 @@ export default class Reader extends DBReader<DRequest>{
 		super(obj);
 	}
 
-	public async read(data: object){
+	public async read(){
 
 	}
 
