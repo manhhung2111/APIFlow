@@ -24,12 +24,12 @@ export default class Validation{
 		return email_regex.test(email);
 	}
 
-	public static isInt(variable: any) {
-		if (typeof variable === 'number') {
+	public static isInt(variable: any){
+		if (typeof variable === "number"){
 			return Number.isInteger(variable);
 		}
 
-		if (typeof variable === 'string') {
+		if (typeof variable === "string"){
 			const parsed = parseInt(variable, 10);
 			return !isNaN(parsed) && parsed.toString() === variable.trim();
 		}

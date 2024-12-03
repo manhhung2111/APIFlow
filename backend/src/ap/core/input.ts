@@ -28,7 +28,7 @@ export default class HTMLInput{
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.request.params.field;
+		const value = this.request.params[field];
 
 		if (!value) return "";
 		return value;
@@ -39,7 +39,7 @@ export default class HTMLInput{
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.request.query.field;
+		const value = this.request.query[field];
 
 		if (!value) return "";
 		return value;
@@ -53,7 +53,7 @@ export default class HTMLInput{
 
 		const raw = html_entities.decode(this.inputRaw(field));
 
-		let text = "";
+		let text: string;
 		if (limit_character){
 			text = Word.addSmartQuote(Word.shorten(raw, this.MAX_TITLE_CHAR, ""));
 		} else{
@@ -131,8 +131,8 @@ export default class HTMLInput{
 		const result: number[] = [];
 
 		const values = this.inputList(field, splitter);
-		for (const value of values) {
-			if (Validation.isInt(value)) {
+		for (const value of values){
+			if (Validation.isInt(value)){
 				result.push(Number(value));
 			}
 		}
