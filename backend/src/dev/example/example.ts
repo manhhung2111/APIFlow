@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import ExampleModel from "@models/example";
 import {DExample} from "@db-schemas";
-import {ExampleReader} from "@entities/example";
+import {ExampleReader} from "@dev/example";
 import {Model} from "mongoose";
 
 export default class DBExample extends DBModel<DExample>{

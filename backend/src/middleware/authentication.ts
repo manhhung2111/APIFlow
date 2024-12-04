@@ -1,15 +1,30 @@
-import {Code, JWT} from "@ap/core";
+import {Code, HTMLInput, JWT} from "@ap/core";
 import {NextFunction, Request, Response} from "express";
+import Client from "@dev/client";
 
 export default async function authentication(request: Request, response: Response, next: NextFunction){
 	try{
-		const token = request.headers.authorization?.split(" ")[1];
+		if (Client.authenticated){
+			next();
+		}
+
+		const token = HTMLInput.signedCookies("access_token");
 		if (!token){
 			response.status(401).json(Code.error("Authorization token required"));
 			return;
 		}
 
-		response.locals.user = await JWT.verifyToken(token);
+		const payload = await JWT.verifyToken(token);
+		if (typeof payload === "string"){
+			response.status(401).json(Code.error("Invalid or missing user_id in token payload"));
+			return;
+		}
+
+		if (!await Client.authenticate(payload.user_id)){
+			response.status(401).json(Code.error("Cannot authenticate user."));
+			return;
+		}
+
 		next();
 	} catch (error){
 		if (error instanceof Error){

@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import ActivityLogModel from "@models/activity.log";
 import {DActivityLog} from "@db-schemas";
-import {ActivityLogReader} from "@entities/activity.log";
+import {ActivityLogReader} from "@dev/activity.log";
 import {Model} from "mongoose";
 
 export default class DBActivityLog extends DBModel<DActivityLog>{

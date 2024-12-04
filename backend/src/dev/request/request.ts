@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import RequestModel from "@models/request";
 import {DRequest} from "@db-schemas";
-import {RequestReader} from "@entities/request";
+import {RequestReader} from "@dev/request";
 import {Model} from "mongoose";
 
 export default class DBRequest extends DBModel<DRequest>{

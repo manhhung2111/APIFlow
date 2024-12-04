@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import CollectionModel from "@models/collection";
 import {DCollection} from "@db-schemas";
-import {CollectionReader} from "@entities/collection";
+import {CollectionReader} from "@dev/collection";
 import {Model} from "mongoose";
 
 export default class DBCollection extends DBModel<DCollection>{

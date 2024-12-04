@@ -1,32 +1,119 @@
 import {Request, Response} from "express";
 import {Code, HTMLInput} from "@ap/core";
-import {Workspace} from "@entities/workspace";
+import {DBWorkspace, DBWorkspaceLoader} from "@dev/workspace";
 import mongoose from "mongoose";
-import {Collection} from "@entities/collection";
-import {Folder} from "@entities/folder";
-import {Request as DBRequest} from "@entities/request";
+import {Collection} from "@dev/collection";
+import {Folder} from "@dev/folder";
+import {Request as DBRequest} from "@dev/request";
 import {DBCondition} from "@ap/db";
-import {Example} from "@entities/example";
-import {Environment} from "@entities/environment";
+import {Example} from "@dev/example";
+import {Environment} from "@dev/environment";
 
 export const getAllWorkspaces = async (request: Request, response: Response) => {
+	try{
+		const workspaces = await DBWorkspaceLoader.mine();
+		const workspaces_compact = workspaces.map(workspace => workspace.releaseCompact());
 
+		response.status(200).json(Code.success("Get all workspaces successfully.", {workspaces: workspaces_compact}));
+	} catch (error){
+		if (error instanceof Error){
+			console.error(error.stack);
+			response.status(500).json(Code.error(error.message));
+		}
+		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+	}
 };
 
 export const getWorkspaceById = async (request: Request, response: Response) => {
+	try{
+		const workspace_id = HTMLInput.param("workspace_id");
+		if (!workspace_id){
+			response.status(400).json(Code.error("Missing params: workspace_id"));
+		}
 
+		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+		if (!workspace.good()){
+			response.status(204).json(Code.error(Code.INVALID_DATA));
+		}
+
+		response.status(200).json(Code.error(`Get workspace-${workspace_id} successfully.`, {workspace: workspace.release()}));
+	} catch (error){
+		if (error instanceof Error){
+			console.error(error.stack);
+			response.status(500).json(Code.error(error.message));
+		}
+		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+	}
 };
 
 export const createNewWorkspace = async (request: Request, response: Response) => {
+	try{
+		const workspace = await DBWorkspace.initialize() as DBWorkspace;
 
+		await workspace.reader().read();
+
+		await workspace.save();
+
+		response.status(201).json(Code.error(`Create a new workspace successfully.`, {workspace: workspace.release()}));
+	} catch (error){
+		if (error instanceof Error){
+			console.error(error.stack);
+			response.status(500).json(Code.error(error.message));
+		}
+		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+	}
 };
 
 export const updateWorkspaceName = async (request: Request, response: Response) => {
+	try{
+		const workspace_id = HTMLInput.param("workspace_id");
+		if (!workspace_id){
+			response.status(400).json(Code.error("Missing params: workspace_id"));
+		}
 
+		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+		if (!workspace.good()){
+			response.status(204).json(Code.error(Code.INVALID_DATA));
+		}
+
+		await workspace.reader().readName();
+
+		await workspace.save();
+
+		response.status(201).json(Code.error(`Update workspace successfully.`, {workspace: workspace.release()}));
+	} catch (error){
+		if (error instanceof Error){
+			console.error(error.stack);
+			response.status(500).json(Code.error(error.message));
+		}
+		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+	}
 };
 
 export const updateWorkspaceContent = async (request: Request, response: Response) => {
+	try{
+		const workspace_id = HTMLInput.param("workspace_id");
+		if (!workspace_id){
+			response.status(400).json(Code.error("Missing params: workspace_id"));
+		}
 
+		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+		if (!workspace.good()){
+			response.status(204).json(Code.error(Code.INVALID_DATA));
+		}
+
+		await workspace.reader().readContent();
+
+		await workspace.save();
+
+		response.status(201).json(Code.error(`Update workspace successfully.`, {workspace: workspace.release()}));
+	} catch (error){
+		if (error instanceof Error){
+			console.error(error.stack);
+			response.status(500).json(Code.error(error.message));
+		}
+		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+	}
 };
 
 export const deleteWorkspace = async (request: Request, response: Response) => {
@@ -36,36 +123,30 @@ export const deleteWorkspace = async (request: Request, response: Response) => {
 	try{
 		const workspace_id = HTMLInput.param("workspace_id");
 		if (!workspace_id){
-			throw new Code(Code.INVALID_DATA);
+			response.status(400).json(Code.error("Missing params: workspace_id"));
 		}
 
-		const workspace = new Workspace();
-		await workspace.initialize(workspace_id);
+		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
 		if (!workspace.good()){
-			throw new Code(Code.INVALID_DATA);
+			response.status(204).json(Code.error(Code.INVALID_DATA));
 		}
 
 		let sc = new DBCondition().setFilter({workspace_id: workspace_id});
 
-		const collection = new Collection();
-		await collection.deleteMany(sc, session);
+		await Collection.deleteMany(sc, session);
 
-		const folder = new Folder();
-		await folder.deleteMany(sc, session);
+		await Folder.deleteMany(sc, session);
 
-		const request = new DBRequest();
-		await request.deleteMany(sc, session);
+		await DBRequest.deleteMany(sc, session);
 
-		const example = new Example();
-		await example.deleteMany(sc, session);
+		await Example.deleteMany(sc, session);
 
-		const environment = new Environment();
-		await environment.deleteMany(sc, session);
+		await Environment.deleteMany(sc, session);
 
 		await workspace.delete();
 
 		await session.commitTransaction();
-		response.status(204).json(Code.success(`Delete workspace \"${workspace._object?.name}\" successfully.`));
+		response.status(204).json(Code.success(`Delete workspace \"${workspace.getField("name")}\" successfully.`));
 	} catch (error){
 		await session.abortTransaction();
 

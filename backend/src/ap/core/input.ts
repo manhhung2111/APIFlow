@@ -45,6 +45,17 @@ export default class HTMLInput{
 		return value;
 	}
 
+	public static signedCookies(field: string = ""){
+		if (!this.request){
+			throw new Code("Please read the request to use request data");
+		}
+
+		const value = this.request.signedCookies[field];
+
+		if (!value) return "";
+		return value;
+	}
+
 
 	public static inputSafe(field: string, limit_character: boolean = true){
 		if (!this.request){

@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import {
 	CollectionRoute,
 	EnvironmentRoute,
@@ -30,9 +31,14 @@ app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
+// Cookies
+app.use(cookieParser(process.env.COOKIES_SECRET));
+
 // Routes
 app.use(HTMLInput.readRequest);
 app.use("/users", UserRoute);
+
+app.use();
 app.use("/workspaces", WorkspaceRoute);
 app.use("/workspaces/:workspace_id/collections", CollectionRoute);
 app.use("/workspaces/:workspace_id/folders", FolderRoute);

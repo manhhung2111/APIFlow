@@ -7,11 +7,19 @@ export default class Reader extends DBReader<DWorkspace>{
 		super(obj);
 	}
 
-	public async read(data: any){
+	public async read(){
 
 	}
 
 	public async readPrimary(){
+
+	}
+
+	public async readName(){
+
+	}
+
+	public async readContent(){
 
 	}
 }

@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import EnvironmentModel from "@models/environment";
 import {DEnvironment} from "@db-schemas";
-import {EnvironmentReader} from "@entities/environment";
+import {EnvironmentReader} from "@dev/environment";
 import {Model} from "mongoose";
 
 export default class DBEnvironment extends DBModel<DEnvironment>{

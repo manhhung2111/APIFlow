@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import WorkspaceModel from "@models/workspace";
 import {DWorkspace} from "@db-schemas";
-import {WorkspaceReader, WorkspaceUserACL} from "@entities/workspace";
+import {DBWorkspaceReader, DBWorkspaceUserACL} from "@dev/workspace";
 import {Model} from "mongoose";
 
 export default class DBWorkspace extends DBModel<DWorkspace>{
@@ -16,10 +16,10 @@ export default class DBWorkspace extends DBModel<DWorkspace>{
 	}
 
 	reader(){
-		return new WorkspaceReader(this._object);
+		return new DBWorkspaceReader(this._object);
 	}
 
-	acl(user_id: string) {
-		return new WorkspaceUserACL(this._object, user_id);
+	acl(user_id: string = ""){
+		return new DBWorkspaceUserACL(this._object, user_id);
 	}
 }

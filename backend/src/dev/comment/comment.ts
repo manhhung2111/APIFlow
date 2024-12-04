@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import CommentModel from "@models/comment";
 import {DComment} from "@db-schemas";
-import {CommentReader} from "@entities/comment";
+import {CommentReader} from "@dev/comment";
 import {Model} from "mongoose";
 
 export default class DBComment extends DBModel<DComment>{

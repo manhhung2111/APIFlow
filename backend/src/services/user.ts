@@ -1,5 +1,5 @@
 import {Code, HTMLInput, Validation} from "@ap/core";
-import {UserLoader} from "@entities/user";
+import {UserLoader} from "@dev/user";
 import bcrypt from "bcrypt";
 
 export default class UserService{
@@ -17,7 +17,7 @@ export default class UserService{
 			throw new Code("Invalid Email or Password!");
 		}
 
-		let correct_password = await bcrypt.compare(password, user.password);
+		let correct_password = await bcrypt.compare(password, user.getField("password"));
 		if (!correct_password){
 			throw new Code("Invalid Email or Password!");
 		}

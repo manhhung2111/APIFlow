@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import {HydratedDocument} from "mongoose";
 import {DBReader} from "@ap/db";
 import {Code, HTMLInput, Validation} from "@ap/core";
-import {UserLoader} from "@entities/user";
+import {UserLoader} from "@dev/user";
 import {DUser} from "@db-schemas";
 
 export default class Reader extends DBReader<DUser>{

@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import FolderModel from "@models/folder";
 import {DFolder} from "@db-schemas";
-import {FolderReader} from "@entities/folder";
+import {FolderReader} from "@dev/folder";
 import {Model} from "mongoose";
 
 export default class DBFolder extends DBModel<DFolder>{

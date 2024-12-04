@@ -36,7 +36,7 @@
        "@services/*": ["src/services/*"],
        "@ap/*": ["src/ap/*"],
        "@controllers/*": ["src/controllers/*"],
-       "@entities/*": ["src/entities/*"],
+       "@dev/*": ["src/dev/*"],
        "@middleware/*": ["src/middleware/*"],
        "@models/*": ["src/models/*"],
        "@routes": ["src/routes/index.ts"],
