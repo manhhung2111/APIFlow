@@ -2,14 +2,10 @@ import {DBModel} from "@ap/db";
 import UserModel from "@models/user";
 import {DUser} from "@db-schemas";
 import {UserReader} from "@entities/user";
+import {Model} from "mongoose";
 
 export default class DBUser extends DBModel<DUser>{
-	protected _db = UserModel;
-
-	constructor(){
-		super();
-		this._db = UserModel;
-	}
+	protected _db: Model<DUser> = UserModel;
 
 	release(): object{
 		return this.export(["email", "first_name", "last_name", "data", "created_at", "updated_at"]);

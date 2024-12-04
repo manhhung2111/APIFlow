@@ -2,14 +2,10 @@ import {DBModel} from "@ap/db";
 import CollectionModel from "@models/collection";
 import {DCollection} from "@db-schemas";
 import {CollectionReader} from "@entities/collection";
+import {Model} from "mongoose";
 
 export default class DBCollection extends DBModel<DCollection>{
-	protected _db = CollectionModel;
-
-	constructor(){
-		super();
-		this._db = CollectionModel;
-	}
+	protected _db: Model<DCollection> = CollectionModel;
 
 	release(): object{
 		return this.export([""]);

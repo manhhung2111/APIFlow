@@ -2,14 +2,10 @@ import {DBModel} from "@ap/db";
 import WorkspaceModel from "@models/workspace";
 import {DWorkspace} from "@db-schemas";
 import {WorkspaceReader, WorkspaceUserACL} from "@entities/workspace";
+import {Model} from "mongoose";
 
 export default class DBWorkspace extends DBModel<DWorkspace>{
-	protected _db = WorkspaceModel;
-
-	constructor(){
-		super();
-		this._db = WorkspaceModel;
-	}
+	protected _db: Model<DWorkspace> = WorkspaceModel;
 
 	release(): object{
 		return this.export([""]);

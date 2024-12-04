@@ -13,6 +13,7 @@ export const loginUser = async (request: Request, response: Response) => {
 	} catch (error){
 		if (error instanceof Error){
 			response.status(500).json(Code.error(error.message));
+			return;
 		}
 		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
 	}
@@ -31,6 +32,7 @@ export const registerUser = async (request: Request, response: Response) => {
 	} catch (error){
 		if (error instanceof Error){
 			response.status(500).json(Code.error(error.message));
+			return;
 		}
 		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
 	}

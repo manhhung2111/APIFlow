@@ -2,7 +2,15 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
-import {CollectionRoute, EnvironmentRoute, FolderRoute, RequestRoute, UserRoute, WorkspaceRoute} from "@routes";
+import {
+	CollectionRoute,
+	EnvironmentRoute,
+	ExampleRoute,
+	FolderRoute,
+	RequestRoute,
+	UserRoute,
+	WorkspaceRoute,
+} from "@routes";
 import {HTMLInput} from "@ap/core";
 
 dotenv.config();
@@ -25,10 +33,11 @@ app.use(express.urlencoded({extended: true}));
 // Routes
 app.use(HTMLInput.readRequest);
 app.use("/users", UserRoute);
-app.use("/workspaces/:workspace_id/requests", RequestRoute);
 app.use("/workspaces", WorkspaceRoute);
 app.use("/workspaces/:workspace_id/collections", CollectionRoute);
 app.use("/workspaces/:workspace_id/folders", FolderRoute);
+app.use("/workspaces/:workspace_id/requests", RequestRoute);
+app.use("/workspaces/:workspace_id/examples", ExampleRoute);
 app.use("/workspaces/:workspace_id/environments", EnvironmentRoute);
 
 

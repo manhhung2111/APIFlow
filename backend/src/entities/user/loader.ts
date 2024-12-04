@@ -7,8 +7,6 @@ export default class Loader{
 		const condition = new DBCondition().setFilter({email: email})
 			.setLimit(1);
 
-		const user = new User();
-
-		return await user.findOne(condition);
+		return await (new User).findOne(condition);
 	}
 }

@@ -4,6 +4,7 @@ export default class Code extends Error{
 
 	static UNKNOWN_ERROR = "Unknown error.";
 	static INVALID_AUTHORIZATION = "You don't have permission to access this resource.";
+	static INVALID_DATA = "Invalid data.";
 
 	protected code: number;
 	protected data: object;

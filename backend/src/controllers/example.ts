@@ -23,3 +23,7 @@ export const getExampleById = async (request: Request, response: Response) => {
 export const updateExampleName = async (request: Request, response: Response) => {
 
 };
+
+export const moveExample = async (request: Request, response: Response) => {
+
+};

@@ -1,10 +1,10 @@
-import {FilterQuery, HydratedDocument, Model} from "mongoose";
+import {ClientSession, FilterQuery, HydratedDocument, Model} from "mongoose";
 import {DBCondition} from "@ap/db";
-import {Code} from "@ap/core";
+import {Code, Validation} from "@ap/core";
 
 abstract class DBModel<T>{
 	protected abstract _db: Model<T>;
-	protected _object: HydratedDocument<T> | null | undefined;
+	public _object: HydratedDocument<T> | null | undefined;
 
 	abstract release(): object;
 
@@ -18,6 +18,36 @@ abstract class DBModel<T>{
 
 	public good(): boolean{
 		return this._object !== null && this._object !== undefined;
+	}
+
+	public async save(): Promise<void>{
+		if (!this._object){
+			throw new Code("Invalid object to be saved.");
+		}
+
+		try{
+			await this._object.save();
+		} catch (error){
+			if (error instanceof Error){
+				throw new Code(error.message);
+			}
+			throw new Code(Code.UNKNOWN_ERROR);
+		}
+	}
+
+	public async delete(): Promise<void>{
+		if (!this._object){
+			throw new Code("Invalid object to be deleted.");
+		}
+
+		try{
+			await this._object.deleteOne();
+		} catch (error){
+			if (error instanceof Error){
+				throw new Code(error.message);
+			}
+			throw new Code(Code.UNKNOWN_ERROR);
+		}
 	}
 
 	public async findById(_id: string): Promise<HydratedDocument<T> | null>{
@@ -51,21 +81,6 @@ abstract class DBModel<T>{
 		}
 	}
 
-	public async save(): Promise<void>{
-		if (!this._object || !this._object._id){
-			throw new Code("Invalid object to be saved.");
-		}
-
-		try{
-			await this._object.save();
-		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
-		}
-	}
-
 	public async find(condition: DBCondition): Promise<HydratedDocument<T>[]>{
 		try{
 			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
@@ -76,6 +91,40 @@ abstract class DBModel<T>{
 					skip: condition.skip,
 				},
 			).sort(condition.sort);
+		} catch (error){
+			if (error instanceof Error){
+				throw new Code(error.message);
+			}
+			throw new Code(Code.UNKNOWN_ERROR);
+		}
+	}
+
+	public async deleteOne(condition: DBCondition, session: ClientSession | null = null){
+		try{
+			this.validCondition(condition);
+			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
+
+			if (session){
+				return await this._db.deleteOne(filter).session(session);
+			}
+			return await this._db.deleteOne(filter);
+		} catch (error){
+			if (error instanceof Error){
+				throw new Code(error.message);
+			}
+			throw new Code(Code.UNKNOWN_ERROR);
+		}
+	}
+
+	public async deleteMany(condition: DBCondition, session: ClientSession | null = null){
+		try{
+			this.validCondition(condition);
+			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
+
+			if (session){
+				return await this._db.deleteMany(filter).session(session);
+			}
+			return await this._db.deleteMany(filter);
 		} catch (error){
 			if (error instanceof Error){
 				throw new Code(error.message);
@@ -96,6 +145,13 @@ abstract class DBModel<T>{
 		}
 
 		return data;
+	}
+
+	private validCondition(condition: DBCondition): void{
+		if (Validation.isEmpty(condition.filter)){
+			throw new Code("Empty filter is passed when calling delete operation.");
+		}
+		// Other logic
 	}
 }
 
