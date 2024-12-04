@@ -25,11 +25,11 @@ app.use(express.urlencoded({extended: true}));
 // Routes
 app.use(HTMLInput.readRequest);
 app.use("/users", UserRoute);
-app.use("/requests", RequestRoute);
+app.use("/workspaces/:workspace_id/requests", RequestRoute);
 app.use("/workspaces", WorkspaceRoute);
-app.use("/collections", CollectionRoute);
-app.use("/folders", FolderRoute);
-app.use("/environments", EnvironmentRoute);
+app.use("/workspaces/:workspace_id/collections", CollectionRoute);
+app.use("/workspaces/:workspace_id/folders", FolderRoute);
+app.use("/workspaces/:workspace_id/environments", EnvironmentRoute);
 
 
 (async function (){

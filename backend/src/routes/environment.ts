@@ -1,6 +1,6 @@
 import express from "express";
 import authentication from "@middleware/authentication";
-import {workspaceViewable} from "@middleware/workspace";
+import {workspaceEditable, workspaceViewable} from "@middleware/workspace";
 
 import {
 	createNewEnvironment,
@@ -18,17 +18,17 @@ router.use(authentication);
 
 // Get routes
 router.get("/", workspaceViewable, getAllEnvironments);
-router.get("/:id", getEnvironmentById);
+router.get("/:environment_id", workspaceViewable, getEnvironmentById);
 
 // Edit routes
-router.put("/:id", updateEnvironment);
-router.patch("/:id/name", updateEnvironmentName);
+router.put("/:environment_id", workspaceEditable, updateEnvironment);
+router.put("/:environment_id/name", workspaceEditable, updateEnvironmentName);
 
 // Create routes
-router.post("/", createNewEnvironment);
-router.post("/:id/duplicate", duplicateEnvironment);
+router.post("/", workspaceEditable, createNewEnvironment);
+router.post("/:environment_id/duplicate", workspaceEditable, duplicateEnvironment);
 
 // Delete routes
-router.delete("/:id", deleteEnvironment);
+router.delete("/:environment_id", workspaceEditable, deleteEnvironment);
 
 export default router;

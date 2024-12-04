@@ -1,4 +1,6 @@
 import express from "express";
+import {workspaceAdmin, workspaceEditable, workspaceViewable} from "@middleware/workspace";
+import authentication from "@middleware/authentication";
 
 import {
 	createNewWorkspace,
@@ -11,18 +13,20 @@ import {
 
 const router = express.Router();
 
+router.use(authentication);
+
 // Get routes
 router.get("/", getAllWorkspaces);
-router.get("/:id", getWorkspaceById);
+router.get("/:workspace_id", workspaceViewable, getWorkspaceById);
 
 // Create routes
 router.post("/", createNewWorkspace);
 
 // Edit routes
-router.put("/:id/name", updateWorkspaceName);
-router.put("/:id/content", updateWorkspaceContent);
+router.put("/:workspace_id/name", workspaceEditable, updateWorkspaceName);
+router.put("/:workspace_id/content", workspaceEditable, updateWorkspaceContent);
 
 
-router.delete("/:id", deleteWorkspace);
+router.delete("/:workspace_id", workspaceAdmin, deleteWorkspace);
 
 export default router;

@@ -1,6 +1,6 @@
 import express from "express";
 import authentication from "@middleware/authentication";
-import {workspaceViewable} from "@middleware/workspace";
+import {workspaceEditable, workspaceViewable} from "@middleware/workspace";
 
 import {
 	createNewCollection,
@@ -19,18 +19,18 @@ router.use(authentication);
 
 // Get routes
 router.get("/", workspaceViewable, getAllCollections);
-router.get("/:id", getCollectionById);
+router.get("/:collection_id", workspaceViewable, getCollectionById);
 
 // Edit routes
-router.put("/:id", updateCollection);
-router.patch("/:id/name", updateCollectionName);
-router.patch("/:id/content", updateCollectionContent);
+router.put("/:collection_id", workspaceEditable, updateCollection);
+router.put("/:collection_id/name", workspaceEditable, updateCollectionName);
+router.put("/:collection_id/content", workspaceEditable, updateCollectionContent);
 
 // Create routes
-router.post("/", createNewCollection);
-router.post("/:id/duplicate", duplicateCollection);
+router.post("/", workspaceEditable, createNewCollection);
+router.post("/:collection_id/duplicate", workspaceEditable, duplicateCollection);
 
 // Delete routes
-router.delete("/:id", deleteCollection);
+router.delete("/:collection_id", workspaceEditable, deleteCollection);
 
 export default router;
