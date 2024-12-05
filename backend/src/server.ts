@@ -38,7 +38,7 @@ app.use(cookieParser(process.env.COOKIES_SECRET));
 app.use(HTMLInput.readRequest);
 app.use("/users", UserRoute);
 
-app.use();
+// app.use();
 app.use("/workspaces", WorkspaceRoute);
 app.use("/workspaces/:workspace_id/collections", CollectionRoute);
 app.use("/workspaces/:workspace_id/folders", FolderRoute);
