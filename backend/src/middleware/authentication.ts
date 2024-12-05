@@ -3,10 +3,6 @@ import {NextFunction, Request, Response} from "express";
 import Client from "@dev/client";
 
 export default async function authentication(request: Request, response: Response, next: NextFunction){
-	if (Client.authenticated){
-		return next();
-	}
-
 	try{
 		const token = HTMLInput.signedCookies("access_token");
 		if (!token){

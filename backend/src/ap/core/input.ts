@@ -28,8 +28,10 @@ export default class HTMLInput{
 		}
 
 		const value = this.cur_request.params[field];
+		if (value === undefined || value === null){
+			throw new Code(`Param \"${field}\" does not exist in the URL.`);
+		}
 
-		if (!value) return "";
 		return value;
 	}
 
@@ -39,8 +41,10 @@ export default class HTMLInput{
 		}
 
 		const value = this.cur_request.query[field];
+		if (value === undefined || value === null){
+			throw new Code(`Query \"${field}\" does not exist in the URL.`);
+		}
 
-		if (!value) return "";
 		return value;
 	}
 
@@ -198,11 +202,15 @@ export default class HTMLInput{
 	private static inputRaw(field: string): string{
 		let value = this.cur_request?.body[field] || "";
 
-		let json_value = JSON.parse(value);
-		if (typeof json_value === "object" && json_value !== null){
-			value = JSON.stringify(json_value); // Convert the object to string
-		} else{
-			value = json_value?.toString() ?? ""; // If it's not an object, just treat it as a string
+		try{
+			let json_value = JSON.parse(value);
+			if (typeof json_value === "object" && json_value !== null){
+				value = JSON.stringify(json_value); // Convert the object to string
+			} else{
+				value = json_value?.toString() ?? ""; // If it's not an object, just treat it as a string
+			}
+		} catch (error){
+
 		}
 
 		return this.cleanData(value);

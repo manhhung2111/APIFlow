@@ -16,26 +16,20 @@ export default class Reader extends DBReader<DWorkspace>{
 			this._obj.token = UUID.randomTokenSize32();
 		}
 
-		await this.readPrimary();
+		await this.readName();
+		await this.readContent();
 	}
 
-	public async readPrimary(){
+	public async readName(){
 		const name = HTMLInput.inputInline("name");
-		const content = HTMLInput.inputInlineNoLimit("content");
-
 		if (Validation.isEmpty(name)){
 			throw new Code("Workspace name must not be empty");
 		}
 
 		this._obj.name = name;
-		this._obj.content = content;
-	}
-
-	public async readName(){
-
 	}
 
 	public async readContent(){
-
+		this._obj.content = HTMLInput.inputInlineNoLimit("content");
 	}
 }
