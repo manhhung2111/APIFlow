@@ -8,11 +8,11 @@ export default class DBWorkspace extends DBModel<DWorkspace>{
 	protected _db: Model<DWorkspace> = WorkspaceModel;
 
 	release(): object{
-		return this.export([""]);
+		return this.export(["name", "content", "created_at", "updated_at"]);
 	}
 
 	releaseCompact(): object{
-		return this.export([""]);
+		return this.export(["name", "content"]);
 	}
 
 	reader(){

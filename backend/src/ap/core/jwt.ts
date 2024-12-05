@@ -10,10 +10,7 @@ export default class JWT{
 		try{
 			return jwt.sign(payload, secret, {algorithm: "HS256", expiresIn: this._TOKEN_MAX_AGE});
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
@@ -23,10 +20,7 @@ export default class JWT{
 		try{
 			return jwt.verify(token, secret);
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 }

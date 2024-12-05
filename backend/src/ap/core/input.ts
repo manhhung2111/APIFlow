@@ -1,6 +1,6 @@
-import {NextFunction, Request, Response} from "express";
+import {Request} from "express";
 import {Code, Validation, Word} from "@ap/core";
-import html_entities from "html-entities";
+import {decode as htmlDecode} from "html-entities";
 
 export default class HTMLInput{
 	public static GET = 1;
@@ -8,15 +8,14 @@ export default class HTMLInput{
 	public static PUT = 3;
 	public static DELETE = -1;
 
-	private static request: Request | null | undefined;
+	private static cur_request: Request | null = null;
 	private static MAX_TITLE_CHAR = 1023;
 	private static allowed_tags = [
 		"b", "center", "i", "u", "br", "p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "li", "url", "img", "code", "small", "big", "tab", "quote", "sub", "sup", "link", "image", "pre", "label",
 	];
 
-	public static readRequest(request: Request, response: Response, next: NextFunction){
-		this.request = request;
-		next();
+	public static readRequest(request: Request){
+		this.cur_request = request;
 	}
 
 	public static pageCounter(){
@@ -24,33 +23,33 @@ export default class HTMLInput{
 	}
 
 	public static param(field: string = ""){
-		if (!this.request){
+		if (!this.cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.request.params[field];
+		const value = this.cur_request.params[field];
 
 		if (!value) return "";
 		return value;
 	}
 
 	public static query(field: string = ""){
-		if (!this.request){
+		if (!this.cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.request.query[field];
+		const value = this.cur_request.query[field];
 
 		if (!value) return "";
 		return value;
 	}
 
 	public static signedCookies(field: string = ""){
-		if (!this.request){
+		if (!this.cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.request.signedCookies[field];
+		const value = this.cur_request.signedCookies[field];
 
 		if (!value) return "";
 		return value;
@@ -58,11 +57,11 @@ export default class HTMLInput{
 
 
 	public static inputSafe(field: string, limit_character: boolean = true){
-		if (!this.request){
+		if (!this.cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const raw = html_entities.decode(this.inputRaw(field));
+		const raw = htmlDecode(this.inputRaw(field));
 
 		let text: string;
 		if (limit_character){
@@ -76,7 +75,7 @@ export default class HTMLInput{
 	}
 
 	public static inputInline(field: string){
-		if (!this.request){
+		if (!this.cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
@@ -97,7 +96,7 @@ export default class HTMLInput{
 	}
 
 	public static inputInlineNoLimit(field: string){
-		if (!this.request){
+		if (!this.cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
@@ -197,16 +196,13 @@ export default class HTMLInput{
 	}
 
 	private static inputRaw(field: string): string{
-		let value = this.request?.body[field];
+		let value = this.cur_request?.body[field] || "";
 
-		try{
-			let json_value = JSON.parse(value);
-			if (typeof json_value === "object" && json_value !== null){
-				value = JSON.stringify(json_value); // Convert the object to string
-			} else{
-				value = json_value?.toString() ?? ""; // If it's not an object, just treat it as a string
-			}
-		} catch (error){
+		let json_value = JSON.parse(value);
+		if (typeof json_value === "object" && json_value !== null){
+			value = JSON.stringify(json_value); // Convert the object to string
+		} else{
+			value = json_value?.toString() ?? ""; // If it's not an object, just treat it as a string
 		}
 
 		return this.cleanData(value);

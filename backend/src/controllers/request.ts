@@ -5,6 +5,7 @@ import {DBCondition} from "@ap/db";
 import {Example, ExampleLoader} from "@dev/example";
 import mongoose from "mongoose";
 import {DBWorkspace} from "@dev/workspace";
+import logger from "@utils/logger";
 
 export const createNewRequest = async (request: Request, response: Response) => {
 	try{
@@ -16,10 +17,7 @@ export const createNewRequest = async (request: Request, response: Response) => 
 
 		response.status(201).json(Code.success("Create new request successfully!"));
 	} catch (error){
-		if (error instanceof Error){
-			response.status(500).json(Code.error(error.message));
-		}
-		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 
@@ -52,12 +50,8 @@ export const deleteRequest = async (request: Request, response: Response) => {
 	} catch (error){
 		await session.abortTransaction();
 
-		if (error instanceof Error){
-			console.error(error.stack);
-			response.status(500).json(Code.error(error.message));
-			return;
-		}
-		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+		logger.error((error as Error).message);
+		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
 	}
@@ -98,12 +92,8 @@ export const duplicateRequest = async (request: Request, response: Response) => 
 	} catch (error){
 		await session.abortTransaction();
 
-		if (error instanceof Error){
-			console.error(error.stack);
-			response.status(500).json(Code.error(error.message));
-			return;
-		}
-		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+		logger.error((error as Error).message);
+		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
 	}
@@ -126,11 +116,8 @@ export const getAllRequests = async (request: Request, response: Response) => {
 
 		response.status(200).json(Code.success("Get all requests successfully.", {requests: requests_compact}));
 	} catch (error){
-		if (error instanceof Error){
-			console.error(error.stack);
-			response.status(500).json(Code.error(error.message));
-		}
-		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+		logger.error((error as Error).message);
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 

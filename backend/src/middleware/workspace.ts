@@ -4,25 +4,29 @@ import {Code, HTMLInput} from "@ap/core";
 
 const createWorkspaceMiddleware = (checkPermission: (workspace: DBWorkspace) => boolean) =>
 	async (request: Request, response: Response, next: NextFunction) => {
-		const workspace_id = HTMLInput.param("workspace_id");
+		try{
+			const workspace_id = HTMLInput.param("workspace_id");
 
-		if (!workspace_id){
-			response.status(400).json(Code.error("Invalid data"));
-			return;
+			if (!workspace_id){
+				response.status(400).json(Code.error("Invalid data"));
+				return;
+			}
+
+			const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+			if (!workspace.good()){
+				response.status(400).json(Code.error("Invalid workspace"));
+				return;
+			}
+
+			if (!checkPermission(workspace)){
+				response.status(403).json(Code.error(Code.INVALID_AUTHORIZATION));
+				return;
+			}
+
+			return next();
+		} catch (error){
+			response.status(500).json(Code.error((error as Error).message));
 		}
-
-		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
-		if (!workspace.good()){
-			response.status(400).json(Code.error("Invalid workspace"));
-			return;
-		}
-
-		if (!checkPermission(workspace)){
-			response.status(403).json(Code.error(Code.INVALID_AUTHORIZATION));
-			return;
-		}
-
-		next();
 	};
 
 export const workspaceViewable = createWorkspaceMiddleware((workspace) =>

@@ -20,11 +20,12 @@ export default class Reader extends DBReader<DUser>{
 			throw new Code("Invalid email address.");
 		}
 
-		if (await UserLoader.byEmail(email)){
+		const user = await UserLoader.byEmail(email);
+		if (user.good()){
 			throw new Code("This email is taken by another account.");
 		}
 
-		if (!Validation.isEmpty(password)){
+		if (Validation.isEmpty(password)){
 			throw new Code("Password must not be empty.");
 		}
 

@@ -13,7 +13,7 @@ export default class UserService{
 		}
 
 		let user = await UserLoader.byEmail(email);
-		if (!user){
+		if (!user.good()){
 			throw new Code("Invalid Email or Password!");
 		}
 

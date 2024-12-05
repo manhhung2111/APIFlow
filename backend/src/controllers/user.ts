@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {Code, JWT} from "@ap/core";
 import {User} from "@dev/user";
 import UserService from "@services/user";
+import logger from "@utils/logger";
 
 export const loginUser = async (request: Request, response: Response) => {
 	try{
@@ -12,11 +13,8 @@ export const loginUser = async (request: Request, response: Response) => {
 		response.cookie("access_token", access_token, {signed: true, maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true});
 		response.status(200).json(Code.success("Login successful", {access_token: access_token}));
 	} catch (error){
-		if (error instanceof Error){
-			response.status(500).json(Code.error(error.message));
-			return;
-		}
-		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+		logger.error((error as Error).message);
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 
@@ -30,11 +28,8 @@ export const registerUser = async (request: Request, response: Response) => {
 
 		response.status(201).json(Code.success("Register new account successfully!"));
 	} catch (error){
-		if (error instanceof Error){
-			response.status(500).json(Code.error(error.message));
-			return;
-		}
-		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+		logger.error((error as Error).message);
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 

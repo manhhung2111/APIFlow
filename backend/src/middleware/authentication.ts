@@ -3,11 +3,11 @@ import {NextFunction, Request, Response} from "express";
 import Client from "@dev/client";
 
 export default async function authentication(request: Request, response: Response, next: NextFunction){
-	try{
-		if (Client.authenticated){
-			next();
-		}
+	if (Client.authenticated){
+		return next();
+	}
 
+	try{
 		const token = HTMLInput.signedCookies("access_token");
 		if (!token){
 			response.status(401).json(Code.error("Authorization token required"));
@@ -25,12 +25,9 @@ export default async function authentication(request: Request, response: Respons
 			return;
 		}
 
-		next();
+		return next();
 	} catch (error){
-		if (error instanceof Error){
-			response.status(500).json(Code.error(error.message));
-		}
-		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 

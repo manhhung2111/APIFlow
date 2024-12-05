@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 import {
 	CollectionRoute,
 	EnvironmentRoute,
@@ -13,6 +14,7 @@ import {
 	WorkspaceRoute,
 } from "@routes";
 import {HTMLInput} from "@ap/core";
+import logger from "@utils/logger";
 
 dotenv.config();
 const app = express();
@@ -35,10 +37,14 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser(process.env.COOKIES_SECRET));
 
 // Routes
-app.use(HTMLInput.readRequest);
-app.use("/users", UserRoute);
+app.use((request, response, next) => {
+	HTMLInput.readRequest(request);
+	next();
+});
 
-// app.use();
+app.use(morgan('dev', {stream: {write: (message) => logger.info(message.trim())},}));
+
+app.use("/users", UserRoute);
 app.use("/workspaces", WorkspaceRoute);
 app.use("/workspaces/:workspace_id/collections", CollectionRoute);
 app.use("/workspaces/:workspace_id/folders", FolderRoute);
@@ -54,14 +60,13 @@ app.use("/workspaces/:workspace_id/environments", EnvironmentRoute);
 		await mongoose.connect(
 			`mongodb+srv://${db_username}:${db_password}@hongkong-1.x4eds.mongodb.net/${db_name}`,
 		).then(() => {
-			console.info(`Connect to database successfully.`);
+			logger.info(`Connect to database successfully.`);
 		});
 
 		app.listen(port, () => {
-			console.info(`Server is running on port ${port}`);
+			logger.info(`Server is running on port ${port}`);
 		});
 	} catch (error){
-		// @ts-ignore
-		console.error(error.message);
+		logger.error((error as Error).message);
 	}
 })();

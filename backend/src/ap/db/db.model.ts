@@ -20,10 +20,7 @@ abstract class DBModel<T>{
 			instance._setObject(document);
 			return instance;
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
@@ -42,16 +39,13 @@ abstract class DBModel<T>{
 			instance._setObject(document);
 			return instance;
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
 	public static async find<T>(this: {new(): DBModel<T>}, condition: DBCondition): Promise<DBModel<T>[]>{
 		try{
-			const instance = new this(); // Create an instance of the derived class
+			const instance = new this();
 			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
 
 			const documents = await instance._db
@@ -60,17 +54,13 @@ abstract class DBModel<T>{
 					skip: condition.skip,
 				})
 				.sort(condition.sort).exec();
-
 			return documents.map((doc) => {
 				const obj = new this();
 				obj._setObject(doc);
 				return obj;
 			});
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
@@ -87,10 +77,7 @@ abstract class DBModel<T>{
 			}
 			return await derived_class._db.deleteOne(filter);
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
@@ -108,10 +95,7 @@ abstract class DBModel<T>{
 			}
 			return await derived_class._db.deleteMany(filter);
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
@@ -126,10 +110,7 @@ abstract class DBModel<T>{
 			}
 			return await derived_class._db.insertMany(documents);
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
@@ -148,10 +129,7 @@ abstract class DBModel<T>{
 			}
 			return await this._object.save();
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
@@ -166,10 +144,7 @@ abstract class DBModel<T>{
 			}
 			return await this._object.deleteOne();
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
@@ -184,8 +159,8 @@ abstract class DBModel<T>{
 		if (!this.good()) return data;
 
 		for (const field of fields){
-			if (field in this._object!.schema.paths){
-				data[field] = this._object![field as keyof typeof this._object];
+			if (field in this._object!.toObject()){
+				data[field] = this._object!.get(field);
 			}
 		}
 
