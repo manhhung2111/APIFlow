@@ -6,6 +6,7 @@ import {Example, ExampleLoader} from "@dev/example";
 import mongoose from "mongoose";
 import {DBWorkspace} from "@dev/workspace";
 import logger from "@utils/logger";
+import {RequestService, RequestServiceReader} from "@services/request";
 
 export const createNewRequest = async (request: Request, response: Response) => {
 	try{
@@ -28,10 +29,6 @@ export const deleteRequest = async (request: Request, response: Response) => {
 	try{
 		const request_id = HTMLInput.param("request_id");
 		const workspace_id = HTMLInput.param("workspace_id");
-
-		if (!request_id || !workspace_id){
-			response.status(400).json(Code.error("Missing params: request_id or workspace_id"));
-		}
 
 		let sc = new DBCondition().setFilter({workspace_id: workspace_id, _id: request_id});
 		const request = await DBRequest.findOne(sc) as DBRequest;
@@ -64,10 +61,6 @@ export const duplicateRequest = async (request: Request, response: Response) => 
 	try{
 		const request_id = HTMLInput.param("request_id");
 		const workspace_id = HTMLInput.param("workspace_id");
-
-		if (!request_id || !workspace_id){
-			response.status(400).json(Code.error("Missing params: request_id or workspace_id"));
-		}
 
 		let sc = new DBCondition().setFilter({workspace_id: workspace_id, _id: request_id});
 		const old_request = await DBRequest.findOne(sc) as DBRequest;
@@ -102,9 +95,6 @@ export const duplicateRequest = async (request: Request, response: Response) => 
 export const getAllRequests = async (request: Request, response: Response) => {
 	try{
 		const workspace_id = HTMLInput.param("workspace_id");
-		if (!workspace_id){
-			response.status(400).json(Code.error("Missing params: workspace_id"));
-		}
 
 		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
 		if (!workspace.good()){
@@ -122,7 +112,18 @@ export const getAllRequests = async (request: Request, response: Response) => {
 };
 
 export const getRequestById = async (request: Request, response: Response) => {
+	try{
+		const request_id = HTMLInput.param("request_id");
 
+		const request = await DBRequest.initialize(request_id);
+		if (!request.good()){
+			response.status(400).json(Code.error(Code.INVALID_DATA));
+		}
+
+		response.status(200).json(Code.success(`Get request with id = ${request_id} successfully`, {request: request.release()}));
+	} catch (error){
+		response.status(500).json((error as Error).message);
+	}
 };
 
 export const moveRequest = async (request: Request, response: Response) => {
@@ -130,15 +131,94 @@ export const moveRequest = async (request: Request, response: Response) => {
 };
 
 export const sendRequest = async (request: Request, response: Response) => {
+	try{
+		const request_reader = new RequestServiceReader();
+		request_reader.readMethod()
+			.readURL()
+			.readParams()
+			.readAuthorization()
+			.readCookies()
+			.readHeaders()
+			.readBody()
+			.readScripts()
+			.readEnvironment();
 
+		const request = new RequestService();
+		request.setMethod(request_reader.getMethod())
+			.setURL(request_reader.getURL())
+			.setParams(request_reader.getParams())
+			.setCookies(request_reader.getCookies())
+			.setHeaders(request_reader.getHeaders())
+			.setAuthorization(request_reader.getAuthorization())
+			.setBody(request_reader.getBody())
+			.setEnvironment(request_reader.getEnvironment())
+			.setScripts(request_reader.getScripts());
+
+		try{
+			const result = await request.send();
+
+			response.status(200).json(Code.success("Send request to endpoint successfully.", {...result}));
+		} catch (error){
+			response.status(502).json(Code.error((error as Error).message, {
+				code: "Error",
+				"body": JSON.stringify(error),
+				"headers": [],
+			}));
+		}
+	} catch (error){
+		response.status(500).json((error as Error).message);
+	}
 };
 
 export const updateRequest = async (request: Request, response: Response) => {
+	try{
+		const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
+		if(!request.good()){
+			response.status(400).json(Code.error(Code.INVALID_DATA));
+		}
 
-};
-export const updateRequestContent = async (request: Request, response: Response) => {
+		await request.reader().read();
 
+		await request.save();
+
+		response.status(201).json(Code.success("Save request successfully!"));
+	} catch (error){
+		response.status(500).json(Code.error((error as Error).message));
+	}
 };
+
 export const updateRequestName = async (request: Request, response: Response) => {
+	try{
+		const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
+		if(!request.good()){
+			response.status(400).json(Code.error(Code.INVALID_DATA));
+		}
 
+		await request.reader().readName();
+
+		await request.save();
+
+		response.status(201).json(Code.success("Update request name successfully!"));
+	} catch (error){
+		response.status(500).json(Code.error((error as Error).message));
+	}
 };
+
+export const updateRequestContent = async (request: Request, response: Response) => {
+	try{
+		const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
+		if(!request.good()){
+			response.status(400).json(Code.error(Code.INVALID_DATA));
+		}
+
+		await request.reader().readContent();
+
+		await request.save();
+
+		response.status(201).json(Code.success("Update request content successfully!"));
+	} catch (error){
+		response.status(500).json(Code.error((error as Error).message));
+	}
+};
+
+

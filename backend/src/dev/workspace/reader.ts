@@ -30,6 +30,6 @@ export default class Reader extends DBReader<DWorkspace>{
 	}
 
 	public async readContent(){
-		this._obj.content = HTMLInput.inputInlineNoLimit("content");
+		this._obj.content = HTMLInput.inputEditor("content");
 	}
 }

@@ -154,6 +154,11 @@ export default class HTMLInput{
 		return result;
 	}
 
+
+	public static inputEditor(field: string){
+		return "";
+	}
+
 	private static sanitize(text: string, style: string = ""): string{
 		if (!text) return "";
 

@@ -66,25 +66,27 @@ export interface DRequest {
     name: string;
     content?: string;
 
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    method: string;
     url: string;
 
     params?: Array<{
+        selected?: boolean,
         key?: string;
         value?: string;
         description?: string;
     }>;
     headers?: Array<{
+        selected?: boolean,
         key?: string;
         value?: string;
         description?: string;
     }>;
     authorization?: {
-        authorization_type: 0 | 1 | 2 | 3 | 4;
+        authorization_type: number;
         authorization_data?: object;
     };
     body?: {
-        body_type: 0 | 1 | 2 | 3;
+        body_type: number;
         body_data?: object;
     };
     scripts?: {
@@ -92,7 +94,7 @@ export interface DRequest {
         post_script?: string;
     };
 
-    tag?: 0 | 1 | 2;
+    tag?: number;
 
     data?: object | {};
     token: string;
@@ -142,7 +144,7 @@ export interface DEnvironment {
 
     name: string;
 
-    scope: 0 | 1;
+    scope: number;
     variables?: Array<{
         variable?: string;
         type?: "text" | "password";
