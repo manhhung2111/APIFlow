@@ -14,7 +14,7 @@ export default class Client{
 		if (!user.good()) return false;
 
 		this.authenticated = true;
-		this.viewer = user._object!;
+		this.viewer = user.object!;
 
 		return true;
 	}

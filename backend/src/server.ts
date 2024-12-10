@@ -42,7 +42,7 @@ app.use((request, response, next) => {
 	next();
 });
 
-app.use(morgan('dev', {stream: {write: (message) => logger.info(message.trim())},}));
+app.use(morgan("dev", {stream: {write: (message) => logger.info(message.trim())}}));
 
 app.use("/users", UserRoute);
 app.use("/workspaces", WorkspaceRoute);

@@ -3,12 +3,9 @@ import {DBCondition} from "@ap/db";
 import {Code, Validation} from "@ap/core";
 
 abstract class DBModel<T>{
-	protected abstract _db: Model<T>;
-
-	public _object: HydratedDocument<T> | null | undefined;
 	public static PAGE_SIZE = 200;
-
-	abstract release(): object;
+	public object: HydratedDocument<T> | null | undefined;
+	protected abstract _db: Model<T>;
 
 	public static async initialize<T>(this: new () => DBModel<T>, _id: string = ""){
 		try{
@@ -114,43 +111,45 @@ abstract class DBModel<T>{
 		}
 	}
 
+	abstract release(): object;
+
 	public good(): boolean{
-		return this._object !== null && this._object !== undefined;
+		return this.object !== null && this.object !== undefined;
 	}
 
 	public async save(session: ClientSession | null = null){
-		if (!this._object){
+		if (!this.object){
 			throw new Code("Invalid object to be saved.");
 		}
 
 		try{
 			if (session){
-				return await this._object.save({session});
+				return await this.object.save({session});
 			}
-			return await this._object.save();
+			return await this.object.save();
 		} catch (error){
 			throw new Code((error as Error).message);
 		}
 	}
 
 	public async delete(session: ClientSession | null = null){
-		if (!this._object){
+		if (!this.object){
 			throw new Code("Invalid object to be deleted.");
 		}
 
 		try{
 			if (session){
-				return await this._object.deleteOne({session});
+				return await this.object.deleteOne({session});
 			}
-			return await this._object.deleteOne();
+			return await this.object.deleteOne();
 		} catch (error){
 			throw new Code((error as Error).message);
 		}
 	}
 
 	public getField(field: string){
-		if (!this._object) return "";
-		return this._object.get(field);
+		if (!this.object) return "";
+		return this.object.get(field);
 	}
 
 	protected export(fields: Array<string>): object{
@@ -159,8 +158,8 @@ abstract class DBModel<T>{
 		if (!this.good()) return data;
 
 		for (const field of fields){
-			if (field in this._object!.toObject()){
-				data[field] = this._object!.get(field);
+			if (field in this.object!.toObject()){
+				data[field] = this.object!.get(field);
 			}
 		}
 
@@ -168,7 +167,7 @@ abstract class DBModel<T>{
 	}
 
 	private _setObject(obj: HydratedDocument<T> | null): void{
-		this._object = obj;
+		this.object = obj;
 	}
 
 	private _validCondition(condition: DBCondition): void{

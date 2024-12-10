@@ -1,4 +1,4 @@
-export {default as Environment} from "./environment";
-export {default as EnvironmentReader} from "./reader";
-export {default as EnvironmentLoader} from "./loader";
-export {default as EnvironmentListener} from "./listener";
+export {default as DBEnvironment} from "./environment";
+export {default as DBEnvironmentReader} from "./reader";
+export {default as DBEnvironmentLoader} from "./loader";
+export {default as DBEnvironmentListener} from "./listener";

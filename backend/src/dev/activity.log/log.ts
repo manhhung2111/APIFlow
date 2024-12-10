@@ -16,7 +16,7 @@ export default class DBActivityLog extends DBModel<DActivityLog>{
 	}
 
 	reader(){
-		return new ActivityLogReader(this._object);
+		return new ActivityLogReader(this.object);
 	}
 
 }

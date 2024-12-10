@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import RequestModel from "@models/request";
 import {DRequest} from "@db-schemas";
-import {RequestReader} from "@dev/request";
+import {DBRequestListener, DBRequestReader} from "@dev/request";
 import {Model} from "mongoose";
 
 export default class DBRequest extends DBModel<DRequest>{
@@ -16,6 +16,10 @@ export default class DBRequest extends DBModel<DRequest>{
 	}
 
 	reader(){
-		return new RequestReader(this._object);
+		return new DBRequestReader(this.object);
+	}
+
+	on(){
+		return new DBRequestListener(this.object);
 	}
 }

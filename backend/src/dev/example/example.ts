@@ -16,6 +16,6 @@ export default class DBExample extends DBModel<DExample>{
 	}
 
 	reader(){
-		return new ExampleReader(this._object);
+		return new ExampleReader(this.object);
 	}
 }

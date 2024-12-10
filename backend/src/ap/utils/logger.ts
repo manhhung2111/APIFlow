@@ -1,4 +1,4 @@
-import winston from 'winston';
+import winston from "winston";
 
 const levelFilter = (level: string) => {
 	return winston.format((info) => {
@@ -7,39 +7,39 @@ const levelFilter = (level: string) => {
 };
 
 const logger = winston.createLogger({
-	level: 'info', // Default logging level
+	level: "info", // Default logging level
 	format: winston.format.combine(
 		winston.format.timestamp(),
-		winston.format.printf(({ level, message, timestamp }) => {
+		winston.format.printf(({level, message, timestamp}) => {
 			return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
-		})
+		}),
 	),
 	transports: [
 		// Separate transports for each level
 		new winston.transports.File({
-			filename: 'logs/error.log',
-			format: winston.format.combine(levelFilter('error')),
+			filename: "logs/error.log",
+			format: winston.format.combine(levelFilter("error")),
 		}),
 		new winston.transports.File({
-			filename: 'logs/warning.log',
-			format: winston.format.combine(levelFilter('warn')),
+			filename: "logs/warning.log",
+			format: winston.format.combine(levelFilter("warn")),
 		}),
 		new winston.transports.File({
-			filename: 'logs/info.log',
-			format: winston.format.combine(levelFilter('info')),
+			filename: "logs/info.log",
+			format: winston.format.combine(levelFilter("info")),
 		}),
-		new winston.transports.File({ filename: 'logs/requests.log' })
+		new winston.transports.File({filename: "logs/requests.log"}),
 	],
 });
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production"){
 	logger.add(
 		new winston.transports.Console({
 			format: winston.format.combine(
 				winston.format.colorize(),
-				winston.format.simple()
+				winston.format.simple(),
 			),
-		})
+		}),
 	);
 }
 

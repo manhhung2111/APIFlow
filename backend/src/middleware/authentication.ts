@@ -1,6 +1,7 @@
 import {Code, HTMLInput, JWT} from "@ap/core";
 import {NextFunction, Request, Response} from "express";
 import Client from "@dev/client";
+import logger from "@utils/logger";
 
 export default async function authentication(request: Request, response: Response, next: NextFunction){
 	try{
@@ -23,6 +24,7 @@ export default async function authentication(request: Request, response: Respons
 
 		return next();
 	} catch (error){
+		logger.error((error as Error).message);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };

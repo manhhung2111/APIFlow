@@ -6,8 +6,8 @@ import {
 	createNewCollection,
 	deleteCollection,
 	duplicateCollection,
-	getAllCollections,
 	getCollectionById,
+	getCollectionsByWorkspace,
 	updateCollection,
 	updateCollectionContent,
 	updateCollectionName,
@@ -18,7 +18,7 @@ const router = express.Router();
 router.use(authentication);
 
 // Get routes
-router.get("/", workspaceViewable, getAllCollections);
+router.get("/", workspaceViewable, getCollectionsByWorkspace);
 router.get("/:collection_id", workspaceViewable, getCollectionById);
 
 // Edit routes

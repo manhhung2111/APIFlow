@@ -1,7 +1,7 @@
 import {HydratedDocument} from "mongoose";
 import {DBReader} from "@ap/db";
 import {DRequest} from "@db-schemas";
-import {Request} from "@dev/request";
+import {DBRequest} from "@dev/request";
 import Client from "@dev/client";
 import UUID from "@utils/uuid";
 import {RequestServiceReader} from "@services/request";
@@ -53,7 +53,7 @@ export default class Reader extends DBReader<DRequest>{
 		this._obj.content = HTMLInput.inputEditor("content");
 	}
 
-	public async duplicate(old_request: Request){
+	public async duplicate(old_request: DBRequest){
 
 	}
 }

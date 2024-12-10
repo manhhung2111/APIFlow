@@ -1,4 +1,4 @@
-export {default as Request} from "./request";
-export {default as RequestReader} from "./reader";
-export {default as RequestLoader} from "./loader";
-export {default as RequestListener} from "./listener";
+export {default as DBRequest} from "./request";
+export {default as DBRequestReader} from "./reader";
+export {default as DBRequestLoader} from "./loader";
+export {default as DBRequestListener} from "./listener";

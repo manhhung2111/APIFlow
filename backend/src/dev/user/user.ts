@@ -16,6 +16,6 @@ export default class DBUser extends DBModel<DUser>{
 	}
 
 	reader(){
-		return new UserReader(this._object);
+		return new UserReader(this.object);
 	}
 }

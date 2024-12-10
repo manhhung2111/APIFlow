@@ -1,6 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import {DBWorkspace} from "@dev/workspace";
 import {Code, HTMLInput} from "@ap/core";
+import logger from "@utils/logger";
 
 const createWorkspaceMiddleware = (checkPermission: (workspace: DBWorkspace) => boolean) =>
 	async (request: Request, response: Response, next: NextFunction) => {
@@ -20,6 +21,7 @@ const createWorkspaceMiddleware = (checkPermission: (workspace: DBWorkspace) => 
 
 			return next();
 		} catch (error){
+			logger.error((error as Error).message);
 			response.status(500).json(Code.error((error as Error).message));
 		}
 	};

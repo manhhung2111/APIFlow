@@ -6,8 +6,8 @@ import {
 	createNewFolder,
 	deleteFolder,
 	duplicateFolder,
-	getAllFolders,
 	getFolderById,
+	getFoldersByWorkspace,
 	moveFolder,
 	updateFolder,
 	updateFolderContent,
@@ -19,7 +19,7 @@ const router = express.Router();
 router.use(authentication);
 
 // Get routes
-router.get("/", workspaceViewable, getAllFolders);
+router.get("/", workspaceViewable, getFoldersByWorkspace);
 router.get("/:folder_id", workspaceViewable, getFolderById);
 
 // Edit routes

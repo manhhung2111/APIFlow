@@ -16,6 +16,6 @@ export default class DBComment extends DBModel<DComment>{
 	}
 
 	reader(){
-		return new CommentReader(this._object);
+		return new CommentReader(this.object);
 	}
 }

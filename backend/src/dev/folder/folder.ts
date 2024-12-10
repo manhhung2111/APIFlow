@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import FolderModel from "@models/folder";
 import {DFolder} from "@db-schemas";
-import {FolderReader} from "@dev/folder";
+import {DBFolderListener, DBFolderReader} from "@dev/folder";
 import {Model} from "mongoose";
 
 export default class DBFolder extends DBModel<DFolder>{
@@ -16,6 +16,10 @@ export default class DBFolder extends DBModel<DFolder>{
 	}
 
 	reader(){
-		return new FolderReader(this._object);
+		return new DBFolderReader(this.object);
+	}
+
+	on(){
+		return new DBFolderListener(this.object);
 	}
 }

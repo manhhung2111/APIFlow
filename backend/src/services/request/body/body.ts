@@ -1,4 +1,4 @@
-export default abstract class RequestBody {
+export default abstract class RequestBody{
 	public static None: number = 0;
 	public static FormData: number = 1;
 	public static FormEncoded: number = 2;

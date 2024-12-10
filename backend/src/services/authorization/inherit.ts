@@ -1,5 +1,5 @@
 import {Authorization} from "@services/authorization";
-import {Code, HTMLInput} from "@ap/core";
+import {Code} from "@ap/core";
 
 export default class InheritAuthorization extends Authorization{
 	protected type: number = Authorization.InheritAuth;

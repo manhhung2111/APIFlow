@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import CollectionModel from "@models/collection";
 import {DCollection} from "@db-schemas";
-import {CollectionReader} from "@dev/collection";
+import {DBCollectionListener, DBCollectionReader} from "@dev/collection";
 import {Model} from "mongoose";
 
 export default class DBCollection extends DBModel<DCollection>{
@@ -16,6 +16,10 @@ export default class DBCollection extends DBModel<DCollection>{
 	}
 
 	reader(){
-		return new CollectionReader(this._object);
+		return new DBCollectionReader(this.object);
+	}
+
+	on(){
+		return new DBCollectionListener(this.object);
 	}
 }

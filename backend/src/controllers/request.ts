@@ -1,14 +1,13 @@
 import {Request, Response} from "express";
 import {Code, HTMLInput} from "@ap/core";
-import {Request as DBRequest, RequestLoader} from "@dev/request";
-import {DBCondition} from "@ap/db";
-import {Example, ExampleLoader} from "@dev/example";
+import {DBRequest as DBRequest, DBRequestLoader} from "@dev/request";
 import mongoose from "mongoose";
 import {DBWorkspace} from "@dev/workspace";
 import logger from "@utils/logger";
 import {RequestService, RequestServiceReader} from "@services/request";
 
 export const createNewRequest = async (request: Request, response: Response) => {
+	logger.info("[Controller] Create new request");
 	try{
 		const request = await DBRequest.initialize() as DBRequest;
 
@@ -18,32 +17,29 @@ export const createNewRequest = async (request: Request, response: Response) => 
 
 		response.status(201).json(Code.success("Create new request successfully!"));
 	} catch (error){
+		logger.error((error as Error).message);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 
 export const deleteRequest = async (request: Request, response: Response) => {
+	logger.info("[Controller] Delete request");
+
 	const session = await mongoose.startSession();
 	session.startTransaction();
 
 	try{
-		const request_id = HTMLInput.param("request_id");
-		const workspace_id = HTMLInput.param("workspace_id");
-
-		let sc = new DBCondition().setFilter({workspace_id: workspace_id, _id: request_id});
-		const request = await DBRequest.findOne(sc) as DBRequest;
+		const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
 		if (!request.good()){
 			response.status(204).json(Code.error(Code.INVALID_DATA));
 		}
 
-		sc = new DBCondition().setFilter({workspace_id: workspace_id, request_id: request_id});
+		await request.delete(session);
 
-		await Example.deleteMany(sc);
-
-		await request.delete();
+		await request.on().deleted(session);
 
 		await session.commitTransaction();
-		response.status(204).json(Code.success(`Delete workspace \"${request.getField("name")}\" successfully.`));
+		response.status(204).json(Code.success(`Delete request \"${request.getField("name")}\" successfully.`));
 	} catch (error){
 		await session.abortTransaction();
 
@@ -55,33 +51,27 @@ export const deleteRequest = async (request: Request, response: Response) => {
 };
 
 export const duplicateRequest = async (request: Request, response: Response) => {
+	logger.info("[Controller] Duplicate request");
+
 	const session = await mongoose.startSession();
 	session.startTransaction();
 
 	try{
-		const request_id = HTMLInput.param("request_id");
-		const workspace_id = HTMLInput.param("workspace_id");
-
-		let sc = new DBCondition().setFilter({workspace_id: workspace_id, _id: request_id});
-		const old_request = await DBRequest.findOne(sc) as DBRequest;
+		const old_request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
 		if (!old_request.good()){
 			response.status(204).json(Code.error(Code.INVALID_DATA));
 		}
 
 		const new_request = await DBRequest.initialize() as DBRequest;
+
 		await new_request.reader().duplicate(old_request);
+
 		await new_request.save(session);
 
-		const old_examples = await ExampleLoader.byRequest(old_request);
-		for (const old_example of old_examples){
-			const new_example = await Example.initialize() as Example;
-			await new_example.reader().duplicate(old_example);
-			await new_example.save(session);
-		}
-
+		await new_request.on().duplicated(old_request, session);
 
 		await session.commitTransaction();
-		response.status(204).json(Code.success(`Delete workspace \"${old_request.getField("name")}\" successfully.`));
+		response.status(204).json(Code.success(`Duplicate request \"${old_request.getField("name")}\" successfully.`));
 	} catch (error){
 		await session.abortTransaction();
 
@@ -92,16 +82,16 @@ export const duplicateRequest = async (request: Request, response: Response) => 
 	}
 };
 
-export const getAllRequests = async (request: Request, response: Response) => {
-	try{
-		const workspace_id = HTMLInput.param("workspace_id");
+export const getRequestsByWorkspace = async (request: Request, response: Response) => {
+	logger.info("[Controller] Get requests by workspace");
 
-		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+	try{
+		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
 		if (!workspace.good()){
 			response.status(204).json(Code.error(Code.INVALID_DATA));
 		}
 
-		const requests = await RequestLoader.byWorkspace(workspace);
+		const requests = await DBRequestLoader.byWorkspace(workspace.object!);
 		const requests_compact = requests.map(request => request.releaseCompact());
 
 		response.status(200).json(Code.success("Get all requests successfully.", {requests: requests_compact}));
@@ -112,17 +102,18 @@ export const getAllRequests = async (request: Request, response: Response) => {
 };
 
 export const getRequestById = async (request: Request, response: Response) => {
-	try{
-		const request_id = HTMLInput.param("request_id");
+	logger.info("[Controller] Get request by id");
 
-		const request = await DBRequest.initialize(request_id);
+	try{
+		const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
 		if (!request.good()){
 			response.status(400).json(Code.error(Code.INVALID_DATA));
 		}
 
-		response.status(200).json(Code.success(`Get request with id = ${request_id} successfully`, {request: request.release()}));
+		response.status(200).json(Code.success(`Get request with id = ${request.getField("_id")} successfully`, {request: request.release()}));
 	} catch (error){
-		response.status(500).json((error as Error).message);
+		logger.error((error as Error).message);
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 
@@ -131,6 +122,8 @@ export const moveRequest = async (request: Request, response: Response) => {
 };
 
 export const sendRequest = async (request: Request, response: Response) => {
+	logger.info("[Controller] Send a request");
+
 	try{
 		const request_reader = new RequestServiceReader();
 		request_reader.readMethod()
@@ -166,14 +159,17 @@ export const sendRequest = async (request: Request, response: Response) => {
 			}));
 		}
 	} catch (error){
-		response.status(500).json((error as Error).message);
+		logger.error((error as Error).message);
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 
 export const updateRequest = async (request: Request, response: Response) => {
+	logger.info("[Controller] Update request");
+
 	try{
 		const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
-		if(!request.good()){
+		if (!request.good()){
 			response.status(400).json(Code.error(Code.INVALID_DATA));
 		}
 
@@ -183,14 +179,17 @@ export const updateRequest = async (request: Request, response: Response) => {
 
 		response.status(201).json(Code.success("Save request successfully!"));
 	} catch (error){
+		logger.error((error as Error).message);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 
 export const updateRequestName = async (request: Request, response: Response) => {
+	logger.info("[Controller] Update request name");
+
 	try{
 		const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
-		if(!request.good()){
+		if (!request.good()){
 			response.status(400).json(Code.error(Code.INVALID_DATA));
 		}
 
@@ -200,14 +199,17 @@ export const updateRequestName = async (request: Request, response: Response) =>
 
 		response.status(201).json(Code.success("Update request name successfully!"));
 	} catch (error){
+		logger.error((error as Error).message);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 
 export const updateRequestContent = async (request: Request, response: Response) => {
+	logger.info("[Controller] Update request content");
+
 	try{
 		const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
-		if(!request.good()){
+		if (!request.good()){
 			response.status(400).json(Code.error(Code.INVALID_DATA));
 		}
 
@@ -217,6 +219,7 @@ export const updateRequestContent = async (request: Request, response: Response)
 
 		response.status(201).json(Code.success("Update request content successfully!"));
 	} catch (error){
+		logger.error((error as Error).message);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };

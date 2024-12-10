@@ -1,7 +1,7 @@
 import {HydratedDocument} from "mongoose";
 import {Code} from "@ap/core";
 
-export default class DBComp<T> {
+export default class DBComp<T>{
 	protected _obj: HydratedDocument<T> | null | undefined;
 
 	protected constructor(obj: HydratedDocument<T> | null | undefined){

@@ -2,12 +2,6 @@ import {Request, Response} from "express";
 import {Code, HTMLInput} from "@ap/core";
 import {DBWorkspace, DBWorkspaceLoader} from "@dev/workspace";
 import mongoose from "mongoose";
-import {Collection} from "@dev/collection";
-import {Folder} from "@dev/folder";
-import {Request as DBRequest} from "@dev/request";
-import {DBCondition} from "@ap/db";
-import {Example} from "@dev/example";
-import {Environment} from "@dev/environment";
 import logger from "@utils/logger";
 
 export const getAllWorkspaces = async (request: Request, response: Response) => {
@@ -113,19 +107,9 @@ export const deleteWorkspace = async (request: Request, response: Response) => {
 			response.status(204).json(Code.error(Code.INVALID_DATA));
 		}
 
-		let sc = new DBCondition().setFilter({workspace_id: workspace_id});
+		await workspace.delete(session);
 
-		await Collection.deleteMany(sc, session);
-
-		await Folder.deleteMany(sc, session);
-
-		await DBRequest.deleteMany(sc, session);
-
-		await Example.deleteMany(sc, session);
-
-		await Environment.deleteMany(sc, session);
-
-		await workspace.delete();
+		await workspace.on().deleted();
 
 		await session.commitTransaction();
 

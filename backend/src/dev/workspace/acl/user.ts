@@ -8,13 +8,6 @@ export default class UserACL extends DBUserAcl<DWorkspace>{
 	private _editable: boolean = false;
 	private _full_access: boolean = false;
 
-	protected __init(){
-		this._viewable = this.canView();
-		this._commentable = this.canComment();
-		this._editable = this.canEdit();
-		this._full_access = this._obj?.user_id.toString() === this._user_id;
-	}
-
 	public canView(): boolean{
 		let viewer_ids = this._obj?.viewers.map(id => id.toString()) ?? [];
 		let commenter_ids = this._obj?.commenters.map(id => id.toString()) ?? [];
@@ -53,5 +46,12 @@ export default class UserACL extends DBUserAcl<DWorkspace>{
 			"editable": this._editable,
 			"full_access": this._full_access,
 		};
+	}
+
+	protected __init(){
+		this._viewable = this.canView();
+		this._commentable = this.canComment();
+		this._editable = this.canEdit();
+		this._full_access = this._obj?.user_id.toString() === this._user_id;
 	}
 }

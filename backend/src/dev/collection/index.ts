@@ -1,4 +1,4 @@
-export {default as Collection} from "./collection";
-export {default as CollectionReader} from "./reader";
-export {default as CollectionLoader} from "./loader";
-export {default as CollectionListener} from "./listener";
+export {default as DBCollection} from "./collection";
+export {default as DBCollectionReader} from "./reader";
+export {default as DBCollectionLoader} from "./loader";
+export {default as DBCollectionListener} from "./listener";

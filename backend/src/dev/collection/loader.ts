@@ -1,15 +1,16 @@
-import {DBWorkspace} from "@dev/workspace";
 import {DBCondition} from "@ap/db";
-import {Collection} from "@dev/collection";
+import {DBCollection} from "@dev/collection";
+import {HydratedDocument} from "mongoose";
+import {DWorkspace} from "@db-schemas";
 
 export default class Loader{
 
-	public static async byWorkspace(workspace: DBWorkspace){
-		const workspace_id = workspace._object?._id.toString() || "";
+	public static async byWorkspace(workspace: HydratedDocument<DWorkspace>){
+		const workspace_id = workspace._id.toString();
 
-		const condition = new DBCondition().setFilter({workspace_id: workspace_id})
-			.setLimit(1);
+		const condition = new DBCondition().setFilter({"workspace_id": workspace_id})
+			.setLimit(DBCollection.PAGE_SIZE);
 
-		return await Collection.find(condition) as Collection[];
+		return await DBCollection.find(condition) as DBCollection[];
 	}
 }

@@ -1,4 +1,4 @@
-export default class RequestService {
+export default class RequestService{
 	private _method: string = "";
 	private _url: string = "";
 	private _params: Array<object> = [];
@@ -61,6 +61,6 @@ export default class RequestService {
 		// TODO: execute pre-scripts
 
 		// TODO: execute post-scripts
-		return {}
+		return {};
 	}
 }

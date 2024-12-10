@@ -8,12 +8,24 @@ export default class Reader extends DBReader<DCollection>{
 		super(obj);
 	}
 
-	public async read(data: object){
+	public async read(){
 
 	}
 
 
 	public async readPrimary(){
+
+	}
+
+	public async duplicate(){
+
+	}
+
+	public async readContent(){
+
+	}
+
+	public async readName(){
 
 	}
 }

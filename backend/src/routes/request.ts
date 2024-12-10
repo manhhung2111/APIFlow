@@ -6,8 +6,8 @@ import {
 	createNewRequest,
 	deleteRequest,
 	duplicateRequest,
-	getAllRequests,
 	getRequestById,
+	getRequestsByWorkspace,
 	moveRequest,
 	sendRequest,
 	updateRequest,
@@ -20,7 +20,7 @@ const router = express.Router();
 router.use(authentication);
 
 // Get routes
-router.get("/", workspaceViewable, getAllRequests);
+router.get("/", workspaceViewable, getRequestsByWorkspace);
 router.get("/:request_id", workspaceViewable, getRequestById);
 
 // Edit routes
