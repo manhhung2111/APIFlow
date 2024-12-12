@@ -1,6 +1,7 @@
-import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
-import viteTsconfigPaths from 'vite-tsconfig-paths';
+import react from "@vitejs/plugin-react";
+import {defineConfig} from "vite";
+import viteTsconfigPaths from "vite-tsconfig-paths";
+import {resolve} from "path";
 
 export default defineConfig({
   base: './',
@@ -10,6 +11,11 @@ export default defineConfig({
   },
   preview: {
     port: 3000,
+  },
+  resolve: {
+    alias: {
+      "@styles": resolve(__dirname, "./src/styles"),
+    },
   },
   optimizeDeps: { exclude: ['fsevents'] },
   build: {

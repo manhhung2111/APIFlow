@@ -1,0 +1,36 @@
+@use "@styles/variables" as *;
+
+.error-page {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &::before {
+    background: linear-gradient(0deg, $base-color-brand 0, rgba(255, 180, 0, 0) 100%);
+    content: "";
+    height: 100vh;
+    left: 50%;
+    position: fixed;
+    transform: translateX(-50%) translateY(50%);
+    width: 100%;
+    z-index: -1;
+  }
+
+  .container {
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: $background-color-primary;
+    border-radius: $border-radius-l;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    .error-image {
+      width: 50%;
+      aspect-ratio: 1/1;
+      border: none;
+      outline: none;
+    }
+  }
+}
