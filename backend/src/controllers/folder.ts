@@ -17,7 +17,7 @@ export const createNewFolder = async (request: Request, response: Response) => {
 
 		response.status(201).json(Code.success("Create new folder successfully!"));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -43,7 +43,7 @@ export const deleteFolder = async (request: Request, response: Response) => {
 	} catch (error){
 		await session.abortTransaction();
 
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
@@ -75,7 +75,7 @@ export const duplicateFolder = async (request: Request, response: Response) => {
 	} catch (error){
 		await session.abortTransaction();
 
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
@@ -96,7 +96,7 @@ export const getFoldersByWorkspace = async (request: Request, response: Response
 
 		response.status(200).json(Code.success("Get all folders successfully.", {folders: folders_compact}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -112,7 +112,7 @@ export const getFolderById = async (request: Request, response: Response) => {
 
 		response.status(200).json(Code.success("Get folder successfully.", {folder: folder.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -139,7 +139,7 @@ export const updateFolderContent = async (request: Request, response: Response) 
 
 		response.status(200).json(Code.success("Update folder content successfully", {folder: folder.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -159,7 +159,7 @@ export const updateFolderName = async (request: Request, response: Response) => 
 
 		response.status(200).json(Code.success("Update folder name successfully", {folders: folder.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };

@@ -13,7 +13,7 @@ export const getAllWorkspaces = async (request: Request, response: Response) => 
 
 		response.status(200).json(Code.success("Get all workspaces successfully.", {workspaces: workspaces_compact}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -31,7 +31,7 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
 
 		response.status(200).json(Code.success(`Get workspace-${workspace_id} successfully.`, {workspace: workspace.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -48,7 +48,7 @@ export const createNewWorkspace = async (request: Request, response: Response) =
 
 		response.status(201).json(Code.success(`Create a new workspace successfully.`, {workspace: workspace.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -68,7 +68,7 @@ export const updateWorkspaceName = async (request: Request, response: Response) 
 
 		response.status(201).json(Code.error(`Update workspace successfully.`, {workspace: workspace.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -88,7 +88,7 @@ export const updateWorkspaceContent = async (request: Request, response: Respons
 
 		response.status(201).json(Code.error(`Update workspace successfully.`, {workspace: workspace.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -117,7 +117,7 @@ export const deleteWorkspace = async (request: Request, response: Response) => {
 	} catch (error){
 		await session.abortTransaction();
 
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();

@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import {DBWorkspace} from "@dev/workspace";
 import logger from "@utils/logger";
 import {RequestService, RequestServiceReader} from "@services/request";
+import axios, {AxiosError} from "axios";
 
 export const createNewRequest = async (request: Request, response: Response) => {
 	logger.info("[Controller] Create new request");
@@ -17,7 +18,7 @@ export const createNewRequest = async (request: Request, response: Response) => 
 
 		response.status(201).json(Code.success("Create new request successfully!"));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -43,7 +44,7 @@ export const deleteRequest = async (request: Request, response: Response) => {
 	} catch (error){
 		await session.abortTransaction();
 
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
@@ -75,7 +76,7 @@ export const duplicateRequest = async (request: Request, response: Response) => 
 	} catch (error){
 		await session.abortTransaction();
 
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
@@ -96,7 +97,7 @@ export const getRequestsByWorkspace = async (request: Request, response: Respons
 
 		response.status(200).json(Code.success("Get all requests successfully.", {requests: requests_compact}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -112,7 +113,7 @@ export const getRequestById = async (request: Request, response: Response) => {
 
 		response.status(200).json(Code.success(`Get request with id = ${request.getField("_id")} successfully`, {request: request.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -125,10 +126,11 @@ export const sendRequest = async (request: Request, response: Response) => {
 	logger.info("[Controller] Send a request");
 
 	try{
-		const request_reader = new RequestServiceReader();
-		request_reader.readMethod()
+		const request_reader = new RequestServiceReader()
+			.readMethod()
 			.readURL()
 			.readParams()
+			.readPathVariables()
 			.readAuthorization()
 			.readCookies()
 			.readHeaders()
@@ -136,10 +138,11 @@ export const sendRequest = async (request: Request, response: Response) => {
 			.readScripts()
 			.readEnvironment();
 
-		const request = new RequestService();
-		request.setMethod(request_reader.getMethod())
+		const request = new RequestService()
+			.setMethod(request_reader.getMethod())
 			.setURL(request_reader.getURL())
 			.setParams(request_reader.getParams())
+			.setPathVariables(request_reader.getPathVariables())
 			.setCookies(request_reader.getCookies())
 			.setHeaders(request_reader.getHeaders())
 			.setAuthorization(request_reader.getAuthorization())
@@ -147,20 +150,32 @@ export const sendRequest = async (request: Request, response: Response) => {
 			.setEnvironment(request_reader.getEnvironment())
 			.setScripts(request_reader.getScripts());
 
-		try{
-			const result = await request.send();
+		const result = await request.send();
 
-			response.status(200).json(Code.success("Send request to endpoint successfully.", {...result}));
-		} catch (error){
-			response.status(502).json(Code.error((error as Error).message, {
-				code: "Error",
-				"body": JSON.stringify(error),
-				"headers": [],
-			}));
-		}
+		response.status(200).json(Code.success("Send request to endpoint successfully.", {
+			"body": result.data,
+			"headers": result.headers,
+			"status": result.status,
+			"statusText": result.statusText,
+		}));
 	} catch (error){
-		logger.error((error as Error).message);
-		response.status(500).json(Code.error((error as Error).message));
+		if (axios.isAxiosError(error)){
+			const axios_error = error as AxiosError;
+			response.status(502).json(Code.error(axios_error.message, {
+				"status": axios_error.response?.status,
+				"body": axios_error.response?.data || {},
+				"headers": axios_error.response?.headers || [],
+				"statusText": axios_error.response?.statusText || "",
+			}));
+			return;
+		}
+		logger.error((error as Error).stack);
+		response.status(500).json(Code.error((error as Error).message, {
+			"status": "Unknown",
+			"body": {"message": (error as Error).message},
+			"headers": [],
+			"statusText": "Unknown Error",
+		}));
 	}
 };
 
@@ -179,7 +194,7 @@ export const updateRequest = async (request: Request, response: Response) => {
 
 		response.status(201).json(Code.success("Save request successfully!"));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -199,7 +214,7 @@ export const updateRequestName = async (request: Request, response: Response) =>
 
 		response.status(201).json(Code.success("Update request name successfully!"));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -219,7 +234,7 @@ export const updateRequestContent = async (request: Request, response: Response)
 
 		response.status(201).json(Code.success("Update request content successfully!"));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };

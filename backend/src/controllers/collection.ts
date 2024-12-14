@@ -17,7 +17,7 @@ export const createNewCollection = async (request: Request, response: Response) 
 
 		response.status(201).json(Code.success("Create new collection successfully!"));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -43,7 +43,7 @@ export const deleteCollection = async (request: Request, response: Response) => 
 	} catch (error){
 		await session.abortTransaction();
 
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
@@ -75,7 +75,7 @@ export const duplicateCollection = async (request: Request, response: Response) 
 	} catch (error){
 		await session.abortTransaction();
 
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
@@ -96,7 +96,7 @@ export const getCollectionsByWorkspace = async (request: Request, response: Resp
 
 		response.status(200).json(Code.success("Get all collections successfully.", {collections: collections_compact}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -112,7 +112,7 @@ export const getCollectionById = async (request: Request, response: Response) =>
 
 		response.status(200).json(Code.success("Get collection successfully.", {collection: collection.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -135,7 +135,7 @@ export const updateCollectionContent = async (request: Request, response: Respon
 
 		response.status(200).json(Code.success("Update collection content successfully", {collection: collection.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
@@ -155,7 +155,7 @@ export const updateCollectionName = async (request: Request, response: Response)
 
 		response.status(200).json(Code.success("Update collection name successfully", {collection: collection.release()}));
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };

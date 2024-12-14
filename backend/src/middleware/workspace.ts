@@ -21,7 +21,7 @@ const createWorkspaceMiddleware = (checkPermission: (workspace: DBWorkspace) => 
 
 			return next();
 		} catch (error){
-			logger.error((error as Error).message);
+			logger.error((error as Error).stack);
 			response.status(500).json(Code.error((error as Error).message));
 		}
 	};

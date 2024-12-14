@@ -1,11 +1,17 @@
+import {RequestBody} from "@services/request/index";
+import axios from "axios";
+import {Code} from "@ap/core";
+import FormData from "form-data";
+
 export default class RequestService{
 	private _method: string = "";
 	private _url: string = "";
-	private _params: Array<object> = [];
-	private _authorization: object = {};
+	private _params: Array<any> = [];
+	private _path_variables: Array<any> = [];
+	private _authorization: any = {};
 	private _cookies: Array<object> = [];
-	private _headers: Array<object> = [];
-	private _body: object = {};
+	private _headers: Array<any> = [];
+	private _body: {body_type?: number, body_data?: any} = {};
 	private _environment: Array<object> = [];
 	private _scripts: object = {};
 
@@ -26,6 +32,11 @@ export default class RequestService{
 		return this;
 	}
 
+	public setPathVariables(path_variables: Array<any>){
+		this._path_variables = path_variables;
+		return this;
+	}
+
 	public setAuthorization(authorization: object){
 		this._authorization = authorization;
 		return this;
@@ -38,10 +49,11 @@ export default class RequestService{
 
 	public setHeaders(headers: Array<any>){
 		this._headers = headers.filter(header => header.selected);
+
 		return this;
 	}
 
-	public setBody(body: object){
+	public setBody(body: {body_type: number, body_data: any}){
 		this._body = body;
 		return this;
 	}
@@ -58,9 +70,96 @@ export default class RequestService{
 
 
 	public async send(){
-		// TODO: execute pre-scripts
+		let url = this.convertRequestUrl();
+		let headers = this.convertRequestHeaders();
+		let body = this.convertRequestBody();
 
-		// TODO: execute post-scripts
-		return {};
+		try{
+			// TODO: execute pre-scripts
+			const response = await axios({
+				method: this._method,
+				url: url,
+				headers: headers,
+				data: this._method === "GET" ? undefined : body,
+			});
+
+			return response;
+			// TODO: execute post-scripts
+		} catch (error){
+			if (axios.isAxiosError(error)) {
+				throw error;
+			}
+			throw new Code((error as Error).message);
+		}
+	}
+
+
+	private convertRequestBody(){
+		let request_body: any = null;
+
+		if (this._body.body_type == RequestBody.FormData){
+			const form_data = new FormData();
+
+			Object.values(this._body.body_data).forEach((row) => {
+				if (typeof row === "object" && row !== null && "key" in row && "value" in row){
+					const {key, value} = row as {key: string; value: string | Express.Multer.File[]};
+					if (Array.isArray(value)){
+						for (const file of value){
+							form_data.append(key, file.buffer, {filename: file.originalname});
+						}
+					} else{
+						form_data.append(key, value);
+					}
+				}
+			});
+
+			request_body = form_data;
+		} else if (this._body.body_type == RequestBody.FormEncoded){
+			request_body = new URLSearchParams(this._body.body_data as Record<string, string>).toString();
+		} else if (this._body.body_type == RequestBody.FormRaw){
+			request_body = JSON.stringify(this._body.body_data);
+		}
+
+
+		return request_body;
+	}
+
+	private convertRequestHeaders(){
+		const headers: any = {};
+		this._headers.forEach((header) => {
+			headers[header.key] = header.value;
+		});
+
+		if (this._body.body_type == RequestBody.FormData){
+			delete headers["Content-Type"];
+		} else if (this._body.body_type == RequestBody.FormEncoded){
+			headers["Content-Type"] = "application/x-www-form-urlencoded";
+		} else if (this._body.body_type == RequestBody.FormRaw){
+			headers["Content-Type"] = headers["Content-Type"] || "application/json";
+		}
+
+
+		return headers;
+	}
+
+	private convertRequestUrl(){
+		let url = this._url;
+
+		for (const variable of this._path_variables){
+			const value = encodeURIComponent(variable.value);
+			url = url.replace(new RegExp(`:${variable.key}`, "g"), value);
+		}
+
+		const [base_url, queries] = url.split("?");
+		const params = new URLSearchParams(queries || "");
+
+		this._params.forEach((param) => {
+			if (!param.selected) return;
+			params.set(param.key, param.value);
+		});
+
+		url = `${base_url}?${params.toString()}`;
+
+		return url;
 	}
 }

@@ -8,26 +8,38 @@ export default class HTMLInput{
 	public static PUT = 3;
 	public static DELETE = -1;
 
-	private static cur_request: Request | null = null;
+	private static _cur_request: Request | null = null;
 	private static MAX_TITLE_CHAR = 1023;
 	private static allowed_tags = [
 		"b", "center", "i", "u", "br", "p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "li", "url", "img", "code", "small", "big", "tab", "quote", "sub", "sup", "link", "image", "pre", "label",
 	];
+	private static _files: any = {};
 
 	public static readRequest(request: Request){
-		this.cur_request = request;
-	}
+		this._cur_request = request;
 
-	public static pageCounter(){
+		if (!request.files) return;
 
+		if (Array.isArray(request.files)){
+			request.files.forEach(file => {
+				if (!this._files[file.fieldname]) this._files[file.fieldname] = [];
+				this._files[file.fieldname].push(file);
+			});
+		} else if (typeof request.files === "object"){
+			for (const field in Object.keys(request.files)){
+				const files = request.files[field];
+
+				this._files[field] = [...files];
+			}
+		}
 	}
 
 	public static param(field: string = ""){
-		if (!this.cur_request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.cur_request.params[field];
+		const value = this._cur_request.params[field];
 		if (value === undefined || value === null){
 			throw new Code(`Param \"${field}\" does not exist in the URL.`);
 		}
@@ -36,11 +48,11 @@ export default class HTMLInput{
 	}
 
 	public static query(field: string = ""){
-		if (!this.cur_request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.cur_request.query[field];
+		const value = this._cur_request.query[field];
 		if (value === undefined || value === null){
 			throw new Code(`Query \"${field}\" does not exist in the URL.`);
 		}
@@ -49,19 +61,18 @@ export default class HTMLInput{
 	}
 
 	public static signedCookies(field: string = ""){
-		if (!this.cur_request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.cur_request.signedCookies[field];
+		const value = this._cur_request.signedCookies[field];
 
 		if (!value) return "";
 		return value;
 	}
 
-
 	public static inputSafe(field: string, limit_character: boolean = true){
-		if (!this.cur_request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
@@ -79,7 +90,7 @@ export default class HTMLInput{
 	}
 
 	public static inputInline(field: string){
-		if (!this.cur_request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
@@ -100,7 +111,7 @@ export default class HTMLInput{
 	}
 
 	public static inputInlineNoLimit(field: string){
-		if (!this.cur_request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
@@ -154,9 +165,12 @@ export default class HTMLInput{
 		return result;
 	}
 
-
 	public static inputEditor(field: string){
 		return "";
+	}
+
+	public static inputFile(field: string){
+		return this._files[field];
 	}
 
 	private static sanitize(text: string, style: string = ""): string{
@@ -205,7 +219,7 @@ export default class HTMLInput{
 	}
 
 	private static inputRaw(field: string): string{
-		let value = this.cur_request?.body[field] || "";
+		let value = this._cur_request?.body[field] || "";
 
 		try{
 			let json_value = JSON.parse(value);

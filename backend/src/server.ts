@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import multer from "multer";
 import morgan from "morgan";
 import {
 	CollectionRoute,
@@ -15,6 +16,7 @@ import {
 } from "@routes";
 import {HTMLInput} from "@ap/core";
 import logger from "@utils/logger";
+import {sendRequest} from "@controllers/request";
 
 dotenv.config();
 const app = express();
@@ -31,18 +33,22 @@ app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
 
 // Body form data
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({extended: false, limit: "1mb"}));
 
 // Cookies
 app.use(cookieParser(process.env.COOKIES_SECRET));
 
-// Routes
-app.use((request, response, next) => {
+// Read files
+const upload = multer({storage: multer.memoryStorage()});
+app.use(upload.any(), (request, response, next) => {
 	HTMLInput.readRequest(request);
 	next();
 });
 
+// Logger HTTP request
 app.use(morgan("dev", {stream: {write: (message) => logger.info(message.trim())}}));
+
+app.post("/send", sendRequest)
 
 app.use("/users", UserRoute);
 app.use("/workspaces", WorkspaceRoute);
@@ -67,6 +73,6 @@ app.use("/workspaces/:workspace_id/environments", EnvironmentRoute);
 			logger.info(`Server is running on port ${port}`);
 		});
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 	}
 })();

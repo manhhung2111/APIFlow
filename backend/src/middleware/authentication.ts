@@ -24,7 +24,7 @@ export default async function authentication(request: Request, response: Respons
 
 		return next();
 	} catch (error){
-		logger.error((error as Error).message);
+		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };

@@ -6,7 +6,7 @@ export default abstract class RequestBody{
 
 	protected type: number = 0;
 	protected data: any = {};
-
+	protected MAX_ROWS = 50;
 
 	public abstract readData(): void;
 

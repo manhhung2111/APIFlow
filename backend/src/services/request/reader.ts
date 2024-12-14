@@ -2,12 +2,6 @@ import {AuthorizationFactory} from "@services/authorization";
 import {RequestBodyFactory} from "@services/request";
 import {Code, HTMLInput} from "@ap/core";
 
-interface ITableStructure{
-	selected: boolean,
-	key: string,
-	value: string,
-	description: string,
-}
 
 export default class RequestServiceReader{
 	private METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"];
@@ -15,10 +9,11 @@ export default class RequestServiceReader{
 
 	private _method: string = "GET";
 	private _url: string = "";
-	private _params: Array<ITableStructure> = [];
+	private _params: Array<any> = [];
+	private _path_variables: Array<any> = [];
 	private _authorization: AuthorizationFactory | null = null;
 	private _cookies: Array<object> = [];
-	private _headers: Array<ITableStructure> = [];
+	private _headers: Array<any> = [];
 	private _body: RequestBodyFactory | null = null;
 	private _environment: Array<object> = [];
 	private _scripts: object = {};
@@ -27,7 +22,7 @@ export default class RequestServiceReader{
 		this._method = HTMLInput.inputInline("request_method");
 
 		if (!this.METHODS.includes(this._method)){
-			throw new Code("The request method is not supported yet.");
+			throw new Code(`The request method is not supported yet.`);
 		}
 
 		return this;
@@ -44,19 +39,48 @@ export default class RequestServiceReader{
 	}
 
 	public readParams(){
-		const prefix = "request_params";
-		const params: Array<ITableStructure> = [];
+		const query_prefix = "request_query_params";
+		const params: Array<any> = [];
 
 		for (let index = 0; index < this.MAX_ROWS; index++){
-			const selected = HTMLInput.inputInline(`${prefix}_selected_${index}`) == "on";
-			const key = HTMLInput.inputInline(`${prefix}_key_${index}`);
-			const value = HTMLInput.inputInline(`${prefix}_value_${index}`);
-			const description = HTMLInput.inputInline(`${prefix}_description_${index}`);
+			const selected = HTMLInput.inputInline(`${query_prefix}_selected_${index}`) == "on";
+			const key = HTMLInput.inputInline(`${query_prefix}_key_${index}`);
+			const value = HTMLInput.inputInline(`${query_prefix}_value_${index}`);
+			const description = HTMLInput.inputInline(`${query_prefix}_description_${index}`);
 
-			params.push({selected, key, value, description});
+			if (!selected && !key && !value) continue;
+			params.push({
+				"selected": selected,
+				"key": key,
+				"value": value,
+				"description": description,
+			});
 		}
 
 		this._params = params;
+
+		return this;
+	}
+
+	public readPathVariables(){
+		const query_prefix = "request_path_params";
+		const path_variables: Array<any> = [];
+
+		for (let index = 0; index < this.MAX_ROWS; index++){
+			const key = HTMLInput.inputInline(`${query_prefix}_key_${index}`);
+			const value = HTMLInput.inputInline(`${query_prefix}_value_${index}`);
+			const description = HTMLInput.inputInline(`${query_prefix}_description_${index}`);
+
+			if (!key && !value) break;
+
+			path_variables.push({
+				"key": key,
+				"value": value,
+				"description": description,
+			});
+		}
+
+		this._path_variables = path_variables;
 
 		return this;
 	}
@@ -72,7 +96,10 @@ export default class RequestServiceReader{
 	}
 
 	public readCookies(){
-		const cookies = JSON.parse(atob(HTMLInput.inputInlineNoLimit("cookies")));
+		let cookies_jar = HTMLInput.inputInlineNoLimit("cookies");
+		if (!cookies_jar) return this;
+
+		const cookies = JSON.parse(atob(cookies_jar));
 
 		cookies?.forEach((cookie: {name: string, value: string, expires: number}) => {
 			if (cookie.expires && cookie.expires < Date.now()) return;
@@ -85,7 +112,7 @@ export default class RequestServiceReader{
 
 	public readHeaders(){
 		const prefix = "request_headers";
-		const headers: Array<ITableStructure> = [];
+		const headers: Array<any> = [];
 
 		for (let index = 0; index < this.MAX_ROWS; index++){
 			const selected = HTMLInput.inputInline(`${prefix}_selected_${index}`) == "on";
@@ -93,6 +120,7 @@ export default class RequestServiceReader{
 			const value = HTMLInput.inputInline(`${prefix}_value_${index}`);
 			const description = HTMLInput.inputInline(`${prefix}_description_${index}`);
 
+			if (!selected && !key && !value) continue;
 			headers.push({"selected": selected, "key": key, "value": value, "description": description});
 		}
 
@@ -135,6 +163,10 @@ export default class RequestServiceReader{
 
 	public getParams(){
 		return this._params;
+	}
+
+	public getPathVariables(){
+		return this._path_variables;
 	}
 
 	public getAuthorization(){
