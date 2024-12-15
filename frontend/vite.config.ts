@@ -4,26 +4,26 @@ import viteTsconfigPaths from "vite-tsconfig-paths";
 import {resolve} from "path";
 
 export default defineConfig({
-  base: './',
-  plugins: [react(), viteTsconfigPaths()],
-  server: {
-    port: 3000,
-  },
-  preview: {
-    port: 3000,
-  },
-  resolve: {
-    alias: {
-      "@styles": resolve(__dirname, "./src/styles"),
+    base: './',
+    plugins: [react(), viteTsconfigPaths()],
+    server: {
+        port: 3000,
     },
-  },
-  optimizeDeps: { exclude: ['fsevents'] },
-  build: {
-    rollupOptions: {
-      external: ['fs/promises'],
-      output: {
-        experimentalMinChunkSize: 3500,
-      },
+    preview: {
+        port: 3000,
     },
-  },
+    resolve: {
+        alias: {
+            "@styles": resolve(__dirname, "./src/styles"),
+        },
+    },
+    optimizeDeps: {exclude: ['fsevents']},
+    build: {
+        rollupOptions: {
+            external: ['fs/promises'],
+            output: {
+                experimentalMinChunkSize: 3500,
+            },
+        },
+    },
 });

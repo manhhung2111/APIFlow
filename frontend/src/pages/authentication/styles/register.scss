@@ -1,0 +1,134 @@
+@use "@styles/variables" as *;
+
+.register-page {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  width: 720px;
+  margin: 40px auto;
+  column-gap: 20px;
+
+  &::before {
+    background: linear-gradient(0deg, $base-color-brand 0, rgba(255, 180, 0, 0) 100%);
+    content: "";
+    height: 100vh;
+    left: 50%;
+    position: fixed;
+    transform: translateX(-50%) translateY(50%);
+    width: 100%;
+    z-index: -1;
+  }
+
+  .left-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    padding-top: 8px;
+
+    .lb-image {
+      width: 64px;
+      aspect-ratio: 1/1;
+      border-radius: 50%;
+      border: none;
+      outline: none;
+    }
+
+    h2 {
+      font-weight: $text-weight-bold;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .signup-img {
+      position: absolute;
+      bottom: -100px;
+      margin-top: auto;
+      width: 80%;
+      z-index: -1;
+    }
+  }
+
+  .right-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 32px;
+    background-color: $background-color-primary;
+    border-radius: $border-radius-l;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+    h1 {
+      font-weight: 600;
+      font-size: $text-size-xxxl;
+    }
+
+    .form-input {
+      width: 100%;
+
+      label {
+        font-weight: 600;
+        color: #6B6B6B;
+        font-size: $text-size-m;
+      }
+
+      input {
+        font-size: $text-size-m;
+      }
+    }
+
+    .form-input-footer {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: $text-size-m;
+
+      span {
+        font-size: $text-size-m;
+      }
+
+      .link {
+        color: $content-color-link;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .submit-btn {
+      width: 100%;
+      background-color: $background-color-button-primary;
+      font-weight: $text-weight-bold;
+      transition: background-color .2s ease-in-out;
+      color: $content-color-constant;
+      cursor: pointer;
+      padding: 6px 16px;
+      outline: none;
+      border: none;
+      border-radius: $border-radius-default;
+      font-size: $text-size-m;
+
+      &:hover {
+        background-color: $background-color-button-primary-hover;
+      }
+    }
+
+    .btn {
+      width: 100%;
+      font-size: $text-size-m;
+
+      .ant-btn-icon {
+        position: absolute;
+        left: 10px;
+      }
+    }
+  }
+}
