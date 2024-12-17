@@ -7,9 +7,9 @@ export default function ForbiddenPage() {
 
     return (
         <div className="error-page">
-            <img src={LogoBrandImg} alt={"Logo brand image"} className={"lb-image"}/>
+            <img src={LogoBrandImg || ""} alt={"Logo brand image"} className={"lb-image"}/>
             <div className="container">
-                <img src={ForbiddenImg} alt={"Forbidden image"} className={"error-image"}/>
+                <img src={ForbiddenImg || ""} alt={"Forbidden image"} className={"error-image"}/>
                 <p>You are not allowed to access this resource</p>
                 <NavLink to="/">Back to home</NavLink>
             </div>

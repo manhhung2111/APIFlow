@@ -3,7 +3,7 @@ import "./index.css";
 import {BrowserRouter, Route, Routes} from "react-router";
 import LoginPage from "@pages/authentication/login";
 import RegisterPage from "@pages/authentication/register";
-import ForbiddenPage from "@pages/error/fobidden";
+import ForbiddenPage from "@pages/error/forbidden";
 import NotFoundPage from "@pages/error/not.found";
 
 const root = document.getElementById('root');

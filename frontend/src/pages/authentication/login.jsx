@@ -9,7 +9,7 @@ import useDocumentTitle from "@hooks/use.document.title";
 export default function LoginPage() {
     useDocumentTitle("APIFlow - Sign In");
 
-    async function onSubmit(event: React.ChangeEvent<HTMLFormElement>) {
+    async function onSubmit(event) {
         event.preventDefault(); // Prevent performing normal submission
 
     }

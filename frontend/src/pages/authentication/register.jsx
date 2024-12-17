@@ -1,17 +1,16 @@
-import * as React from "react";
 import SignUpImg from "@assets/images/sign.up.svg";
 import useDocumentTitle from "@hooks/use.document.title";
 import LogoBrandImg from "@assets/images/logo.brand.svg";
 import {Button, Checkbox, Divider, Input, Typography} from "antd";
 import {GithubOutlined, GoogleOutlined} from "@ant-design/icons";
-import './styles/register.scss';
+import "./styles/register.scss";
 
-const {Title, Paragraph, Text, Link} = Typography;
+const {Paragraph, Text} = Typography;
 
 export default function RegisterPage() {
     useDocumentTitle("APIFlow - Sign Up");
 
-    async function onSubmit(event: React.ChangeEvent<HTMLFormElement>) {
+    async function onSubmit(event) {
         event.preventDefault(); // Prevent performing normal submission
 
     }
