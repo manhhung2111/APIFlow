@@ -1,0 +1,54 @@
+@use "@styles/variables" as *;
+
+.super-header {
+  height: 48px;
+  background-color: $background-color-secondary;
+  box-shadow: inset 0 -1px 0 var(--border-color-strong);
+  border-bottom: 1px solid $border-color-default;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 0 12px;
+
+  .super-header-navs {
+    .workspace-btn {
+      transition: transform 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+    }
+  }
+
+  .super-header-search {
+    position: absolute;
+    left: calc(50% - 63px);
+
+    width: 180px;
+    padding: 0 8px;
+    box-sizing: border-box;
+
+    .shs-btn {
+      width: 100%;
+      border: 1px solid $border-color-strong;
+      background-color: $background-color-tertiary;
+      -webkit-box-align: center;
+      border-radius: $border-radius-default;
+      color: rgb(107, 107, 107);
+      font-weight: $text-weight-regular;
+      font-size: $text-size-m;
+
+      .ant-btn-icon {
+        font-size: $text-size-xl;
+      }
+
+      &.ant-btn-variant-outlined {
+        &:hover {
+          color: $base-color-brand;
+          border-collapse: $base-color-brand;
+        }
+      }
+    }
+  }
+
+  .super-header-side {
+
+  }
+}

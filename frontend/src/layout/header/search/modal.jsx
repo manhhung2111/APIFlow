@@ -23,7 +23,7 @@ export default function UniversalSearchModal(props){
 			open={modalState}
 			style={{top: 0, left: "50%"}}
 			closable={false}
-			afterClose={() => toggleModalState(false)}
+			onCancel={() => toggleModalState(false)}
 			footer={null}
 			mask={false}
 			className={"universal-search-modal"}

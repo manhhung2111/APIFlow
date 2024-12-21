@@ -9,9 +9,9 @@ export default function AccountModal(props){
 	return (
 		<Modal
 			open={modalState}
-			style={{top: 0, right: 0}}
+			style={{top: 42, right: 0, left: 0}}
 			closable={false}
-			afterClose={() => toggleModalState(false)}
+			onCancel={() => toggleModalState(false)}
 			footer={null}
 			mask={false}
 			className={"account-modal"}

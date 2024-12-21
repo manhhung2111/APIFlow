@@ -6,12 +6,13 @@ export default function WorkspaceSelectionModal(props){
 	const {modalState, toggleModalState, setSearchTerm} = props;
 	const navigate = useNavigate();
 
+	console.log(`Modal state >>> ${modalState}`)
 	return (
 		<Modal
-			style={{top: 48, left: 40}}
+			style={{top: 30, left: 30}}
 			open={modalState}
 			closable={false}
-			afterClose={() => toggleModalState(false)}
+			onCancel={() => toggleModalState(false)}
 			footer={null}
 			mask={false}
 			className={"workspace-selection-modal"}

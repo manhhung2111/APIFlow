@@ -10,9 +10,22 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
+    .ant-modal {
+        margin: 0 !important;
+    }
+
+    .ant-tabs-ink-bar {
+        background-color: transparent;
+    }
 }
 
 * {
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
+}
+
+#body {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
 }

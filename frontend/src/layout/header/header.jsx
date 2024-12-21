@@ -1,7 +1,7 @@
-import SuperHeaderNavs from "@components/header/navs";
-import SuperHeaderSearch from "@components/header/search";
-import SuperHeaderSide from "@components/header/side";
-
+import SuperHeaderNavs from "./navigation/navigation";
+import SuperHeaderSearch from "./search/search";
+import SuperHeaderSide from "./side/side";
+import "./header.scss";
 
 export default function SuperHeader(){
 	return (

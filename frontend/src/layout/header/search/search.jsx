@@ -9,7 +9,7 @@ export default function SuperHeaderSearch(){
 
 	return (
 		<div className="super-header-search">
-			<Button icon={<SearchOutlined/>} iconPosition={"start"} className="shs-btn"
+			<Button icon={<SearchOutlined />} iconPosition={"start"} className="shs-btn"
 					onClick={() => toggleModalState(true)}>
 				Search APIFlow
 			</Button>

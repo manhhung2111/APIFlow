@@ -18,14 +18,15 @@ export default function SuperHeaderNavs(){
 	return (
 		<div className="super-header-navs">
 			<Button type="text" onClick={() => navigate("/")}>Home</Button>
-			<Button type="text" onClick={() => toggleModalState(!modalState)}
+			<Button className={`workspace-btn ${modalState && "active"}`} type="text"
+					onClick={() => toggleModalState(!modalState)}
 					icon={modalState ? <UpOutlined/> : <DownOutlined/>} iconPosition={"end"}>
 				Workspace
 			</Button>
 
 			<WorkspaceSelectionModal
 				modalState={modalState}
-				setModalState={toggleModalState}
+				toggleModalState={toggleModalState}
 				setSearchTerm={setSearchTerm}
 			/>
 		</div>
