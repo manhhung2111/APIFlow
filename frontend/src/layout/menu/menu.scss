@@ -7,7 +7,6 @@
   height: calc(100vh - 48px);
   background-color: $background-color-secondary;
 
-
   .menu-header {
     border-bottom: 1px solid $border-color-default;
     height: 40px;
@@ -66,12 +65,12 @@
         background-color: #E6E6E6;
 
         .ant-tabs-tab-btn {
-          color: $content-color-primary;
+          color: $base-color-brand;
 
         }
       }
 
-      .icon-wrapper {
+      .base-label {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -83,6 +82,7 @@
 
         .title {
           font-size: $text-size-s;
+          font-weight: $text-weight-thick;
         }
       }
     }
@@ -114,13 +114,40 @@
     }
 
     .ant-menu-inline {
+      margin-top: 4px;
       background-color: transparent;
       border-inline-end: none;
+      font-size: $text-size-m;
+
+      .ant-menu-submenu-title {
+        margin-block: 0;
+        border-radius: $border-radius-default;
+        font-weight: $text-weight-regular;
+        .ant-menu-title-content {
+          a {
+            display: inline-block;
+            width: 100%;
+            color: $content-color-primary;
+          }
+        }
+      }
+
+      .ant-menu-submenu-title[aria-expanded="true"] .menu-item-icon {
+        transform: rotateX(180deg);
+        transition: transform 0.3s;
+      }
+
+      .menu-item-icon {
+        top: 40%;
+        transform: rotateX(0deg);
+        transition: transform 0.3s;
+      }
 
       .ant-menu-submenu-selected >.ant-menu-submenu-title {
         color: $base-color-brand;
         font-weight: $text-weight-bold;
       }
+
       .ant-menu-sub.ant-menu-inline {
         background-color: transparent;
       }

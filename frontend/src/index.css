@@ -29,3 +29,13 @@
     display: grid;
     grid-template-columns: 1fr 4fr;
 }
+
+.master-menu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ant-dropdown-menu-title-content {
+    font-size: 12px;
+}
