@@ -39,3 +39,10 @@ export const examples = [
 	{id: 8, request_id: 9, folder_id: 7, collection_id: 3, name: "Example 2", content: "This is example 2"},
 	{id: 9, request_id: 9, folder_id: 7, collection_id: 3, name: "Example 1", content: "This is example 1"},
 ];
+
+export const environments = [
+	{id: 1, name: 'Globals', scope: 0},
+	{id: 2, name: "Environment 1", scope: 1},
+	{id: 3, name: "Environment 2", scope: 1},
+	{id: 4, name: "Environment 3", scope: 1}
+]

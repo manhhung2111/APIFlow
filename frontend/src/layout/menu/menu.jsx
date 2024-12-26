@@ -1,24 +1,34 @@
 import {Button, Tabs} from "antd";
 import "./menu.scss";
-import {AppstoreOutlined, UserOutlined} from "@ant-design/icons";
+import {UserOutlined} from "@ant-design/icons";
 import PrimaryMenu from "@layout/menu/primary.jsx";
 import CollectionIcon from "@assets/icons/collection.jsx";
 import {BaseLabel} from "@utils/text.jsx";
 import {useContext} from "react";
 import {AppContext} from "@contexts/app.jsx";
 import Menu from "@utils/menu/menu.jsx";
-
+import EnvironmentMenu from "@layout/menu/environment.jsx";
+import FolderEnvironmentIcon from "@assets/icons/folder.environment.jsx";
 
 export default function MasterMenu(){
-	const {menuItems} = useContext(AppContext)
+	const {menuItems, environments} = useContext(AppContext)
 	const {collections, folders, requests, examples} = menuItems;
+
 	const primaryMenuItems = Menu.constructPrimaryMenu(collections, folders, requests, examples);
+	const [globalEnvItems, environmentItems] = Menu.constructEnvironmentMenu(environments);
 
 	const items = [
-		{label: <BaseLabel icon={<CollectionIcon  size={16}/>} title={"Collections"}/>, key: 1, children: <PrimaryMenu items={primaryMenuItems}/>},
-		{label: <BaseLabel icon={<AppstoreOutlined  size={16}/>} title={"Environments"}/>, key: 2, children: "Content of tab 2"},
+		{
+			label: <BaseLabel icon={<CollectionIcon style={{fontSize: "16px"}}/>} title={"Collections"}/>,
+			key: 1,
+			children: <PrimaryMenu items={primaryMenuItems}/>
+		},
+		{
+			label: <BaseLabel icon={<FolderEnvironmentIcon style={{fontSize: "16px"}}/>} title={"Environments"}/>,
+			key: 2,
+			children: <EnvironmentMenu globalEnv={globalEnvItems} environments={environmentItems} />
+		},
 	]
-
 
 
 	return (

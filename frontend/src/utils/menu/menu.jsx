@@ -3,18 +3,19 @@ import {ApiOutlined, FolderOutlined, PaperClipOutlined} from "@ant-design/icons"
 import {NavLink} from "react-router";
 import MasterMenuItem from "@utils/menu/item.jsx";
 import Collection from "@components/collection/collection.jsx";
+import EnvironmentIcon from "@assets/icons/environment.jsx";
 
 export default class Menu{
 
 	static constructPrimaryMenu(collections, folders, requests, examples){
 		return collections.map(collection => {
-			const assoc_folders = folders.filter(folder => folder.collection_id === collection.id);
-			const assoc_requests_folders = requests.filter(request => request.collection_id === collection.id && request.folder_id !== null);
-			const assoc_requests = requests.filter(request => request.collection_id === collection.id && request.folder_id == null)
-			const assoc_examples = examples.filter(example => example.collection_id === collection.id);
+			const assocFolders = folders.filter(folder => folder.collection_id === collection.id);
+			const assocRequestsFolders = requests.filter(request => request.collection_id === collection.id && request.folder_id !== null);
+			const assocRequests = requests.filter(request => request.collection_id === collection.id && request.folder_id == null)
+			const assocExamples = examples.filter(example => example.collection_id === collection.id);
 
-			const folders_children = this.#renderFolders(assoc_folders, assoc_requests_folders, assoc_examples);
-			const requests_children = this.#renderRequests(assoc_requests, assoc_examples)
+			const folders_children = this.#renderFolders(assocFolders, assocRequestsFolders, assocExamples);
+			const requests_children = this.#renderRequests(assocRequests, assocExamples)
 			const children = [...folders_children, ...requests_children];
 			return {
 				key: `menu_collection_${collection.id}`,
@@ -23,6 +24,28 @@ export default class Menu{
 				...(children.length ? {children: children} : {})
 			}
 		});
+	}
+
+	static constructEnvironmentMenu(environments){
+		let globalItems = [];
+		let environmentItems = [];
+
+		environments.forEach(environment => {
+			if (environment.scope === 1) {
+				return environmentItems.push({
+					key: `environment_${environment.id}`,
+					label: <MasterMenuItem url={`environments/${environment.id}`} title={environment.name}/>,
+					icon: <EnvironmentIcon style={{fontSize: "14px"}}/>
+				});
+			}
+			return globalItems.push({
+				key: `global_environment_${environment.id}`,
+				label: <MasterMenuItem url={`environments/globals`} title={environment.name}/>,
+				icon: <EnvironmentIcon style={{fontSize: "14px"}}/>
+			});
+		});
+
+		return [globalItems, environmentItems];
 	}
 
 	static #renderFolders(folders, requests, examples){

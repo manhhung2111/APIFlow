@@ -1,5 +1,5 @@
 import {createContext} from "react";
-import {collections, examples, folders, requests} from "../data.js";
+import {collections, examples, folders, requests, environments} from "../data.js";
 
 export const AppContext = createContext({});
 
@@ -9,7 +9,7 @@ export default function AppContextProvider(props){
 	const menuItems = {collections, folders, requests, examples};
 
 	return (
-		<AppContext.Provider value={{menuItems}}>
+		<AppContext.Provider value={{menuItems, environments}}>
 			{children}
 		</AppContext.Provider>
 	);

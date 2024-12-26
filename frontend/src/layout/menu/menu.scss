@@ -94,7 +94,7 @@
       overflow-y: auto;
       height: calc(100vh - 48px - 41px);
 
-      scrollbar-gutter: stable;
+      scrollbar-gutter: stable both-edges;
       &:active::-webkit-scrollbar-thumb,
       &:focus::-webkit-scrollbar-thumb,
       &:hover::-webkit-scrollbar-thumb {
@@ -118,7 +118,9 @@
       background-color: transparent;
       border-inline-end: none;
       font-size: $text-size-m;
-
+      .ant-menu-item {
+        margin-block: 0;
+      }
       .ant-menu-submenu-title {
         margin-block: 0;
         border-radius: $border-radius-default;
@@ -152,5 +154,11 @@
         background-color: transparent;
       }
     }
+  }
+}
+
+.environment-menu {
+  .ant-divider {
+    margin: 4px 0 0;
   }
 }

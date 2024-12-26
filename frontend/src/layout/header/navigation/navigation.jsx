@@ -7,8 +7,8 @@ import WorkspaceSelectionModal from "./modal.jsx";
 
 export default function SuperHeaderNavs(){
 	const [modalState, toggleModalState] = useToggle(false);
-	const [search_term, setSearchTerm] = useState("");
-	const debouncedSearchTerm = useDebounce(search_term, 500);
+	const [searchTerm, setSearchTerm] = useState("");
+	const debouncedSearchTerm = useDebounce(searchTerm, 500);
 	const navigate = useNavigate();
 
 	useEffect(() => {

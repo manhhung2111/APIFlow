@@ -9,12 +9,16 @@ export default function ActionManager(props){
 	};
 
 	return (
-		<Dropdown menu={{items: am}} placement="bottomRight" className="action-manager">
-			<Button
-				type="text"
-				icon={<MoreOutlined/>}
-				onClick={handleClick} // Stop propagation on button click
-			/>
-		</Dropdown>
+		<>
+			{am && (
+				<Dropdown menu={{ items: am }} placement="bottomRight" className="action-manager">
+					<Button
+						type="text"
+						icon={<MoreOutlined />}
+						onClick={handleClick} // Stop propagation on button click
+					/>
+				</Dropdown>
+			)}
+		</>
 	);
 }
