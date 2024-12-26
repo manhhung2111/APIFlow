@@ -1,33 +1,36 @@
-import {Button, Input, Modal} from "antd";
-import WorkspaceList from "@components/workspace/board/list";
-import {useNavigate} from "react-router";
+import {Button, Input} from "antd";
+import {NavLink, useNavigate} from "react-router";
+import {UserOutlined} from "@ant-design/icons";
 
 export default function WorkspaceSelectionModal(props){
-	const {modalState, toggleModalState, setSearchTerm} = props;
+	const {setSearchTerm} = props;
 	const navigate = useNavigate();
+	const workspaces = [
+		{id: 1, name: "Workspace 1"},
+		{id: 2, name: "Workspace 2"},
+	];
 
 	return (
-		<Modal
-			style={{top: 30, left: 30}}
-			open={modalState}
-			closable={false}
-			onCancel={() => toggleModalState(false)}
-			footer={null}
-			mask={false}
-			className={"workspace-selection-modal"}
-		>
-			<div className={"modal-header"}>
-				<Input placeholder="Search workspaces" onChange={(e) => setSearchTerm(e.target.value)}/>;
+		<div className="workspace-selection-modal">
+			<div className="wsm-header">
+				<Input placeholder="Search workspaces" onChange={(e) => setSearchTerm(e.target.value)}/>
 				<Button color="default" variant="filled" onClick={() => {
 					navigate("workspace/create");
 				}}>
 					Create Workspace
 				</Button>
 			</div>
-			<div className={"modal-main"}>
+			<div className="wsm-main">
 				<h6>Recently visited</h6>
-				<WorkspaceList/>
+				<div className="workspace-list">
+					{workspaces.map(workspace => (
+						<NavLink key={`workspace-${workspace.id}`} to={`workspace/${workspace.id}`}
+								 className="workspace-item">
+							<UserOutlined style={{fontSize: "16px"}}/> &nbsp;{workspace.name}
+						</NavLink>
+					))}
+				</div>
 			</div>
-		</Modal>
+		</div>
 	)
 }

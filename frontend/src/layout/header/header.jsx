@@ -1,7 +1,8 @@
 import SuperHeaderNavs from "./navigation/navigation";
 import SuperHeaderSearch from "./search/search";
 import SuperHeaderSide from "./side/side";
-import "./header.scss";
+import "./styles/header.scss";
+import "./styles/modal.scss";
 
 export default function SuperHeader(){
 	return (

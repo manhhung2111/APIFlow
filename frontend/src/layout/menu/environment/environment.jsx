@@ -15,6 +15,7 @@ const EnvironmentMenu = (props) => {
 				openKeys={stateOpenKeys}
 				onOpenChange={onOpenChange}
 				items={globalEnv}
+				inlineIndent={16}
 			/>
 			<Divider />
 			<Menu
@@ -22,6 +23,7 @@ const EnvironmentMenu = (props) => {
 				openKeys={stateOpenKeys}
 				onOpenChange={onOpenChange}
 				items={environments}
+				inlineIndent={16}
 			/>
 		</div>
 	);

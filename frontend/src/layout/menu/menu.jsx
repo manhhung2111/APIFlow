@@ -1,13 +1,13 @@
 import {Button, Tabs} from "antd";
-import "./menu.scss";
+import "./styles/menu.scss";
 import {UserOutlined} from "@ant-design/icons";
-import PrimaryMenu from "@layout/menu/primary.jsx";
+import PrimaryMenu from "@layout/menu/primary/primary.jsx";
 import CollectionIcon from "@assets/icons/collection.jsx";
 import {BaseLabel} from "@utils/text.jsx";
 import {useContext} from "react";
 import {AppContext} from "@contexts/app.jsx";
 import Menu from "@utils/menu/menu.jsx";
-import EnvironmentMenu from "@layout/menu/environment.jsx";
+import EnvironmentMenu from "@layout/menu/environment/environment.jsx";
 import FolderEnvironmentIcon from "@assets/icons/folder.environment.jsx";
 
 export default function MasterMenu(){

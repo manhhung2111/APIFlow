@@ -1,12 +1,11 @@
-import {useDebounce, useToggle} from "@uidotdev/usehooks";
-import {Button} from "antd";
+import {useDebounce} from "@uidotdev/usehooks";
+import {Button, Dropdown, Space} from "antd";
 import {useNavigate} from "react-router";
-import {DownOutlined, UpOutlined} from "@ant-design/icons";
+import {DownOutlined} from "@ant-design/icons";
 import {useEffect, useState} from "react";
-import WorkspaceSelectionModal from "./modal.jsx";
+import WorkspaceSelectionModal from "@layout/header/navigation/modal.jsx";
 
 export default function SuperHeaderNavs(){
-	const [modalState, toggleModalState] = useToggle(false);
 	const [searchTerm, setSearchTerm] = useState("");
 	const debouncedSearchTerm = useDebounce(searchTerm, 500);
 	const navigate = useNavigate();
@@ -18,17 +17,21 @@ export default function SuperHeaderNavs(){
 	return (
 		<div className="super-header-navs">
 			<Button type="text" onClick={() => navigate("/")}>Home</Button>
-			<Button className={`workspace-btn ${modalState && "active"}`} type="text"
-					onClick={() => toggleModalState(!modalState)}
-					icon={modalState ? <UpOutlined/> : <DownOutlined/>} iconPosition={"end"}>
-				Workspace
-			</Button>
 
-			<WorkspaceSelectionModal
-				modalState={modalState}
-				toggleModalState={toggleModalState}
-				setSearchTerm={setSearchTerm}
-			/>
+			<Dropdown
+				dropdownRender={() => (<WorkspaceSelectionModal setSearchTerm={setSearchTerm}/>)}
+				trigger={['click']}
+				placement="bottomLeft"
+				className="workspace-btn"
+			>
+				<Space>
+					<Button type="text">
+						Workspace
+						<DownOutlined className="dropdown-icon"/>
+					</Button>
+				</Space>
+			</Dropdown>
 		</div>
+
 	);
 };
