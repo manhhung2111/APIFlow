@@ -22,11 +22,6 @@
     box-sizing: border-box;
 }
 
-#body {
-    display: grid;
-    grid-template-columns: 1fr 4fr;
-}
-
 .master-menu-item {
     display: flex;
     justify-content: space-between;
@@ -39,4 +34,11 @@
 
 .ant-modal .ant-modal-content {
     padding: 0;
+}
+
+.rs-tooltip {
+    font-size: 12px;
+    .ant-tooltip-inner {
+        color: #212121;
+    }
 }

@@ -1,0 +1,30 @@
+@use "@styles/variables" as *;
+
+.request-sidebar {
+  width: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-left: 1px solid $border-color-default;
+  height: calc(100vh - 48px - 41px);
+  align-items: center;
+  padding: 4px;
+  .rs-item {
+    width: 100%;
+    padding: 8px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: $border-radius-default;
+    &:hover {
+      background-color: rgb(237, 237, 237);
+      .anticon {
+        color: $content-color-primary;
+      }
+    }
+
+    .anticon {
+      font-size: 16px;
+      color: $content-color-secondary;
+    }
+  }
+}
