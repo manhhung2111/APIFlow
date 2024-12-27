@@ -1,18 +1,22 @@
-import {Avatar} from "antd";
-import {UserOutlined} from "@ant-design/icons";
-import {useToggle} from "@uidotdev/usehooks";
+import {Avatar, Dropdown} from "antd";
+import {QuestionCircleOutlined, SettingOutlined, UserOutlined} from "@ant-design/icons";
 import AccountModal from "@layout/header/side/modal.jsx";
+import {NavLink} from "react-router";
 
 export default function SuperHeaderSide(){
-	const [modalState, toggleModalState] = useToggle(false);
 
 	return (
 		<div className="super-header-side">
-			<Avatar icon={<UserOutlined/>} onClick={() => toggleModalState(!modalState)}/>
-			<AccountModal
-				modalState={modalState}
-				toggleModalState={toggleModalState}
-			/>
+			<NavLink to={"helpdesk"} className="shs-item"><QuestionCircleOutlined style={{fontSize: "16px"}}/></NavLink>
+			<SettingOutlined style={{fontSize: "16px"}} className="shs-item"/>
+			<Dropdown
+				dropdownRender={() => (<AccountModal />)}
+				trigger={['click']}
+				placement="bottomRight"
+				className="account-dropdown shs-item"
+			>
+				<Avatar style={{ backgroundColor: '#1F509A' }} icon={<UserOutlined/>} size={"small"}/>
+			</Dropdown>
 		</div>
 	);
 }
