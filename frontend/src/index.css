@@ -10,9 +10,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    .ant-modal {
-        margin: 0 !important;
-    }
 
     .ant-tabs-ink-bar {
         background-color: transparent;
@@ -38,4 +35,8 @@
 
 .ant-dropdown-menu-title-content {
     font-size: 12px;
+}
+
+.ant-modal .ant-modal-content {
+    padding: 0;
 }

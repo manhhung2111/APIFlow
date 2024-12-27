@@ -26,7 +26,7 @@ export default function SuperHeaderNavs(){
 			>
 				<Space>
 					<Button type="text">
-						Workspace
+						Workspaces
 						<DownOutlined className="dropdown-icon"/>
 					</Button>
 				</Space>

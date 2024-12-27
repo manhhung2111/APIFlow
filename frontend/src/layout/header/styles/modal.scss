@@ -44,3 +44,51 @@
     }
   }
 }
+
+.universal-search-modal {
+  top: 100px;
+  .usm-header {
+    padding: 8px 16px;
+    display: flex;
+    font-size: $text-size-m !important;
+    .ant-select-single .ant-select-selector {
+      font-size: $text-size-m;
+    }
+    border-bottom: 1px solid $border-color-strong;
+  }
+
+  .usm-main {
+    padding: 0 16px 8px;
+    .header {
+      padding: 8px 0;
+      border-bottom: 1px solid $border-color-strong;
+
+      .ant-typography {
+        font-size: $text-size-m;
+        color: $content-color-secondary;
+        font-weight: $text-weight-regular;
+      }
+      .radio-group {
+        .ant-radio-button-wrapper {
+          font-size: $text-size-m;
+          padding-inline: 8px;
+        }
+      }
+    }
+
+    .main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      img {
+        width: 50%;
+      }
+    }
+  }
+}
+
+.global-select-item {
+  .ant-select-item-option-content {
+    font-size: $text-size-m;
+  }
+}
