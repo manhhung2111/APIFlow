@@ -1,6 +1,5 @@
 import {Avatar, Dropdown} from "antd";
 import {QuestionCircleOutlined, SettingOutlined, UserOutlined} from "@ant-design/icons";
-import AccountModal from "@layout/header/side/modal.jsx";
 import {NavLink} from "react-router";
 import AccountProfileIcon from "@assets/icons/account.profile.jsx";
 import SignOutIcon from "@assets/icons/signout.jsx";

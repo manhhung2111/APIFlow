@@ -1,0 +1,25 @@
+.request-display-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .rdh-breadcrumb {
+    flex: 1;
+    ol {
+      height: fit-content;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      li {
+        height: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+
+  .rdh-actions {
+    width: fit-content;
+  }
+}

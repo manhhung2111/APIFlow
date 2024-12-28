@@ -11,7 +11,8 @@ export default function LoginPage() {
 
     async function onSubmit(event) {
         event.preventDefault(); // Prevent performing normal submission
-
+        // const formData = new FormData(event.target);
+        // const values = Object.fromEntries(formData);
     }
 
     return (
