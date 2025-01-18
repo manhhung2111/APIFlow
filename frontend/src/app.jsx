@@ -5,11 +5,12 @@ import RequestSidebar from "@components/request/sidebar/sidebar.jsx";
 import '@components/request/styles/index.scss'
 import "./index.scss";
 import RequestEditorUrl from "@components/request/display/editor/url.jsx";
+import RequestEditorUrlMain from "@components/request/display/editor/main.jsx";
+import RequestContextProvider from "@contexts/request.jsx";
 
 function App() {
-
     return (
-        <>
+        <RequestContextProvider>
             <SuperHeader/>
             <div id="body">
                 <div className={"master-menu-wrapper"}>
@@ -21,15 +22,17 @@ function App() {
                     </div>
                     <div className="mmw-main">
                         <div className="rm-main">
-                            <div className="request-header">
-                                <RequestDisplayHeader/>
-                            </div>
-                            <div className="request-main">
-                                <div className="rm-editor">
-                                    <RequestEditorUrl />
+                                <div className="request-header">
+                                    <RequestDisplayHeader/>
                                 </div>
-                                <div className="rm-response"></div>
-                            </div>
+                                <div className="request-main">
+                                    <div className="rm-editor">
+                                        <RequestEditorUrl />
+                                        <RequestEditorUrlMain />
+                                    </div>
+                                    <div className="rm-response"></div>
+                                </div>
+
                         </div>
                         <div className="sidebar">
                             <RequestSidebar/>
@@ -37,7 +40,7 @@ function App() {
                     </div>
                 </div>
             </div>
-        </>
+        </RequestContextProvider>
     );
 }
 
