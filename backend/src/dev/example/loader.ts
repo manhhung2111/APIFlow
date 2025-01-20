@@ -1,5 +1,5 @@
 import DbCondition from "@ap/db/db.condition";
-import {Example} from "@dev/example";
+import {DBExample} from "@dev/example";
 import {HydratedDocument} from "mongoose";
 import {DRequest} from "@db-schemas";
 
@@ -10,6 +10,6 @@ export default class Loader{
 		const workspace_id = request.workspace_id.toString();
 
 		const sc = new DbCondition().setFilter({"request_id": request_id, "workspace_id": workspace_id});
-		return await Example.find(sc) as Example[];
+		return await DBExample.find(sc) as DBExample[];
 	}
 }

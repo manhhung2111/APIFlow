@@ -1,5 +1,5 @@
 import {DBCondition} from "@ap/db";
-import {User} from "@dev/user";
+import {DBUser} from "@dev/user";
 
 export default class Loader{
 
@@ -7,6 +7,6 @@ export default class Loader{
 		const condition = new DBCondition().setFilter({email: email})
 			.setLimit(1);
 
-		return await User.findOne(condition) as User;
+		return await DBUser.findOne(condition) as DBUser;
 	}
 }

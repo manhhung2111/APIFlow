@@ -1,5 +1,5 @@
 import {Code, HTMLInput, Validation} from "@ap/core";
-import {UserLoader} from "@dev/user";
+import {DBUserLoader} from "@dev/user";
 import bcrypt from "bcrypt";
 
 export default class UserService{
@@ -12,7 +12,7 @@ export default class UserService{
 			throw new Code("Invalid email address.");
 		}
 
-		let user = await UserLoader.byEmail(email);
+		let user = await DBUserLoader.byEmail(email);
 		if (!user.good()){
 			throw new Code("Invalid Email or Password!");
 		}

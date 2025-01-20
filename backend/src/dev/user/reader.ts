@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import {HydratedDocument} from "mongoose";
 import {DBReader} from "@ap/db";
 import {Code, HTMLInput, Validation} from "@ap/core";
-import {UserLoader} from "@dev/user";
+import {DBUserLoader} from "@dev/user";
 import {DUser} from "@db-schemas";
 
 export default class Reader extends DBReader<DUser>{
@@ -20,7 +20,7 @@ export default class Reader extends DBReader<DUser>{
 			throw new Code("Invalid email address.");
 		}
 
-		const user = await UserLoader.byEmail(email);
+		const user = await DBUserLoader.byEmail(email);
 		if (user.good()){
 			throw new Code("This email is taken by another account.");
 		}

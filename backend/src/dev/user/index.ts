@@ -1,4 +1,4 @@
-export {default as User} from "./user";
-export {default as UserReader} from "./reader";
-export {default as UserLoader} from "./loader";
-export {default as UserListener} from "./listener";
+export {default as DBUser} from "./user";
+export {default as DBUserReader} from "./reader";
+export {default as DBUserLoader} from "./loader";
+export {default as DBUserListener} from "./listener";

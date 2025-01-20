@@ -1,4 +1,4 @@
-export {default as Example} from "./example";
-export {default as ExampleReader} from "./reader";
-export {default as ExampleLoader} from "./loader";
-export {default as ExampleListener} from "./listener";
+export {default as DBExample} from "./example";
+export {default as DBExampleReader} from "./reader";
+export {default as DBExampleLoader} from "./loader";
+export {default as DBExampleListener} from "./listener";

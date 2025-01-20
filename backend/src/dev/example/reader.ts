@@ -1,7 +1,7 @@
 import {HydratedDocument} from "mongoose";
 import {DBReader} from "@ap/db";
 import {DExample} from "@db-schemas";
-import {Example} from "@dev/example";
+import {DBExample} from "@dev/example";
 
 export default class Reader extends DBReader<DExample>{
 	constructor(obj: HydratedDocument<DExample> | null | undefined){
@@ -17,7 +17,7 @@ export default class Reader extends DBReader<DExample>{
 
 	}
 
-	async duplicate(old_example: Example){
+	async duplicate(old_example: DBExample){
 
 	}
 }

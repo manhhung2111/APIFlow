@@ -1,7 +1,7 @@
 import {DBModel} from "@ap/db";
 import UserModel from "@models/user";
 import {DUser} from "@db-schemas";
-import {UserReader} from "@dev/user";
+import {DBUserReader} from "@dev/user";
 import {Model} from "mongoose";
 
 export default class DBUser extends DBModel<DUser>{
@@ -16,6 +16,6 @@ export default class DBUser extends DBModel<DUser>{
 	}
 
 	reader(){
-		return new UserReader(this.object);
+		return new DBUserReader(this.object);
 	}
 }

@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {Code, JWT} from "@ap/core";
-import {User} from "@dev/user";
+import {DBUser} from "@dev/user";
 import UserService from "@services/user";
 import logger from "@utils/logger";
 
@@ -20,7 +20,7 @@ export const loginUser = async (request: Request, response: Response) => {
 
 export const registerUser = async (request: Request, response: Response) => {
 	try{
-		const user = await User.initialize() as User;
+		const user = await DBUser.initialize() as DBUser;
 
 		await user.reader().read();
 
