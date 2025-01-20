@@ -152,7 +152,14 @@ abstract class DBModel<T>{
 		return this.object.get(field);
 	}
 
-	protected export(fields: Array<string>): object{
+
+	public setField(key: string, value: any){
+		if (!this.object) return;
+		this.object.set(key, value);
+	}
+
+
+	protected export(fields: Array<string>) {
 		let data: Record<string, any> = {};
 
 		if (!this.good()) return data;

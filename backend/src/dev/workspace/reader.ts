@@ -18,6 +18,7 @@ export default class Reader extends DBReader<DWorkspace>{
 
 		await this.readName();
 		await this.readContent();
+		await this.readUsers();
 	}
 
 	public async readName(){
@@ -26,10 +27,21 @@ export default class Reader extends DBReader<DWorkspace>{
 			throw new Code("Workspace name must not be empty");
 		}
 
+		if (name.length > 255){
+			throw new Code("Workspace name too long, exceeds 255 characters");
+		}
+
 		this._obj.name = name;
 	}
 
 	public async readContent(){
 		this._obj.content = HTMLInput.inputEditor("content");
+	}
+
+
+	public async readUsers() {
+		this._obj.viewers = HTMLInput.inputList("viewers");
+		this._obj.commenters = HTMLInput.inputList("commenters");
+		this._obj.editors = HTMLInput.inputList("editors");
 	}
 }

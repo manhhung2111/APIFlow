@@ -9,7 +9,7 @@ export const getAllWorkspaces = async (request: Request, response: Response) => 
 
 	try{
 		const workspaces = await DBWorkspaceLoader.mine();
-		const workspaces_compact = workspaces.map(workspace => workspace.releaseCompact());
+		const workspaces_compact = workspaces.map(workspace => workspace.release());
 
 		response.status(200).json(Code.success("Get all workspaces successfully.", {workspaces: workspaces_compact}));
 	} catch (error){

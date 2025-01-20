@@ -22,9 +22,9 @@ export interface DWorkspace {
     name: string,
     content?: string,
 
-    viewers: Array<Types.ObjectId>,
-    commenters: Array<Types.ObjectId>,
-    editors: Array<Types.ObjectId>,
+    viewers: Array<string>,
+    commenters: Array<string>,
+    editors: Array<string>,
 
     data?: object | {},
     token: string,
@@ -36,7 +36,7 @@ export interface DWorkspace {
 export interface DWorkspaceFollowing {
     user_id: Types.ObjectId,
     creator_id: Types.ObjectId,
-    workspace_id: Types.ObjectId,
+    object_id: Types.ObjectId,
 
     name: string,
     content?: string,
@@ -45,9 +45,9 @@ export interface DWorkspaceFollowing {
     commenting?: 0 | 1,
     editing?: 0 | 1,
 
-    viewers: Array<Types.ObjectId>,
-    commenters: Array<Types.ObjectId>,
-    editors: Array<Types.ObjectId>,
+    viewers: Array<string>,
+    commenters: Array<string>,
+    editors: Array<string>,
 
     data?: object | {},
     token: string,
@@ -168,7 +168,7 @@ export interface DComment {
 
     title?: string;
     content?: string;
-    followers?: Types.ObjectId[];
+    followers?: string[];
     status?: number;
 
     data?: object | {};
