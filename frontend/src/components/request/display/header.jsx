@@ -16,7 +16,7 @@ export default function RequestDisplayHeader(){
 				className="rdh-breadcrumb"
 				separator=""
 				items={[{
-					title: <Text><HttpIcon style={{fontSize: "30px", marginRight: "5px", color: "#1F509A"}}/></Text>,
+					title: <HttpIcon style={{fontSize: "30px", marginRight: "5px", color: "#1F509A"}}/>,
 				}, {
 					title: <NavLink to={"collection/1"}>Collection 1</NavLink>
 				}, {
@@ -30,7 +30,7 @@ export default function RequestDisplayHeader(){
 				menu={{items: requestActions}}
 				type="default"
 			>
-				<SaveOutlined style={{fontSize: "14px"}} /> Actions
+				<SaveOutlined style={{fontSize: "14px"}} /> Save
 			</Dropdown.Button>
 		</div>
 	);
