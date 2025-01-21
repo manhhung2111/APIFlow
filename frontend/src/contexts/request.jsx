@@ -12,8 +12,13 @@ export default function RequestContextProvider(props){
 		{selected: 0, key: '', value: '', content: ''}
 	]);
 
+	let [authorization, setAuthorization] = useState({
+		type: 0,
+		data: {}
+	})
+
 	return (
-		<RequestContext.Provider value={{params, url, setUrl, setParams}}>
+		<RequestContext.Provider value={{url, setUrl, params, setParams, authorization, setAuthorization}}>
 			{children}
 		</RequestContext.Provider>
 	);

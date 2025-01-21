@@ -11,7 +11,7 @@ export default class RequestService{
 	private _authorization: any = {};
 	private _cookies: Array<object> = [];
 	private _headers: Array<any> = [];
-	private _body: {body_type?: number, body_data?: any} = {};
+	private _body: {type?: number, data?: any} = {};
 	private _environment: Array<object> = [];
 	private _scripts: object = {};
 
@@ -53,7 +53,7 @@ export default class RequestService{
 		return this;
 	}
 
-	public setBody(body: {body_type: number, body_data: any}){
+	public setBody(body: {type: number, data: any}){
 		this._body = body;
 		return this;
 	}
@@ -97,10 +97,10 @@ export default class RequestService{
 	private convertRequestBody(){
 		let request_body: any = null;
 
-		if (this._body.body_type == RequestBody.FormData){
+		if (this._body.type == RequestBody.FormData){
 			const form_data = new FormData();
 
-			Object.values(this._body.body_data).forEach((row) => {
+			Object.values(this._body.data).forEach((row) => {
 				if (typeof row === "object" && row !== null && "key" in row && "value" in row){
 					const {key, value} = row as {key: string; value: string | Express.Multer.File[]};
 					if (Array.isArray(value)){
@@ -114,10 +114,10 @@ export default class RequestService{
 			});
 
 			request_body = form_data;
-		} else if (this._body.body_type == RequestBody.FormEncoded){
-			request_body = new URLSearchParams(this._body.body_data as Record<string, string>).toString();
-		} else if (this._body.body_type == RequestBody.FormRaw){
-			request_body = JSON.stringify(this._body.body_data);
+		} else if (this._body.type == RequestBody.FormEncoded){
+			request_body = new URLSearchParams(this._body.data as Record<string, string>).toString();
+		} else if (this._body.type == RequestBody.FormRaw){
+			request_body = JSON.stringify(this._body.data);
 		}
 
 
@@ -130,11 +130,11 @@ export default class RequestService{
 			headers[header.key] = header.value;
 		});
 
-		if (this._body.body_type == RequestBody.FormData){
+		if (this._body.type == RequestBody.FormData){
 			delete headers["Content-Type"];
-		} else if (this._body.body_type == RequestBody.FormEncoded){
+		} else if (this._body.type == RequestBody.FormEncoded){
 			headers["Content-Type"] = "application/x-www-form-urlencoded";
-		} else if (this._body.body_type == RequestBody.FormRaw){
+		} else if (this._body.type == RequestBody.FormRaw){
 			headers["Content-Type"] = headers["Content-Type"] || "application/json";
 		}
 

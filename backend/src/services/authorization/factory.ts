@@ -34,8 +34,8 @@ export default class AuthorizationFactory{
 	public release(){
 		const object = this._authorization!.release();
 		return {
-			authorization_type: object.type,
-			authorization_data: object.data,
+			type: object.type,
+			data: object.data,
 		};
 	}
 }

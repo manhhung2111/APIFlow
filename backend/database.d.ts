@@ -82,12 +82,12 @@ export interface DRequest {
         description?: string;
     }>;
     authorization?: {
-        authorization_type: number;
-        authorization_data?: object;
+        type: number;
+        data?: object;
     };
     body?: {
-        body_type: number;
-        body_data?: object;
+        type: number;
+        data?: object;
     };
     scripts?: {
         pre_script?: string;

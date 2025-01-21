@@ -25,8 +25,8 @@ export default class RequestBodyFactory{
 	public release(){
 		const object = this._body!.release();
 		return {
-			body_type: object.type,
-			body_data: object.data,
+			type: object.type,
+			data: object.data,
 		};
 	}
 }
