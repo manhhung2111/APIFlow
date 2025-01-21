@@ -5,22 +5,7 @@ import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
 
 export default function RequestEditorParams(){
-	let {params, setParams, url, setUrl} = useContext(RequestContext);
-
-	useEffect(() => {
-		let queryString = "";
-		params.forEach(row => {
-			if (!row.selected) return;
-
-			if (queryString) queryString += '&';
-			if (row.key) queryString += row.key;
-			if (row.value) queryString += `=${row.value}`;
-		});
-
-		if (queryString) queryString = '?' + queryString;
-		let baseUrl = url.split('?')[0];
-		setUrl(baseUrl + queryString);
-	}, [params]);
+	let {body, setBody} = useContext(RequestContext);
 
 	const handleInputChange = (index, field, value) => {
 		const params_dup = _.cloneDeep(params);

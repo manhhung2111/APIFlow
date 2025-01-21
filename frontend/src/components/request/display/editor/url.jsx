@@ -1,10 +1,15 @@
 import {Button, Input, Select, Space} from "antd";
 import {SendOutlined} from "@ant-design/icons";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 
 export default function RequestEditorUrl(){
-	const {url, setUrl} = useContext(RequestContext);
+	const {url, setUrl, params, setParams} = useContext(RequestContext);
+
+	useEffect(()=>{
+		// Build params
+
+	}, [url])
 
 	const requestMethods = [
 		{value: "get", label: "GET"},
