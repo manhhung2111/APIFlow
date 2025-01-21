@@ -2,10 +2,10 @@ import {model, Schema} from "mongoose";
 import {DWorkspaceFollowing} from "@db-schemas";
 
 const schema = new Schema<DWorkspaceFollowing>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
-	creator_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
+	user_id: {type: String, required: true},
+	creator_id: {type: String, required: true},
+	object_id: {type: String, required: true},
 
-	workspace_id: {type: Schema.Types.ObjectId, ref: "Workspace"},
 	name: {type: String, required: true},
 	content: String,
 

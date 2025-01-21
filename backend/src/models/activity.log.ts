@@ -2,7 +2,7 @@ import {model, Schema} from "mongoose";
 import {DActivityLog} from "@db-schemas";
 
 const schema = new Schema<DActivityLog>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
+	user_id: {type: String, required: true},
 	meta_type: {type: String, required: true},
 
 	name: String,

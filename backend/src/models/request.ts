@@ -2,9 +2,9 @@ import {model, Schema} from "mongoose";
 import {DRequest} from "@db-schemas";
 
 const schema = new Schema<DRequest>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
-	workspace_id: {type: Schema.Types.ObjectId, ref: "Workspace", required: true},
-	collection_id: {type: Schema.Types.ObjectId, ref: "Collection", required: true},
+	user_id: {type: String, required: true},
+	workspace_id: {type: String, required: true},
+	collection_id: {type: String, required: true},
 	folder_id: {type: Schema.Types.ObjectId, ref: "Folder", default: null},
 
 	name: {type: String, required: true},

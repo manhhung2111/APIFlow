@@ -17,7 +17,7 @@ export interface DUser {
 }
 
 export interface DWorkspace {
-    user_id: Types.ObjectId,
+    user_id: string,
 
     name: string,
     content?: string,
@@ -34,9 +34,9 @@ export interface DWorkspace {
 }
 
 export interface DWorkspaceFollowing {
-    user_id: Types.ObjectId,
-    creator_id: Types.ObjectId,
-    object_id: Types.ObjectId,
+    user_id: string,
+    creator_id: string,
+    object_id: string,
 
     name: string,
     content?: string,
@@ -57,11 +57,11 @@ export interface DWorkspaceFollowing {
 }
 
 export interface DRequest {
-    user_id: Types.ObjectId;
+    user_id: string;
 
-    workspace_id: Types.ObjectId;
-    collection_id: Types.ObjectId;
-    folder_id?: Types.ObjectId | null;
+    workspace_id: string;
+    collection_id: string;
+    folder_id?: string | null;
 
     name: string;
     content?: string;
@@ -104,8 +104,8 @@ export interface DRequest {
 }
 
 export interface DRequestHistory {
-    user_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
+    user_id: string;
+    workspace_id: string;
 
     request: object;
     response: {
@@ -124,9 +124,9 @@ export interface DRequestHistory {
 }
 
 export interface DFolder {
-    user_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
-    collection_id: Types.ObjectId;
+    user_id: string;
+    workspace_id: string;
+    collection_id: string;
 
     name: string;
     content?: string;
@@ -139,8 +139,8 @@ export interface DFolder {
 }
 
 export interface DEnvironment {
-    user_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
+    user_id: string;
+    workspace_id: string;
 
     name: string;
 
@@ -160,7 +160,7 @@ export interface DEnvironment {
 }
 
 export interface DComment {
-    user_id: Types.ObjectId;
+    user_id: string;
     meta_type?: string;
 
     obj_key: string;
@@ -179,8 +179,8 @@ export interface DComment {
 }
 
 export interface DCollection {
-    user_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
+    user_id: string;
+    workspace_id: string;
 
     name: string;
     content?: string;
@@ -193,7 +193,7 @@ export interface DCollection {
 }
 
 export interface DActivityLog {
-    user_id: Types.ObjectId;
+    user_id:string;
     meta_type?: string;
 
     name?: string;
@@ -211,17 +211,17 @@ export interface DActivityLog {
 }
 
 export interface DExample {
-    user_id: Types.ObjectId;
+    user_id: string;
 
     name: string,
 
     request: object;
     response: object;
 
-    request_id: Types.ObjectId;
-    folder_id: Types.ObjectId | null;
-    collection_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
+    request_id: string;
+    folder_id: string | null;
+    collection_id: string;
+    workspace_id: string;
 
     data?: object | {};
 

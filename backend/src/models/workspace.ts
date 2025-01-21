@@ -2,14 +2,14 @@ import {model, Schema} from "mongoose";
 import {DWorkspace} from "@db-schemas";
 
 const schema = new Schema<DWorkspace>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
+	user_id: {type: String, required: true},
 
 	name: {type: String, required: true},
 	content: String,
 
-	viewers: [{type: Schema.Types.ObjectId, ref: "User"}],
-	commenters: [{type: Schema.Types.ObjectId, ref: "User"}],
-	editors: [{type: Schema.Types.ObjectId, ref: "User"}],
+	viewers: [{type: String, required: true}],
+	commenters: [{type: String, required: true}],
+	editors: [{type: String, required: true}],
 
 	data: Schema.Types.Mixed,
 	token: {type: String, required: true, unique: true},

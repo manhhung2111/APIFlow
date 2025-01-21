@@ -2,8 +2,8 @@ import {model, Schema} from "mongoose";
 import {DRequestHistory} from "@db-schemas";
 
 const schema = new Schema<DRequestHistory>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
-	workspace_id: {type: Schema.Types.ObjectId, ref: "Workspace", required: true},
+	user_id: {type: String, required: true},
+	workspace_id: {type: String, required: true},
 
 	request: Schema.Types.Mixed,
 	response: {

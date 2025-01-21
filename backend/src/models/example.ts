@@ -2,12 +2,12 @@ import {model, Schema} from "mongoose";
 import {DExample} from "@db-schemas";
 
 const schema = new Schema<DExample>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
+	user_id: {type: String, required: true},
 
-	request_id: {type: Schema.Types.ObjectId, ref: "Request", required: true},
-	folder_id: {type: Schema.Types.ObjectId, ref: "Folder", default: null},
-	collection_id: {type: Schema.Types.ObjectId, ref: "Collection", required: true},
-	workspace_id: {type: Schema.Types.ObjectId, ref: "Workspace", required: true},
+	request_id: {type: String, required: true},
+	folder_id: {type: String, required: true},
+	collection_id: {type: String, required: true},
+	workspace_id: {type: String, required: true},
 
 	name: {type: String, required: true},
 

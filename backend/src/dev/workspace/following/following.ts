@@ -13,7 +13,7 @@ export default class WorkspaceFollowing extends DBFollowing<DWorkspaceFollowing>
 
 
 	getExport(workspace: HydratedDocument<DWorkspace>, user: HydratedDocument<DUser>){
-		const workspace_admin = workspace.user_id == user._id;
+		const workspace_admin = workspace.user_id == user._id.toString();
 		const editing = workspace.editors.includes(user._id.toString()) || workspace_admin;
 		const commenting = workspace.commenters.includes(user._id.toString()) || editing || workspace_admin;
 		const viewing = workspace.viewers.includes(user._id.toString()) || commenting || editing || workspace_admin;

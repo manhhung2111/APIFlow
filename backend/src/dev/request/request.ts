@@ -8,11 +8,14 @@ export default class DBRequest extends DBModel<DRequest>{
 	protected _db: Model<DRequest> = RequestModel;
 
 	release(): object{
-		return this.export([""]);
+		return this.export(["user_id", "workspace_id", "collection_id", "folder_id", "name",
+			"content", "method", "url", "params", "headers", "authorization", "body", "scripts",
+			"tag", "data", "token", "created_at", "updated_at"]);
 	}
 
 	releaseCompact(): object{
-		return this.export([""]);
+		return this.export(["user_id", "workspace_id", "collection_id", "folder_id", "name",
+			"content", "method", "created_at", "updated_at"]);
 	}
 
 	reader(){

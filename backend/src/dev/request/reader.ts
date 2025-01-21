@@ -14,8 +14,9 @@ export default class Reader extends DBReader<DRequest>{
 
 	public async read(){
 		if (this.isCreating()){
-			this._obj.user_id = Client.viewer._id;
+			this._obj.user_id = Client.viewer._id.toString();
 			this._obj.token = UUID.randomTokenSize32();
+			this._obj.workspace_id = HTMLInput.param("workspace_id");
 		}
 
 		const request_reader = new RequestServiceReader();

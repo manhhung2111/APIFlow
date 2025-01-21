@@ -12,7 +12,7 @@ export default class Reader extends DBReader<DWorkspace>{
 
 	public async read(){
 		if (this.isCreating()){
-			this._obj.user_id = Client.viewer._id;
+			this._obj.user_id = Client.viewer._id.toString();
 			this._obj.token = UUID.randomTokenSize32();
 		}
 
