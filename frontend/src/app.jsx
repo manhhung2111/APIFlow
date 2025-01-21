@@ -18,7 +18,7 @@ function App() {
                 </div>
                 <div className="master-main-wrapper">
                     <div className="mmw-header">
-                        Header
+
                     </div>
                     <div className="mmw-main">
                         <div className="rm-main">

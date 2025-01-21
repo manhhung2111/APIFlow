@@ -52,9 +52,11 @@
       border-radius: 4px;
       line-height: 16px;
       width: 100%;
+      color: $content-color-secondary;
 
       &:hover {
         background-color: #EDEDED;
+        color: $content-color-primary;
       }
 
       & + .ant-tabs-tab {
@@ -65,8 +67,7 @@
         background-color: #E6E6E6;
 
         .ant-tabs-tab-btn {
-          color: $base-color-brand;
-
+          color: $content-color-primary;
         }
       }
 
@@ -82,7 +83,7 @@
 
         .title {
           font-size: $text-size-s;
-          font-weight: $text-weight-thick;
+          font-weight: $text-weight-regular;
         }
       }
     }
@@ -120,6 +121,7 @@
       font-size: $text-size-m;
       .ant-menu-item {
         margin-block: 0;
+
       }
       .ant-menu-submenu-title {
         margin-block: 0;
@@ -130,6 +132,24 @@
             display: inline-block;
             width: 100%;
             color: $content-color-primary;
+
+            &:hover {
+              color: $content-color-link;
+            }
+          }
+        }
+      }
+
+      .ant-menu-item {
+        .ant-menu-title-content {
+          a {
+            display: inline-block;
+            width: 100%;
+            color: $content-color-primary;
+
+            &:hover {
+              color: $content-color-link;
+            }
           }
         }
       }
