@@ -8,6 +8,30 @@ export default function RequestEditorParams(){
 	let {params, setParams, url, setUrl} = useContext(RequestContext);
 
 	useEffect(() => {
+		setParams(prev => [...prev, {selected: 1, key: '', value: '', content: ''}])
+	}, [])
+
+	const handleInputChange = (index, field, value) => {
+		const params_dup = _.cloneDeep(params);
+		params_dup[index][field] = value;
+
+		// If the last row is being edited, add a new empty row
+		if(index === params.length - 1){
+			params_dup.push({selected: 0, key: '', value: '', content: ''});
+			params_dup[index]["selected"] = true;
+		}
+		handleBuildUrl(params_dup);
+		setParams(params_dup);
+	};
+
+	const handleRemoveRow = (index) => {
+		const params_dup = _.cloneDeep(params);
+		params_dup.splice(index, 1);
+		handleBuildUrl(params_dup);
+		setParams(params_dup);
+	};
+
+	const handleBuildUrl = (params) => {
 		let queryString = "";
 		params.forEach(row => {
 			if (!row.selected) return;
@@ -19,26 +43,10 @@ export default function RequestEditorParams(){
 
 		if (queryString) queryString = '?' + queryString;
 		let baseUrl = url.split('?')[0];
-		setUrl(baseUrl + queryString);
-	}, [params]);
+		const newUrl = baseUrl + queryString;
 
-	const handleInputChange = (index, field, value) => {
-		const params_dup = _.cloneDeep(params);
-		params_dup[index][field] = value;
-
-		// If the last row is being edited, add a new empty row
-		if(index === params.length - 1){
-			params_dup.push({selected: 0, key: '', value: '', content: ''});
-			params_dup[index]["selected"] = true;
-		}
-		setParams(params_dup);
-	};
-
-	const handleRemoveRow = (index) => {
-		const params_dup = _.cloneDeep(params);
-		params_dup.splice(index, 1);
-		setParams(params_dup);
-	};
+		setUrl(newUrl);
+	}
 
 
 	return (

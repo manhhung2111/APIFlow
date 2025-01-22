@@ -7,7 +7,7 @@ export default function RequestContextProvider(props){
 
 	let [url, setUrl] = useState("https://www.google.com");
 	let [params, setParams] = useState([
-		{selected: 0, key: '', value: '', content: ''}
+
 	]);
 
 	let [authorization, setAuthorization] = useState({type: 0, data: {}});
