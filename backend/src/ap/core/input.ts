@@ -218,7 +218,7 @@ export default class HTMLInput{
 		return text;
 	}
 
-	private static inputRaw(field: string): string{
+	public static inputRaw(field: string): string{
 		let value = this._cur_request?.body[field] || "";
 
 		try{

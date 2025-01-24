@@ -8,7 +8,6 @@ import morgan from "morgan";
 import {
 	CollectionRoute,
 	EnvironmentRoute,
-	ExampleRoute,
 	FolderRoute,
 	RequestRoute,
 	UserRoute,
@@ -55,7 +54,6 @@ app.use("/workspaces", WorkspaceRoute);
 app.use("/workspaces/:workspace_id/collections", CollectionRoute);
 app.use("/workspaces/:workspace_id/folders", FolderRoute);
 app.use("/workspaces/:workspace_id/requests", RequestRoute);
-app.use("/workspaces/:workspace_id/examples", ExampleRoute);
 app.use("/workspaces/:workspace_id/environments", EnvironmentRoute);
 
 

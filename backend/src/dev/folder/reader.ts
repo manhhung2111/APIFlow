@@ -17,7 +17,7 @@ export default class Reader extends DBReader<DFolder>{
 			this._obj.user_id = Client.viewer._id.toString();
 			this._obj.token = UUID.randomTokenSize32();
 			this._obj.workspace_id = HTMLInput.param("workspace_id");
-			this._obj.collection_id = HTMLInput.param("collection_id");
+			this._obj.collection_id = HTMLInput.inputInline("collection_id");
 		}
 
 		await this.readName();

@@ -8,6 +8,26 @@ const schema = new Schema<DCollection>({
 	name: {type: String, required: true},
 	content: String,
 
+	authorization: {
+		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
+		data: Schema.Types.Mixed,
+	},
+
+	scripts: {
+		pre_script: {type: String, default: ""},
+		post_script: {type: String, default: ""},
+	},
+
+	variables: [
+		{
+			selected: Boolean,
+			variable: String,
+			type: {type: String, enum: ["text", "password"], default: "text"},
+			initial_value: String,
+			current_value: String,
+		},
+	],
+
 	data: Schema.Types.Mixed,
 	token: {type: String, required: true, unique: true},
 }, {

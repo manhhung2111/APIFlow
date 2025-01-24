@@ -94,6 +94,7 @@ export interface DRequest {
         post_script?: string;
     };
 
+    examples: Array<object>
     tag?: number;
 
     data?: object | {};
@@ -145,7 +146,8 @@ export interface DEnvironment {
     name: string;
 
     scope: number;
-    variables?: Array<{
+    variables: Array<{
+        selected: boolean,
         variable?: string;
         type?: "text" | "password";
         initial_value?: string;
@@ -185,6 +187,24 @@ export interface DCollection {
     name: string;
     content?: string;
 
+    authorization?: {
+        type: number;
+        data?: object;
+    };
+
+    scripts?: {
+        pre_script?: string;
+        post_script?: string;
+    };
+
+    variables: Array<{
+        selected: boolean,
+        variable?: string;
+        type?: "text" | "password";
+        initial_value?: string;
+        current_value?: string;
+    }>;
+
     data?: object | {};
     token: string;
 
@@ -206,26 +226,6 @@ export interface DActivityLog {
 
     data?: object | {};
 
-    created_at?: number;
-    updated_at?: number;
-}
-
-export interface DExample {
-    user_id: string;
-
-    name: string,
-
-    request: object;
-    response: object;
-
-    request_id: string;
-    folder_id: string | null;
-    collection_id: string;
-    workspace_id: string;
-
-    data?: object | {};
-
-    token: string;
     created_at?: number;
     updated_at?: number;
 }

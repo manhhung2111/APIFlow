@@ -19,6 +19,8 @@ export default class Reader extends DBReader<DRequest>{
 			this._obj.workspace_id = HTMLInput.param("workspace_id");
 		}
 
+		await this.readName();
+
 		const request_reader = new RequestServiceReader();
 		request_reader.readMethod()
 			.readURL()

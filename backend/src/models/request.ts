@@ -5,7 +5,7 @@ const schema = new Schema<DRequest>({
 	user_id: {type: String, required: true},
 	workspace_id: {type: String, required: true},
 	collection_id: {type: String, required: true},
-	folder_id: {type: Schema.Types.ObjectId, ref: "Folder", default: null},
+	folder_id: {type: String, default: null},
 
 	name: {type: String, required: true},
 	content: String,
@@ -16,18 +16,19 @@ const schema = new Schema<DRequest>({
 	params: [{key: String, value: String, description: String}],
 	headers: [{key: String, value: String, description: String}],
 	authorization: {
-		authorization_type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
-		authorization_data: Schema.Types.Mixed,
+		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
+		data: Schema.Types.Mixed,
 	},
 	body: {
-		body_type: {type: Number, enum: [0, 1, 2, 3], default: 0},
-		body_data: Schema.Types.Mixed,
+		type: {type: Number, enum: [0, 1, 2, 3], default: 0},
+		data: Schema.Types.Mixed,
 	},
 	scripts: {
 		pre_script: {type: String, default: ""},
 		post_script: {type: String, default: ""},
 	},
 
+	examples: {type: [Object]},
 	tag: {type: Number, enum: [0, 1, 2], default: 0},
 
 	data: Schema.Types.Mixed,

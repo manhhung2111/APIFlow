@@ -10,6 +10,7 @@ const schema = new Schema<DEnvironment>({
 	scope: {type: Number, enum: [0, 1], default: 0, required: true},
 	variables: [
 		{
+			selected: Boolean,
 			variable: String,
 			type: {type: String, enum: ["text", "password"], default: "text"},
 			initial_value: String,
