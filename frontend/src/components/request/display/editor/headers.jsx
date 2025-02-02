@@ -14,6 +14,7 @@ export default function RequestEditorHeaders(){
 		// If the last row is being edited, add a new empty row
 		if(index === headers.length - 1){
 			headers_dup.push({selected: 0, key: '', value: '', content: ''});
+			headers_dup[index]["selected"] = true;
 		}
 		setHeaders(headers_dup);
 	};

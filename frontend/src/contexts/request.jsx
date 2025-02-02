@@ -5,10 +5,8 @@ export const RequestContext = createContext({});
 export default function RequestContextProvider(props){
 	const {children} = props;
 
-	let [url, setUrl] = useState("https://www.google.com");
-	let [params, setParams] = useState([
-
-	]);
+	let [url, setUrl] = useState("");
+	let [params, setParams] = useState([]);
 
 	let [authorization, setAuthorization] = useState({type: 0, data: {}});
 	let [headers, setHeaders] = useState([
@@ -18,8 +16,10 @@ export default function RequestContextProvider(props){
 		{selected: 0, key: '', value: '', content: ''}
 	]);
 
+	let [body, setBody] = useState({type: 0, data: {}});
+
 	return (
-		<RequestContext.Provider value={{url, setUrl, params, setParams, authorization, setAuthorization, headers, setHeaders}}>
+		<RequestContext.Provider value={{url, setUrl, params, setParams, authorization, setAuthorization, headers, setHeaders, body, setBody}}>
 			{children}
 		</RequestContext.Provider>
 	);
