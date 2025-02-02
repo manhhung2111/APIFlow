@@ -1,12 +1,12 @@
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import Request from "@components/request/request.js";
-import {Checkbox, Input, Select} from "antd";
+import {Checkbox, Empty, Input, Select} from "antd";
 import {NavLink} from "react-router";
 import {UnControlled as CodeMirror} from 'react-codemirror2';
 import 'codemirror/mode/javascript/javascript';
 
-export default function RequestEditorAuthorization() {
+export default function RequestEditorAuthorization(){
 	let {authorization, setAuthorization} = useContext(RequestContext);
 
 	const handleChangeType = (authType) => {
@@ -23,26 +23,39 @@ export default function RequestEditorAuthorization() {
 				<h3>Auth Type</h3>
 				<Select
 					defaultValue={0}
-					style={{width: 120}}
 					onChange={(value) => handleChangeType(value)}
 					options={Object.values(Request.AUTHORIZATION)}
+					className="auth-selector"
+					popupClassName="auth-selector-items"
 				/>
 				<p>The authorization header will be automatically generated when you send the request.</p>
 			</div>
 			<div className="right-container">
 				{authorization.type === Request.AUTHORIZATION.InheritAuth.value &&
-					<div className="empty-message">
-						This request is using No Auth from collection <NavLink to={`collection/${1}`}>Collection
-						1</NavLink>
-					</div>
+					<Empty
+						image={Empty.PRESENTED_IMAGE_SIMPLE}
+						description={
+							<div className="empty-message">
+								This request is using No Auth from collection <NavLink to={`collection/${1}`}>Collection
+								1</NavLink>
+							</div>
+						}
+					>
+					</Empty>
 				}
 				{authorization.type === Request.AUTHORIZATION.NoAuth.value &&
-					<div className="empty-message">
-						This request does not use any authorization.
-					</div>
+					<Empty
+						image={Empty.PRESENTED_IMAGE_SIMPLE}
+						description={
+							<div className="empty-message">
+								This request does not use any authorization.
+							</div>
+						}
+					>
+					</Empty>
 				}
 				{authorization.type === Request.AUTHORIZATION.BasicAuth.value &&
-					<>
+					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Username</div>
 							<Input name="username" onChange={handleChangeData}/>
@@ -51,18 +64,18 @@ export default function RequestEditorAuthorization() {
 							<div className="title">Password</div>
 							<Input name="password" onChange={handleChangeData}/>
 						</div>
-					</>
+					</div>
 				}
 				{authorization.type === Request.AUTHORIZATION.BearerToken.value &&
-					<>
+					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Token</div>
 							<Input name="token" onChange={handleChangeData}/>
 						</div>
-					</>
+					</div>
 				}
 				{authorization.type === Request.AUTHORIZATION.JWTBearer.value &&
-					<>
+					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Algorithm</div>
 							<Input name="algorithm" onChange={handleChangeData}/>
@@ -92,7 +105,7 @@ export default function RequestEditorAuthorization() {
 								/>
 							</div>
 						</div>
-					</>
+					</div>
 				}
 			</div>
 		</div>

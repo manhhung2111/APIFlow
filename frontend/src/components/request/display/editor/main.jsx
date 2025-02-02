@@ -18,7 +18,7 @@ export default function RequestEditorUrlMain() {
 	}
 	return (
 		<div className="request-editor-url-main">
-			<Tabs tabBarExtraContent={rightSide} items={items} size={"small"} tabBarGutter={24}/>
+			<Tabs tabBarExtraContent={rightSide} items={items} size={"small"} tabBarGutter={16}/>
 		</div>
 	);
 }

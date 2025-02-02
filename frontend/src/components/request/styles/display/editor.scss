@@ -10,6 +10,7 @@
   .editor-url {
     width: 70vw;
     height: 40px;
+
     .ant-select {
       width: 90px;
       height: 40px;
@@ -27,6 +28,7 @@
 
   .editor-action {
     height: 40px;
+
     &.ant-btn {
       font-weight: $text-weight-bold;
       font-size: $text-size-l !important;
@@ -36,18 +38,25 @@
 
 .request-editor-url-main {
   padding: 0 16px;
+  font-size: $text-size-m;
 
   .ant-tabs-top > .ant-tabs-nav {
+    margin-bottom: 8px;
+
     &::before {
       border: none;
     }
+  }
+
+  .ant-tabs-top, .ant-input {
+    font-size: $text-size-m;
   }
 
   .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
     .ant-tabs-tab {
       color: $content-color-secondary;
       border-bottom: 1px solid transparent;
-      font-size: $text-size-l;
+      font-size: $text-size-m;
 
       &.ant-tabs-tab-active {
         border-bottom-color: $base-color-brand;
@@ -157,6 +166,7 @@
           border-left: 1px solid $border-color-default;
           border-right: 1px solid $border-color-default;
         }
+
         .action-col {
           display: flex;
           justify-content: center;
@@ -169,6 +179,99 @@
 
             &:hover {
               color: #9c3328;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.request-editor-authorization {
+  display: grid;
+  grid-template-columns: 1fr 2.5fr;
+
+  .left-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+
+    h3 {
+      font-weight: 600;
+      color: #6B6B6B;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .auth-selector {
+      width: 100%;
+      margin-bottom: 8px;
+      font-size: $text-size-m !important;
+
+      .ant-select-selector {
+        font-size: $text-size-m;
+      }
+    }
+  }
+
+  .right-container {
+    height: 100%;
+    padding-left: 12px;
+    padding-bottom: 12px;
+    border-left: 1px solid $border-color-default;
+
+    .empty-message {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      font-size: $text-size-m;
+    }
+
+    .form-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .form-row {
+        display: flex;
+        align-items: center;
+
+        .title {
+          display: flex;
+          flex: 1;
+          min-width: 196px;
+          max-width: 280px;
+          align-self: flex-start;
+          padding-top: $spacing-m;
+          margin-right: $spacing-l;
+        }
+
+        input {
+          margin-top: $spacing-m;
+          min-width: 196px;
+          max-width: 280px;
+          min-height: 32px;
+        }
+
+        .input-group {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          gap: 4px;
+          .ant-checkbox-wrapper {
+            font-size: $text-size-m;
+          }
+
+          .react-codemirror2 {
+            border: 1px solid $border-color-default;
+            width: 280px !important;
+            .CodeMirror {
+              height: 200px;
+              width: 280px !important;
             }
           }
         }
