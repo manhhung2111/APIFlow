@@ -1,8 +1,9 @@
-import {Tabs, Button} from "antd";
+import {Button, Tabs} from "antd";
 import RequestEditorParams from "@components/request/display/editor/params.jsx";
 import RequestEditorAuthorization from "@components/request/display/editor/authorization.jsx";
 import RequestEditorHeaders from "@components/request/display/editor/headers.jsx";
 import RequestEditorBody from "@components/request/display/editor/body/body.jsx";
+import RequestEditorScripts from "@components/request/display/editor/scripts.jsx";
 
 export default function RequestEditorUrlMain() {
 	const items = [
@@ -10,7 +11,7 @@ export default function RequestEditorUrlMain() {
 		{label: "Authorization", key: 2, children: <RequestEditorAuthorization />},
 		{label: "Headers", key: 3, children: <RequestEditorHeaders />},
 		{label: "Body", key: 4, children: <RequestEditorBody />},
-		{label: "Scripts", key: 5, children: "Scripts"},
+		{label: "Scripts", key: 5, children: <RequestEditorScripts/>},
 		{label: "Settings", key: 6, children: "Settings"},
 	]
 

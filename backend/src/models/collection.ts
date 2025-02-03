@@ -14,8 +14,8 @@ const schema = new Schema<DCollection>({
 	},
 
 	scripts: {
-		pre_script: {type: String, default: ""},
-		post_script: {type: String, default: ""},
+		pre_request: {type: String, default: ""},
+		post_response: {type: String, default: ""},
 	},
 
 	variables: [

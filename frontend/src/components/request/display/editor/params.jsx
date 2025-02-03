@@ -46,7 +46,7 @@ export default function RequestEditorParams(){
 
 
 	return (
-		<div className="request-editor-params">
+		<div className="request-editor request-editor-params">
 			<h3 className="title">Query Params</h3>
 			<div className="request-table">
 				<div className="table-header">

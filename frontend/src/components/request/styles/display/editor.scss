@@ -9,11 +9,15 @@
 
   .editor-url {
     width: 70vw;
-    height: 40px;
+    height: 32px;
 
     .ant-select {
       width: 90px;
-      height: 40px;
+      height: 32px;
+      font-size: $text-size-m;
+      .ant-select-selection-item {
+        font-size: $text-size-m;
+      }
     }
 
     .ant-select-selector {
@@ -23,11 +27,12 @@
 
     .url {
       width: 90%;
+      font-size: $text-size-m;
     }
   }
 
   .editor-action {
-    height: 40px;
+    height: 32px;
 
     &.ant-btn {
       font-weight: $text-weight-bold;
@@ -39,7 +44,7 @@
 .request-editor-url-main {
   padding: 0 16px;
   font-size: $text-size-m;
-
+  flex: 1;
   .ant-tabs-top > .ant-tabs-nav {
     margin-bottom: 8px;
 
@@ -57,6 +62,8 @@
   }
 
   & >.ant-tabs {
+    display: flex;
+    flex-direction: column;
     & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
       .ant-tabs-tab {
         color: $content-color-secondary;
@@ -72,6 +79,30 @@
         }
       }
     }
+  }
+}
+
+.request-editor-url-main .request-editor {
+  height: 42vh;
+  min-height: 100px;
+  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable both-edges;
+  &:active::-webkit-scrollbar-thumb,
+  &:focus::-webkit-scrollbar-thumb,
+  &:hover::-webkit-scrollbar-thumb {
+    visibility: visible;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    visibility: hidden;
+    transition: all 3s ease-in-out;
+  }
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 4px;
+    border-radius: $border-radius-l;
   }
 }
 
@@ -187,7 +218,7 @@
   }
 }
 
-.request-editor-authorization {
+.request-editor-url-main .request-editor-authorization {
   display: grid;
   grid-template-columns: 1fr 2.5fr;
 
@@ -219,7 +250,6 @@
   .right-container {
     height: 100%;
     padding-left: 12px;
-    padding-bottom: 12px;
     border-left: 1px solid $border-color-default;
 
     .empty-message {
@@ -254,25 +284,20 @@
           margin-top: $spacing-m;
           min-width: 196px;
           max-width: 280px;
-          min-height: 32px;
         }
 
         .input-group {
           display: flex;
           flex: 1;
           flex-direction: column;
-          gap: 4px;
+          gap: 8px;
           .ant-checkbox-wrapper {
             font-size: $text-size-m;
           }
 
-          .react-codemirror2 {
+          .app-code-editor {
             border: 1px solid $border-color-default;
             width: 280px !important;
-            .CodeMirror {
-              height: 200px;
-              width: 280px !important;
-            }
           }
         }
       }
@@ -280,7 +305,7 @@
   }
 }
 
-.request-editor-body {
+.request-editor-url-main .request-editor-body {
   & >.ant-tabs {
     & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
       .ant-tabs-tab {
@@ -307,10 +332,15 @@
     }
   }
 
-
+  .request-editor-body-form-raw {
+    .app-code-editor {
+      border: 1px solid $border-color-default;
+      height: 38vh;
+    }
+  }
 }
 
-.request-editor-body .request-editor-body-form-data {
+.request-editor-url-main .request-editor-body .request-editor-body-form-data {
   .request-form-data-table {
     border: 1px solid $border-color-default;
     border-bottom: none;
@@ -451,6 +481,37 @@
           }
         }
       }
+    }
+  }
+}
+
+.request-editor-url-main .request-editor-scripts {
+  & >.ant-tabs {
+    & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
+      border-right: 1px solid $border-color-default;
+      .ant-tabs-tab {
+        color: $content-color-secondary;
+        font-size: $text-size-m;
+        padding: 8px 8px 8px 16px;
+
+        &.ant-tabs-tab-active {
+          background-color: $background-color-tertiary;
+          .ant-tabs-tab-btn {
+            color: $content-color-primary;
+          }
+        }
+      }
+
+    }
+    .ant-tabs-ink-bar {
+      background-color: transparent;
+      display: none;
+    }
+  }
+
+  .app-code-editor {
+    section {
+      height: 40vh !important;
     }
   }
 }

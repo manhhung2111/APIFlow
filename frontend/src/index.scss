@@ -67,6 +67,7 @@
     }
 
     .master-main-wrapper {
+        height: calc(100vh - 48px);
         .ant-btn {
             font-size: $text-size-m;
         }
@@ -77,17 +78,27 @@
         }
 
         & > .mmw-main {
+            height: calc(100% - 40px);
             position: relative;
             & > .rm-main {
+                height: 100%;
                 width: calc(100% - 48px);
                 position: absolute;
                 right: 48px;
+                display: flex;
+                flex-direction: column;
                 .request-header {
                     padding: 8px 16px;
                 }
 
                 .request-main {
-
+                    flex: 1;
+                    .rm-editor {
+                        height: 65%;
+                        border-bottom: 1px solid $border-color-default;
+                        display: flex;
+                        flex-direction: column;
+                    }
                 }
             }
 

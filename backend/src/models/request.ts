@@ -24,8 +24,8 @@ const schema = new Schema<DRequest>({
 		data: Schema.Types.Mixed,
 	},
 	scripts: {
-		pre_script: {type: String, default: ""},
-		post_script: {type: String, default: ""},
+		pre_request: {type: String, default: ""},
+		post_response: {type: String, default: ""},
 	},
 
 	examples: {type: [Object]},

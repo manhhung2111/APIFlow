@@ -26,7 +26,7 @@ export default function RequestEditorHeaders(){
 	};
 
 	return (
-		<div className="request-editor-params request-editor-headers">
+		<div className="request-editor request-editor-headers">
 			<h3 className="title">Headers</h3>
 			<div className="request-table">
 				<div className="table-header">

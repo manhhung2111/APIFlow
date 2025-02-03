@@ -35,7 +35,7 @@ export default function RequestEditorBody(){
 	}
 
 	return (
-		<div className="request-editor-body">
+		<div className="request-editor request-editor-body">
 			<Tabs items={items} activeKey={activeTab} onChange={(key) => handleSetActiveTab(key)} size={"small"}
 				  tabBarGutter={16}/>
 		</div>

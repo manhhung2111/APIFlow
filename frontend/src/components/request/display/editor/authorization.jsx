@@ -3,8 +3,9 @@ import {RequestContext} from "@contexts/request.jsx";
 import Request from "@components/request/request.js";
 import {Checkbox, Empty, Input, Select} from "antd";
 import {NavLink} from "react-router";
-import {UnControlled as CodeMirror} from 'react-codemirror2';
 import 'codemirror/mode/javascript/javascript';
+import CodeEditor from "@components/app/editor/index.jsx";
+import _ from "lodash";
 
 export default function RequestEditorAuthorization(){
 	let {authorization, setAuthorization} = useContext(RequestContext);
@@ -13,12 +14,14 @@ export default function RequestEditorAuthorization(){
 		setAuthorization(() => ({type: authType, data: {}}));
 	}
 
-	const handleChangeData = (e) => {
-
+	const handleChangeData = (field, value) => {
+		const clone = _.cloneDeep(authorization);
+		clone.data[field] = value;
+		setAuthorization(clone);
 	}
 
 	return (
-		<div className="request-editor-authorization">
+		<div className="request-editor request-editor-authorization">
 			<div className="left-container">
 				<h3>Auth Type</h3>
 				<Select
@@ -58,11 +61,11 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Username</div>
-							<Input name="username" onChange={handleChangeData}/>
+							<Input name="username" value={authorization.data.username ?? ""} onChange={(e) => handleChangeData("username", e.target.value)}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Password</div>
-							<Input name="password" onChange={handleChangeData}/>
+							<Input name="password" value={authorization.data.password ?? ""} onChange={(e) => handleChangeData("password", e.target.value)}/>
 						</div>
 					</div>
 				}
@@ -70,7 +73,7 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Token</div>
-							<Input name="token" onChange={handleChangeData}/>
+							<Input name="token" value={authorization.data.token ?? ""} onChange={(e) => handleChangeData("token", e.target.value)}/>
 						</div>
 					</div>
 				}
@@ -78,30 +81,22 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Algorithm</div>
-							<Input name="algorithm" onChange={handleChangeData}/>
+							<Input name="algorithm" value={authorization.data.algorithm ?? ""} onChange={(e) => handleChangeData("algorithm", e.target.value)}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Secret</div>
 							<div className="input-group">
-								<Input name="algorithm" onChange={handleChangeData}/>
-								<Checkbox onChange={handleChangeData}>Secret Base64 encoded</Checkbox>
+								<Input name="secret" value={authorization.data.secret ?? ""} onChange={(e) => handleChangeData("secret", e.target.value)}/>
+								<Checkbox value={authorization.data.encoded ?? false} onChange={(e) => handleChangeData("encoded", e.target.checked)}>Secret Base64 encoded</Checkbox>
 							</div>
 						</div>
 						<div className="form-row">
 							<div className="title">Payload</div>
 							<div className="input-group">
-								<CodeMirror
-									value='{"key": "value"}'
-									options={{
-										mode: {name: "javascript", json: true},
-										theme: 'xq-light',
-										lineNumbers: true
-									}}
-									onChange={(editor, data, value) => {
-										console.log(editor);
-										console.log(data);
-										console.log(value);
-									}}
+								<CodeEditor
+									value={authorization.data.payload ?? ""}
+									setValue={(value) => handleChangeData("payload", value)}
+									options={{lineNumbers: "off", language: "json"}}
 								/>
 							</div>
 						</div>

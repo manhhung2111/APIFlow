@@ -90,8 +90,8 @@ export interface DRequest {
         data?: object;
     };
     scripts?: {
-        pre_script?: string;
-        post_script?: string;
+        pre_request?: string;
+        post_response?: string;
     };
 
     examples: Array<object>
@@ -193,8 +193,8 @@ export interface DCollection {
     };
 
     scripts?: {
-        pre_script?: string;
-        post_script?: string;
+        pre_request?: string;
+        post_response?: string;
     };
 
     variables: Array<{

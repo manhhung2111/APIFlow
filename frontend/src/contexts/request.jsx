@@ -21,12 +21,30 @@ export default function RequestContextProvider(props){
 		data: {
 			form_data: [{selected: 1, key: '', type: 'text', value: '', content: ''}],
 			form_encoded: [{selected: 1, key: '', value: '', content: ''}],
-			form_raw: {}
+			form_raw: ""
 		}
 	});
 
+	let [scripts, setScripts] = useState({
+		pre_request: "",
+		post_response: ""
+	})
+
 	return (
-		<RequestContext.Provider value={{url, setUrl, params, setParams, authorization, setAuthorization, headers, setHeaders, body, setBody}}>
+		<RequestContext.Provider value={{
+			url,
+			setUrl,
+			params,
+			setParams,
+			authorization,
+			setAuthorization,
+			headers,
+			setHeaders,
+			body,
+			setBody,
+			scripts,
+			setScripts
+		}}>
 			{children}
 		</RequestContext.Provider>
 	);

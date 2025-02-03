@@ -13,7 +13,7 @@ export default function AppContextProvider(props){
 		<ConfigProvider
 			theme={{
 				token: {
-					fontFamily: "Geist"
+					fontFamily: "Inter"
 				}
 			}}
 		>
