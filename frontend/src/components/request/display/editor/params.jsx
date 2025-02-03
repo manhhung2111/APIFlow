@@ -1,15 +1,11 @@
 import {DeleteOutlined} from "@ant-design/icons";
 import {Checkbox, Input} from 'antd';
-import {useContext, useEffect, useState} from "react";
+import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
 
 export default function RequestEditorParams(){
 	let {params, setParams, url, setUrl} = useContext(RequestContext);
-
-	useEffect(() => {
-		setParams(prev => [...prev, {selected: 1, key: '', value: '', content: ''}])
-	}, [])
 
 	const handleInputChange = (index, field, value) => {
 		const params_dup = _.cloneDeep(params);
@@ -18,7 +14,7 @@ export default function RequestEditorParams(){
 		// If the last row is being edited, add a new empty row
 		if(index === params.length - 1){
 			params_dup.push({selected: 0, key: '', value: '', content: ''});
-			params_dup[index]["selected"] = true;
+			params_dup[index]["selected"] = 1;
 		}
 		handleBuildUrl(params_dup);
 		setParams(params_dup);
@@ -52,7 +48,7 @@ export default function RequestEditorParams(){
 	return (
 		<div className="request-editor-params">
 			<h3 className="title">Query Params</h3>
-			<div className="params-table">
+			<div className="request-table">
 				<div className="table-header">
 					<div></div>
 					<div>Key</div>

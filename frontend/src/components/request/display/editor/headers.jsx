@@ -14,7 +14,7 @@ export default function RequestEditorHeaders(){
 		// If the last row is being edited, add a new empty row
 		if(index === headers.length - 1){
 			headers_dup.push({selected: 0, key: '', value: '', content: ''});
-			headers_dup[index]["selected"] = true;
+			headers_dup[index]["selected"] = 1;
 		}
 		setHeaders(headers_dup);
 	};
@@ -28,7 +28,7 @@ export default function RequestEditorHeaders(){
 	return (
 		<div className="request-editor-params request-editor-headers">
 			<h3 className="title">Headers</h3>
-			<div className="params-table">
+			<div className="request-table">
 				<div className="table-header">
 					<div></div>
 					<div>Key</div>

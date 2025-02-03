@@ -13,4 +13,11 @@ export default class Request{
 		POST: {value: "post", label: "POST"},
 		DELETE: {value: "delete", label: "DELETE"}
 	}
+
+	static BODY_TYPES = {
+		None: {value: 0, label: "none"},
+		FormData: {value: 1, label: "form-data"},
+		FormEncoded: {value: 2, label: "x-www-form-urlencoded"},
+		FormRaw: {value: 3, label: "raw"}
+	}
 }
