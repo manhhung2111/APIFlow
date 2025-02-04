@@ -1,11 +1,12 @@
 import {DeleteOutlined} from "@ant-design/icons";
 import {Checkbox, Input} from 'antd';
-import {useContext} from "react";
+import {useContext, useRef} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
 
 export default function RequestEditorHeaders(){
 	let {headers, setHeaders} = useContext(RequestContext);
+	const containerRef = useRef(null);
 
 	const handleInputChange = (index, field, value) => {
 		const headers_dup = _.cloneDeep(headers);
@@ -15,8 +16,14 @@ export default function RequestEditorHeaders(){
 		if(index === headers.length - 1){
 			headers_dup.push({selected: 0, key: '', value: '', content: ''});
 			headers_dup[index]["selected"] = 1;
+
+			setHeaders(headers_dup);
+			setTimeout(() => {
+				containerRef.current?.scrollTo({top: containerRef.current.scrollHeight, behavior: "smooth"});
+			}, 50);
+		} else {
+			setHeaders(headers_dup);
 		}
-		setHeaders(headers_dup);
 	};
 
 	const handleRemoveRow = (index) => {
@@ -26,7 +33,7 @@ export default function RequestEditorHeaders(){
 	};
 
 	return (
-		<div className="request-editor request-editor-headers">
+		<div className="request-editor request-editor-headers" ref={containerRef}>
 			<h3 className="title">Headers</h3>
 			<div className="request-table">
 				<div className="table-header">

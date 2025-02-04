@@ -1,11 +1,12 @@
 import {DeleteOutlined} from "@ant-design/icons";
 import {Checkbox, Input} from 'antd';
-import {useContext} from "react";
+import {useContext, useRef} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
 
 export default function RequestEditorParams(){
 	let {params, setParams, url, setUrl} = useContext(RequestContext);
+	const containerRef = useRef(null);
 
 	const handleInputChange = (index, field, value) => {
 		const params_dup = _.cloneDeep(params);
@@ -15,9 +16,17 @@ export default function RequestEditorParams(){
 		if(index === params.length - 1){
 			params_dup.push({selected: 0, key: '', value: '', content: ''});
 			params_dup[index]["selected"] = 1;
+
+			handleBuildUrl(params_dup);
+			setParams(params_dup);
+
+			setTimeout(() => {
+				containerRef.current?.scrollTo({top: containerRef.current.scrollHeight, behavior: "smooth"});
+			}, 50);
+		} else {
+			handleBuildUrl(params_dup);
+			setParams(params_dup);
 		}
-		handleBuildUrl(params_dup);
-		setParams(params_dup);
 	};
 
 	const handleRemoveRow = (index) => {
@@ -46,7 +55,7 @@ export default function RequestEditorParams(){
 
 
 	return (
-		<div className="request-editor request-editor-params">
+		<div className="request-editor request-editor-params" ref={containerRef}>
 			<h3 className="title">Query Params</h3>
 			<div className="request-table">
 				<div className="table-header">

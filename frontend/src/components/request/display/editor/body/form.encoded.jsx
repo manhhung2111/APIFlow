@@ -1,4 +1,4 @@
-import {useContext} from "react";
+import {useContext, useRef} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
 import {DeleteOutlined} from "@ant-design/icons";
@@ -6,6 +6,7 @@ import {Checkbox, Input} from "antd";
 
 export default function RequestEditorBodyFormEncoded() {
 	let {body, setBody} = useContext(RequestContext);
+	const containerRef = useRef(null);
 
 	const handleInputChange = (index, field, value) => {
 		const clone = _.cloneDeep(body);
@@ -15,9 +16,14 @@ export default function RequestEditorBodyFormEncoded() {
 		if(index === clone.data["form_encoded"].length - 1){
 			clone.data["form_encoded"].push({selected: 0, key: '', value: '', content: ''});
 			clone.data["form_encoded"][index]["selected"] = 1;
-		}
 
-		setBody(clone);
+			setBody(clone);
+			setTimeout(() => {
+				containerRef.current?.scrollTo({top: containerRef.current.scrollHeight, behavior: "smooth"});
+			}, 50);
+		} else {
+			setBody(clone);
+		}
 	};
 
 	const handleRemoveRow = (index) => {
@@ -28,7 +34,7 @@ export default function RequestEditorBodyFormEncoded() {
 
 
 	return (
-		<div className="request-editor-body-form-encoded">
+		<div className="request-editor-body-form-encoded" ref={containerRef}>
 			<div className="request-table">
 				<div className="table-header">
 					<div></div>

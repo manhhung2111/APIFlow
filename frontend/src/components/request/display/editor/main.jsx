@@ -12,7 +12,6 @@ export default function RequestEditorUrlMain() {
 		{label: "Headers", key: 3, children: <RequestEditorHeaders />},
 		{label: "Body", key: 4, children: <RequestEditorBody />},
 		{label: "Scripts", key: 5, children: <RequestEditorScripts/>},
-		{label: "Settings", key: 6, children: "Settings"},
 	]
 
 	const rightSide = {

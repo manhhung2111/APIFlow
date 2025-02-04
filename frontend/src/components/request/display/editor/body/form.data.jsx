@@ -1,27 +1,33 @@
 import {DeleteOutlined} from "@ant-design/icons";
 import {Checkbox, Input, Select} from 'antd';
-import {useContext} from "react";
+import {useContext, useRef} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
 
 export default function RequestEditorBodyFormData(){
 	let {body, setBody} = useContext(RequestContext);
+	const containerRef = useRef(null);
 
 	const handleInputChange = (index, field, value) => {
 		const clone = _.cloneDeep(body);
 		clone.data["form_data"][index][field] = value;
 
-		// If the last row is being edited, add a new empty row
-		if(index === clone.data["form_data"].length - 1){
-			clone.data["form_data"].push({selected: 0, key: '', type: 'text', value: '', content: ''});
-			clone.data["form_data"][index]["selected"] = 1;
-		}
-
 		if(field === "type"){
 			clone.data["form_data"][index]["value"] = "";
 		}
 
-		setBody(clone);
+		// If the last row is being edited, add a new empty row
+		if(index === clone.data["form_data"].length - 1){
+			clone.data["form_data"].push({selected: 0, key: '', type: 'text', value: '', content: ''});
+			clone.data["form_data"][index]["selected"] = 1;
+
+			setBody(clone);
+			setTimeout(() => {
+				containerRef.current?.scrollTo({top: containerRef.current.scrollHeight, behavior: "smooth"});
+			}, 50);
+		}else {
+			setBody(clone);
+		}
 	};
 
 	const handleRemoveRow = (index) => {
@@ -32,7 +38,7 @@ export default function RequestEditorBodyFormData(){
 
 	console.log(body)
 	return (
-		<div className="request-editor-body-form-data">
+		<div className="request-editor-body-form-data" ref={containerRef}>
 			<div className="request-form-data-table">
 				<div className="table-header">
 					<div></div>
