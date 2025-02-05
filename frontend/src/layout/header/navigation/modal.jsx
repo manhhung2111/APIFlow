@@ -1,22 +1,28 @@
 import {Button, Input} from "antd";
-import {NavLink, useNavigate} from "react-router";
+import {NavLink} from "react-router";
 import {UserOutlined} from "@ant-design/icons";
+import WorkspaceFormCreate from "@components/workspace/form/create.jsx";
+import {useState} from "react";
 
 export default function WorkspaceSelectionModal(props){
-	const {setSearchTerm} = props;
-	const navigate = useNavigate();
+	const {setSearchTerm, setDropdownVisible} = props;
+	const [createFormVisibility, setCreateFormVisibility] = useState(false);
+
 	const workspaces = [
 		{id: 1, name: "Workspace 1"},
 		{id: 2, name: "Workspace 2"},
 	];
 
+	const handleCreateWorkspaceClick = () => {
+		setDropdownVisible(false); // Close the dropdown when "Create Workspace" is clicked
+		setCreateFormVisibility(true);
+	};
+
 	return (
 		<div className="workspace-selection-modal">
 			<div className="wsm-header">
 				<Input placeholder="Search workspaces" onChange={(e) => setSearchTerm(e.target.value)}/>
-				<Button color="default" variant="filled" onClick={() => {
-					navigate("workspace/create");
-				}}>
+				<Button color="default" variant="filled" onClick={handleCreateWorkspaceClick}>
 					Create Workspace
 				</Button>
 			</div>
@@ -31,6 +37,10 @@ export default function WorkspaceSelectionModal(props){
 					))}
 				</div>
 			</div>
+			<WorkspaceFormCreate
+				visible={createFormVisibility}
+				setVisible={setCreateFormVisibility}
+			/>
 		</div>
 	)
 }
