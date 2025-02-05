@@ -30,9 +30,9 @@ export default function RequestResponseSide() {
 
 		let time = response.time;
 		if (time >= 1000) {
-			return `${(time / 1000).toFixed(2)} s`; // Convert to seconds with 2 decimal places
+			return <span className="time">{`${(time / 1000).toFixed(0)} s`}</span>; // Convert to seconds with 2 decimal places
 		}
-		return `${time.toFixed(0)} ms`;
+		return <span className="time">{`${time.toFixed(0)} ms`}</span>;
 	}
 
 	const sizeHTML = () => {
@@ -49,7 +49,7 @@ export default function RequestResponseSide() {
 		const i = Math.floor(Math.log(totalSize) / Math.log(k));
 
 		// Calculate the size and floor it to the nearest whole number
-		return Math.floor(totalSize / Math.pow(k, i)) + ' ' + units[i];
+		return <span className="size">{Math.floor(totalSize / Math.pow(k, i)) + ' ' + units[i]}</span>;
 	}
 
 
@@ -58,7 +58,7 @@ export default function RequestResponseSide() {
 			{statusHTML()}
 			{timeHTML()}
 			{sizeHTML()}
-			<Button icon={<BookmarkAddIcon />} type="text">Save Response</Button>
+			<Button icon={<BookmarkAddIcon />} type="text" size={"small"} className="save-btn">Save Response</Button>
 		</div>
 	)
 }

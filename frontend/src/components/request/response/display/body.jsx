@@ -8,7 +8,7 @@ export default function RequestResponseBody(){
 	return (
 		<div className="request-response-content request-response-body">
 			<Editor
-				height={"23vh"}
+				height={"25vh"}
 				theme={"light"}
 				defaultLanguage={"json"}
 				value={JSON.stringify(response.body, null, 2)}

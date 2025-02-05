@@ -98,11 +98,16 @@ export default function RequestContextProvider(props){
 			"expires": "0",
 			"pragma": "no-cache",
 			"server": "nginx/1.21.6",
-			"x-powered-by": "Express"
+			"x-powered-by": "Express",
+			"Set-Cookie": [
+				"sessionId=abcdef123456; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Tue, 06 Feb 2024 12:34:56 GMT",
+				"userId=789xyz; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Tue, 06 Feb 2024 12:34:56 GMT",
+				"token=securetoken; Path=/; HttpOnly; Secure; SameSite=Strict; Expires=Tue, 06 Feb 2024 12:34:56 GMT"
+			]
 		},
 		"status": "201",
 		"statusText": "Created",
-		"time": 21112003,
+		"time": 23000,
 		"request_size": {headers: 2000, body: 1400},
 		"response_size": {headers: 2000, body: 1400},
 	})
