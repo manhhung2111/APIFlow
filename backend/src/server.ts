@@ -26,7 +26,7 @@ const db_name = process.env.DB_NAME;
 
 // Config CORS
 app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
-	origin: "http://localhost:5763",
+	origin: "http://localhost:3000",
 	optionsSuccessStatus: 200,
 }));
 

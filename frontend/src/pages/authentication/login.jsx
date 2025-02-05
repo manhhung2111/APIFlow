@@ -5,14 +5,18 @@ import {Button, Checkbox, Divider, Input} from 'antd';
 import {NavLink} from "react-router";
 import {GithubOutlined, GoogleOutlined} from "@ant-design/icons";
 import useDocumentTitle from "@hooks/use.document.title";
+import UserService from "@services/user.js";
 
 export default function LoginPage() {
     useDocumentTitle("APIFlow - Sign In");
 
     async function onSubmit(event) {
         event.preventDefault(); // Prevent performing normal submission
-        // const formData = new FormData(event.target);
-        // const values = Object.fromEntries(formData);
+        const formData = new FormData(event.target);
+        const values = Object.fromEntries(formData);
+
+        const response = await UserService.login(values["email"], values["password"]);
+
     }
 
     return (

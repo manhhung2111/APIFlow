@@ -36,8 +36,6 @@ export default function WorkspaceFormCreate({visible, setVisible}) {
 					<Input placeholder={"Workspace name"}/>
 				</Form.Item>
 
-
-
 				<Form.Item label={null}>
 					<Button type="primary" htmlType="submit" loading={confirmLoading}>
 						Submit
