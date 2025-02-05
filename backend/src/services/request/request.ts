@@ -75,7 +75,7 @@ export default class RequestService{
 		let body = this.convertRequestBody();
 
 		try{
-			// TODO: execute pre-scripts
+			const startTime = performance.now();
 			const response = await axios({
 				method: this._method,
 				url: url,
@@ -83,8 +83,14 @@ export default class RequestService{
 				data: this._method === "GET" ? undefined : body,
 			});
 
-			return response;
-			// TODO: execute post-scripts
+			const endTime = performance.now();
+			const duration = endTime - startTime;
+
+			// Calculate request and response size
+			const request_size = {headers: this.calculateSize(headers), body: this.calculateSize(body)};
+			const response_size = {headers: this.calculateSize(response.headers), body: this.calculateSize(response.data)};
+
+			return {...response, time: duration, request_size, response_size};
 		} catch (error){
 			if (axios.isAxiosError(error)) {
 				throw error;
@@ -138,7 +144,6 @@ export default class RequestService{
 			headers["Content-Type"] = headers["Content-Type"] || "application/json";
 		}
 
-
 		return headers;
 	}
 
@@ -161,5 +166,13 @@ export default class RequestService{
 		url = `${base_url}?${params.toString()}`;
 
 		return url;
+	}
+
+	private calculateSize(data: any) {
+		try {
+			return JSON.stringify(data)?.length || 0;
+		} catch {
+			return 0;
+		}
 	}
 }

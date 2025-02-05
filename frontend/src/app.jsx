@@ -7,6 +7,7 @@ import "./index.scss";
 import RequestEditorUrl from "@components/request/display/editor/url.jsx";
 import RequestEditorUrlMain from "@components/request/display/editor/main.jsx";
 import RequestContextProvider from "@contexts/request.jsx";
+import RequestResponse from "@components/request/response/display/display.jsx";
 
 function App() {
     return (
@@ -30,7 +31,9 @@ function App() {
                                         <RequestEditorUrl />
                                         <RequestEditorUrlMain />
                                     </div>
-                                    <div className="rm-response"></div>
+                                    <div className="rm-response">
+                                        <RequestResponse />
+                                    </div>
                                 </div>
 
                         </div>

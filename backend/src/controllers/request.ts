@@ -157,6 +157,9 @@ export const sendRequest = async (request: Request, response: Response) => {
 			"headers": result.headers,
 			"status": result.status,
 			"statusText": result.statusText,
+			"time": result.time,
+			"request_size": result.request_size,
+			"response_size": result.response_size,
 		}));
 	} catch (error){
 		if (axios.isAxiosError(error)){

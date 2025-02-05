@@ -17,14 +17,16 @@ export default function CodeEditor(props){
 				theme={options?.theme ?? "light"}
 				defaultLanguage={options?.language ?? "javascript"}
 				onMount={onMount}
-				value={value}
-				onChange={(value) => setValue(value)}
+				value={value ?? ""}
+				onChange={setValue ? (value) => setValue(value) : undefined}
 				options={{
 					"wordWrap": "on",
+					"smoothScrolling": true,
+					"scrollBeyondLastLine": false,
 					"minimap": {"enabled": false},
 					"fontSize": 12,
 					"renderLineHighlight": "none",
-					"lineNumbers": options?.lineNumbers ?? "on"
+					"lineNumbers": options?.lineNumbers ?? "on",
 				}}
 			/>
 		</div>
