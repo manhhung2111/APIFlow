@@ -33,7 +33,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
+    gap: 4px;
     padding: 32px;
     background-color: $background-color-primary;
     border-radius: $border-radius-l;
@@ -46,6 +46,19 @@
 
     .form-input {
       width: 100%;
+      margin-bottom: 19px;
+      .ant-form-item-label {
+        padding: 0px;
+      }
+
+      .ant-form-item-explain-error {
+        font-size: $text-size-m;
+        color: $content-color-error;
+      }
+
+      .ant-input-status-error {
+        border-color: $content-color-error;
+      }
 
       label {
         font-weight: 600;
@@ -60,10 +73,19 @@
 
     .form-input-footer {
       width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: $text-size-m;
+      margin-bottom: 0;
+
+      .ant-form-item-control-input {
+        height: fit-content;
+        min-height: 0;
+      }
+
+      .ant-form-item-control-input-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: $text-size-m;
+      }
 
       span {
         font-size: $text-size-m;
@@ -91,6 +113,7 @@
       border: none;
       border-radius: $border-radius-default;
       font-size: $text-size-m;
+      margin-top: 8px;
 
       &:hover {
         background-color: $background-color-button-primary-hover;
@@ -100,10 +123,29 @@
     .btn {
       width: 100%;
       font-size: $text-size-m;
-
+      &:last-of-type {
+        margin-top: 8px;
+      }
       .ant-btn-icon {
         position: absolute;
         left: 10px;
+      }
+    }
+
+    .ant-divider-with-text {
+      margin: 8px 0;
+    }
+
+    .signup-message {
+      font-size: $text-size-m;
+      margin-top: 8px;
+      .link {
+        color: $content-color-link;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
       }
     }
   }

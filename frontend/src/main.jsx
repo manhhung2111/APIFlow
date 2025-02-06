@@ -6,6 +6,7 @@ import ForbiddenPage from "@pages/error/forbidden";
 import NotFoundPage from "@pages/error/not.found";
 import AppContextProvider from "@contexts/app.jsx";
 import App from "./app.jsx";
+import { ToastContainer } from 'react-toastify';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('No root element found');
@@ -25,5 +26,17 @@ createRoot(root).render(
                 <Route path="*" element={<NotFoundPage/>}/>
             </Routes>
         </BrowserRouter>
+        <ToastContainer
+            position="top-right"
+            autoClose={2000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+        />
     </AppContextProvider>,
 );
