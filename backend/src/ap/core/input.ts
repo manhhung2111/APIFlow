@@ -60,6 +60,18 @@ export default class HTMLInput{
 		return value;
 	}
 
+	public static cookies(field: string = ""){
+		if (!this._cur_request){
+			throw new Code("Please read the request to use request data");
+		}
+
+		const value = this._cur_request.cookies[field];
+
+		if (!value) return "";
+		return value;
+	}
+
+
 	public static signedCookies(field: string = ""){
 		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");

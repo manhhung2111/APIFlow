@@ -5,6 +5,7 @@ import logger from "@utils/logger";
 
 export default async function authentication(request: Request, response: Response, next: NextFunction){
 	try{
+		logger.info("Request into authentication middleware");
 		const token = HTMLInput.signedCookies("access_token");
 		if (!token){
 			response.status(401).json(Code.error("Authorization token required"));

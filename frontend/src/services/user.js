@@ -11,12 +11,11 @@ export default class UserService {
 	}
 
 	// Method to handle user registration
-	static async register(name, email, password) {
+	static async register(username, email, password) {
 		try {
-			const response = await axios.post('/auth/register', { name, email, password });
-			return response.data;
+			return await axios.post('/users/register', {username, email, password});
 		} catch (error) {
-			throw new Error(error.response?.data?.message || 'Registration failed');
+			throw new Error(error.message || 'Register failed');
 		}
 	}
 
@@ -47,6 +46,14 @@ export default class UserService {
 			return response.data;
 		} catch (error) {
 			throw new Error(error.response?.data?.message || 'Logout failed');
+		}
+	}
+
+	static async verify() {
+		try {
+			return await axios.post('/users/verify');
+		} catch (error) {
+			throw new Error(error?.message || 'Verification failed');
 		}
 	}
 }

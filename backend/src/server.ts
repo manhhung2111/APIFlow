@@ -28,6 +28,7 @@ const db_name = process.env.DB_NAME;
 app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
 	origin: "http://localhost:3000",
 	optionsSuccessStatus: 200,
+	credentials: true,
 }));
 
 // Body form data

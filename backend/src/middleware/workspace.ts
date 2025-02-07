@@ -6,6 +6,7 @@ import logger from "@utils/logger";
 const createWorkspaceMiddleware = (checkPermission: (workspace: DBWorkspace) => boolean) =>
 	async (request: Request, response: Response, next: NextFunction) => {
 		try{
+			logger.info("Request into workspace middleware");
 			const workspace_id = HTMLInput.param("workspace_id");
 
 			const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;

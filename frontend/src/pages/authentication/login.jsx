@@ -2,20 +2,27 @@ import * as React from "react";
 import './styles/login.scss';
 import LogoBrandImg from "@assets/images/logo.brand.svg";
 import {Button, Checkbox, Divider, Form, Input} from 'antd';
-import {NavLink} from "react-router";
+import {NavLink, useNavigate} from "react-router";
 import {GithubOutlined, GoogleOutlined} from "@ant-design/icons";
 import useDocumentTitle from "@hooks/use.document.title";
 import {toast} from "react-toastify";
 import UserService from "@services/user.js";
+import {useContext, useEffect} from "react";
+import {AppContext} from "@contexts/app.jsx";
 
 export default function LoginPage(){
 	useDocumentTitle("APIFlow - Sign In");
+	const navigate = useNavigate();
+	const {user, setUser} = useContext(AppContext);
 
 	async function onSubmit(values){
 		const response = await UserService.login(values["email"], values["password"]);
 
 		if(response.code === 0){
 			toast.success(response.message);
+			localStorage.setItem("authenticated", "true");
+			setUser(response.data.user);
+			navigate("/");
 		} else {
 			toast.error(response.message);
 		}

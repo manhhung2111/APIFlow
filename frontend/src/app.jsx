@@ -8,41 +8,43 @@ import RequestEditorUrl from "@components/request/display/editor/url.jsx";
 import RequestEditorUrlMain from "@components/request/display/editor/main.jsx";
 import RequestContextProvider from "@contexts/request.jsx";
 import RequestResponse from "@components/request/response/display/display.jsx";
+import {BrowserRouter, Route, Routes} from "react-router";
+import ProtectedRoute from "@layout/routes/protected.jsx";
+import LoginPage from "@pages/authentication/login.jsx";
+import RegisterPage from "@pages/authentication/register.jsx";
+import ForbiddenPage from "@pages/error/forbidden.jsx";
+import NotFoundPage from "@pages/error/not.found.jsx";
+import WorkspacePage from "@pages/workspace/workspace.jsx";
+import RequestPage from "@pages/request/request.jsx";
+import {useContext, useEffect} from "react";
+import {AppContext} from "@contexts/app.jsx";
+import WorkspaceDisplay from "@components/workspace/display/display.jsx";
+import HomePage from "@pages/home/home.jsx";
+import PublicRoute from "@layout/routes/public.jsx";
+import UserService from "@services/user.js";
 
 function App() {
+    const {setUser} = useContext(AppContext);
+
     return (
         <RequestContextProvider>
-            <SuperHeader/>
-            <div id="body">
-                <div className={"master-menu-wrapper"}>
-                    <MasterMenu />
-                </div>
-                <div className="master-main-wrapper">
-                    <div className="mmw-header">
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<ProtectedRoute redirectPath={"/login"} />}>
+                        <Route index element={<HomePage />}/>
+                        <Route path="workspace/:workspace_id/" element={<WorkspacePage />}>
+                            <Route index element={<WorkspaceDisplay />}/>
+                            <Route path="request/:request_id/" element={<RequestPage />} />
+                        </Route>
+                    </Route>
 
-                    </div>
-                    <div className="mmw-main">
-                        <div className="rm-main">
-                                <div className="request-header">
-                                    <RequestDisplayHeader/>
-                                </div>
-                                <div className="request-main">
-                                    <div className="rm-editor">
-                                        <RequestEditorUrl />
-                                        <RequestEditorUrlMain />
-                                    </div>
-                                    <div className="rm-response">
-                                        <RequestResponse />
-                                    </div>
-                                </div>
+                    <Route path="login" element={<PublicRoute redirectPath={"/"}><LoginPage/></PublicRoute>}/>
+                    <Route path="register" element={<PublicRoute redirectPath={"/"}><RegisterPage/></PublicRoute>}/>
 
-                        </div>
-                        <div className="sidebar">
-                            <RequestSidebar/>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <Route path="forbidden" element={<ForbiddenPage/>}/>
+                    <Route path="*" element={<NotFoundPage/>}/>
+                </Routes>
+            </BrowserRouter>
         </RequestContextProvider>
     );
 }

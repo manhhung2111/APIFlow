@@ -4,17 +4,26 @@ import LogoBrandImg from "@assets/images/logo.brand.svg";
 import {Button, Checkbox, Divider, Form, Input, Typography} from "antd";
 import {GithubOutlined, GoogleOutlined} from "@ant-design/icons";
 import "./styles/register.scss";
-import {NavLink} from "react-router";
+import {NavLink, useNavigate} from "react-router";
 import * as React from "react";
+import UserService from "@services/user.js";
+import {toast} from "react-toastify";
 
 const {Paragraph, Text} = Typography;
 
 export default function RegisterPage() {
     useDocumentTitle("APIFlow - Sign Up");
+    const navigate = useNavigate();
 
     async function onSubmit(values) {
+        const response = await UserService.register(values["username"], values["email"], values["password"]);
 
-
+        if (response.code === 0){
+            toast.success(response.message);
+            navigate("/login");
+        } else {
+            toast.error(response.message);
+        }
     }
 
     return (
@@ -64,6 +73,20 @@ export default function RegisterPage() {
 
                 <Form.Item
                     hasFeedback
+                    label="Username"
+                    name="username"
+                    validateTrigger="onBlur"
+                    className="form-input"
+                    rules={[{
+                        required: true,
+                        message: "Please enter username"
+                    },]}
+                >
+                    <Input/>
+                </Form.Item>
+
+                <Form.Item
+                    hasFeedback
                     label="Password"
                     name="password"
                     validateTrigger="onBlur"
@@ -101,10 +124,6 @@ export default function RegisterPage() {
                     ]}
                 >
                     <Input.Password/>
-                </Form.Item>
-
-                <Form.Item name="remember" valuePropName="checked" className="form-input-footer">
-                    <Checkbox>Stay signed in</Checkbox>
                 </Form.Item>
                 <button className="submit-btn" type="submit">Sign Up</button>
                 <Divider style={{color: "#6b6b6b", fontSize: "12px"}} plain>Or</Divider>

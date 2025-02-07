@@ -16,6 +16,6 @@ export default class Client{
 		this.authenticated = true;
 		this.viewer = user.object!;
 
-		return true;
+		return user;
 	}
 }

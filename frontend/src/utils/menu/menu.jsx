@@ -20,7 +20,7 @@ export default class Menu{
 			return {
 				key: `menu_collection_${collection.id}`,
 				icon: <CollectionIcon style={{fontSize: "14px"}}/>,
-				label: <MasterMenuItem url={`collections/${collection.id}`} title={collection.name} am={Collection.am(collection)}/>,
+				label: <MasterMenuItem url={`collection/${collection.id}`} title={collection.name} am={Collection.am(collection)}/>,
 				...(children.length ? {children: children} : {})
 			}
 		});
@@ -57,7 +57,7 @@ export default class Menu{
 			return {
 				key: `menu_folder_${folder.id}`,
 				icon: <FolderOutlined/>,
-				label: <NavLink to={`folders/${folder.id}`}>{folder.name}</NavLink>,
+				label: <NavLink to={`folder/${folder.id}`}>{folder.name}</NavLink>,
 				...(children.length ? {children: children} : {})
 			}
 		});
@@ -71,7 +71,7 @@ export default class Menu{
 			return {
 				key: `menu_request_${request.id}`,
 				icon: <ApiOutlined/>,
-				label: <NavLink to={`requests/${request.id}`}>{request.name}</NavLink>,
+				label: <NavLink to={`request/${request.id}`}>{request.name}</NavLink>,
 				...(children.length ? {children: children} : {})
 			}
 		});

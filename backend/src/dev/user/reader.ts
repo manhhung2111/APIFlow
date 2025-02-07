@@ -12,6 +12,7 @@ export default class Reader extends DBReader<DUser>{
 
 	public async read(){
 		let email = HTMLInput.inputInline("email");
+		let username = HTMLInput.inputInline("username");
 		let password = HTMLInput.inputInline("password");
 		let first_name = HTMLInput.inputInline("first_name");
 		let last_name = HTMLInput.inputInline("last_name");
@@ -20,9 +21,9 @@ export default class Reader extends DBReader<DUser>{
 			throw new Code("Invalid email address.");
 		}
 
-		const user = await DBUserLoader.byEmail(email);
+		const user = await DBUserLoader.byEmailOrUsername(email, username);
 		if (user.good()){
-			throw new Code("This email is taken by another account.");
+			throw new Code("This email or username is taken by another account.");
 		}
 
 		if (Validation.isEmpty(password)){
@@ -30,6 +31,7 @@ export default class Reader extends DBReader<DUser>{
 		}
 
 		this._obj.email = email;
+		this._obj.username = username;
 		this._obj.password = await this.hashPassword(password);
 		this._obj.first_name = first_name;
 		this._obj.last_name = last_name;
