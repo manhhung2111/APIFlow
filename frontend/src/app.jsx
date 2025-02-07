@@ -24,7 +24,28 @@ import PublicRoute from "@layout/routes/public.jsx";
 import UserService from "@services/user.js";
 
 function App() {
-    const {setUser} = useContext(AppContext);
+    const {user, setUser} = useContext(AppContext);
+
+    useEffect(() => {
+        const verifyUser = async () => {
+            try {
+                const response = await UserService.verify(); // Replace with your API URL
+
+                if (response.code === 0) {
+                    setUser(response.data.user);
+                    localStorage.setItem("user", JSON.stringify(response.data.user));
+                } else {
+                    setUser(null);
+                    localStorage.removeItem("user");
+                }
+            } catch (err) {
+                console.error("Error verifying user", err);
+                setUser(null); // Prevent undefined state
+                localStorage.removeItem("user");
+            }
+        };
+        verifyUser();
+    }, []);
 
     return (
         <RequestContextProvider>

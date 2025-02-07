@@ -1,0 +1,187 @@
+@use "@styles/variables" as *;
+
+.home-page {
+  .page-main {
+    position: relative;
+    .master-menu {
+      width: 290px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      .menu-section {
+        width: 220px;
+        padding-bottom: 16px;
+        &:not(:last-of-type) {
+          border-bottom: 1px solid $border-color-default;
+        }
+
+        img {
+          width: 80%;
+        }
+
+        h4 {
+          font-size: $text-size-l;
+          margin-bottom: 4px;
+          font-weight: $text-weight-bold;
+        }
+
+        p {
+          font-size: $text-size-m;
+          color: $content-color-secondary;
+          margin-bottom: 12px;
+        }
+
+        .cta-btn {
+          font-size: $text-size-m;
+          color: $content-color-primary;
+          &:hover {
+            border-color: rgba(0, 0, 0, 0.32);
+          }
+        }
+
+        .link-btn {
+          color: $content-color-primary;
+          display: flex;
+          gap: 6px;
+          width: 100%;
+          text-decoration: none;
+          margin-top: 8px;
+          padding: 0 16px 0 8px;
+          line-height: 1.6;
+          height: 32px;
+          align-items: center;
+          border-radius: $border-radius-default;
+          &:hover {
+            background-color: $highlight-background-color-primary;
+          }
+
+          .anticon {
+            font-size: $text-size-l;
+          }
+        }
+
+        .link-ref {
+          display: flex;
+          text-decoration: none;
+          color: $content-color-secondary;
+          margin-top: 16px;
+          &:hover {
+            text-decoration: underline;
+            color: $content-color-primary;
+          }
+        }
+
+      }
+    }
+    .master-main {
+      width: calc(100vw - 290px);
+      height: calc(100vh - 48px);
+      position: absolute;
+      left: 290px;
+      top: 0;
+      padding: 32px 0;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+      overflow: hidden;
+      overflow-y: auto;
+      scrollbar-gutter: stable;
+      &::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+      }
+
+      &::-webkit-scrollbar {
+        width: 8px;
+        height: 4px;
+        border-radius: $border-radius-l;
+      }
+
+      .display-section {
+        width: 800px;
+
+        &:not(:first-of-type) {
+          margin-top: 32px;
+        }
+
+        .ds-header {
+          h2 {
+            color: $content-color-primary;
+            font-weight: $text-weight-bold;
+          }
+          margin-bottom: 16px;
+          p {
+            font-size: $text-size-m;
+            color: $content-color-secondary;
+          }
+        }
+
+        .empty-workspaces {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          img {
+            width: 20%;
+          }
+          p {
+            color: $content-color-secondary;
+            font-size: 13px;
+          }
+        }
+
+        .templates {
+          margin-top: 8px;
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 24px;
+
+          .card {
+            border: 1px solid $border-color-default;
+            border-radius: $border-radius-default;
+            padding: 20px;
+            cursor: pointer;
+
+            &:hover {
+              background-color: rgb(249, 249, 249);
+            }
+
+            .avatar {
+              width: 48px;
+              height: 48px;
+              padding: 8px;
+              background-color: $background-color-tertiary;
+              border-radius: $border-radius-default;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              img {
+                color: $base-color-brand;
+              }
+            }
+
+            h4 {
+              margin-top: 8px;
+              margin-bottom: 8px;
+              color: $content-color-primary;
+              font-weight: $text-weight-bold;
+              font-size: $text-size-l;
+            }
+
+            p {
+              color: $content-color-secondary;
+              font-size: $text-size-m;
+              overflow: hidden;
+              display: -webkit-box;
+              -webkit-line-clamp: 3; /* number of lines to show */
+              line-clamp: 3;
+              -webkit-box-orient: vertical;
+            }
+          }
+        }
+      }
+    }
+  }
+}

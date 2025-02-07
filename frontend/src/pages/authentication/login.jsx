@@ -2,7 +2,7 @@ import * as React from "react";
 import './styles/login.scss';
 import LogoBrandImg from "@assets/images/logo.brand.svg";
 import {Button, Checkbox, Divider, Form, Input} from 'antd';
-import {NavLink, useNavigate} from "react-router";
+import {NavLink, useLocation, useNavigate} from "react-router";
 import {GithubOutlined, GoogleOutlined} from "@ant-design/icons";
 import useDocumentTitle from "@hooks/use.document.title";
 import {toast} from "react-toastify";
@@ -20,7 +20,7 @@ export default function LoginPage(){
 
 		if(response.code === 0){
 			toast.success(response.message);
-			localStorage.setItem("authenticated", "true");
+			localStorage.setItem("user", JSON.stringify(response.data.user));
 			setUser(response.data.user);
 			navigate("/");
 		} else {

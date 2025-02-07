@@ -34,10 +34,6 @@ export const registerUser = async (request: Request, response: Response) => {
     }
 };
 
-export const logoutUser = async (request: Request, response: Response) => {
-
-};
-
 export const forgotPassword = async (request: Request, response: Response) => {
 
 };
@@ -67,4 +63,22 @@ export const verifyUser = async (request: Request, response: Response) => {
     }
 
     response.status(200).json(Code.success("User verified successful", {user: user.release()}));
+};
+
+export const logoutUser = async (request: Request, response: Response) => {
+    const token = HTMLInput.signedCookies("access_token");
+
+    if (!token) {
+        response.status(401).json(Code.error("Authorization token required"));
+        return;
+    }
+
+    const payload = await JWT.verifyToken(token);
+    if (typeof payload === "string") {
+        response.status(401).json(Code.error("Invalid or missing user_id in token payload"));
+        return;
+    }
+
+    response.cookie("access_token", "", {signed: true, maxAge: 0, httpOnly: true});
+    response.status(200).json(Code.success("Logout successful"));
 };

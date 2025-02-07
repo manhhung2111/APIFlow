@@ -30,7 +30,7 @@ export default function WorkspaceSelectionModal(props){
 				<h6>Recently visited</h6>
 				<div className="workspace-list">
 					{workspaces.map(workspace => (
-						<NavLink key={`workspace-${workspace.id}`} to={`workspace/${workspace.id}`}
+						<NavLink key={`workspace-${workspace.id}`} to={`/workspace/${workspace.id}`} replace={true}
 								 className="workspace-item">
 							<UserOutlined style={{fontSize: "16px"}}/> &nbsp;{workspace.name}
 						</NavLink>

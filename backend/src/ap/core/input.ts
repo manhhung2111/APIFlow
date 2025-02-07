@@ -47,6 +47,19 @@ export default class HTMLInput{
 		return value;
 	}
 
+	public static page() {
+		if (!this._cur_request){
+			throw new Code("Please read the request to use request data");
+		}
+
+		const value = this._cur_request.query["page"];
+		if (value === undefined || value === null){
+			return 0;
+		}
+
+		return value;
+	}
+
 	public static query(field: string = ""){
 		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");

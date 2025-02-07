@@ -9,7 +9,7 @@ export default class Loader{
 			creator_id: {$eq: Client.viewer._id.toString()},
 		}).setLimit(DBWorkspace.PAGE_SIZE);
 
-		let page_query = HTMLInput.query("page");
+		let page_query = HTMLInput.page();
 		if (!Validation.isInt(page_query) || Number(page_query) <= 0){
 			sc.setSkip(0);
 		} else{
