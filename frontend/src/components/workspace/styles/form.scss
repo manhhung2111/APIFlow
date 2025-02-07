@@ -1,0 +1,54 @@
+@use "@styles/variables" as *;
+
+.workspace-form-create {
+
+  .ant-modal-content {
+    padding: 0;
+    .ant-modal-header {
+      padding: 16px 24px 8px 24px;
+      border-bottom: 1px solid $border-color-default;
+    }
+
+    .ant-modal-body {
+      padding: 0 24px 8px 24px;
+
+      .ant-form-item {
+        margin-bottom: 16px;
+      }
+
+      .ant-form-item-label {
+        padding: 0 !important;
+        label {
+          font-size: $text-size-m !important;
+          font-weight: $text-weight-thick;
+          color: $content-color-primary;
+        }
+      }
+
+      .text-editor {
+        height: 150px;
+      }
+
+      .footer {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 55px;
+        button {
+          font-size: $text-size-m;
+
+          &.submit-btn {
+            background-color: $base-color-brand;
+
+            &:hover {
+              filter: brightness(90%);
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+}

@@ -41,16 +41,16 @@ export default class UserACL extends DBUserAcl<DWorkspace>{
 
 	public release(): object{
 		return {
-			"viewable": this._viewable,
-			"commentable": this._commentable,
-			"editable": this._editable,
-			"full_access": this._full_access,
+			"viewable": this.canView(),
+			"commentable": this.canView(),
+			"editable": this.canEdit(),
+			"full_access": this._obj?.user_id.toString() === this._user_id,
 		};
 	}
 
 	protected __init(){
 		this._viewable = this.canView();
-		this._commentable = this.canComment();
+		this._commentable = this.canView();
 		this._editable = this.canEdit();
 		this._full_access = this._obj?.user_id.toString() === this._user_id;
 	}

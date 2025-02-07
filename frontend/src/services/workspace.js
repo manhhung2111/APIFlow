@@ -5,7 +5,15 @@ export default class WorkspaceService {
 		try {
 			return await axios.get('/workspaces');
 		} catch (error) {
-			throw new Error(error.message || 'Register failed');
+			throw new Error(error.message || 'Get workspaces failed');
+		}
+	}
+
+	static async create(name, content = "") {
+		try {
+			return await axios.post('/workspaces', {name: name, content});
+		} catch (error) {
+			throw new Error(error.message || 'Create workspace failed');
 		}
 	}
 }

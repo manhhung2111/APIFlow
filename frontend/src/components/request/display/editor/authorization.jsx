@@ -4,7 +4,7 @@ import Request from "@components/request/request.js";
 import {Checkbox, Empty, Input, Select} from "antd";
 import {NavLink} from "react-router";
 import 'codemirror/mode/javascript/javascript';
-import CodeEditor from "@components/app/editor/index.jsx";
+import CodeEditor from "@components/app/editor/code.editor.jsx";
 import _ from "lodash";
 
 export default function RequestEditorAuthorization(){

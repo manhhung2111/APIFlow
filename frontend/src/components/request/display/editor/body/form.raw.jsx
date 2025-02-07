@@ -1,4 +1,4 @@
-import CodeEditor from "@components/app/editor/index.jsx";
+import CodeEditor from "@components/app/editor/code.editor.jsx";
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
