@@ -10,6 +10,13 @@ export default class Listener extends DBListener<DWorkspace>{
 		super(obj);
 	}
 
+
+	public async created(session: ClientSession | null = null){
+
+
+
+	}
+
 	public async deleted(session: ClientSession | null = null){
 		const collections = await DBCollectionLoader.byWorkspace(this._obj!);
 		for (const collection of collections){

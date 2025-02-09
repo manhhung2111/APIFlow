@@ -46,6 +46,8 @@ export const createNewWorkspace = async (request: Request, response: Response) =
 
 		await workspace.save();
 
+		await workspace.fs().setFollowing();
+
 		response.status(201).json(Code.success(`Create a new workspace successfully.`, {workspace: workspace.release()}));
 	} catch (error){
 		logger.error((error as Error).stack);
