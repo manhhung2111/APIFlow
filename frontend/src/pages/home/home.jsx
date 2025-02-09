@@ -2,7 +2,7 @@ import SuperHeader from "@layout/header/header.jsx";
 import TeamWork from "@assets/images/team.work.svg";
 import {Button} from "antd";
 import './styles/home.scss'
-import {NavLink} from "react-router";
+import {NavLink, useNavigate} from "react-router";
 import NorthEastIcon from "@assets/icons/north.east.jsx";
 import {BarChartOutlined, TeamOutlined, UserOutlined} from "@ant-design/icons";
 import {useContext} from "react";
@@ -17,6 +17,7 @@ import QuickReference from "@assets/images/quick.reference.svg";
 
 export default function HomePage(){
 	let {workspaces} = useContext(AppContext);
+
 
 	return (
 		<div className="home-page master-page">
@@ -47,12 +48,16 @@ export default function HomePage(){
 						</div>
 						{workspaces.length > 0 &&
 							<div className="workspace-list">
-								<div className="list-item">
-									<div className="icon">
-										<UserOutlined/>
-
-									</div>
-								</div>
+								{workspaces.map(workspace => {
+									return (
+										<NavLink className="list-item" to={`/workspace/${workspace._id}`} key={workspace._id}>
+											<div className="icon">
+												<UserOutlined/>
+											</div>
+											<p>{workspace.name}</p>
+										</NavLink>
+									)
+								})}
 							</div>
 						}
 						{workspaces.length === 0 &&

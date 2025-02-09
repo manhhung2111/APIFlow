@@ -144,14 +144,14 @@
             cursor: pointer;
 
             &:hover {
-              background-color: rgb(249, 249, 249);
+              background-color: $background-color-tertiary;
             }
 
             .avatar {
               width: 48px;
               height: 48px;
               padding: 8px;
-              background-color: $background-color-tertiary;
+              background-color: $background-color-secondary;
               border-radius: $border-radius-default;
               display: flex;
               align-items: center;
@@ -178,6 +178,40 @@
               -webkit-line-clamp: 3; /* number of lines to show */
               line-clamp: 3;
               -webkit-box-orient: vertical;
+            }
+          }
+        }
+
+        .workspace-list {
+          display: flex;
+          flex-direction: column;
+
+          .list-item {
+            .icon {
+              width: 24px;
+              height: 24px;
+              border-radius: $border-radius-default;
+              background-color: $background-color-secondary;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+
+              .anticon {
+                font-size: 16px;
+                color: rgb(107, 107, 107);
+              }
+            }
+            height: 48px;
+            padding: 8px;
+            border-top: 1px solid $border-color-default;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            color: $content-color-primary;
+            &:hover {
+              background-color: $background-color-tertiary;
             }
           }
         }
