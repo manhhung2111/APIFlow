@@ -11,7 +11,7 @@ export default class WorkspaceFollowing extends DBModel<DWorkspaceFollowing> {
     protected _db: Model<DWorkspaceFollowing> = WorkspaceFollowingModel;
 
     release() {
-        return this.export(["_id", "user_id", "creator_id", "workspace_id", "name", "content", "viewing", "commenting", "editing", "viewers", "commenters", "editors", "token"]);
+        return this.export(["_id", "user_id", "creator_id", "object_id", "workspace_id", "name", "content", "viewing", "commenting", "editing", "viewers", "commenters", "editors", "token"]);
     }
 
     public static getExport(workspace: HydratedDocument<DWorkspace>, user: HydratedDocument<DUser>) {

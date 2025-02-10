@@ -15,9 +15,25 @@
     align-items: center;
 
     .left-section {
-      button {
-        color: $content-color-primary;
-        font-size: $text-size-l;
+      width: 200px;
+      margin-left: 12px;
+      a {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        color: rgb(46, 46, 46);
+        text-decoration: none;
+        .anticon {
+          font-size: 14px;
+        }
+
+        &:hover {
+          color: $content-color-link;
+        }
       }
     }
 

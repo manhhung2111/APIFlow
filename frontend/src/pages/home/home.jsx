@@ -50,7 +50,7 @@ export default function HomePage(){
 							<div className="workspace-list">
 								{workspaces.map(workspace => {
 									return (
-										<NavLink className="list-item" to={`/workspace/${workspace._id}`} key={workspace._id}>
+										<NavLink className="list-item" to={`/workspace/${workspace.object_id}`} key={workspace._id}>
 											<div className="icon">
 												<UserOutlined/>
 											</div>

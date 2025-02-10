@@ -1,4 +1,4 @@
-import {Button, Tabs} from "antd";
+import {Button, Tabs, Skeleton} from "antd";
 import "./styles/menu.scss";
 import {UserOutlined} from "@ant-design/icons";
 import PrimaryMenu from "@layout/menu/primary/primary.jsx";
@@ -9,6 +9,8 @@ import {AppContext} from "@contexts/app.jsx";
 import Menu from "@utils/menu/menu.jsx";
 import EnvironmentMenu from "@layout/menu/environment/environment.jsx";
 import FolderEnvironmentIcon from "@assets/icons/folder.environment.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
+import {NavLink} from "react-router";
 
 export default function MasterMenu(){
 	const {menuItems, environments} = useContext(AppContext)
@@ -17,6 +19,8 @@ export default function MasterMenu(){
 	const primaryMenuItems = Menu.constructPrimaryMenu(collections, folders, requests, examples);
 	const [globalEnvItems, environmentItems] = Menu.constructEnvironmentMenu(environments);
 
+	const {workspace} = useContext(WorkspaceContext);
+	console.log(workspace);
 	const items = [
 		{
 			label: <BaseLabel icon={<CollectionIcon style={{fontSize: "16px"}}/>} title={"Collections"}/>,
@@ -35,7 +39,8 @@ export default function MasterMenu(){
 		<div className={"master-menu"}>
 			<div className="menu-header">
 				<div className="left-section">
-					<Button type={"link"} icon={<UserOutlined />}>My Workspace</Button>
+					{workspace && <NavLink to={`/workspace/${workspace._id}`} ><UserOutlined /> {workspace.name}</NavLink>}
+					{!workspace && <Skeleton.Input active={true} style={{width: "200px"}}/>}
 				</div>
 
 				<div className="right-section">

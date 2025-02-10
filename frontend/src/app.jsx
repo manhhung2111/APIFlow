@@ -17,6 +17,7 @@ import WorkspaceDisplay from "@components/workspace/display/display.jsx";
 import HomePage from "@pages/home/home.jsx";
 import PublicRoute from "@layout/routes/public.jsx";
 import UserService from "@services/user.js";
+import PageLoader from "@components/app/utils/loader.jsx";
 
 function App(){
 	const {user, setUser} = useContext(AppContext);
@@ -41,6 +42,10 @@ function App(){
 		};
 		verifyUser();
 	}, []);
+
+	if (!user){
+		return <PageLoader />;
+	}
 
 	return (
 		<RequestContextProvider>

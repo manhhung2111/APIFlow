@@ -21,7 +21,7 @@ export const getAllWorkspaces = async (request: Request, response: Response) => 
 export const getWorkspaceById = async (request: Request, response: Response) => {
 	logger.info("[Controller] Get workspace by ID");
 	try{
-
+		console.log(request.params)
 		const workspace_id = HTMLInput.param("workspace_id");
 
 		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;

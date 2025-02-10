@@ -8,7 +8,7 @@ export default class DBWorkspace extends DBModel<DWorkspace>{
 	protected _db: Model<DWorkspace> = WorkspaceModel;
 
 	release() {
-		let obj = this.export(["user_id", "name", "content", "viewers", "commenters", "editors", "data", "token", "created_at", "updated_at"]);
+		let obj = this.export(["_id", "user_id", "name", "content", "viewers", "commenters", "editors", "data", "token", "created_at", "updated_at"]);
 		obj["can"] = this.acl().release();
 
 		return obj;
