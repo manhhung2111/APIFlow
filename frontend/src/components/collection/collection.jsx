@@ -2,6 +2,13 @@ import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import CollectionForm from "@components/collection/form.jsx";
 
 export default class Collection {
+	static AUTHORIZATION = {
+		NoAuth: {value: 1, label: "No Auth"},
+		BasicAuth: {value: 2, label: "Basic Auth"},
+		BearerToken: {value: 3, label: "Bearer Token"},
+		JWTBearer: {value: 4, label: "JWT Bearer"}
+	};
+
 	static am(collection) {
 		return [
 			{ key: `actions_edit_collection_${collection.id}`, label: "Edit", icon: <EditOutlined />, onClick: (event) => CollectionForm.edit(collection, event) },

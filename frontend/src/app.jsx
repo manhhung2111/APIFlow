@@ -18,6 +18,7 @@ import HomePage from "@pages/home/home.jsx";
 import PublicRoute from "@layout/routes/public.jsx";
 import UserService from "@services/user.js";
 import PageLoader from "@components/app/utils/loader.jsx";
+import CollectionPage from "@pages/collection/collection.jsx";
 
 function App(){
 	const {user, setUser} = useContext(AppContext);
@@ -56,6 +57,7 @@ function App(){
 						<Route path="workspace/:workspace_id/" element={<WorkspacePage/>}>
 							<Route index element={<WorkspaceDisplay/>}/>
 							<Route path="request/:request_id/" element={<RequestPage/>}/>
+							<Route path="collection/:collection_id" element={<CollectionPage/>}/>
 						</Route>
 					</Route>
 

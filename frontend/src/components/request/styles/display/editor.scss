@@ -506,6 +506,10 @@
       background-color: transparent;
       display: none;
     }
+
+    .ant-tabs-tabpane {
+      padding-left: 0;
+    }
   }
 
   .app-code-editor {

@@ -20,7 +20,6 @@ export default class WorkspaceService {
 
 	static async getById(id) {
 		try {
-			console.log(id)
 			return await axios.get(`/workspaces/${id}`);
 		} catch (error) {
 			throw new Error(error.message || 'Create workspace failed');

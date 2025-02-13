@@ -9,8 +9,8 @@ const schema = new Schema<DCollection>({
 	content: String,
 
 	authorization: {
-		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
-		data: Schema.Types.Mixed,
+		type: {type: Number, enum: [1, 2, 3, 4], default: 1},
+		data: {type: Schema.Types.Mixed, default: {}},
 	},
 
 	scripts: {

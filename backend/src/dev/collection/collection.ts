@@ -8,7 +8,7 @@ export default class DBCollection extends DBModel<DCollection>{
 	protected _db: Model<DCollection> = CollectionModel;
 
 	release(): object{
-		return this.export([""]);
+		return this.export(["_id", "workspace_id", "name", "content", "authorization", "scripts", "variables", "data", "token", "created_at", "updated_at"]);
 	}
 
 	releaseCompact(): object{

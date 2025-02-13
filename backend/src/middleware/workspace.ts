@@ -9,6 +9,11 @@ const createWorkspaceMiddleware = (checkPermission: (workspace: DBWorkspace) => 
 			logger.info("Request into workspace middleware");
 			const workspace_id = HTMLInput.inputInline("workspace_id") || HTMLInput.param("workspace_id") || HTMLInput.query("workspace_id");
 
+			if (!workspace_id){
+				response.status(400).json(Code.error("Invalid workspace"));
+				return;
+			}
+
 			const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
 			if (!workspace.good()){
 				response.status(400).json(Code.error("Invalid workspace"));

@@ -1,19 +1,9 @@
-import {useContext, useEffect, useState} from "react";
-import {WorkspaceContext} from "@contexts/workspace.jsx";
-import {Button, Input} from "antd";
+import {Input} from "antd";
 import TextEditor from "@components/app/editor/text.editor.jsx";
-import {useParams} from "react-router";
+import {NavLink} from "react-router";
+import {ArrowRightOutlined} from "@ant-design/icons";
 
-export default function WorkspaceDisplayOverview(){
-	const {workspace, setWorkspace} = useContext(WorkspaceContext);
-	const {workspace_id} = useParams();
-
-	const [name, setName] = useState(workspace.name || "");
-	const [content, setContent] = useState(workspace.content || "");
-
-	useEffect(() => {
-		setName(workspace.name);
-	}, [workspace]);
+export default function CollectionDisplayOverview({collection, name, setName, content, setContent}){
 
 	const handleChangeContent = (quill, quillRef) => {
 		if(quill){
@@ -27,12 +17,8 @@ export default function WorkspaceDisplayOverview(){
 		}
 	}
 
-	const handleCancel = () => {
-
-	}
-
 	return (
-		<div className="workspace-display-overview">
+		<div className="collection-display-overview">
 			<div className="main">
 				<div className="row">
 					<Input className="workspace-name" placeholder={"Workspace name"} value={name}
@@ -42,12 +28,7 @@ export default function WorkspaceDisplayOverview(){
 					<TextEditor handleChange={handleChangeContent}/>
 				</div>
 				<div className="footer">
-					<Button className="submit-btn" color="geekblue" variant="solid" htmlType="submit">
-						Save
-					</Button>
-					<Button color="default" variant="filled" onClick={handleCancel}>
-						Cancel
-					</Button>
+					<NavLink to={"documentation"}>View complete documentation <ArrowRightOutlined/></NavLink>
 				</div>
 			</div>
 			<div className="sidebar">
@@ -57,11 +38,11 @@ export default function WorkspaceDisplayOverview(){
 				</div>
 				<div className="row">
 					<h5>Created at</h5>
-					<p>{workspace.created_at}</p>
+					<p>{collection.created_at}</p>
 				</div>
 				<div className="row">
 					<h5>Last updated at</h5>
-					<p>{workspace.updated_at}</p>
+					<p>{collection.updated_at}</p>
 				</div>
 			</div>
 		</div>

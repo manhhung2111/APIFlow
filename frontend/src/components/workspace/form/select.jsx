@@ -21,16 +21,16 @@ export default function WorkspaceNewSelectForm({ visible, setVisible }) {
 
 		if (type === "Collection") {
 			result = await CollectionService.create(workspace._id);
-			link = `collection/${result?.data?.collection._id}`;
+			link = `/workspace/${workspace._id}/collection/${result?.data?.collection._id}`;
 		} else if (type === "Environment") {
 			result = await EnvironmentService.create(workspace._id);
-			link = `environment/${result?.data?.environment._id}`;
+			link = `/workspace/${workspace._id}/environment/${result?.data?.environment._id}`;
 		}
 
 		if (result?.code === 0) {
 			toast.success(result?.message);
 			setVisible(false);
-			// navigate(link);
+			navigate(link);
 		} else {
 			toast.error(result?.message);
 		}
