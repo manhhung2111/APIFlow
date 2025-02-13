@@ -16,7 +16,9 @@ export default class Reader extends DBReader<DCollection>{
 		if (this.isCreating()){
 			this._obj.user_id = Client.viewer._id.toString();
 			this._obj.token = UUID.randomTokenSize32();
-			this._obj.workspace_id = HTMLInput.param("workspace_id");
+			this._obj.workspace_id = HTMLInput.inputInline("workspace_id");
+			this._obj.name = "New Collection";
+			return;
 		}
 
 		this.readName();
@@ -35,16 +37,14 @@ export default class Reader extends DBReader<DCollection>{
 	}
 
 	public readName(){
-		const name = HTMLInput.inputInline("name");
-		if (Validation.isEmpty(name)){
-			throw new Code("Request name must not be empty");
+		this._obj.name = HTMLInput.inputInline("name");
+		if (Validation.isEmpty(this._obj.name)){
+			throw new Code("Collection name must not be empty");
 		}
 
-		if (name.length > 255){
-			throw new Code("Request name must not exceed 255 characters");
+		if (this._obj.name.length > 255){
+			throw new Code("Collection name must not exceed 255 characters");
 		}
-
-		this._obj.name = name;
 	}
 
 

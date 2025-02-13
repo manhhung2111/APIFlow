@@ -52,10 +52,10 @@ app.post("/send", sendRequest)
 
 app.use("/users", UserRoute);
 app.use("/workspaces", WorkspaceRoute);
-app.use("/workspaces/:workspace_id/collections", CollectionRoute);
-app.use("/workspaces/:workspace_id/folders", FolderRoute);
-app.use("/workspaces/:workspace_id/requests", RequestRoute);
-app.use("/workspaces/:workspace_id/environments", EnvironmentRoute);
+app.use("/collections", CollectionRoute);
+app.use("/folders", FolderRoute);
+app.use("/requests", RequestRoute);
+app.use("/environments", EnvironmentRoute);
 
 
 (async function (){

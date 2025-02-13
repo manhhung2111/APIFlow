@@ -41,7 +41,8 @@ export default class HTMLInput{
 
 		const value = this._cur_request.params[field];
 		if (value === undefined || value === null){
-			throw new Code(`Param \"${field}\" does not exist in the URL.`);
+			// throw new Code(`Param \"${field}\" does not exist in the URL.`);
+			return "";
 		}
 
 		return value;
@@ -67,10 +68,11 @@ export default class HTMLInput{
 
 		const value = this._cur_request.query[field];
 		if (value === undefined || value === null){
-			throw new Code(`Query \"${field}\" does not exist in the URL.`);
+			// throw new Code(`Query \"${field}\" does not exist in the URL.`);
+			return "";
 		}
 
-		return value;
+		return value as string;
 	}
 
 	public static cookies(field: string = ""){

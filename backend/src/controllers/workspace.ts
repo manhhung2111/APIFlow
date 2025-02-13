@@ -39,19 +39,30 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
 export const createNewWorkspace = async (request: Request, response: Response) => {
 	logger.info("[Controller] Create new workspace");
 
+	const session = await mongoose.startSession();
+	session.startTransaction();
+
 	try{
 		const workspace = await DBWorkspace.initialize() as DBWorkspace;
 
 		await workspace.reader().read();
 
-		await workspace.save();
+		await workspace.save(session);
 
-		await workspace.fs().setFollowing();
+		await workspace.fs().setFollowing(session);
+
+		await workspace.on().created(session);
+
+		await session.commitTransaction();
 
 		response.status(201).json(Code.success(`Create a new workspace successfully.`, {workspace: workspace.release()}));
 	} catch (error){
+		await session.abortTransaction();
+
 		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
+	} finally{
+		await session.endSession();
 	}
 };
 

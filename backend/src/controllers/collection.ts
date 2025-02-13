@@ -11,11 +11,11 @@ export const createNewCollection = async (request: Request, response: Response) 
 	try{
 		const collection = await DBCollection.initialize() as DBCollection;
 
-		await collection.reader().read();
+		collection.reader().read();
 
 		await collection.save();
 
-		response.status(201).json(Code.success("Create new collection successfully!"));
+		response.status(201).json(Code.success("Create new collection successfully!", {collection: collection.releaseCompact()}));
 	} catch (error){
 		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
@@ -86,7 +86,7 @@ export const getCollectionsByWorkspace = async (request: Request, response: Resp
 	logger.info("[Controller] Get collections by workspace");
 
 	try{
-		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
+		const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
 		if (!workspace.good()){
 			response.status(204).json(Code.error(Code.INVALID_DATA));
 		}

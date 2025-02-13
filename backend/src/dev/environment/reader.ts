@@ -11,15 +11,28 @@ export default class Reader extends DBReader<DEnvironment>{
 		super(obj);
 	}
 
-	public read(){
+	public async read(){
 		if (this.isCreating()){
 			this._obj.user_id = Client.viewer._id.toString();
 			this._obj.token = UUID.randomTokenSize32();
-			this._obj.workspace_id = HTMLInput.param("workspace_id");
+			this._obj.workspace_id = HTMLInput.inputInline("workspace_id");
+			this._obj.name = "New Environment";
+			this._obj.variables = [];
+			this._obj.scope = 1;
+		} else {
+			this.readName();
+			this.readVariables();
 		}
+	}
 
-		this.readName();
-		this.readVariables();
+
+	public async readGlobal(workspace_id: string) {
+		this._obj.user_id = Client.viewer._id.toString();
+		this._obj.token = UUID.randomTokenSize32();
+		this._obj.workspace_id = workspace_id;
+
+		this._obj.name = "Globals";
+		this._obj.variables = [];
 	}
 
 
