@@ -1,47 +1,39 @@
 @use "@styles/variables" as *;
 
 .request-page {
-  position: relative;
-
-  height: calc(100vh - 48px);
+  height: fit-content;
   .ant-btn {
     font-size: $text-size-m;
   }
+  position: relative;
 
-  & > .mmw-header {
-    height: 40px;
-    border-bottom: 1px solid $border-color-default;
+  .main-wrapper {
+    position: absolute;
+    right: 48px;
+    width: calc(100% - 48px);
+    display: flex;
+    flex-direction: column;
+
+    .request-header {
+      padding: 8px 16px;
+    }
+
+    .request-main {
+      flex: 1;
+
+      .rm-editor {
+        height: 47vh;
+        border-bottom: 1px solid $border-color-default;
+        display: flex;
+        flex-direction: column;
+      }
+    }
   }
 
-  & > .mmw-main {
-    height: calc(100% - 40px);
-    position: relative;
-    & > .rm-main {
-      height: 100%;
-      width: calc(100% - 48px);
-      position: absolute;
-      right: 48px;
-      display: flex;
-      flex-direction: column;
-      .request-header {
-        padding: 8px 16px;
-      }
+  .request-sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
 
-      .request-main {
-        flex: 1;
-        .rm-editor {
-          height: 47vh;
-          border-bottom: 1px solid $border-color-default;
-          display: flex;
-          flex-direction: column;
-        }
-      }
-    }
-
-    & > .sidebar {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
   }
 }

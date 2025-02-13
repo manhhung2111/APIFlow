@@ -1,7 +1,8 @@
 import SuperHeader from "@layout/header/header.jsx";
 import MasterMenu from "@layout/menu/menu.jsx";
-import {Outlet, useParams} from "react-router";
+import {Outlet} from "react-router";
 import WorkspaceContextProvider from "@contexts/workspace.jsx";
+import './styles/workspace.scss'
 
 export default function WorkspacePage(){
 	return (
@@ -13,7 +14,12 @@ export default function WorkspacePage(){
 						<MasterMenu/>
 					</div>
 					<div className="master-main-wrapper">
-						<Outlet/>
+						<div className="mmw-header">
+
+						</div>
+						<div className="mmw-main">
+							<Outlet/>
+						</div>
 					</div>
 				</div>
 			</div>

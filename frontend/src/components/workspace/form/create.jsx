@@ -11,7 +11,6 @@ export default function WorkspaceFormCreate({visible, setVisible}){
 	const {setWorkspaces} = useContext(AppContext);
 
 	const handleSubmit = async (values) => {
-		console.log(values);
 		const response = await WorkspaceService.create(values['name']);
 
 		if (response.code === 0) {

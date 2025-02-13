@@ -18,7 +18,7 @@ export default function TextEditor({handleChange}) {
 		],
 	};
 
-	const { quill, quillRef } = useQuill({ placeholder: "123", theme, modules, formats });
+	const { quill, quillRef } = useQuill({ placeholder: "Write something...", theme, modules, formats });
 
 	useEffect(() => {
 		handleChange(quill, quillRef);
