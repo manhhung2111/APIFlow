@@ -15,7 +15,7 @@ export const createNewFolder = async (request: Request, response: Response) => {
 
 		await folder.save();
 
-		response.status(201).json(Code.success("Create new folder successfully!"));
+		response.status(201).json(Code.success("Create new folder successfully!", {folder: folder.releaseCompact()}));
 	} catch (error){
 		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
@@ -86,7 +86,7 @@ export const getFoldersByWorkspace = async (request: Request, response: Response
 	logger.info("[Controller] Get folders by workspace");
 
 	try{
-		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
+		const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
 		if (!workspace.good()){
 			response.status(204).json(Code.error(Code.INVALID_DATA));
 		}

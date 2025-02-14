@@ -1,5 +1,6 @@
 import {Button, Dropdown} from "antd";
 import MoreHorizontalIcon from "@assets/icons/more.horizontal.jsx";
+import "@styles/utiles/am/am.scss"
 
 export default function ActionManager({am}){
 	const handleClick = (event) => {
@@ -9,7 +10,7 @@ export default function ActionManager({am}){
 	return (
 		<>
 			{am && (
-				<Dropdown menu={{ items: am }} placement="bottomRight" className="action-manager" trigger={"click"}>
+				<Dropdown menu={{ items: am }} placement="bottomRight" className="action-manager" trigger={"click"} overlayClassName="action-manager-dd">
 					<Button
 						type="text"
 						icon={<MoreHorizontalIcon/>}

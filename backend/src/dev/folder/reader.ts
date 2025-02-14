@@ -16,12 +16,13 @@ export default class Reader extends DBReader<DFolder>{
 		if (this.isCreating()){
 			this._obj.user_id = Client.viewer._id.toString();
 			this._obj.token = UUID.randomTokenSize32();
-			this._obj.workspace_id = HTMLInput.param("workspace_id");
+			this._obj.workspace_id = HTMLInput.inputInline("workspace_id");
 			this._obj.collection_id = HTMLInput.inputInline("collection_id");
+			this._obj.name = "New Folder";
+		} else {
+			await this.readName();
+			await this.readContent();
 		}
-
-		await this.readName();
-		await this.readContent();
 	}
 
 

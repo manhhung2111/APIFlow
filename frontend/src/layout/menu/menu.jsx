@@ -15,9 +15,8 @@ import WorkspaceNewSelectForm from "@components/workspace/form/select.jsx";
 import CollectionMenu from "@components/collection/menu/menu.jsx";
 
 export default function MasterMenu(){
-	const {menuItems, environments} = useContext(AppContext)
+	const {environments} = useContext(AppContext)
 	const {workspace} = useContext(WorkspaceContext);
-	const {collections, folders, requests, examples} = menuItems;
 
 	const [globalEnvItems, environmentItems] = Menu.constructEnvironmentMenu(environments);
 

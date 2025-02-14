@@ -12,8 +12,12 @@ export default class Collection {
 
 	static am(collection) {
 		return [
-			{ key: `actions_edit_collection_${collection.id}`, label: "Edit", icon: <EditOutlined />, onClick: (event) => CollectionForm.edit(collection, event) },
-			{ key: `actions_delete_collection_${collection.id}`, label: "Delete", icon: <DeleteOutlined />, onClick: (event) => CollectionForm.delete(collection, event), danger: 1 },
+			{ key: `edit_${collection.id}`, label: "Edit", onClick: (event) => CollectionForm.edit(collection, event) },
+			{ key: `add_request_${collection.id}`, label: "Add request", onClick: (event) => CollectionForm.addRequest(collection) },
+			{ key: `add_folder_${collection.id}`, label: "Add folder", onClick: (event) => CollectionForm.addFolder(collection) },
+			{ key: `duplicate_${collection.id}`, label: "Duplicate", onClick: (event) => CollectionForm.edit(collection, event) },
+			{ key: `export_${collection.id}`, label: "Export", onClick: (event) => CollectionForm.edit(collection, event) },
+			{ key: `actions_delete_collection_${collection.id}`, label: "Delete", onClick: (event) => CollectionForm.delete(collection, event), danger: 1 },
 		];
 	}
 }

@@ -5,6 +5,18 @@
   .menu-item {
     position: relative;
 
+    //&.folder-menu-item {
+    //  .main-item {
+    //    padding-left: 24px;
+    //  }
+    //}
+    //
+    //&.request-menu-item {
+    //  .main-item {
+    //    padding-left: 36px;
+    //  }
+    //}
+
     .main-item {
       display: flex;
       align-items: center;
@@ -17,6 +29,9 @@
 
       &:hover {
         background-color: $highlight-background-color-primary;
+        .item-side {
+          display: block;
+        }
       }
 
       & > .dropdown-icon {
@@ -43,6 +58,7 @@
           flex: 0 0 28px;
           display: flex;
           justify-content: flex-end;
+          align-items: center;
           margin: var(--spacing-zero) var(--spacing-xs);
           font-size: $text-size-l;
         }
@@ -54,6 +70,7 @@
       }
 
       .item-side {
+        display: none;
         border-radius: $border-radius-default;
         height: fit-content;
 
@@ -74,6 +91,21 @@
 
       .sub-items {
         display: none;
+      }
+    }
+
+    .sub-items {
+      position: relative;
+      padding-left: 12px;
+
+      &::before{
+        position: absolute;
+        top: 0px;
+        left: 10px;
+        bottom: 8px;
+        width: 1px;
+        background-color: #e3e3e3;
+        content: '';
       }
     }
   }

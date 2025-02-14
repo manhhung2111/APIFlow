@@ -12,17 +12,18 @@ export default function FolderMenuItem({folder, requests}) {
 
 	return (
 		<div className="menu-item folder-menu-item">
-			{requests.length && <span className="dd-cion dropdown-icon" onClick={handleToggleMenu}></span>}
+			<div className="main-item">
+				{requests.length > 0 && <span className="dd-cion dropdown-icon" onClick={handleToggleMenu}></span>}
 
-			<NavLink className="item" title={folder.name} to={`folder/${folder._id}`}>
-				<div className="item-label">
-					<span className="icon"><FolderOutlined /></span>
-					<span className="label">{folder.name}</span>
-				</div>
+				<NavLink className="item" title={folder.name} to={`folder/${folder._id}`}>
+					<div className="icon"><FolderOutlined/></div>
+					<div className="label">{folder.name}</div>
+				</NavLink>
+
 				<div className="item-side">
 					<ActionManager am={Folder.am(folder)}/>
 				</div>
-			</NavLink>
+			</div>
 
 			<div className="sub-items">
 				<div className="group-items">
