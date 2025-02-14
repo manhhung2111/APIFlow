@@ -53,8 +53,20 @@
         display: flex;
         gap: 6px;
 
+        &.active {
+          color: red;
+
+          .icon {
+            color: $content-color-primary;
+          }
+
+          .label {
+            color: $content-color-primary;
+          }
+        }
+
         .icon {
-          color: $content-color-primary;
+          color: $content-color-secondary;
           flex: 0 0 28px;
           display: flex;
           justify-content: flex-end;
@@ -65,7 +77,7 @@
 
         .label {
           font-size: $text-size-m;
-          color: $content-color-primary;
+          color: $content-color-secondary;
         }
       }
 
@@ -102,10 +114,20 @@
         position: absolute;
         top: 0px;
         left: 10px;
-        bottom: 8px;
+        bottom: 0px;
         width: 1px;
         background-color: #e3e3e3;
         content: '';
+      }
+
+      .empty-message {
+        font-size: $text-size-m;
+        padding: 4px 24px;
+        color: $content-color-secondary;
+        span {
+          cursor: pointer;
+          color: $content-color-link;
+        }
       }
     }
   }

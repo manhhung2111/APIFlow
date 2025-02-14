@@ -11,7 +11,7 @@ const schema = new Schema<DRequest>({
 	content: String,
 
 	method: {type: String, required: true, enum: ["GET", "POST", "PUT", "PATCH", "DELETE"], default: "GET"},
-	url: {type: String, required: true, default: ""},
+	url: {type: String, default: ""},
 
 	params: [{key: String, value: String, description: String}],
 	headers: [{key: String, value: String, description: String}],

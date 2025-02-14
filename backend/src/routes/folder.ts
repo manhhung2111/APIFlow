@@ -12,6 +12,7 @@ import {
 	updateFolder,
 	updateFolderContent,
 	updateFolderName,
+	createNewRequestFromFolder
 } from "@controllers/folder";
 
 const router = express.Router();
@@ -30,6 +31,7 @@ router.put("/:folder_id/move", workspaceEditable, moveFolder);
 
 // Create routes
 router.post("/", workspaceEditable, createNewFolder);
+router.post("/request", workspaceEditable, createNewRequestFromFolder);
 router.post("/:folder_id/duplicate", workspaceEditable, duplicateFolder);
 
 // Delete routes

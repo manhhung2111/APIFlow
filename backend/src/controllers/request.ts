@@ -87,13 +87,13 @@ export const getRequestsByWorkspace = async (request: Request, response: Respons
 	logger.info("[Controller] Get requests by workspace");
 
 	try{
-		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
+		const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
 		if (!workspace.good()){
 			response.status(204).json(Code.error(Code.INVALID_DATA));
 		}
 
 		const requests = await DBRequestLoader.byWorkspace(workspace.object!);
-		const requests_compact = requests.map(request => request.releaseCompact());
+		const requests_compact = requests.map(request => request.release());
 
 		response.status(200).json(Code.success("Get all requests successfully.", {requests: requests_compact}));
 	} catch (error){
