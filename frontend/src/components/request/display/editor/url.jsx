@@ -2,7 +2,7 @@ import {Button, Input, Select, Space} from "antd";
 import {SendOutlined} from "@ant-design/icons";
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
-import Request from "@components/request/request.js";
+import Request from "@components/request/request.jsx";
 
 export default function RequestEditorUrl(){
 	const {url, setUrl, params, setParams} = useContext(RequestContext);

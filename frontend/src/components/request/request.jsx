@@ -20,4 +20,23 @@ export default class Request{
 		FormEncoded: {value: 2, label: "x-www-form-urlencoded"},
 		FormRaw: {value: 3, label: "raw"}
 	}
+
+	static getMethod(method){
+		if(method === this.METHODS.GET.value){
+			return {name: "GET", color: '#007F31'}
+		} else if(method === this.METHODS.POST.value){
+			return {name: "POST", color: '#AD7A03'}
+		} else if(method === this.METHODS.PUT.value){
+			return {name: "PUT", color: '#0053B8'}
+		} else if(method === this.METHODS.DELETE.value){
+			return {name: "DEL", color: '#8E1A10'}
+		}
+
+		return null;
+	}
+
+
+	static am(request) {
+
+	}
 }

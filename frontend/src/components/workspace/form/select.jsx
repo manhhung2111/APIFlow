@@ -1,9 +1,8 @@
 import {Modal} from "antd";
-import HttpIcon from "@assets/icons/http.jsx";
 import CollectionIcon from "@assets/icons/collection.jsx";
 import EnvironmentIcon from "@assets/icons/environment.jsx";
 import '../styles/form.scss';
-import {useContext, useState} from "react";
+import {useContext} from "react";
 import CollectionService from "@services/collection.js";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {toast} from "react-toastify";

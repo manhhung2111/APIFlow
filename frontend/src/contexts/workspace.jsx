@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useEffect, useState} from "react";
 import {useParams} from "react-router";
 import WorkspaceService from "@services/workspace.js";
 import CollectionService from "@services/collection.js";
@@ -10,10 +10,9 @@ export default function WorkspaceContextProvider(props){
 	const {workspace_id} = useParams();
 
 	const [workspace, setWorkspace] = useState(null);
-	const [collections, setCollections] = useState([]);
+	const [collections, setCollections] = useState(null);
 	const [folders, setFolders] = useState([]);
-	const [requests, setRequests] = useState([]);
-	const [examples, setExamples] = useState([]);
+	const [requests, setRequests] = useState([{collection_id: '67ad79dc244f93d96d34792c', name: "Request 1", method: "GET", examples: []}]);
 	const [environments, setEnvironments] = useState([]);
 
 	useEffect(() => {
@@ -38,7 +37,18 @@ export default function WorkspaceContextProvider(props){
 
 
 	return (
-		<WorkspaceContext.Provider value={{workspace, setWorkspace}}>
+		<WorkspaceContext.Provider value={{
+			workspace,
+			setWorkspace,
+			collections,
+			setCollections,
+			folders,
+			setFolders,
+			requests,
+			setRequests,
+			environments,
+			setEnvironments
+		}}>
 			{children}
 		</WorkspaceContext.Provider>
 	);

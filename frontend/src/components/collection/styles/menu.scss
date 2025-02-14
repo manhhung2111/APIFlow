@@ -1,0 +1,80 @@
+@use "@styles/variables" as *;
+
+.collections-master-menu {
+  margin-top: 4px;
+  .menu-item {
+    position: relative;
+
+    .main-item {
+      display: flex;
+      align-items: center;
+      padding: 4px 8px;
+      height: 28px;
+      box-sizing: border-box;
+      cursor: pointer;
+      color: $content-color-primary;
+
+
+      &:hover {
+        background-color: $highlight-background-color-primary;
+      }
+
+      & > .dropdown-icon {
+        z-index: 1;
+        transform-origin: center;
+        transform: rotate(0deg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease-in-out; // Added transition
+
+        &:hover {
+          background-color: $highlight-background-color-secondary;
+        }
+      }
+
+      .item {
+        flex: 1;
+        display: flex;
+        gap: 6px;
+
+        .icon {
+          color: $content-color-primary;
+          flex: 0 0 28px;
+          display: flex;
+          justify-content: flex-end;
+          margin: var(--spacing-zero) var(--spacing-xs);
+          font-size: $text-size-l;
+        }
+
+        .label {
+          font-size: $text-size-m;
+          color: $content-color-primary;
+        }
+      }
+
+      .item-side {
+        border-radius: $border-radius-default;
+        height: fit-content;
+
+        .ant-btn {
+          margin-top: 4px;
+          padding: 0;
+          height: fit-content;
+          width: fit-content;
+        }
+      }
+    }
+
+
+    &.-collapsed {
+      .dropdown-icon {
+        transform: rotate(-90deg);
+      }
+
+      .sub-items {
+        display: none;
+      }
+    }
+  }
+}

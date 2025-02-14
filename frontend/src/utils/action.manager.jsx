@@ -1,9 +1,7 @@
 import {Button, Dropdown} from "antd";
 import MoreHorizontalIcon from "@assets/icons/more.horizontal.jsx";
 
-export default function ActionManager(props){
-	const {am} = props;
-
+export default function ActionManager({am}){
 	const handleClick = (event) => {
 		event.stopPropagation(); // Prevent the parent menu from triggering
 	};
@@ -11,7 +9,7 @@ export default function ActionManager(props){
 	return (
 		<>
 			{am && (
-				<Dropdown menu={{ items: am }} placement="bottomRight" className="action-manager">
+				<Dropdown menu={{ items: am }} placement="bottomRight" className="action-manager" trigger={"click"}>
 					<Button
 						type="text"
 						icon={<MoreHorizontalIcon/>}

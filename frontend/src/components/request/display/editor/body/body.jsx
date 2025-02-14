@@ -1,7 +1,7 @@
 import {Tabs} from "antd";
 import {useContext, useState} from "react";
 import {RequestContext} from "@contexts/request.jsx";
-import Request from "@components/request/request.js";
+import Request from "@components/request/request.jsx";
 import RequestBodyTypeSelector from "@components/request/display/editor/body/type.selector.jsx";
 import RequestEditorBodyNone from "@components/request/display/editor/body/none.jsx";
 import RequestEditorBodyFormData from "@components/request/display/editor/body/form.data.jsx";

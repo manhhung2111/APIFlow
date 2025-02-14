@@ -31,7 +31,6 @@ export default function CollectionPage(){
 		async function fetchCollection(){
 			const result = await CollectionService.getById(collection_id, workspace._id);
 
-			console.log(result);
 			if(result.code === 0){
 				const collection = result.data.collection;
 				setCollection(collection);

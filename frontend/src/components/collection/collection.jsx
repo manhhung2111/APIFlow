@@ -1,5 +1,6 @@
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
-import CollectionForm from "@components/collection/form.jsx";
+import CollectionForm from "@components/collection/form.js";
+import './styles/menu.scss'
 
 export default class Collection {
 	static AUTHORIZATION = {

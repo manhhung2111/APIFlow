@@ -1,6 +1,6 @@
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
-import Request from "@components/request/request.js";
+import Request from "@components/request/request.jsx";
 import {Checkbox, Empty, Input, Select} from "antd";
 import {NavLink} from "react-router";
 import 'codemirror/mode/javascript/javascript';

@@ -12,13 +12,13 @@ import FolderEnvironmentIcon from "@assets/icons/folder.environment.jsx";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {NavLink} from "react-router";
 import WorkspaceNewSelectForm from "@components/workspace/form/select.jsx";
+import CollectionMenu from "@components/collection/menu/menu.jsx";
 
 export default function MasterMenu(){
 	const {menuItems, environments} = useContext(AppContext)
 	const {workspace} = useContext(WorkspaceContext);
 	const {collections, folders, requests, examples} = menuItems;
 
-	const primaryMenuItems = Menu.constructPrimaryMenu(collections, folders, requests, examples);
 	const [globalEnvItems, environmentItems] = Menu.constructEnvironmentMenu(environments);
 
 	const [newModalVisibility, setNewModalVisibility ] = useState(false);
@@ -27,7 +27,7 @@ export default function MasterMenu(){
 		{
 			label: <BaseLabel icon={<CollectionIcon style={{fontSize: "16px"}}/>} title={"Collections"}/>,
 			key: 1,
-			children: <PrimaryMenu items={primaryMenuItems}/>
+			children: workspace ? <CollectionMenu /> : <Skeleton active/>
 		},
 		{
 			label: <BaseLabel icon={<FolderEnvironmentIcon style={{fontSize: "16px"}}/>} title={"Environments"}/>,
