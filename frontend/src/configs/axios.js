@@ -37,9 +37,9 @@ instance.interceptors.response.use(
 		hideOverlay();
 
 		if(error.response.status === 401){
-			return "Unauthorized user";
+			// window.location.href = "/login";
 		} else if(error.response.status === 403){
-			window.location.href = "/forbidden";
+			// window.location.href = "/forbidden";
 		}
 		return error?.response?.data || Promise.reject(error);
 	}
