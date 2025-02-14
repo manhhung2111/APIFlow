@@ -3,6 +3,7 @@ import {useParams} from "react-router";
 import WorkspaceService from "@services/workspace.js";
 import CollectionService from "@services/collection.js";
 import FolderService from "@services/folder.js";
+import RequestService from "@services/request.jsx";
 
 export const WorkspaceContext = createContext({});
 
@@ -13,13 +14,7 @@ export default function WorkspaceContextProvider(props){
 	const [workspace, setWorkspace] = useState(null);
 	const [collections, setCollections] = useState(null);
 	const [folders, setFolders] = useState(null);
-	const [requests, setRequests] = useState([
-		{collection_id: '67ad79dc244f93d96d34792c', name: "Request 1", method: "GET", examples: []},
-		{collection_id: '67ad79dc244f93d96d34792c', name: "Request 2", method: "POST", examples: []},
-		{collection_id: '67ad79dc244f93d96d34792c', name: "Request 3", method: "PUT", examples: []},
-		{collection_id: '67ad79dc244f93d96d34792c', name: "Request 4", method: "DELETE", examples: []},
-
-	]);
+	const [requests, setRequests] = useState(null);
 	const [environments, setEnvironments] = useState([]);
 
 	useEffect(() => {
@@ -38,6 +33,8 @@ export default function WorkspaceContextProvider(props){
 				const folderRes = await FolderService.mine(workspace_id);
 				setFolders(folderRes.data.folders);
 
+				const requestRes = await RequestService.mine(workspace_id);
+				setRequests(requestRes.data.requests);
 			} else {
 				alert(response.message);
 			}

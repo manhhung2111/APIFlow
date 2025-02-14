@@ -4,6 +4,7 @@ import {Code, HTMLInput} from "@ap/core";
 import {DBCollection, DBCollectionLoader} from "@dev/collection";
 import mongoose from "mongoose";
 import {DBWorkspace} from "@dev/workspace";
+import {DBRequest} from "@dev/request";
 
 export const createNewCollection = async (request: Request, response: Response) => {
 	logger.info("[Controller] Create new collection");
@@ -154,6 +155,23 @@ export const updateCollectionName = async (request: Request, response: Response)
 		await collection.save();
 
 		response.status(200).json(Code.success("Update collection name successfully", {collection: collection.release()}));
+	} catch (error){
+		logger.error((error as Error).stack);
+		response.status(500).json(Code.error((error as Error).message));
+	}
+};
+
+export const createNewRequestFromCollection = async (request: Request, response: Response) => {
+	logger.info("[Controller] Create new request from collection");
+
+	try{
+		const request = await DBRequest.initialize() as DBRequest;
+
+		await request.reader().readCollection();
+
+		await request.save();
+
+		response.status(200).json(Code.success("Create new request successfully", {request: request.release()}));
 	} catch (error){
 		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));

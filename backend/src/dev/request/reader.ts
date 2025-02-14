@@ -39,6 +39,16 @@ export default class Reader extends DBReader<DRequest>{
 		this._obj.scripts = request_reader.getScripts();
 	}
 
+
+	public async readCollection() {
+		this._obj.user_id = Client.viewer._id.toString();
+		this._obj.token = UUID.randomTokenSize32();
+		this._obj.workspace_id = HTMLInput.inputInline("workspace_id");
+		this._obj.collection_id = HTMLInput.inputInline("collection_id");
+		this._obj.name = "New request";
+		this._obj.url = "";
+	}
+
 	public async readName(){
 		const name = HTMLInput.inputInline("name");
 		if (Validation.isEmpty(name)){

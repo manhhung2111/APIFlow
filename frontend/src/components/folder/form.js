@@ -4,14 +4,11 @@ export default class FolderForm {
 
 	}
 
-	static edit(folder, event){
-		event.domEvent.stopPropagation();
+	static edit(folder){
 		alert("edit folder");
-		console.log(event)
 	}
 
-	static delete(folder, event){
-		event.domEvent.stopPropagation();
+	static delete(folder){
 
 		alert("delete folder");
 	}

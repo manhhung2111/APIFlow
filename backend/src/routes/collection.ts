@@ -11,6 +11,7 @@ import {
 	updateCollection,
 	updateCollectionContent,
 	updateCollectionName,
+	createNewRequestFromCollection
 } from "@controllers/collection";
 
 const router = express.Router();
@@ -29,6 +30,7 @@ router.put("/:collection_id/content", workspaceEditable, updateCollectionContent
 // Create routes
 router.post("/", workspaceEditable, createNewCollection);
 router.post("/:collection_id/duplicate", workspaceEditable, duplicateCollection);
+router.post("/request", workspaceEditable, createNewRequestFromCollection);
 
 // Delete routes
 router.delete("/:collection_id", workspaceEditable, deleteCollection);
