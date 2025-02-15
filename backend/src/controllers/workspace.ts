@@ -66,8 +66,8 @@ export const createNewWorkspace = async (request: Request, response: Response) =
 	}
 };
 
-export const updateWorkspaceName = async (request: Request, response: Response) => {
-	logger.info("[Controller] Update workspace name");
+export const updateWorkspace = async (request: Request, response: Response) => {
+	logger.info("[Controller] Update workspace");
 
 	try{
 		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
@@ -76,35 +76,17 @@ export const updateWorkspaceName = async (request: Request, response: Response) 
 		}
 
 		await workspace.reader().readName();
-
-		await workspace.save();
-
-		response.status(201).json(Code.error(`Update workspace successfully.`, {workspace: workspace.release()}));
-	} catch (error){
-		logger.error((error as Error).stack);
-		response.status(500).json(Code.error((error as Error).message));
-	}
-};
-
-export const updateWorkspaceContent = async (request: Request, response: Response) => {
-	logger.info("[Controller] Update workspace content");
-
-	try{
-		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
-		if (!workspace.good()){
-			response.status(204).json(Code.error(Code.INVALID_DATA));
-		}
-
 		await workspace.reader().readContent();
 
 		await workspace.save();
 
-		response.status(201).json(Code.error(`Update workspace successfully.`, {workspace: workspace.release()}));
+		response.status(201).json(Code.success(`Update workspace successfully.`, {workspace: workspace.release()}));
 	} catch (error){
 		logger.error((error as Error).stack);
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
+
 
 export const deleteWorkspace = async (request: Request, response: Response) => {
 	logger.info("[Controller] Delete workspace");

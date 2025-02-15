@@ -41,6 +41,9 @@ instance.interceptors.response.use(
 		} else if(error.response.status === 403){
 			// window.location.href = "/forbidden";
 		}
+		 else if (error.response.status === 404){
+			window.location.href = "/notfound"
+		}
 		return error?.response?.data || Promise.reject(error);
 	}
 );

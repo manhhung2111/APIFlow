@@ -40,7 +40,7 @@ export const deleteCollection = async (request: Request, response: Response) => 
 		await collection.on().deleted(session);
 
 		await session.commitTransaction();
-		response.status(201).json(Code.success("Delete folder successfully!"));
+		response.status(201).json(Code.success("Delete collection successfully!"));
 	} catch (error){
 		await session.abortTransaction();
 
@@ -107,8 +107,10 @@ export const getCollectionById = async (request: Request, response: Response) =>
 
 	try{
 		const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
+
 		if (!collection.good()){
-			response.status(204).json(Code.error(Code.INVALID_DATA));
+			response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
 		}
 
 		response.status(200).json(Code.success("Get collection successfully.", {collection: collection.release()}));

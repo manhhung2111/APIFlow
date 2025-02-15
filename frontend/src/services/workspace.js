@@ -25,4 +25,13 @@ export default class WorkspaceService {
 			throw new Error(error.message || 'Create workspace failed');
 		}
 	}
+
+
+	static async save(workspace, name, content) {
+		try {
+			return await axios.put(`/workspaces/${workspace._id}`, {name, content});
+		} catch (error) {
+			throw new Error(error.message || 'Create workspace failed');
+		}
+	}
 }

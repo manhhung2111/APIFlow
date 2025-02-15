@@ -35,7 +35,7 @@ export default class Reader extends DBReader<DWorkspace>{
 	}
 
 	public async readContent(){
-		this._obj.content = HTMLInput.inputEditor("content");
+		this._obj.content = HTMLInput.inputSafe("content");
 	}
 
 
