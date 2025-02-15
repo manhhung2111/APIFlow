@@ -8,11 +8,7 @@ export default function CollectionDisplayOverview({collection, name, setName, co
 	const handleChangeContent = (quill, quillRef) => {
 		if(quill){
 			quill.on('text-change', (delta, oldDelta, source) => {
-				console.log('Text change!');
-				console.log(quill.getText()); // Get text only
-				console.log(quill.getContents()); // Get delta contents
-				console.log(quill.root.innerHTML); // Get innerHTML using quill
-				console.log(quillRef.current.firstChild.innerHTML); // Get innerHTML using quillRef
+				setContent(quill.root.innerHTML);
 			});
 		}
 	}
@@ -25,7 +21,7 @@ export default function CollectionDisplayOverview({collection, name, setName, co
 						   onChange={(e) => setName(e.target.value)}/>
 				</div>
 				<div className="row">
-					<TextEditor handleChange={handleChangeContent}/>
+					<TextEditor handleChange={handleChangeContent} value={content}/>
 				</div>
 				<div className="footer">
 					<NavLink to={"documentation"}>View complete documentation <ArrowRightOutlined/></NavLink>

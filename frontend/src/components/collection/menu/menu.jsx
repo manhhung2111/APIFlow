@@ -6,8 +6,6 @@ import CollectionMenuItem from "@components/collection/menu/item.jsx";
 export default function CollectionMenu(){
 	const {workspace, collections, folders, requests} = useContext(WorkspaceContext);
 
-	console.log(collections)
-
 	return (
 		<div className="collections-master-menu">
 			{workspace && collections?.length === 0 && <div className="empty-collections">

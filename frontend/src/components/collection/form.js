@@ -36,9 +36,14 @@ export default class CollectionForm{
 	}
 
 
-	static delete(collection, event){
-		event.domEvent.stopPropagation();
+	static async delete(collection, navigate){
+		const result = await CollectionService.delete(collection);
 
-		alert("delete collection");
+		if (result.code === 0) {
+			toast.success(result.message);
+			navigate(`/workspace/${collection.workspace_id}`);
+		} else {
+			toast.error(result.message);
+		}
 	}
 }

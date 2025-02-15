@@ -5,22 +5,35 @@
     padding: 8px 16px;
     border-bottom: 1px solid $border-color-default;
 
-    .text {
-      font-size: $text-size-m;
-      color: $content-color-primary;
-      width: fit-content;
-      font-weight: $text-weight-thick;
+    .inner-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .text {
+        font-size: $text-size-m;
+        color: $content-color-primary;
+        width: fit-content;
+        font-weight: $text-weight-thick;
+
+        .anticon {
+          font-size: $text-size-xl;
+          color: $content-color-secondary;
+          margin-right: 6px;
+        }
+      }
+
+      button {
+        font-size: $text-size-m;
+      }
 
       .anticon {
-        font-size: $text-size-xl;
-        color: $content-color-secondary;
-        margin-right: 6px;
+        font-size: $text-size-l;
       }
     }
   }
 
   & > .main {
-    height: 80vh;
+    height: calc(100vh - 48px - 40px - 49px);
     min-height: 100px;
     overflow: hidden;
     overflow-y: auto;
@@ -109,6 +122,7 @@
       margin-top: 40px;
       border-top: 1px solid $border-color-default;
       padding: 8px 0;
+
       a {
         display: block;
       }
@@ -173,9 +187,11 @@
     height: 100%;
     padding-top: 12px;
     font-size: $text-size-m;
+
     .ant-input {
       font-size: $text-size-m;
     }
+
     .empty-message {
       height: 100%;
       display: flex;
@@ -215,6 +231,7 @@
           flex: 1;
           flex-direction: column;
           gap: 8px;
+
           .ant-checkbox-wrapper {
             font-size: $text-size-m;
           }
@@ -232,9 +249,10 @@
 .collection-page .collection-display-scripts {
   border-bottom: 1px solid $border-color-default;
 
-  & >.ant-tabs {
+  & > .ant-tabs {
     & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
       border-right: 1px solid $border-color-default;
+
       .ant-tabs-tab {
         color: $content-color-secondary;
         font-size: $text-size-m;
@@ -242,6 +260,7 @@
 
         &.ant-tabs-tab-active {
           background-color: $background-color-tertiary;
+
           .ant-tabs-tab-btn {
             color: $content-color-primary;
           }
@@ -249,6 +268,7 @@
       }
 
     }
+
     .ant-tabs-ink-bar {
       background-color: transparent;
       display: none;
@@ -262,6 +282,135 @@
   .app-code-editor {
     section {
       height: 40vh !important;
+    }
+  }
+}
+
+.collection-page .collection-display-variables {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .subtitle {
+    color: $content-color-secondary;
+    font-size: $text-size-m;
+    span {
+      text-decoration: underline;
+    }
+  }
+
+  .search-btn {
+    margin-top: 8px;
+    width: fit-content;
+    font-size: $text-size-m;
+  }
+
+  .variables-table {
+    border: 1px solid $border-color-default;
+    border-bottom: none;
+    color: $content-color-secondary;
+    font-weight: $text-weight-thick;
+    font-size: $text-size-m;
+
+    .ant-input {
+      font-size: $text-size-m;
+    }
+
+    & > .table-header {
+      display: grid;
+      grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
+      border-bottom: 1px solid $border-color-default;
+
+      div {
+        padding: 10px;
+
+        &:nth-child(2),
+        &:nth-child(3) {
+          border-left: 1px solid $border-color-default;
+        }
+
+        &:nth-child(3) {
+          border-right: 1px solid $border-color-default;
+        }
+      }
+    }
+
+    & > .table-body {
+      & > .row {
+        display: grid;
+        grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
+        border-bottom: 1px solid $border-color-default;
+
+        &.disabled {
+          cursor: not-allowed;
+          background-color: rgba(239, 239, 239, 0.3);
+
+          input {
+            cursor: not-allowed;
+            background-color: transparent;
+          }
+        }
+
+        input[type='text'] {
+          flex: 1;
+          padding: 4px 8px;
+          border-radius: 3px;
+          outline: none;
+          border: 1px solid transparent;
+          color: #212121;
+
+          &:focus {
+            border-color: $border-color-default;
+          }
+        }
+
+        .selected-col {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 4px;
+
+          input[type='checkbox'] {
+            width: 16px;
+            aspect-ratio: 1/1;
+            cursor: pointer;
+            border-radius: 4px;
+          }
+        }
+
+        .key-col,
+        .value-col,
+        .content-col {
+          display: flex;
+          padding: 4px;
+        }
+
+        .key-col {
+          border-left: 1px solid $border-color-default;
+        }
+
+        .value-col {
+          border-left: 1px solid $border-color-default;
+          border-right: 1px solid $border-color-default;
+        }
+
+        .action-col {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .remove-icon {
+            cursor: pointer;
+            color: grey;
+            position: relative;
+
+            &:hover {
+              color: #9c3328;
+            }
+          }
+        }
+      }
     }
   }
 }

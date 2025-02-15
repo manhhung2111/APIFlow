@@ -86,8 +86,8 @@ export default class RequestServiceReader{
 	}
 
 	public readAuthorization(){
-		const auth_type = HTMLInput.inputInt("request_authorization_type");
-
+		const auth_type = HTMLInput.inputInt("authorization_type");
+		console.log("Auth type:", auth_type);
 		const authorization = new AuthorizationFactory(auth_type);
 		authorization.read();
 		this._authorization = authorization;

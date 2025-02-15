@@ -40,7 +40,7 @@ export const deleteCollection = async (request: Request, response: Response) => 
 		await collection.on().deleted(session);
 
 		await session.commitTransaction();
-		response.status(201).json(Code.success("Create new folder successfully!"));
+		response.status(201).json(Code.success("Delete folder successfully!"));
 	} catch (error){
 		await session.abortTransaction();
 
@@ -119,7 +119,23 @@ export const getCollectionById = async (request: Request, response: Response) =>
 };
 
 export const updateCollection = async (request: Request, response: Response) => {
+	logger.info("[Controller] Update collection");
 
+	try{
+		const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
+		if (!collection.good()){
+			response.status(204).json(Code.error(Code.INVALID_DATA));
+		}
+
+		collection.reader().read();
+
+		await collection.save();
+
+		response.status(200).json(Code.success("Save collection successfully", {collection: collection.release()}));
+	} catch (error){
+		logger.error((error as Error).stack);
+		response.status(500).json(Code.error((error as Error).message));
+	}
 };
 export const updateCollectionContent = async (request: Request, response: Response) => {
 	logger.info("[Controller] Update collection content");

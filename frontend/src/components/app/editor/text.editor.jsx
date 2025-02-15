@@ -2,7 +2,7 @@ import React, {useEffect} from "react";
 
 import { useQuill } from "react-quilljs";
 
-export default function TextEditor({handleChange}) {
+export default function TextEditor({handleChange, value}) {
 	const theme = 'snow';
 	// const theme = 'bubble';
 	const formats = ['header', 'bold', 'italic', 'underline', 'strike', 'align', 'list', 'indent'];
@@ -21,6 +21,9 @@ export default function TextEditor({handleChange}) {
 	const { quill, quillRef } = useQuill({ placeholder: "Write something...", theme, modules, formats });
 
 	useEffect(() => {
+		if (quill) {
+			quill.clipboard.dangerouslyPasteHTML(value || '');
+		}
 		handleChange(quill, quillRef);
 	}, [quill]);
 

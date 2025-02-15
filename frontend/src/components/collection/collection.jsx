@@ -10,32 +10,30 @@ export default class Collection{
 		JWTBearer: {value: 4, label: "JWT Bearer"}
 	};
 
-	static am(collection){
+	static am(collection, navigate){
 		return [
 			{
 				key: `add_request_${collection.id}`,
 				label: "Add request",
-				onClick: (event) => CollectionForm.addRequest(collection)
+				onClick: () => CollectionForm.addRequest(collection)
 			},
 			{
 				key: `add_folder_${collection.id}`,
 				label: "Add folder",
-				onClick: (event) => CollectionForm.addFolder(collection)
+				onClick: () => CollectionForm.addFolder(collection)
 			},
 			{
 				key: `duplicate_${collection.id}`,
 				label: "Duplicate",
-				onClick: (event) => CollectionForm.edit(collection, event)
 			},
 			{
 				key: `export_${collection.id}`,
 				label: "Export",
-				onClick: (event) => CollectionForm.edit(collection, event)
 			},
 			{
 				key: `actions_delete_collection_${collection.id}`,
 				label: "Delete",
-				onClick: (event) => CollectionForm.delete(collection, event),
+				onClick: () => CollectionForm.delete(collection, navigate),
 				danger: 1
 			},
 		];

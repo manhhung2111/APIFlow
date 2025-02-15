@@ -21,7 +21,7 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 			<div className="left-container">
 				<h3>Auth Type</h3>
 				<Select
-					defaultValue={1}
+					defaultValue={authorization.type || 1}
 					onChange={(value) => handleChangeType(value)}
 					options={Object.values(Collection.AUTHORIZATION)}
 					className="auth-selector"

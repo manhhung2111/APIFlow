@@ -5,6 +5,6 @@ export default class BearerTokenAuthorization extends Authorization{
 	protected type: number = Authorization.BearerTokenAuth;
 
 	readData(): void{
-		this.data.token = HTMLInput.inputInlineNoLimit("authorization_bearer_token");
+		this.data.token = HTMLInput.inputInlineNoLimit("bearer_token");
 	}
 }

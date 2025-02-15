@@ -1,6 +1,7 @@
 import {Request} from "express";
 import {Code, Validation, Word} from "@ap/core";
 import {decode as htmlDecode} from "html-entities";
+import sanitizeHtml from 'sanitize-html';
 
 export default class HTMLInput{
 	public static GET = 1;
@@ -111,7 +112,7 @@ export default class HTMLInput{
 		} else{
 			text = Word.addSmartQuote(raw);
 		}
-		text = this.sanitize(text);
+		text = sanitizeHtml(text);
 
 		return text;
 	}
@@ -237,10 +238,12 @@ export default class HTMLInput{
 		);
 
 		// Step 3: Convert BBCode back to HTML
-		text = text.replace(new RegExp(bb.join("|"), "gi"), (match) => {
-			const index = bb.indexOf(match);
-			return index !== -1 ? html[index] : match;
-		});
+		const bbToHtmlMap: Record<string, string> = {};
+		for (let i = 0; i < bb.length; i++) {
+			bbToHtmlMap[bb[i]] = html[i];
+		}
+
+		text = text.replace(new RegExp(bb.join("|"), "gi"), (match) => bbToHtmlMap[match] || match);
 
 		return text;
 	}

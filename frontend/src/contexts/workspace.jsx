@@ -27,7 +27,6 @@ export default function WorkspaceContextProvider(props){
 
 				// Get all collections
 				const collectionRes = await CollectionService.mine(workspace_id);
-				console.log(collectionRes)
 				setCollections(collectionRes.data.collections);
 
 				const folderRes = await FolderService.mine(workspace_id);

@@ -16,6 +16,7 @@
     "@babel/core": "^7.26.0",
     "@babel/node": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
+    "@types/sanitize-html": "^2.13.0",
     "axios": "^1.7.9",
     "backblaze-b2": "^1.7.0",
     "bcrypt": "^5.1.1",
@@ -32,6 +33,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.7",
+    "sanitize-html": "^2.14.0",
     "tsconfig-paths": "^4.2.0",
     "uuid": "^11.0.3",
     "winston": "^3.17.0"
