@@ -10,28 +10,32 @@ import EnvironmentService from "@services/environment.js";
 import {useNavigate} from "react-router";
 
 export default function WorkspaceNewSelectForm({ visible, setVisible }) {
-	const {workspace} = useContext(WorkspaceContext);
+	const {workspace, setCollections, setEnvironments} = useContext(WorkspaceContext);
 	const navigate = useNavigate();
 
 
 	const handleCardClick = async (type) => {
-		let result = null;
-		let link = "";
-
 		if (type === "Collection") {
-			result = await CollectionService.create(workspace._id);
-			link = `/workspace/${workspace._id}/collection/${result?.data?.collection._id}`;
-		} else if (type === "Environment") {
-			result = await EnvironmentService.create(workspace._id);
-			link = `/workspace/${workspace._id}/environment/${result?.data?.environment._id}`;
-		}
+			const result = await CollectionService.create(workspace._id);
 
-		if (result?.code === 0) {
-			toast.success(result?.message);
-			setVisible(false);
-			navigate(link);
-		} else {
-			toast.error(result?.message);
+			if (result?.code === 0) {
+				toast.success(result?.message);
+				setVisible(false);
+				setCollections(prev => [...prev, result.data.collection]);
+				navigate(`/workspace/${workspace._id}/collection/${result?.data?.collection._id}`);
+			} else {
+				toast.error(result?.message);
+			}
+		} else if (type === "Environment") {
+			const result = await EnvironmentService.create(workspace._id);
+			if (result?.code === 0) {
+				toast.success(result?.message);
+				setVisible(false);
+				setEnvironments(prev => [...prev, result.data.collection]);
+				navigate(`/workspace/${workspace._id}/environment/${result?.data?.environment._id}`);
+			} else {
+				toast.error(result?.message);
+			}
 		}
 	};
 

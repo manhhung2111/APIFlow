@@ -13,9 +13,10 @@ import {SaveOutlined} from "@ant-design/icons";
 import Collection from "@components/collection/collection.jsx";
 import ActionManager from "@utils/action.manager.jsx";
 import {toast} from "react-toastify";
+import FolderService from "@services/folder.js";
 
 export default function CollectionPage(){
-	const {workspace} = useContext(WorkspaceContext);
+	const {workspace, setCollections, setFolders, setRequests} = useContext(WorkspaceContext);
 	const [collection, setCollection] = useState(null);
 
 	const [name, setName] = useState("");
@@ -92,6 +93,50 @@ export default function CollectionPage(){
 		}
 	}
 
+	const handleAddRequest = async () => {
+		const result = await CollectionService.addRequest(collection);
+
+		if (result.code === 0) {
+			setRequests(prev => [...prev, result.data.request]);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+	const handleAddFolder = async () => {
+		const result = await FolderService.create(collection);
+
+		if (result.code === 0) {
+			setFolders(prev => [...prev, result.data.folder]);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+	const handleDelete = async () => {
+		const result = await CollectionService.delete(collection);
+
+		if (result.code === 0) {
+			setCollections(prev => {
+				return prev.filter(e => e._id !== collection._id);
+			});
+			toast.success(result.message);
+			navigate(`/workspace/${collection.workspace_id}`);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+	const actionManagers = [
+		{key: `add_request_${collection?._id}`, label: "Add request", onClick: handleAddRequest},
+		{key: `add_folder_${collection?._id}`, label: "Add folder", onClick: handleAddFolder},
+		{key: `duplicate_${collection?._id}`, label: "Duplicate",},
+		{key: `export_${collection?._id}`, label: "Export",},
+		{key: `delete_${collection?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+	];
+
 	return (
 		<div className="collection-page">
 			<div className="header">
@@ -104,7 +149,7 @@ export default function CollectionPage(){
 						<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
 							Save
 						</Button>
-						<ActionManager am={Collection.am(collection, navigate)} />
+						<ActionManager am={actionManagers} />
 					</div>
 				</div>}
 				{!collection && <Skeleton.Input active={true}/>}
