@@ -1,21 +1,18 @@
 import {useContext, useEffect, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
-import {useNavigate, useParams} from "react-router";
+import {useParams} from "react-router";
 import FolderService from "@services/folder.js";
 import FolderDisplayOverview from "@components/folder/display/overview.jsx";
 import FolderDisplayAuthorization from "@components/folder/display/authorization.jsx";
 import FolderDisplayScripts from "@components/folder/display/scripts.jsx";
-import CollectionService from "@services/collection.js";
 import {toast} from "react-toastify";
 import CollectionIcon from "@assets/icons/collection.jsx";
 import {Button, Skeleton, Tabs} from "antd";
 import {SaveOutlined} from "@ant-design/icons";
 import ActionManager from "@utils/action.manager.jsx";
-import Collection from "@components/collection/collection.jsx";
-import Folder from "@components/folder/folder.jsx";
 
 export default function FolderPage(){
-	const {workspace} = useContext(WorkspaceContext);
+	const {workspace, setRequests, setFolders} = useContext(WorkspaceContext);
 	const [folder, setFolder] = useState(null);
 
 	const [name, setName] = useState("");
@@ -27,7 +24,6 @@ export default function FolderPage(){
 	});
 
 	const {folder_id} = useParams();
-	const navigate = useNavigate();
 	useEffect(() => {
 		async function fetchFolder(){
 			const result = await FolderService.getById(folder_id, workspace._id);
@@ -79,6 +75,36 @@ export default function FolderPage(){
 		}
 	}
 
+	const handleAddRequest = async() => {
+		const result = await FolderService.addRequest(folder);
+
+		if(result.code === 0){
+			setRequests(prev => [...prev, result.data.request]);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+	const handleDelete = async() => {
+		const result = await FolderService.delete(folder);
+
+		if(result.code === 0){
+			setFolders(prev => {
+				return prev.filter(e => e._id !== folder._id);
+			});
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+	const actionManagers = [
+		{key: `add_request_${folder?._id}`, label: "Add request", onClick: handleAddRequest},
+		{key: `duplicate_${folder?._id}`, label: "Duplicate",},
+		{key: `delete_${folder?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+	];
+
 	return (
 		<div className="collection-page">
 			<div className="header">
@@ -91,7 +117,7 @@ export default function FolderPage(){
 						<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
 							Save
 						</Button>
-						<ActionManager am={Folder.am(folder, navigate)}/>
+						<ActionManager am={actionManagers}/>
 					</div>
 				</div>}
 				{!folder && <Skeleton.Input active={true}/>}
