@@ -83,12 +83,6 @@ export default function CollectionPage(){
 	]
 
 	const handleSave =  async () => {
-		console.log("Name:", name);
-		console.log("Content:", content);
-		console.log("Auth:", authorization);
-		console.log("Scripts", scripts);
-		console.log("Variables", variables);
-
 		const result = await CollectionService.save(collection, name, content, authorization, scripts, variables);
 
 		if (result.code === 0){

@@ -9,6 +9,16 @@ const schema = new Schema<DFolder>({
 	name: {type: String, required: true},
 	content: String,
 
+	authorization: {
+		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
+		data: {type: Schema.Types.Mixed, default: {}},
+	},
+
+	scripts: {
+		pre_request: {type: String, default: ""},
+		post_response: {type: String, default: ""},
+	},
+
 	data: Schema.Types.Mixed,
 	token: {type: String, required: true, unique: true},
 }, {

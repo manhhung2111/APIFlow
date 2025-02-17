@@ -1,9 +1,7 @@
 import {Input} from "antd";
 import TextEditor from "@components/app/editor/text.editor.jsx";
-import {NavLink} from "react-router";
-import {ArrowRightOutlined} from "@ant-design/icons";
 
-export default function CollectionDisplayOverview({collection, name, setName, content, setContent}){
+export default function FolderDisplayOverview({folder, name, setName, content, setContent}){
 
 	const handleChangeContent = (quill, quillRef) => {
 		if(quill){
@@ -17,14 +15,11 @@ export default function CollectionDisplayOverview({collection, name, setName, co
 		<div className="collection-display-overview">
 			<div className="main">
 				<div className="row">
-					<Input className="workspace-name" placeholder={"Collection name"} value={name}
+					<Input className="workspace-name" placeholder={"Folder name"} value={name}
 						   onChange={(e) => setName(e.target.value)}/>
 				</div>
 				<div className="row">
 					<TextEditor handleChange={handleChangeContent} value={content}/>
-				</div>
-				<div className="footer">
-					<NavLink to={"documentation"}>View complete documentation <ArrowRightOutlined/></NavLink>
 				</div>
 			</div>
 			<div className="sidebar">
@@ -34,11 +29,11 @@ export default function CollectionDisplayOverview({collection, name, setName, co
 				</div>
 				<div className="row">
 					<h5>Created at</h5>
-					<p>{collection.created_at}</p>
+					<p>{folder.created_at}</p>
 				</div>
 				<div className="row">
 					<h5>Last updated at</h5>
-					<p>{collection.updated_at}</p>
+					<p>{folder.updated_at}</p>
 				</div>
 			</div>
 		</div>

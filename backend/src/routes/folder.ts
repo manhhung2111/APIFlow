@@ -10,8 +10,6 @@ import {
 	getFoldersByWorkspace,
 	moveFolder,
 	updateFolder,
-	updateFolderContent,
-	updateFolderName,
 	createNewRequestFromFolder
 } from "@controllers/folder";
 
@@ -25,8 +23,6 @@ router.get("/:folder_id", workspaceViewable, getFolderById);
 
 // Edit routes
 router.put("/:folder_id", workspaceEditable, updateFolder);
-router.put("/:folder_id/name", workspaceEditable, updateFolderName);
-router.put("/:folder_id/content", workspaceEditable, updateFolderContent);
 router.put("/:folder_id/move", workspaceEditable, moveFolder);
 
 // Create routes

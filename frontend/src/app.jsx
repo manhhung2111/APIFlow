@@ -16,6 +16,7 @@ import WorkspaceDisplay from "@components/workspace/display/display.jsx";
 import HomePage from "@pages/home/home.jsx";
 import PublicRoute from "@layout/routes/public.jsx";
 import CollectionPage from "@pages/collection/collection.jsx";
+import FolderPage from "@pages/folder/folder.jsx";
 
 function App(){
 	return (
@@ -28,6 +29,7 @@ function App(){
 							<Route index element={<WorkspaceDisplay/>}/>
 							<Route path="request/:request_id/" element={<RequestPage/>}/>
 							<Route path="collection/:collection_id" element={<CollectionPage/>}/>
+							<Route path="folder/:folder_id" element={<FolderPage/>}/>
 						</Route>
 					</Route>
 

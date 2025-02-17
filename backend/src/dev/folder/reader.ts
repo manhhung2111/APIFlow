@@ -5,6 +5,7 @@ import {DBFolder} from "@dev/folder/index";
 import Client from "@dev/client";
 import UUID from "@utils/uuid";
 import {Code, HTMLInput, Validation} from "@ap/core";
+import {RequestServiceReader} from "@services/request";
 
 
 export default class Reader extends DBReader<DFolder>{
@@ -19,10 +20,13 @@ export default class Reader extends DBReader<DFolder>{
 			this._obj.workspace_id = HTMLInput.inputInline("workspace_id");
 			this._obj.collection_id = HTMLInput.inputInline("collection_id");
 			this._obj.name = "New Folder";
-		} else {
-			await this.readName();
-			await this.readContent();
+			return;
 		}
+
+		this.readName();
+		this.readContent();
+		this.readAuthentication();
+		this.readScripts();
 	}
 
 
@@ -31,7 +35,7 @@ export default class Reader extends DBReader<DFolder>{
 	}
 
 
-	public async readName(){
+	public readName(){
 		const name = HTMLInput.inputInline("name");
 		if (Validation.isEmpty(name)){
 			throw new Code("Folder name must not be empty");
@@ -45,7 +49,18 @@ export default class Reader extends DBReader<DFolder>{
 	}
 
 
-	public async readContent(){
+	public readContent(){
 		this._obj.content = HTMLInput.inputEditor("content");
+	}
+
+	public readAuthentication() {
+		const request_reader = new RequestServiceReader();
+		request_reader.readAuthorization();
+		this._obj.authorization = request_reader.getAuthorization();
+	}
+
+	public readScripts() {
+		let data = Buffer.from(HTMLInput.inputRaw("scripts"), 'base64').toString('utf8');
+		this._obj.scripts = JSON.parse(data);
 	}
 }

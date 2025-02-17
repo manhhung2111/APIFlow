@@ -133,6 +133,16 @@ export interface DFolder {
     name: string;
     content?: string;
 
+    authorization?: {
+        type: number;
+        data?: object;
+    };
+
+    scripts?: {
+        pre_request?: string;
+        post_response?: string;
+    };
+
     data?: object | {};
     token: string;
 

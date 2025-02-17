@@ -29,4 +29,39 @@ export default class FolderService{
 			throw new Error(error.message || 'Create new folder failed');
 		}
 	}
+
+
+	static async getById(folder_id, workspace_id) {
+		try {
+			return await axios.get(`/folders/${folder_id}?workspace_id=${workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Get folder by id failed');
+		}
+	}
+
+	static async save(folder, name, content, authorization, scripts){
+		try {
+			const data = {
+				"name": name,
+				"content": content,
+				"authorization_type": authorization.type,
+				...authorization.data,
+				"scripts": btoa(JSON.stringify(scripts)),
+				workspace_id: folder.workspace_id,
+			}
+
+			return await axios.put(`/folders/${folder._id}`, data);
+		} catch (error) {
+			throw new Error(error.message || 'Save folder failed');
+		}
+	}
+
+
+	static async delete(folder){
+		try {
+			return await axios.delete(`/folders/${folder._id}?workspace_id=${folder.workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Delete folder failed');
+		}
+	}
 }

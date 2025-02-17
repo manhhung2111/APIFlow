@@ -123,10 +123,7 @@ export const moveFolder = async (request: Request, response: Response) => {
 };
 
 export const updateFolder = async (request: Request, response: Response) => {
-
-};
-export const updateFolderContent = async (request: Request, response: Response) => {
-    logger.info("[Controller] Update folder content");
+    logger.info("[Controller] Update folder by id");
 
     try {
         const folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
@@ -134,31 +131,11 @@ export const updateFolderContent = async (request: Request, response: Response) 
             response.status(204).json(Code.error(Code.INVALID_DATA));
         }
 
-        await folder.reader().readContent();
+        await folder.reader().read();
 
         await folder.save();
 
-        response.status(200).json(Code.success("Update folder content successfully", {folder: folder.release()}));
-    } catch (error) {
-        logger.error((error as Error).stack);
-        response.status(500).json(Code.error((error as Error).message));
-    }
-};
-
-export const updateFolderName = async (request: Request, response: Response) => {
-    logger.info("[Controller] Update folder name");
-
-    try {
-        const folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
-        if (!folder.good()) {
-            response.status(204).json(Code.error(Code.INVALID_DATA));
-        }
-
-        await folder.reader().readName();
-
-        await folder.save();
-
-        response.status(200).json(Code.success("Update folder name successfully", {folders: folder.release()}));
+        response.status(200).json(Code.success("Update folder successfully.", {folder: folder.release()}));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
