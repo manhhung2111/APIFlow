@@ -8,11 +8,11 @@ export default class DBEnvironment extends DBModel<DEnvironment>{
 	protected _db: Model<DEnvironment> = EnvironmentModel;
 
 	release(): object{
-		return this.export(["user_id", "workspace_id", "name", "scope", "variables", "data", "token", "created_at", "updated_at"]);
+		return this.export(["_id", "user_id", "workspace_id", "name", "scope", "variables", "data", "token", "created_at", "updated_at"]);
 	}
 
 	releaseCompact(): object{
-		return this.export(["user_id", "workspace_id", "name", "scope"]);
+		return this.export(["_id", "user_id", "workspace_id", "name", "scope"]);
 	}
 
 	reader(){

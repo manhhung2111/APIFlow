@@ -6,7 +6,7 @@ import {
 	createNewEnvironment,
 	deleteEnvironment,
 	duplicateEnvironment,
-	getAllEnvironments,
+	getEnvironmentsByWorkspace,
 	getEnvironmentById,
 	updateEnvironment,
 	updateEnvironmentName,
@@ -17,7 +17,7 @@ const router = express.Router();
 router.use(authentication);
 
 // Get routes
-router.get("/", workspaceViewable, getAllEnvironments);
+router.get("/", workspaceViewable, getEnvironmentsByWorkspace);
 router.get("/:environment_id", workspaceViewable, getEnvironmentById);
 
 // Edit routes

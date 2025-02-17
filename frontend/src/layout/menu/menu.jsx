@@ -1,13 +1,12 @@
-import {Button, Tabs, Skeleton} from "antd";
+import {Button, Skeleton, Tabs} from "antd";
 import "./styles/menu.scss";
 import {UserOutlined} from "@ant-design/icons";
-import PrimaryMenu from "@layout/menu/primary/primary.jsx";
 import CollectionIcon from "@assets/icons/collection.jsx";
 import {BaseLabel} from "@utils/text.jsx";
 import {useContext, useState} from "react";
 import {AppContext} from "@contexts/app.jsx";
 import Menu from "@utils/menu/menu.jsx";
-import EnvironmentMenu from "@layout/menu/environment/environment.jsx";
+import EnvironmentMenu from "@components/environment/menu/menu.jsx";
 import FolderEnvironmentIcon from "@assets/icons/folder.environment.jsx";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {NavLink} from "react-router";
@@ -15,10 +14,7 @@ import WorkspaceNewSelectForm from "@components/workspace/form/select.jsx";
 import CollectionMenu from "@components/collection/menu/menu.jsx";
 
 export default function MasterMenu(){
-	const {environments} = useContext(AppContext)
 	const {workspace} = useContext(WorkspaceContext);
-
-	const [globalEnvItems, environmentItems] = Menu.constructEnvironmentMenu(environments);
 
 	const [newModalVisibility, setNewModalVisibility ] = useState(false);
 
@@ -31,10 +27,9 @@ export default function MasterMenu(){
 		{
 			label: <BaseLabel icon={<FolderEnvironmentIcon style={{fontSize: "16px"}}/>} title={"Environments"}/>,
 			key: 2,
-			children: <EnvironmentMenu globalEnv={globalEnvItems} environments={environmentItems} />
+			children: workspace ? <EnvironmentMenu /> : <Skeleton active/>
 		},
-	]
-
+	];
 
 	return (
 		<div className={"master-menu"}>

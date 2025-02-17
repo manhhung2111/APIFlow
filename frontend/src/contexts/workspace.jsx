@@ -24,16 +24,10 @@ export default function WorkspaceContextProvider(props){
 			if (response.code === 0){
 				const workspace = response.data.workspace;
 				setWorkspace(workspace);
-
-				// Get all collections
-				const collectionRes = await CollectionService.mine(workspace_id);
-				setCollections(collectionRes.data.collections);
-
-				const folderRes = await FolderService.mine(workspace_id);
-				setFolders(folderRes.data.folders);
-
-				const requestRes = await RequestService.mine(workspace_id);
-				setRequests(requestRes.data.requests);
+				setCollections(response.data.collections);
+				setFolders(response.data.folders);
+				setRequests(response.data.requests);
+				setEnvironments(response.data.environments);
 			} else {
 				alert(response.message);
 			}

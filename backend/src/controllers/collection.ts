@@ -139,6 +139,7 @@ export const updateCollection = async (request: Request, response: Response) => 
 		response.status(500).json(Code.error((error as Error).message));
 	}
 };
+
 export const updateCollectionContent = async (request: Request, response: Response) => {
 	logger.info("[Controller] Update collection content");
 

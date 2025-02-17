@@ -4,6 +4,7 @@ import {DEnvironment} from "@db-schemas";
 import Client from "@dev/client";
 import UUID from "@utils/uuid";
 import {Code, HTMLInput, Validation} from "@ap/core";
+import {DBEnvironment} from "@dev/environment/index";
 
 
 export default class Reader extends DBReader<DEnvironment>{
@@ -62,5 +63,10 @@ export default class Reader extends DBReader<DEnvironment>{
 
 			this._obj.variables.push({selected, variable, type, initial_value, current_value});
 		}
+	}
+
+
+	public duplicate(old_environment: DBEnvironment) {
+
 	}
 }
