@@ -1,6 +1,6 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import ActionManager from "@utils/action.manager.jsx";
-import {NavLink, useNavigate} from "react-router";
+import {NavLink, useNavigate, useMatch, useLocation} from "react-router";
 import CollectionIcon from "@assets/icons/collection.jsx";
 import FolderMenuItem from "@components/collection/menu/item.folder.jsx";
 import RequestMenuItem from "@components/collection/menu/item.request.jsx";
@@ -13,9 +13,27 @@ import {WorkspaceContext} from "@contexts/workspace.jsx";
 export default function CollectionMenuItem({collection, folders, requests}){
 	const {setRequests, setFolders, setCollections} = useContext(WorkspaceContext);
 
+	const location = useLocation();
+
+	const isCollectionActive = useMatch(`collection/${collection._id}`);
+
+	// Check if any folder or request link is active
+	const isChildActive = folders.some(folder => location.pathname.includes(folder._id)) ||
+		requests.some(request => location.pathname.includes(request._id));
+
+	// If either the collection or any child is active
+	const isActive = isCollectionActive || isChildActive;
+
 	// State to track collapsed state
 	const [collapsed, setCollapsed] = useState(true);
 	// Toggle function
+
+	useEffect(() => {
+		if (isActive) {
+			setCollapsed(false);
+		}
+	}, [isActive]);
+
 	const handleToggleMenu = () => {
 		setCollapsed((prev) => !prev);
 	};

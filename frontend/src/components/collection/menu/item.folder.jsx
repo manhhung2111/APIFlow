@@ -1,9 +1,9 @@
-import {NavLink, useNavigate} from "react-router";
+import {NavLink, useLocation, useMatch, useNavigate} from "react-router";
 import ActionManager from "@utils/action.manager.jsx";
 import RequestMenuItem from "@components/collection/menu/item.request.jsx";
 import Folder from "@components/folder/folder.jsx";
 import {FolderOutlined} from "@ant-design/icons";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import DropdownIcon from "@assets/icons/drop.down.jsx";
 import FolderService from "@services/folder.js";
 import {toast} from "react-toastify";
@@ -11,6 +11,17 @@ import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function FolderMenuItem({folder, requests}){
 	const {setRequests, setFolders} = useContext(WorkspaceContext);
+
+	const location = useLocation();
+
+	const isFolderActive = useMatch(`folder/${folder._id}`);
+
+	// Check if any request link is active
+	const isChildActive = requests.some(request => location.pathname.includes(request._id));
+
+	// If either the collection or any child is active
+	const isActive = isFolderActive || isChildActive;
+
 	// State to track collapsed state
 	const [collapsed, setCollapsed] = useState(true);
 	// Toggle function
@@ -22,6 +33,12 @@ export default function FolderMenuItem({folder, requests}){
 	const handleNavigate = () => {
 		setCollapsed(false);
 	}
+
+	useEffect(() => {
+		if (isActive) {
+			setCollapsed(false);
+		}
+	}, [isActive]);
 
 	const handleAddRequest = async() => {
 		const result = await FolderService.addRequest(folder);
