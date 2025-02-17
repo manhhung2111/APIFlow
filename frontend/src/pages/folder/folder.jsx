@@ -6,13 +6,13 @@ import FolderDisplayOverview from "@components/folder/display/overview.jsx";
 import FolderDisplayAuthorization from "@components/folder/display/authorization.jsx";
 import FolderDisplayScripts from "@components/folder/display/scripts.jsx";
 import {toast} from "react-toastify";
-import CollectionIcon from "@assets/icons/collection.jsx";
 import {Button, Skeleton, Tabs} from "antd";
-import {SaveOutlined} from "@ant-design/icons";
+import {FolderOutlined, SaveOutlined} from "@ant-design/icons";
 import ActionManager from "@utils/action.manager.jsx";
+import _ from "lodash";
 
 export default function FolderPage(){
-	const {workspace, setRequests, setFolders} = useContext(WorkspaceContext);
+	const {workspace, folders, setRequests, setFolders} = useContext(WorkspaceContext);
 	const [folder, setFolder] = useState(null);
 
 	const [name, setName] = useState("");
@@ -70,6 +70,15 @@ export default function FolderPage(){
 
 		if(result.code === 0){
 			toast.success(result.message);
+			// Update folder in menu tree
+			const clone = _.cloneDeep(folders);
+			for (const e of clone) {
+				if(e._id === folder._id){
+					e.name = name;
+				}
+			}
+			setFolders(clone);
+			setFolder(result.data.folder);
 		} else {
 			toast.error(result.message);
 		}
@@ -110,7 +119,7 @@ export default function FolderPage(){
 			<div className="header">
 				{folder && <div className="inner-header">
 					<div className="text">
-						<CollectionIcon/>
+						<FolderOutlined/>
 						{folder.name}
 					</div>
 					<div className="side">

@@ -1,5 +1,4 @@
 import {createContext, useEffect, useState} from "react";
-import {collections, environments, examples, folders, requests} from "../data.js";
 import {ConfigProvider} from "antd";
 import UserService from "@services/user.js";
 import WorkspaceService from "@services/workspace.js";
@@ -12,13 +11,10 @@ export const AppContext = createContext({});
 export default function AppContextProvider(props){
 	const {children} = props;
 
-	const menuItems = {collections, folders, requests, examples};
-
 	const [user, setUser] = useState(null);
 	const [workspaces, setWorkspaces] = useState([]);
 	const [fetching, setFetching] = useState(true);
 	const navigate = useNavigate();
-
 
 	useEffect(() => {
 		async function verifyUser(){
@@ -53,7 +49,7 @@ export default function AppContextProvider(props){
 		};
 
 		if(localStorage.getItem("user")){
-			if (!user) {
+			if(!user){
 				verifyUser();
 			}
 		} else {
@@ -77,7 +73,7 @@ export default function AppContextProvider(props){
 				}
 			}}
 		>
-			<AppContext.Provider value={{menuItems, environments, user, setUser, workspaces, setWorkspaces}}>
+			<AppContext.Provider value={{user, setUser, workspaces, setWorkspaces}}>
 				{children}
 			</AppContext.Provider>
 		</ConfigProvider>

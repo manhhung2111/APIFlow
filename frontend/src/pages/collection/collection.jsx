@@ -14,9 +14,10 @@ import Collection from "@components/collection/collection.jsx";
 import ActionManager from "@utils/action.manager.jsx";
 import {toast} from "react-toastify";
 import FolderService from "@services/folder.js";
+import _ from "lodash";
 
 export default function CollectionPage(){
-	const {workspace, setCollections, setFolders, setRequests} = useContext(WorkspaceContext);
+	const {workspace, collections, setCollections, setFolders, setRequests} = useContext(WorkspaceContext);
 	const [collection, setCollection] = useState(null);
 
 	const [name, setName] = useState("");
@@ -88,6 +89,14 @@ export default function CollectionPage(){
 
 		if (result.code === 0){
 			toast.success(result.message);
+			const clone = _.cloneDeep(collections);
+			for (const e of clone) {
+				if (e._id === collection._id) {
+					e.name = name;
+				}
+			}
+			setCollections(clone);
+			setCollection(result.data.collection);
 		} else {
 			toast.error(result.message);
 		}

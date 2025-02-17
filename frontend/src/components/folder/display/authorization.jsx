@@ -25,7 +25,7 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 				<Select
 					defaultValue={authorization.type || 0}
 					onChange={(value) => handleChangeType(value)}
-					options={Object.values(Collection.AUTHORIZATION)}
+					options={Object.values(Request.AUTHORIZATION)}
 					className="auth-selector"
 					popupClassName="auth-selector-items"
 				/>

@@ -7,7 +7,7 @@ const schema = new Schema<DFolder>({
 	collection_id: {type: String, required: true, index: true},
 
 	name: {type: String, required: true},
-	content: {type: String, default: {}},
+	content: {type: String, default: ""},
 
 	authorization: {
 		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
