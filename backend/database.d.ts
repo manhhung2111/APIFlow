@@ -51,13 +51,13 @@ export interface DRequest {
         selected?: boolean,
         key?: string;
         value?: string;
-        description?: string;
+        content?: string;
     }>;
     headers?: Array<{
         selected?: boolean,
         key?: string;
         value?: string;
-        description?: string;
+        content?: string;
     }>;
     authorization?: {
         type: number;

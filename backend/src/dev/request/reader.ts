@@ -46,6 +46,11 @@ export default class Reader extends DBReader<DRequest>{
 		this._obj.workspace_id = HTMLInput.inputInline("workspace_id");
 		this._obj.collection_id = HTMLInput.inputInline("collection_id");
 		this._obj.name = "New request";
+		this._obj.headers = [
+			{selected: true, key: 'Accept', value: '*/*', content: ''},
+			{selected: true, key: 'Accept-Encoding', value: 'gzip, deflate, br', content: ''},
+			{selected: true, key: 'Connection', value: 'keep-alive', content: ''},
+		]
 	}
 
 	public async readFolder() {
@@ -55,6 +60,11 @@ export default class Reader extends DBReader<DRequest>{
 		this._obj.collection_id = HTMLInput.inputInline("collection_id");
 		this._obj.folder_id = HTMLInput.inputInline("folder_id");
 		this._obj.name = "New request";
+		this._obj.headers = [
+			{selected: true, key: 'Accept', value: '*/*', content: ''},
+			{selected: true, key: 'Accept-Encoding', value: 'gzip, deflate, br', content: ''},
+			{selected: true, key: 'Connection', value: 'keep-alive', content: ''},
+		]
 	}
 
 

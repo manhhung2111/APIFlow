@@ -1,29 +1,24 @@
-import {createContext, useState} from "react";
+import {createContext, useContext, useEffect, useState} from "react";
+import {useParams} from "react-router";
+import RequestService from "@services/request.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
+import {toast} from "react-toastify";
+import {setSelectionNoUndo} from "codemirror/src/model/selection_updates.js";
 
 export const RequestContext = createContext({});
 
 export default function RequestContextProvider(props){
 	const {children} = props;
+	const {workspace} = useContext(WorkspaceContext);
 
+	let [request, setRequest] = useState(null);
+	let [name, setName] = useState("");
 	let [url, setUrl] = useState("");
-	let [params, setParams] = useState([{selected: 1, key: '', value: '', content: ''}]);
+	let [params, setParams] = useState(null);
+	let [authorization, setAuthorization] = useState(null);
+	let [headers, setHeaders] = useState(null);
 
-	let [authorization, setAuthorization] = useState({type: 0, data: {}});
-	let [headers, setHeaders] = useState([
-		{selected: 1, key: 'Accept', value: '*/*', content: '', disabled: true},
-		{selected: 1, key: 'Accept-Encoding', value: 'gzip, deflate, br', content: '', disabled: true},
-		{selected: 1, key: 'Connection', value: 'keep-alive', content: '', disabled: true},
-		{selected: 0, key: '', value: '', content: ''}
-	]);
-
-	let [body, setBody] = useState({
-		type: 0,
-		data: {
-			form_data: [{selected: 1, key: '', type: 'text', value: '', content: ''}],
-			form_encoded: [{selected: 1, key: '', value: '', content: ''}],
-			form_raw: ""
-		}
-	});
+	let [body, setBody] = useState(null);
 
 	let [scripts, setScripts] = useState({
 		pre_request: "",
@@ -112,8 +107,41 @@ export default function RequestContextProvider(props){
 		"response_size": {headers: 2000, body: 1400},
 	})
 
+	const {request_id} = useParams();
+	useEffect(() => {
+		const fetchData = async() => {
+			const response = await RequestService.getById(request_id, workspace._id);
+
+			if(response.code === 0){
+				const request = response.data.request;
+				setRequest(request);
+				setName(request.name);
+				setUrl(request.url);
+				setParams([...request.params, {selected: 0, key: '', value: '', content: ''}]);
+				setAuthorization(request.authorization);
+				setHeaders([...request.headers, {selected: 0, key: '', value: '', content: ''}]);
+				setBody({
+					type: request.body.type,
+					data: {
+						form_data: [...request.body.data.form_data, {selected: 0, key: '', type: 'text', value: '', content: ''}],
+						form_encoded: [...request.body.data.form_encoded, {selected: 0, key: '', value: '', content: ''}],
+						form_raw: request.body.data.form_raw
+					}
+				});
+				setScripts(request.scripts);
+			} else {
+				toast.error(response.message);
+			}
+		}
+
+		if (workspace) {
+			fetchData();
+		}
+	}, [request_id, workspace]);
+
 	return (
 		<RequestContext.Provider value={{
+			name, setName,
 			url,
 			setUrl,
 			params,
@@ -127,7 +155,9 @@ export default function RequestContextProvider(props){
 			scripts,
 			setScripts,
 			response,
-			setResponse
+			setResponse,
+			request,
+			setRequest
 		}}>
 			{children}
 		</RequestContext.Provider>

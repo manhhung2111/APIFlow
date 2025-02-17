@@ -66,7 +66,7 @@ export default function RequestEditorParams(){
 					<div></div>
 				</div>
 				<div className="table-body">
-					{params.map((row, index) => {
+					{params?.length > 0 && params.map((row, index) => {
 						let prefixName = 'request_query_params';
 						let actionHtml = !(index === params.length - 1) ?
 							<DeleteOutlined className="remove-icon" size='16' onClick={() => handleRemoveRow(index)}/> : '';

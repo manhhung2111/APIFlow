@@ -13,15 +13,19 @@ const schema = new Schema<DRequest>({
 	method: {type: String, required: true, enum: ["GET", "POST", "PUT", "PATCH", "DELETE"], default: "GET"},
 	url: {type: String, default: ""},
 
-	params: [{key: String, value: String, description: String}],
-	headers: [{key: String, value: String, description: String}],
+	params: [{selected: Boolean, key: String, value: String, content: String}],
+	headers: [{selected: Boolean, key: String, value: String, content: String}],
 	authorization: {
 		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
 		data: {type: Schema.Types.Mixed, default: {}},
 	},
 	body: {
 		type: {type: Number, enum: [0, 1, 2, 3], default: 0},
-		data: {type: Schema.Types.Mixed, default: {}},
+		data: {type: Schema.Types.Mixed, default: {
+			form_data: [],
+			form_encoded: [],
+			form_raw: ""
+		}},
 	},
 	scripts: {
 		pre_request: {type: String, default: ""},
