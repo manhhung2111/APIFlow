@@ -95,10 +95,10 @@ export default function CollectionMenuItem({collection, folders, requests}){
 
 					{requests.length === 0 && folders.length === 0 &&
 						<p className="empty-message">
-							This collection is empty <span>Add a request</span> to start working.
+							This collection is empty <span onClick={handleAddRequest}>Add a request</span> to start
+							working.
 						</p>
 					}
-
 
 					<div className="group-items">
 						{folders?.length > 0 && folders.map(folder => {

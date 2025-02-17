@@ -78,7 +78,7 @@ export default function FolderMenuItem({folder, requests}){
 			<div className="sub-items">
 				<div className="group-items">
 					{requests.length === 0 && <p className="empty-message">
-						This folder is empty <span>Add a request</span> to start working.
+						This folder is empty <span onClick={handleAddRequest}>Add a request</span> to start working.
 					</p>}
 
 					{requests.length > 0 && requests.map(request => {

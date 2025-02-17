@@ -4,18 +4,7 @@
   margin-top: 4px;
   .menu-item {
     position: relative;
-
-    //&.folder-menu-item {
-    //  .main-item {
-    //    padding-left: 24px;
-    //  }
-    //}
-    //
-    //&.request-menu-item {
-    //  .main-item {
-    //    padding-left: 36px;
-    //  }
-    //}
+    box-sizing: border-box;
 
     .main-item {
       display: flex;
@@ -106,11 +95,15 @@
       }
     }
 
+
     .sub-items {
       position: relative;
-      padding-left: 12px;
-
-      &::before{
+      .group-items {
+        .menu-item {
+          padding-left: 12px;
+        }
+      }
+      .group-items::before{
         position: absolute;
         top: 0px;
         left: 10px;
