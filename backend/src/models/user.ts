@@ -12,7 +12,7 @@ const schema = new Schema<DUser>({
 	oauth_id: {type: String, default: ""},
 	remember_token: {type: String, default: ""},
 
-	data: Schema.Types.Mixed,
+	data: {type: Schema.Types.Mixed, default: {}},
 }, {
 	timestamps: {
 		createdAt: "created_at",

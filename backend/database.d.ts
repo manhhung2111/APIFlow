@@ -34,29 +34,6 @@ export interface DWorkspace {
     updated_at?: number,
 }
 
-export interface DWorkspaceFollowing {
-    user_id: string,
-    creator_id: string,
-    object_id: string,
-
-    name: string,
-    content?: string,
-
-    viewing?: 0 | 1,
-    commenting?: 0 | 1,
-    editing?: 0 | 1,
-
-    viewers: Array<string>,
-    commenters: Array<string>,
-    editors: Array<string>,
-
-    data?: object | {},
-    token: string,
-
-    created_at?: number,
-    updated_at?: number,
-}
-
 export interface DRequest {
     user_id: string;
 

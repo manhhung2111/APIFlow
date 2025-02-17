@@ -2,11 +2,11 @@ import {model, Schema} from "mongoose";
 import {DCollection} from "@db-schemas";
 
 const schema = new Schema<DCollection>({
-	user_id: {type: String, required: true},
-	workspace_id: {type: String, required: true},
+	user_id: {type: String, required: true, index: true},
+	workspace_id: {type: String, required: true, index: true},
 
 	name: {type: String, required: true},
-	content: String,
+	content: {type: String, default: ""},
 
 	authorization: {
 		type: {type: Number, enum: [1, 2, 3, 4], default: 1},
@@ -28,7 +28,7 @@ const schema = new Schema<DCollection>({
 		},
 	],
 
-	data: Schema.Types.Mixed,
+	data: {type: Schema.Types.Mixed, default: {}},
 	token: {type: String, required: true, unique: true},
 }, {
 	timestamps: {

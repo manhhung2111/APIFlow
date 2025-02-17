@@ -70,13 +70,11 @@ export const createNewWorkspace = async (request: Request, response: Response) =
 
 		await workspace.save(session);
 
-		await workspace.fs().setFollowing(session);
-
 		await workspace.on().created(session);
 
 		await session.commitTransaction();
 
-		response.status(201).json(Code.success(`Create a new workspace successfully.`, {workspace: workspace.release()}));
+		response.status(201).json(Code.success(`Create a new workspace successfully.`, {workspace: workspace.releaseCompact()}));
 	} catch (error){
 		await session.abortTransaction();
 

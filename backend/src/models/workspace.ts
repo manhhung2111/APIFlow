@@ -5,13 +5,13 @@ const schema = new Schema<DWorkspace>({
 	user_id: {type: String, required: true},
 
 	name: {type: String, required: true},
-	content: String,
+	content: {type: String, default: ""},
 
-	viewers: [{type: String, required: true}],
-	commenters: [{type: String, required: true}],
-	editors: [{type: String, required: true}],
+	viewers: {type: [String], index: true},
+	commenters: {type: [String], index: true},
+	editors: {type: [String], index: true},
 
-	data: Schema.Types.Mixed,
+	data: {type: Schema.Types.Mixed, default: {}},
 	token: {type: String, required: true, unique: true},
 }, {
 	timestamps: {

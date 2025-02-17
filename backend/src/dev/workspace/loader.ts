@@ -1,12 +1,12 @@
 import {DBCondition} from "@ap/db";
 import Client from "@dev/client";
 import {HTMLInput, Validation} from "@ap/core";
-import {DBWorkspace, DBWorkspaceFollowing} from "@dev/workspace";
+import {DBWorkspace, DBWorkspaceLoader} from "@dev/workspace";
 
 export default class Loader{
 	public static async mine(){
 		const sc = new DBCondition().setFilter({
-			creator_id: {$eq: Client.viewer._id.toString()},
+			user_id: {$eq: Client.viewer._id.toString()},
 		}).setLimit(DBWorkspace.PAGE_SIZE);
 
 		let page_query = HTMLInput.page();
@@ -16,7 +16,7 @@ export default class Loader{
 			sc.setSkip((Number(page_query) - 1) * DBWorkspace.PAGE_SIZE);
 		}
 
-		return await DBWorkspaceFollowing.find(sc) as DBWorkspaceFollowing[];
+		return await DBWorkspace.find(sc) as DBWorkspace[];
 	}
 
 	public static async workspaces(){
@@ -31,7 +31,7 @@ export default class Loader{
 			sc.setSkip((Number(page_query) - 1) * DBWorkspace.PAGE_SIZE);
 		}
 
-		return await DBWorkspaceFollowing.find(sc) as DBWorkspaceFollowing[];
+		return await DBWorkspace.find(sc) as DBWorkspace[];
 	}
 
 }

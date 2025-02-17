@@ -2,12 +2,12 @@ import {model, Schema} from "mongoose";
 import {DFolder} from "@db-schemas";
 
 const schema = new Schema<DFolder>({
-	user_id: {type: String, required: true},
-	workspace_id: {type: String, required: true},
-	collection_id: {type: String, required: true},
+	user_id: {type: String, required: true, index: true},
+	workspace_id: {type: String, required: true, index: true},
+	collection_id: {type: String, required: true, index: true},
 
 	name: {type: String, required: true},
-	content: String,
+	content: {type: String, default: {}},
 
 	authorization: {
 		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
