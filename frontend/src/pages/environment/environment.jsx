@@ -4,23 +4,25 @@ import {useNavigate, useParams} from "react-router";
 import EnvironmentService from "@services/environment.js";
 import _ from "lodash";
 import {Button, Checkbox, Input, Select, Skeleton} from "antd";
-import {DeleteOutlined, SaveOutlined, SearchOutlined} from "@ant-design/icons";
+import {DeleteOutlined, EyeInvisibleOutlined, EyeOutlined, SaveOutlined, SearchOutlined} from "@ant-design/icons";
 import "./styles/environment.scss";
-import CollectionIcon from "@assets/icons/collection.jsx";
 import ActionManager from "@utils/action.manager.jsx";
 import EnvironmentIcon from "@assets/icons/environment.jsx";
-import CollectionService from "@services/collection.js";
 import {toast} from "react-toastify";
-import FolderService from "@services/folder.js";
 
 export default function EnvironmentPage(){
 	const {workspace, environments, setEnvironments} = useContext(WorkspaceContext);
 
 	const {environment_id} = useParams();
 	const navigate = useNavigate();
+	const [visibility, setVisibility] = useState({});
 	const [environment, setEnvironment] = useState(null);
 	const [name, setName] = useState("");
 	const [variables, setVariables] = useState(null);
+
+	const toggleVisibility = (index) => {
+		setVisibility(prev => ({...prev, [index]: !prev[index]}));
+	};
 
 	useEffect(() => {
 		async function fetchEnvironment(){
@@ -53,6 +55,12 @@ export default function EnvironmentPage(){
 		const cloneDeep = _.cloneDeep(variables);
 		cloneDeep[index][field] = value;
 
+		if(field === "type"){
+			if(value === "password"){
+				setVisibility(prev => ({...prev, [index]: false}));
+			}
+		}
+
 		// If the last row is being edited, add a new empty row
 		if(index === variables.length - 1){
 			cloneDeep.push({selected: 0, variable: '', initial_value: '', current_value: ''});
@@ -74,10 +82,10 @@ export default function EnvironmentPage(){
 		setVariables(cloneDeep);
 	};
 
-	const handleSave =  async () => {
+	const handleSave = async() => {
 		const result = await EnvironmentService.save(environment, variables);
 
-		if (result.code === 0){
+		if(result.code === 0){
 			toast.success(result.message);
 			setEnvironment(result.data.environment);
 		} else {
@@ -85,10 +93,10 @@ export default function EnvironmentPage(){
 		}
 	}
 
-	const handleDelete = async () => {
+	const handleDelete = async() => {
 		const result = await EnvironmentService.delete(environment);
 
-		if (result.code === 0) {
+		if(result.code === 0){
 			setEnvironments(prev => {
 				return prev.filter(e => e._id !== environment._id);
 			});
@@ -133,7 +141,8 @@ export default function EnvironmentPage(){
 						<span>Learn more about workspace globals</span>
 					</p>}
 
-				{environment && <Input className="search-btn" placeholder="Filter variables" prefix={<SearchOutlined/>}/>}
+				{environment &&
+					<Input className="search-btn" placeholder="Filter variables" prefix={<SearchOutlined/>}/>}
 				{environment && <div className="variables-table">
 					<div className="table-header">
 						<div></div>
@@ -145,9 +154,18 @@ export default function EnvironmentPage(){
 					</div>
 					<div className="table-body">
 						{variables?.map((row, index) => {
+							let showIcon = row.type === "password" ? visibility[index] ? (
+								<EyeOutlined onClick={() => toggleVisibility(index)}/>
+							) : (
+								<EyeInvisibleOutlined onClick={() => toggleVisibility(index)}/>
+							) : null;
+
 							let actionHtml = !(index === variables.length - 1) ?
-								<DeleteOutlined className="remove-icon" size='16'
-												onClick={() => handleRemoveRow(index)}/> : '';
+								<>
+									{showIcon}
+									<DeleteOutlined className="remove-icon" size='16'
+													onClick={() => handleRemoveRow(index)}/>
+								</> : '';
 							let selectedHtml = !(index === variables.length - 1) ?
 								<Checkbox checked={row.selected} onChange={(e) =>
 									handleInputChange(index, "selected", e.target.checked)
@@ -159,7 +177,7 @@ export default function EnvironmentPage(){
 										{selectedHtml}
 									</div>
 									<div className="col key-col">
-										<Input placeholder="Key" variant="borderless" value={row.variable}
+										<Input placeholder="Variable" variant="borderless" value={row.variable}
 											   onChange={(e) => handleInputChange(index, "variable", e.target.value)}/>
 									</div>
 									<div className=" col type-col">
@@ -175,12 +193,18 @@ export default function EnvironmentPage(){
 										/>
 									</div>
 									<div className="col value-col">
-										<Input placeholder="Initial value" variant="borderless" value={row.initial_value}
-											   onChange={(e) => handleInputChange(index, "initial_value", e.target.value)}/>
+										<Input placeholder="Initial value" variant="borderless"
+											   value={row.initial_value}
+											   onChange={(e) => handleInputChange(index, "initial_value", e.target.value)}
+											   type={row.type === "password" ? visibility[index] ? "text" : "password" : "text"}
+										/>
 									</div>
 									<div className="col content-col">
-										<Input placeholder="Current value" variant="borderless" value={row.current_value}
-											   onChange={(e) => handleInputChange(index, "current_value", e.target.value)}/>
+										<Input placeholder="Current value" variant="borderless"
+											   value={row.current_value}
+											   onChange={(e) => handleInputChange(index, "current_value", e.target.value)}
+											   type={row.type === "password" ? visibility[index] ? "text" : "password" : "text"}
+										/>
 									</div>
 									<div className="col action-col">
 										{actionHtml}

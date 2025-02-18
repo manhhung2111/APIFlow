@@ -33,7 +33,7 @@
   }
 
   .main {
-    padding: 0 16px;
+    padding: 0 16px 16px 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -116,7 +116,7 @@
             }
           }
 
-          input[type='text'] {
+          input[type='text'], input[type='password'] {
             flex: 1;
             padding: 4px 8px;
             border-radius: 3px;
@@ -183,9 +183,10 @@
 
           .action-col {
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
             align-items: center;
-
+            gap: 6px;
+            padding-right: 5px;
             .remove-icon {
               cursor: pointer;
               color: grey;

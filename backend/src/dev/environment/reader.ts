@@ -59,11 +59,12 @@ export default class Reader extends DBReader<DEnvironment>{
 		for (let index = 0; index < variables.length; index++) {
 			const selected = variables[index].selected;
 			const variable = variables[index].variable;
+			const type = variables[index].type;
 			const initial_value = variables[index].initial_value;
 			const current_value = variables[index].current_value;
 
 			if (!selected && !variable && !initial_value && !current_value) break;
-			new_variables.push({selected, variable, initial_value, current_value});
+			new_variables.push({selected, variable, type, initial_value, current_value});
 		}
 
 		this._obj.variables = new_variables;
