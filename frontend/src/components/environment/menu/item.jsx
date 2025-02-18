@@ -38,7 +38,7 @@ export default function EnvironmentMenuItem({environment}){
 			</NavLink>
 
 			<div className="item-side">
-				<ActionManager am={actionManagers}/>
+				{environment.scope === 1 && <ActionManager am={actionManagers}/>}
 			</div>
 		</div>
 	)

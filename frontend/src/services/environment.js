@@ -21,4 +21,25 @@ export default class EnvironmentService{
 			throw new Error(error.message || 'Delete environment failed');
 		}
 	}
+
+	static async getById(environment_id, workspace_id) {
+		try {
+			return await axios.get(`/environments/${environment_id}?workspace_id=${workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Delete environment failed');
+		}
+	}
+
+	static async save(environment, variables) {
+		try {
+			const data = {
+				"variables": btoa(JSON.stringify(variables)),
+				workspace_id: environment.workspace_id,
+			}
+
+			return await axios.put(`/environments/${environment._id}`, data);
+		} catch (error) {
+			throw new Error(error.message || 'Save environment failed');
+		}
+	}
 }

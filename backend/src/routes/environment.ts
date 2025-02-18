@@ -22,7 +22,6 @@ router.get("/:environment_id", workspaceViewable, getEnvironmentById);
 
 // Edit routes
 router.put("/:environment_id", workspaceEditable, updateEnvironment);
-router.put("/:environment_id/name", workspaceEditable, updateEnvironmentName);
 
 // Create routes
 router.post("/", workspaceEditable, createNewEnvironment);

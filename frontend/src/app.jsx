@@ -16,6 +16,7 @@ import HomePage from "@pages/home/home.jsx";
 import PublicRoute from "@layout/routes/public.jsx";
 import CollectionPage from "@pages/collection/collection.jsx";
 import FolderPage from "@pages/folder/folder.jsx";
+import EnvironmentPage from "@pages/environment/environment.jsx";
 
 function App(){
 	return (
@@ -28,6 +29,7 @@ function App(){
 						<Route path="request/:request_id/" element={<RequestPage/>}/>
 						<Route path="collection/:collection_id" element={<CollectionPage/>}/>
 						<Route path="folder/:folder_id" element={<FolderPage/>}/>
+						<Route path="environment/:environment_id" element={<EnvironmentPage/>}/>
 					</Route>
 				</Route>
 
