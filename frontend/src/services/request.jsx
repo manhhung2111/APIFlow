@@ -37,7 +37,14 @@ export default class RequestService {
 		} catch (error) {
 			throw new Error(error.message || 'Save request failed');
 		}
+	}
 
 
+	static async delete(request) {
+		try {
+			return await axios.delete(`/requests/${request._id}?workspace_id=${request.workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Delete request failed');
+		}
 	}
 }

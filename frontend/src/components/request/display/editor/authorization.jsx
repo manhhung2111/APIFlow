@@ -25,7 +25,7 @@ export default function RequestEditorAuthorization(){
 			<div className="left-container">
 				<h3>Auth Type</h3>
 				<Select
-					defaultValue={0}
+					defaultValue={authorization.type || 0}
 					onChange={(value) => handleChangeType(value)}
 					options={Object.values(Request.AUTHORIZATION)}
 					className="auth-selector"

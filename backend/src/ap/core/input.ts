@@ -249,7 +249,7 @@ export default class HTMLInput{
 	}
 
 	public static inputRaw(field: string): string{
-		let value = this._cur_request?.body[field] || "";
+		let value = this._cur_request?.body[field] ?? "";
 
 		try{
 			let json_value = JSON.parse(value);

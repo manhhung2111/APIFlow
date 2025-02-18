@@ -12,6 +12,7 @@ export default class AuthorizationFactory{
 	private _authorization: Authorization | null = null;
 
 	public constructor(authorization_type: number){
+		console.log("auth", authorization_type);
 		if (authorization_type === Authorization.NoAuth){
 			this._authorization = new NoAuthorization();
 		} else if (authorization_type === Authorization.InheritAuth){
