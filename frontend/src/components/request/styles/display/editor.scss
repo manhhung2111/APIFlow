@@ -6,6 +6,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  height: 48px;
 
   .editor-url {
     width: 70vw;
@@ -34,7 +35,8 @@
   .editor-action {
     height: 32px;
 
-    &.ant-btn {
+    .ant-btn {
+      background-color: $base-color-brand;
       font-weight: $text-weight-bold;
       font-size: $text-size-l !important;
     }
@@ -109,7 +111,7 @@
     font-weight: 600;
     color: #6B6B6B;
     margin-bottom: 8px;
-    font-size: 13px;
+    font-size: 12px;
   }
 }
 
@@ -231,7 +233,7 @@
       font-weight: 600;
       color: #6B6B6B;
       margin-bottom: 8px;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .auth-selector {
@@ -334,7 +336,7 @@
   .request-editor-body-form-raw {
     .app-code-editor {
       border: 1px solid $border-color-default;
-      height: 38vh;
+      height: 30vh;
     }
   }
 }

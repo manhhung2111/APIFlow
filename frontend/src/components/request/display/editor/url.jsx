@@ -1,11 +1,11 @@
-import {Button, Input, Select, Space} from "antd";
+import {Button, Input, Select, Skeleton, Space} from "antd";
 import {SendOutlined} from "@ant-design/icons";
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import Request from "@components/request/request.jsx";
 
 export default function RequestEditorUrl(){
-	const {url, setUrl, params, setParams} = useContext(RequestContext);
+	const {request, url, setUrl, params, setParams, handleSend, method, setMethod} = useContext(RequestContext);
 
 	const buildParamsFromUrl = (url) => {
 		const params = [];
@@ -47,12 +47,13 @@ export default function RequestEditorUrl(){
 					value: newParams[j].value,
 					content: newParams[j].key === params[i].key ? params[i].content : ""
 				});
-				i++; j++;
+				i++;
+				j++;
 			}
 		}
 
 		while (i < params.length) {
-			if (!params[i].selected) mergedParams.push(params[i]);
+			if(!params[i].selected) mergedParams.push(params[i]);
 			i++;
 		}
 
@@ -67,21 +68,34 @@ export default function RequestEditorUrl(){
 		setUrl(newUrl)
 	}
 
+	const handleChangeMethod = (value) => {
+		setMethod(value);
+	}
+
 	return (
 		<div className="request-editor-url">
 			<Space.Compact className="editor-url">
-				<Select
-					showSearch
-					placeholder="Search to Select"
-					optionFilterProp="label"
-
-					defaultValue="get"
-					options={Object.values(Request.METHODS)}
-				/>
-				<Input className="url" placeholder="Enter URL or paste text" value={url}
-					   onChange={handleChangeUrl}/>
+				{request && <>
+					<Select
+						showSearch
+						placeholder="Search to Select"
+						optionFilterProp="label"
+						defaultValue={method || "GET"}
+						options={Object.values(Request.METHODS)}
+						onChange={handleChangeMethod}
+					/>
+					<Input className="url" placeholder="Enter URL or paste text" value={url}
+						   onChange={handleChangeUrl}/>
+				</>}
+				{!request && <Skeleton.Input style={{width: "60vw"}} active={true} />}
 			</Space.Compact>
-			<Button className="editor-action" type="primary"> <SendOutlined /> Send</Button>
+			<div className="editor-action">
+				{!request && <Skeleton.Button />}
+				{request && <Button type="primary" icon={<SendOutlined />} onClick={handleSend}>
+					Send
+				</Button>}
+			</div>
+
 		</div>
 	);
 };

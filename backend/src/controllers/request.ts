@@ -201,14 +201,14 @@ export const updateRequest = async (request: Request, response: Response) => {
     try {
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
         }
 
         await request.reader().read();
 
         await request.save();
 
-        response.status(201).json(Code.success("Save request successfully!"));
+        response.status(201).json(Code.success("Save request successfully!", {request: request.release()}));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));

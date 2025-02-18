@@ -19,7 +19,7 @@ export default function RequestMenuItem({request}){
 	}
 
 	function getRequestIcon(){
-		const method = Request.getMethod(request.method.toLowerCase());
+		const method = Request.getMethod(request.method);
 		if(!method) return null;
 
 		return <span style={{fontWeight: 600, color: method.color, fontSize: "9px", marginTop: "2px"}}>

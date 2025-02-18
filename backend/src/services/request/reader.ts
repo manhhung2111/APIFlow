@@ -19,7 +19,7 @@ export default class RequestServiceReader{
 	private _scripts: object = {};
 
 	public readMethod(){
-		this._method = HTMLInput.inputInline("request_method");
+		this._method = HTMLInput.inputInline("method");
 
 		if (!this.METHODS.includes(this._method)){
 			throw new Code(`The request method is not supported yet.`);
@@ -29,7 +29,7 @@ export default class RequestServiceReader{
 	}
 
 	public readURL(){
-		this._url = HTMLInput.inputInlineNoLimit("request_url");
+		this._url = HTMLInput.inputInlineNoLimit("url");
 
 		if (this._url.length > 2047){
 			throw new Code("The URL is too long, as it exceeds the maximum limit of 2047 characters.");
@@ -39,25 +39,21 @@ export default class RequestServiceReader{
 	}
 
 	public readParams(){
-		const query_prefix = "request_query_params";
-		const params: Array<any> = [];
+		let data = Buffer.from(HTMLInput.inputRaw("params"), 'base64').toString('utf8');
+		let params = JSON.parse(data);
 
-		for (let index = 0; index < this.MAX_ROWS; index++){
-			const selected = HTMLInput.inputInline(`${query_prefix}_selected_${index}`) == "on";
-			const key = HTMLInput.inputInline(`${query_prefix}_key_${index}`);
-			const value = HTMLInput.inputInline(`${query_prefix}_value_${index}`);
-			const description = HTMLInput.inputInline(`${query_prefix}_description_${index}`);
+		let temp = [];
 
-			if (!selected && !key && !value) continue;
-			params.push({
-				"selected": selected,
-				"key": key,
-				"value": value,
-				"description": description,
-			});
+		for (let index = 0; index < params.length - 1; index++) {
+			const selected = params[index].selected;
+			const key = params[index].key;
+			const value = params[index].value;
+			const content = params[index].content;
+
+			temp.push({selected, key, value, content});
 		}
 
-		this._params = params;
+		this._params = temp;
 
 		return this;
 	}
@@ -87,7 +83,7 @@ export default class RequestServiceReader{
 
 	public readAuthorization(){
 		const auth_type = HTMLInput.inputInt("authorization_type");
-		console.log("Auth type:", auth_type);
+
 		const authorization = new AuthorizationFactory(auth_type);
 		authorization.read();
 		this._authorization = authorization;
@@ -111,27 +107,27 @@ export default class RequestServiceReader{
 	}
 
 	public readHeaders(){
-		const prefix = "request_headers";
-		const headers: Array<any> = [];
+		let data = Buffer.from(HTMLInput.inputRaw("headers"), 'base64').toString('utf8');
+		let headers = JSON.parse(data);
 
-		for (let index = 0; index < this.MAX_ROWS; index++){
-			const selected = HTMLInput.inputInline(`${prefix}_selected_${index}`) == "on";
-			const key = HTMLInput.inputInline(`${prefix}_key_${index}`);
-			const value = HTMLInput.inputInline(`${prefix}_value_${index}`);
-			const description = HTMLInput.inputInline(`${prefix}_description_${index}`);
+		let temp = [];
 
-			if (!selected && !key && !value) continue;
-			headers.push({"selected": selected, "key": key, "value": value, "description": description});
+		for (let index = 0; index < headers.length - 1; index++) {
+			const selected = headers[index].selected;
+			const key = headers[index].key;
+			const value = headers[index].value;
+			const content = headers[index].content;
+
+			temp.push({selected, key, value, content});
 		}
 
-		this._headers = headers;
-
+		this._headers = temp;
 
 		return this;
 	}
 
 	public readBody(){
-		const body_type = HTMLInput.inputInt("request_body_type");
+		const body_type = HTMLInput.inputInt("body_type");
 
 		const body = new RequestBodyFactory(body_type);
 		body.read();
@@ -145,10 +141,9 @@ export default class RequestServiceReader{
 	}
 
 	public readScripts(){
-		const pre_script = HTMLInput.inputInlineNoLimit("request_pre_script");
-		const post_script = HTMLInput.inputInlineNoLimit("request_post_script");
+		let data = Buffer.from(HTMLInput.inputRaw("scripts"), 'base64').toString('utf8');
 
-		this._scripts = {"pre_script": pre_script, "post_script": post_script};
+		this._scripts = JSON.parse(data);
 		return this;
 	}
 

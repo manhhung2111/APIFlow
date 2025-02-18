@@ -47,27 +47,27 @@ export interface DRequest {
     method: string;
     url: string;
 
-    params?: Array<{
+    params: Array<{
         selected?: boolean,
         key?: string;
         value?: string;
         content?: string;
     }>;
-    headers?: Array<{
+    headers: Array<{
         selected?: boolean,
         key?: string;
         value?: string;
         content?: string;
     }>;
-    authorization?: {
+    authorization: {
         type: number;
         data?: object;
     };
-    body?: {
+    body: {
         type: number;
         data?: object;
     };
-    scripts?: {
+    scripts: {
         pre_request?: string;
         post_response?: string;
     };
@@ -75,7 +75,7 @@ export interface DRequest {
     examples: Array<object>
     tag?: number;
 
-    data?: object | {};
+    data: object | {};
     token: string;
 
     created_at?: number;

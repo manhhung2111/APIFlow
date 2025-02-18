@@ -3,7 +3,6 @@ import {useParams} from "react-router";
 import RequestService from "@services/request.jsx";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {toast} from "react-toastify";
-import {setSelectionNoUndo} from "codemirror/src/model/selection_updates.js";
 
 export const RequestContext = createContext({});
 
@@ -12,7 +11,11 @@ export default function RequestContextProvider(props){
 	const {workspace} = useContext(WorkspaceContext);
 
 	let [request, setRequest] = useState(null);
+	let [requestFolder, setRequestFolder] = useState(null);
+	let [requestCollection, setRequestCollection] = useState(null);
+
 	let [name, setName] = useState("");
+	let [method, setMethod] = useState("");
 	let [url, setUrl] = useState("");
 	let [params, setParams] = useState(null);
 	let [authorization, setAuthorization] = useState(null);
@@ -117,27 +120,72 @@ export default function RequestContextProvider(props){
 				setRequest(request);
 				setName(request.name);
 				setUrl(request.url);
-				setParams([...request.params, {selected: 0, key: '', value: '', content: ''}]);
+				setMethod(request.method);
+				setParams([...request.params, {selected: 1, key: '', value: '', content: ''}]);
 				setAuthorization(request.authorization);
-				setHeaders([...request.headers, {selected: 0, key: '', value: '', content: ''}]);
+				setHeaders([...request.headers, {selected: 1, key: '', value: '', content: ''}]);
 				setBody({
 					type: request.body.type,
 					data: {
-						form_data: [...request.body.data.form_data, {selected: 0, key: '', type: 'text', value: '', content: ''}],
-						form_encoded: [...request.body.data.form_encoded, {selected: 0, key: '', value: '', content: ''}],
+						form_data: [...request.body.data.form_data, {
+							selected: 1,
+							key: '',
+							type: 'text',
+							value: '',
+							content: ''
+						}],
+						form_encoded: [...request.body.data.form_encoded, {
+							selected: 1,
+							key: '',
+							value: '',
+							content: ''
+						}],
 						form_raw: request.body.data.form_raw
 					}
 				});
 				setScripts(request.scripts);
+
+				setRequestFolder(response.data?.folder ?? null);
+				setRequestCollection(response.data.collection);
 			} else {
 				toast.error(response.message);
 			}
 		}
 
-		if (workspace) {
+		if(workspace){
 			fetchData();
 		}
 	}, [request_id, workspace]);
+
+	const handleSave = async () => {
+		const response = await RequestService.save(request, method, url, params, authorization, headers, body, scripts);
+
+		if (response.code === 0) {
+			toast.success(response.message);
+			setRequest(response.data.request);
+		} else {
+			toast.error(response.message);
+		}
+	}
+
+	const handleAddExample = () => {
+
+	}
+
+	const handleDelete = () => {
+
+	}
+
+	const handleSend = () => {
+
+	}
+
+	const actionManagers = [
+		{key: `add_example_${request?._id}`, label: "Add example", onClick: handleAddExample},
+		{key: `duplicate_${request?._id}`, label: "Duplicate",},
+		{key: `delete_${request?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+	]
+
 
 	return (
 		<RequestContext.Provider value={{
@@ -157,7 +205,10 @@ export default function RequestContextProvider(props){
 			response,
 			setResponse,
 			request,
-			setRequest
+			setRequest,
+			requestFolder, setRequestFolder,
+			requestCollection, setRequestCollection,
+			handleSave, actionManagers, handleSend, method, setMethod
 		}}>
 			{children}
 		</RequestContext.Provider>

@@ -8,10 +8,10 @@ export default class Request{
 	};
 
 	static METHODS = {
-		GET: {value: "get", label: "GET"},
-		PUT: {value: "put", label: "PUT"},
-		POST: {value: "post", label: "POST"},
-		DELETE: {value: "delete", label: "DELETE"}
+		GET: {value: "GET", label: <div style={{color: "#007F31", fontWeight: 600}}>GET</div>},
+		POST: {value: "POST", label: <div style={{color: "#AD7A03", fontWeight: 600}}>POST</div>},
+		PUT: {value: "PUT", label: <div style={{color: "#0053B8", fontWeight: 600}}>PUT</div>},
+		DELETE: {value: "DELETE", label: <div style={{color: "#8E1A10", fontWeight: 600}}>DELETE</div>}
 	}
 
 	static BODY_TYPES = {

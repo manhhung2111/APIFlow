@@ -16,10 +16,8 @@ export default class Reader extends DBReader<DRequest>{
 		if (this.isCreating()){
 			this._obj.user_id = Client.viewer._id.toString();
 			this._obj.token = UUID.randomTokenSize32();
-			this._obj.workspace_id = HTMLInput.param("workspace_id");
+			this._obj.workspace_id = HTMLInput.inputInline("workspace_id");
 		}
-
-		await this.readName();
 
 		const request_reader = new RequestServiceReader();
 		request_reader.readMethod()
@@ -27,7 +25,6 @@ export default class Reader extends DBReader<DRequest>{
 			.readParams()
 			.readAuthorization()
 			.readHeaders()
-			.readBody()
 			.readScripts();
 
 		this._obj.method = request_reader.getMethod();
@@ -35,8 +32,9 @@ export default class Reader extends DBReader<DRequest>{
 		this._obj.params = request_reader.getParams();
 		this._obj.authorization = request_reader.getAuthorization();
 		this._obj.headers = request_reader.getHeaders();
-		this._obj.body = request_reader.getBody();
 		this._obj.scripts = request_reader.getScripts();
+
+		this.readBody();
 	}
 
 
@@ -87,5 +85,45 @@ export default class Reader extends DBReader<DRequest>{
 
 	public async duplicate(old_request: DBRequest){
 
+	}
+
+
+	private readBody() {
+		this._obj.body.type = HTMLInput.inputInt("body_type");
+
+		let data = Buffer.from(HTMLInput.inputRaw("body_data"), 'base64').toString('utf8');
+		let body_data = JSON.parse(data);
+
+		// Read form data
+		let form_data = [];
+		for (let index = 0; index < body_data.form_data.length - 1; index++) {
+			const selected = body_data.form_data[index].selected;
+			const key = body_data.form_data[index].key;
+			const type = body_data.form_data[index].type;
+			const value = body_data.form_data[index].value;
+			const content = body_data.form_data[index].content;
+
+			form_data.push({selected, key, type, value, content});
+		}
+
+		// Read form encoded
+		let form_encoded = [];
+		for (let index = 0; index < body_data.form_encoded.length - 1; index++) {
+			const selected = body_data.form_encoded[index].selected;
+			const key = body_data.form_encoded[index].key;
+			const value = body_data.form_encoded[index].value;
+			const content = body_data.form_encoded[index].content;
+
+			form_encoded.push({selected, key, value, content});
+		}
+
+		// Read form raw
+		let form_raw = body_data.form_raw;
+
+		this._obj.body.data = {
+			form_data: form_data,
+			form_encoded: form_encoded,
+			form_raw: form_raw
+		};
 	}
 }
