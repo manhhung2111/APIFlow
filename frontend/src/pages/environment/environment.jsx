@@ -1,6 +1,6 @@
 import {useContext, useEffect, useRef, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
-import {useNavigate, useParams} from "react-router";
+import {useLocation, useMatch, useNavigate, useParams} from "react-router";
 import EnvironmentService from "@services/environment.js";
 import _ from "lodash";
 import {Button, Checkbox, Input, Select, Skeleton} from "antd";
@@ -11,7 +11,7 @@ import EnvironmentIcon from "@assets/icons/environment.jsx";
 import {toast} from "react-toastify";
 
 export default function EnvironmentPage(){
-	const {workspace, environments, setEnvironments} = useContext(WorkspaceContext);
+	const {workspace, environments, setEnvironments, setActiveMenuKey} = useContext(WorkspaceContext);
 
 	const {environment_id} = useParams();
 	const navigate = useNavigate();
@@ -20,9 +20,13 @@ export default function EnvironmentPage(){
 	const [name, setName] = useState("");
 	const [variables, setVariables] = useState(null);
 
+	const isPageActive = useMatch(`environment/${environment?._id}`);
+
 	const toggleVisibility = (index) => {
 		setVisibility(prev => ({...prev, [index]: !prev[index]}));
 	};
+
+
 
 	useEffect(() => {
 		async function fetchEnvironment(){
@@ -48,6 +52,11 @@ export default function EnvironmentPage(){
 			fetchEnvironment();
 		}
 	}, [environment_id, workspace]);
+
+
+	useEffect(() => {
+		setActiveMenuKey(2);
+	}, [isPageActive])
 
 	const containerRef = useRef(null);
 

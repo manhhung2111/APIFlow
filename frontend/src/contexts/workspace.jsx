@@ -17,6 +17,8 @@ export default function WorkspaceContextProvider(props){
 	const [requests, setRequests] = useState(null);
 	const [environments, setEnvironments] = useState([]);
 
+	const [activeMenuKey, setActiveMenuKey] = useState(1);
+
 	useEffect(() => {
 		const getWorkspace = async () => {
 			const response = await WorkspaceService.getById(workspace_id);
@@ -48,7 +50,9 @@ export default function WorkspaceContextProvider(props){
 			requests,
 			setRequests,
 			environments,
-			setEnvironments
+			setEnvironments,
+			activeMenuKey,
+			setActiveMenuKey,
 		}}>
 			{children}
 		</WorkspaceContext.Provider>

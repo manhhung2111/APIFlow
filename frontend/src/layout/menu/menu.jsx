@@ -14,7 +14,7 @@ import WorkspaceNewSelectForm from "@components/workspace/form/select.jsx";
 import CollectionMenu from "@components/collection/menu/menu.jsx";
 
 export default function MasterMenu(){
-	const {workspace} = useContext(WorkspaceContext);
+	const {workspace, activeMenuKey, setActiveMenuKey} = useContext(WorkspaceContext);
 
 	const [newModalVisibility, setNewModalVisibility ] = useState(false);
 
@@ -51,6 +51,8 @@ export default function MasterMenu(){
 				<Tabs
 					tabPosition={"left"}
 					items={items}
+					activeKey={activeMenuKey}
+					onChange={(key) => setActiveMenuKey(key)}
 				/>
 			</div>
 			<WorkspaceNewSelectForm
