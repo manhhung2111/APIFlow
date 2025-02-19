@@ -104,8 +104,10 @@ export default function RequestResponseCookies(){
 
 		const data = [];
 
-		for (const cookie of response.headers["Set-Cookie"]) {
-			data.push(parseCookie(cookie))
+		if (response.headers["Set-Cookie"]) {
+			for (const cookie of response.headers["Set-Cookie"]) {
+				data.push(parseCookie(cookie))
+			}
 		}
 
 		return data;

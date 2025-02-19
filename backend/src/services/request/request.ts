@@ -74,6 +74,7 @@ export default class RequestService{
 		let headers = this.convertRequestHeaders();
 		let body = this.convertRequestBody();
 
+		console.log("Body", body);
 		try{
 			const startTime = performance.now();
 			const response = await axios({
@@ -106,7 +107,7 @@ export default class RequestService{
 		if (this._body.type == RequestBody.FormData){
 			const form_data = new FormData();
 
-			Object.values(this._body.data).forEach((row) => {
+			this._body.data.forEach((row: { key: string; value: string | Express.Multer.File[]; } | null) => {
 				if (typeof row === "object" && row !== null && "key" in row && "value" in row){
 					const {key, value} = row as {key: string; value: string | Express.Multer.File[]};
 					if (Array.isArray(value)){
@@ -121,7 +122,11 @@ export default class RequestService{
 
 			request_body = form_data;
 		} else if (this._body.type == RequestBody.FormEncoded){
-			request_body = new URLSearchParams(this._body.data as Record<string, string>).toString();
+			request_body = new URLSearchParams(
+				Object.fromEntries(
+					this._body.data.map(({ key, value }: { key: string; value: string }) => [key, value])
+				)
+			).toString();
 		} else if (this._body.type == RequestBody.FormRaw){
 			request_body = JSON.stringify(this._body.data);
 		}

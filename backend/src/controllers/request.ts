@@ -143,36 +143,32 @@ export const sendRequest = async (request: Request, response: Response) => {
             .readMethod()
             .readURL()
             .readParams()
-            .readPathVariables()
             .readAuthorization()
             .readCookies()
             .readHeaders()
-            .readBody()
-            .readScripts()
-            .readEnvironment();
+            .readBody();
 
         const request = new RequestService()
             .setMethod(request_reader.getMethod())
             .setURL(request_reader.getURL())
             .setParams(request_reader.getParams())
-            .setPathVariables(request_reader.getPathVariables())
             .setCookies(request_reader.getCookies())
             .setHeaders(request_reader.getHeaders())
             .setAuthorization(request_reader.getAuthorization())
             .setBody(request_reader.getBody())
-            .setEnvironment(request_reader.getEnvironment())
-            .setScripts(request_reader.getScripts());
 
         const result = await request.send();
 
-        response.status(200).json(Code.success("Send request to endpoint successfully.", {
-            "body": result.data,
-            "headers": result.headers,
-            "status": result.status,
-            "statusText": result.statusText,
-            "time": result.time,
-            "request_size": result.request_size,
-            "response_size": result.response_size,
+        response.status(200).json(Code.success("Send request to endpoint successfully", {
+            "response": {
+                "body": result.data,
+                "headers": result.headers,
+                "status": result.status,
+                "statusText": result.statusText,
+                "time": result.time,
+                "request_size": result.request_size,
+                "response_size": result.response_size,
+            }
         }));
     } catch (error) {
         if (axios.isAxiosError(error)) {

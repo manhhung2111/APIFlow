@@ -60,4 +60,26 @@ export default class RequestService {
 			throw new Error(error.message || 'Save request failed');
 		}
 	}
+
+	static async send(request, method, url, params, authorization, headers, body, scripts) {
+		try {
+			const data = {
+				"method": method,
+				"url": url,
+				"authorization_type": authorization.type,
+				...authorization.data,
+				"params": btoa(JSON.stringify(params)),
+				"headers": btoa(JSON.stringify(headers)),
+				"scripts": btoa(JSON.stringify(scripts)),
+				"body_type": body.type,
+				"body_data": btoa(JSON.stringify(body.data)),
+				workspace_id: request.workspace_id,
+			}
+
+			return await axios.post(`/requests/send`, data);
+		} catch (error) {
+			throw new Error(error.message || 'Send request failed');
+		}
+	}
+
 }

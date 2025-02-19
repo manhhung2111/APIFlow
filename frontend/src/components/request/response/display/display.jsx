@@ -7,9 +7,10 @@ import RequestResponseBody from "@components/request/response/display/body.jsx";
 import RequestResponseHeaders from "@components/request/response/display/headers.jsx";
 import RequestResponseCookies from "@components/request/response/display/cookies.jsx";
 import RequestResponseTestResults from "@components/request/response/display/test.results.jsx";
+import EmptyResponse from "@assets/images/empty.response.svg"
 
 export default function RequestResponse(){
-	let {response} = useContext(RequestContext);
+	let {response, request} = useContext(RequestContext);
 
 	const items = [
 		{label: "Body", key: 1, children: <RequestResponseBody />},
@@ -18,13 +19,21 @@ export default function RequestResponse(){
 		{label: "Test Results", key: 4, children: <RequestResponseTestResults />},
 	];
 
+	if (!request){
+		return "";
+	}
+
 	return (
 		<div className="request-response">
 			<div className="rr-header">
 				<h3>Response</h3>
-				<RequestResponseSide />
+				{response && <RequestResponseSide />}
 			</div>
-			<Tabs items={items} size={"small"} tabBarGutter={8}/>
+			{!response && <div className="empty-response">
+				<img className="empty-response-img" src={EmptyResponse} alt="Empty Response"/>
+				<p>Click Send to get a response</p>
+			</div>}
+			{response && <Tabs items={items} size={"small"} tabBarGutter={8}/>}
 		</div>
 	);
 }

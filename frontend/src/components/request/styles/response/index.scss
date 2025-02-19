@@ -2,6 +2,21 @@
 
 .request-response {
   flex: 1;
+  .empty-response {
+    margin: 0 auto;
+    .empty-response-img {
+      width: 200px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    p {
+      font-size: $text-size-m;
+      text-align: center;
+      color: $content-color-secondary;
+    }
+  }
+
 
   .rr-header {
     padding: 8px;

@@ -3,20 +3,21 @@ import {HTMLInput} from "@ap/core";
 
 export default class RequestFormEncoded extends RequestBody{
 	protected type = RequestBody.FormEncoded;
-	private prefix_field = "request_body_encoded";
+
 	readData(): void{
-		const data = [];
+		let data = Buffer.from(HTMLInput.inputRaw("body_data"), 'base64').toString('utf8');
+		let body_data = JSON.parse(data);
 
-		for (let index = 0; index < this.MAX_ROWS; index++){
-			const selected = HTMLInput.inputInline(`${this.prefix_field}_selected_${index}`) == "on";
-			const key = HTMLInput.inputInline(`${this.prefix_field}_key_${index}`);
-			const value = HTMLInput.inputInline(`${this.prefix_field}_value_${index}`);
-			const description = HTMLInput.inputInline(`${this.prefix_field}_description_${index}`);
+		let form_encoded = [];
+		for (let index = 0; index < body_data.form_encoded.length - 1; index++) {
+			const selected = body_data.form_encoded[index].selected;
+			const key = body_data.form_encoded[index].key;
+			const value = body_data.form_encoded[index].value;
+			const content = body_data.form_encoded[index].content;
 
-			if (!selected && !key && !value) continue;
-			data.push({"selected": selected, "key": key, "value": value, "description": description});
+			form_encoded.push({selected, key, value, content});
 		}
-		this.data = {...data}
-	}
 
+		this.data = form_encoded;
+	}
 }
