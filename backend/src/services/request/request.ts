@@ -1,7 +1,8 @@
 import {RequestBody} from "@services/request/index";
 import axios from "axios";
-import {Code} from "@ap/core";
+import {Code, JWT} from "@ap/core";
 import FormData from "form-data";
+import {Authorization, BearerTokenAuthorization} from "@services/authorization";
 
 export default class RequestService{
 	private _method: string = "";
@@ -71,7 +72,7 @@ export default class RequestService{
 
 	public async send(){
 		let url = this.convertRequestUrl();
-		let headers = this.convertRequestHeaders();
+		let headers = await this.convertRequestHeaders();
 		let body = this.convertRequestBody();
 
 		try{
@@ -134,7 +135,7 @@ export default class RequestService{
 		return request_body;
 	}
 
-	private convertRequestHeaders(){
+	private async convertRequestHeaders(){
 		const headers: any = {};
 		this._headers.forEach((header) => {
 			headers[header.key] = header.value;
@@ -149,7 +150,26 @@ export default class RequestService{
 		}
 
 		// Construct authorization
-		
+		if (this._authorization.type == Authorization.BasicAuth) {
+			const credential = this._authorization.data.username + ":" + this._authorization.data.password;
+			headers["Authorization"] = Buffer.from(credential, "utf-8").toString("base64");
+		} else if (this._authorization.type == Authorization.BearerTokenAuth) {
+			headers["Authorization"] = "Bearer " + this._authorization.data.bearer_token;
+		} else if (this._authorization.type == Authorization.JWTBearerAuth) {
+			const algorithm = this._authorization.data.algorithm;
+			const secret = this._authorization.data.secret;
+			const payload = this._authorization.data.payload;
+
+			let payload_decode = {};
+			try {
+				payload_decode = JSON.parse(payload);
+			} catch (error) {
+				payload_decode = {};
+			}
+
+			const token = await JWT.signToken(payload_decode, secret, algorithm);
+			headers["Authorization"] = "Bearer " + token;
+		}
 
 		return headers;
 	}
