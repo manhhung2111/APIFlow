@@ -220,10 +220,14 @@
           margin-right: $spacing-l;
         }
 
-        input {
+        input, .select {
           margin-top: $spacing-m;
           min-width: 196px;
           max-width: 280px;
+
+          .ant-select-selector {
+            font-size: $text-size-m !important;
+          }
         }
 
         .input-group {

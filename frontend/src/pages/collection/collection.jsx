@@ -49,11 +49,12 @@ export default function CollectionPage(){
 					current_value: ''
 				}]);
 			} else {
-				console.log(result.message);
+				console.error(result.message);
 			}
 		}
 
 		if(workspace){
+			setCollection(null);
 			fetchCollection();
 		}
 	}, [collection_id, workspace]);

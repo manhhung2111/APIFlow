@@ -265,6 +265,11 @@ export default class HTMLInput{
 		return this.cleanData(value);
 	}
 
+
+	public static inputNoSafe(field: string): string {
+		return this._cur_request?.body[field] ?? "";
+	}
+
 	private static cleanData(text: string): string{
 		return text.replace(/[^\x20-\x7E]/g, "");
 	}

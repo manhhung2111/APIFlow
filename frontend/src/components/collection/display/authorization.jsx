@@ -67,17 +67,24 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Algorithm</div>
-							<Input name="algorithm" value={authorization.data.algorithm ?? ""}
-								   onChange={(e) => handleChangeData("algorithm", e.target.value)}/>
+							<Select
+								className="select"
+								style={{width: 280}}
+								value={authorization.data.algorithm ?? "HS256"}
+								name="algorithm"
+								onChange={(value) => handleChangeData("algorithm", value)}
+								options={[
+									{value: 'HS256', label: 'HS256'},
+									{value: 'HS384', label: 'HS384'},
+									{value: 'HS512', label: 'HS512'},
+								]}
+							/>
 						</div>
 						<div className="form-row">
 							<div className="title">Secret</div>
 							<div className="input-group">
 								<Input name="secret" value={authorization.data.secret ?? ""}
 									   onChange={(e) => handleChangeData("secret", e.target.value)}/>
-								<Checkbox value={authorization.data.encoded ?? false}
-										  onChange={(e) => handleChangeData("encoded", e.target.checked)}>Secret Base64
-									encoded</Checkbox>
 							</div>
 						</div>
 						<div className="form-row">

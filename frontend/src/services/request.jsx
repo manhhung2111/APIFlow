@@ -76,7 +76,7 @@ export default class RequestService {
 				workspace_id: request.workspace_id,
 			}
 
-			return await axios.post(`/requests/send`, data);
+			return await axios.post(`/requests/${request._id}/send`, data);
 		} catch (error) {
 			throw new Error(error.message || 'Send request failed');
 		}

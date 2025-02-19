@@ -37,6 +37,6 @@ router.post("/:request_id/duplicate", workspaceEditable, duplicateRequest);
 router.delete("/:request_id", workspaceEditable, deleteRequest);
 
 // Other routes
-router.post("/send", workspaceViewable, sendRequest);
+router.post("/:request_id/send", workspaceViewable, sendRequest);
 
 export default router;

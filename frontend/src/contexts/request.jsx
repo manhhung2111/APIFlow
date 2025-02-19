@@ -4,6 +4,7 @@ import RequestService from "@services/request.jsx";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {toast} from "react-toastify";
 import _ from "lodash";
+import Request from "@components/request/request.jsx";
 
 export const RequestContext = createContext({});
 
@@ -74,6 +75,7 @@ export default function RequestContextProvider(props){
 		}
 
 		if(workspace){
+			setRequest(null);
 			fetchData();
 		}
 	}, [request_id, workspace]);
@@ -98,7 +100,19 @@ export default function RequestContextProvider(props){
 	}
 
 	const handleSend = async () => {
-		const response = await RequestService.send(request, method, url, params, authorization, headers, body, scripts);
+		// Construct authorization type and data if the authorization type is inherit
+		let refactor_auth = {};
+		if (authorization.type === Request.AUTHORIZATION.InheritAuth.value) {
+			if (requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value) {
+				refactor_auth.type = requestFolder.authorization.type;
+				refactor_auth.data = requestFolder.authorization.data;
+			} else {
+				refactor_auth.type = requestCollection.authorization.type;
+				refactor_auth.data = requestCollection.authorization.data;
+			}
+		}
+
+		const response = await RequestService.send(request, method, url, params, refactor_auth, headers, body, scripts);
 
 		if (response.code === 0) {
 			toast.success(response.message);

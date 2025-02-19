@@ -36,7 +36,6 @@ export default function RequestEditorBodyFormData(){
 		setBody(clone);
 	};
 
-	console.log(body)
 	return (
 		<div className="request-editor-body-form-data" ref={containerRef}>
 			<div className="request-form-data-table">

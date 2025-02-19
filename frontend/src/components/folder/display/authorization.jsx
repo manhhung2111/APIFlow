@@ -5,7 +5,7 @@ import Collection from "@components/collection/collection.jsx";
 import Request from "@components/request/request.jsx";
 import {NavLink} from "react-router";
 
-export default function FolderDisplayAuthorization({folder, authorization, setAuthorization}){
+export default function FolderDisplayAuthorization({folder, authorization, setAuthorization, folderCollection}){
 	const handleChangeType = (authType) => {
 		setAuthorization(() => ({type: authType, data: {}}));
 	}
@@ -14,6 +14,20 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 		const clone = _.cloneDeep(authorization);
 		clone.data[field] = value;
 		setAuthorization(clone);
+	}
+
+	const getInheritAuthMessage = () => {
+		if(authorization.type === Request.AUTHORIZATION.InheritAuth.value){
+			if(folderCollection?.authorization.type === Request.AUTHORIZATION.BasicAuth.value){
+				return <div>This request is using Basic Auth from collection <b>{folderCollection.name}</b></div>;
+			} else if(folderCollection?.authorization.type === Request.AUTHORIZATION.NoAuth.value){
+				return <div>This request is using No Auth from collection <b>{folderCollection.name}</b></div>;
+			} else if(folderCollection?.authorization.type === Request.AUTHORIZATION.BearerToken.value){
+				return <div>This request is using Bearer Token from collection <b>{folderCollection.name}</b></div>;
+			} else {
+				return <div>This request is using JWT Token from collection <b>{folderCollection.name}</b></div>;
+			}
+		}
 	}
 
 	return (
@@ -36,8 +50,7 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 						image={Empty.PRESENTED_IMAGE_SIMPLE}
 						description={
 							<div className="empty-message">
-								This request is using No Auth from collection <NavLink to={`collection/${1}`}>Collection
-								1</NavLink>
+								{getInheritAuthMessage()}
 							</div>
 						}
 					>
@@ -81,18 +94,23 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Algorithm</div>
-							<Input name="algorithm" value={authorization.data.algorithm ?? ""}
-								   onChange={(e) => handleChangeData("algorithm", e.target.value)}/>
+							<Select
+								className="select"
+								style={{width: 280}}
+								value={authorization.data.algorithm ?? "HS256"}
+								name="algorithm"
+								onChange={(value) => handleChangeData("algorithm", value)}
+								options={[
+									{value: 'HS256', label: 'HS256'},
+									{value: 'HS384', label: 'HS384'},
+									{value: 'HS512', label: 'HS512'},
+								]}
+							/>
 						</div>
 						<div className="form-row">
 							<div className="title">Secret</div>
-							<div className="input-group">
-								<Input name="secret" value={authorization.data.secret ?? ""}
-									   onChange={(e) => handleChangeData("secret", e.target.value)}/>
-								<Checkbox value={authorization.data.encoded ?? false}
-										  onChange={(e) => handleChangeData("encoded", e.target.checked)}>Secret Base64
-									encoded</Checkbox>
-							</div>
+							<Input name="secret" value={authorization.data.secret ?? ""}
+								   onChange={(e) => handleChangeData("secret", e.target.value)}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Payload</div>

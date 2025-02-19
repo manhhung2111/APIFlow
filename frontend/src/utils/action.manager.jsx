@@ -1,6 +1,6 @@
 import {Button, Dropdown} from "antd";
 import MoreHorizontalIcon from "@assets/icons/more.horizontal.jsx";
-import "@styles/utiles/am/am.scss"
+import "@styles/utils/am.scss";
 
 export default function ActionManager({am}){
 	const handleClick = (event) => {

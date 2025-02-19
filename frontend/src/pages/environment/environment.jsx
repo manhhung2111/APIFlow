@@ -44,7 +44,7 @@ export default function EnvironmentPage(){
 					current_value: ''
 				}]);
 			} else {
-				console.log(result.message);
+				console.error(result.message);
 			}
 		}
 

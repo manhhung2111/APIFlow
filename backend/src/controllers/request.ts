@@ -139,6 +139,12 @@ export const sendRequest = async (request: Request, response: Response) => {
     logger.info("[Controller] Send a request");
 
     try {
+        const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
+        if (!request.good()) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
+        }
+
         const request_reader = new RequestServiceReader()
             .readMethod()
             .readURL()
@@ -148,7 +154,7 @@ export const sendRequest = async (request: Request, response: Response) => {
             .readHeaders()
             .readBody();
 
-        const request = new RequestService()
+        const request_service = new RequestService()
             .setMethod(request_reader.getMethod())
             .setURL(request_reader.getURL())
             .setParams(request_reader.getParams())
@@ -157,7 +163,7 @@ export const sendRequest = async (request: Request, response: Response) => {
             .setAuthorization(request_reader.getAuthorization())
             .setBody(request_reader.getBody())
 
-        const result = await request.send();
+        const result = await request_service.send();
 
         response.status(200).json(Code.success("Send request to endpoint successfully", {
             "response": {

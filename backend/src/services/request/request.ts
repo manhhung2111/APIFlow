@@ -74,7 +74,6 @@ export default class RequestService{
 		let headers = this.convertRequestHeaders();
 		let body = this.convertRequestBody();
 
-		console.log("Body", body);
 		try{
 			const startTime = performance.now();
 			const response = await axios({
@@ -148,6 +147,9 @@ export default class RequestService{
 		} else if (this._body.type == RequestBody.FormRaw){
 			headers["Content-Type"] = headers["Content-Type"] || "application/json";
 		}
+
+		// Construct authorization
+		
 
 		return headers;
 	}

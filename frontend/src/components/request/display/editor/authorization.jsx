@@ -1,14 +1,13 @@
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import Request from "@components/request/request.jsx";
-import {Checkbox, Empty, Input, Select} from "antd";
-import {NavLink} from "react-router";
+import {Empty, Input, Select} from "antd";
 import 'codemirror/mode/javascript/javascript';
 import CodeEditor from "@components/app/editor/code.editor.jsx";
 import _ from "lodash";
 
 export default function RequestEditorAuthorization(){
-	let {authorization, setAuthorization} = useContext(RequestContext);
+	let {authorization, setAuthorization, requestFolder, requestCollection} = useContext(RequestContext);
 
 	const handleChangeType = (authType) => {
 		setAuthorization(() => ({type: authType, data: {}}));
@@ -18,6 +17,32 @@ export default function RequestEditorAuthorization(){
 		const clone = _.cloneDeep(authorization);
 		clone.data[field] = value;
 		setAuthorization(clone);
+	}
+
+	const getInheritAuthMessage = () => {
+		if(authorization.type === Request.AUTHORIZATION.InheritAuth.value){
+			if(requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value){
+				if(requestFolder?.authorization.type === Request.AUTHORIZATION.BasicAuth.value){
+					return <div>This request is using Basic Auth from folder <b>{requestFolder.name}</b></div>;
+				} else if(requestFolder?.authorization.type === Request.AUTHORIZATION.NoAuth.value){
+					return <div>This request is using No Auth from folder <b>{requestFolder.name}</b></div>;
+				} else if(requestFolder?.authorization.type === Request.AUTHORIZATION.BearerToken.value){
+					return <div>This request is using Bearer Token from folder <b>{requestFolder.name}</b></div>;
+				} else {
+					return <div>This request is using JWT Token from folder <b>{requestFolder.name}</b></div>;
+				}
+			} else {
+				if(requestCollection?.authorization.type === Request.AUTHORIZATION.BasicAuth.value){
+					return <div>This request is using Basic Auth from collection <b>{requestCollection.name}</b></div>;
+				} else if(requestCollection?.authorization.type === Request.AUTHORIZATION.NoAuth.value){
+					return <div>This request is using No Auth from collection <b>{requestCollection.name}</b></div>;
+				} else if(requestCollection?.authorization.type === Request.AUTHORIZATION.BearerToken.value){
+					return <div>This request is using Bearer Token from collection <b>{requestCollection.name}</b></div>;
+				} else {
+					return <div>This request is using JWT Token from collection <b>{requestCollection.name}</b></div>;
+				}
+			}
+		}
 	}
 
 	return (
@@ -39,8 +64,7 @@ export default function RequestEditorAuthorization(){
 						image={Empty.PRESENTED_IMAGE_SIMPLE}
 						description={
 							<div className="empty-message">
-								This request is using No Auth from collection <NavLink to={`collection/${1}`}>Collection
-								1</NavLink>
+								{getInheritAuthMessage()}
 							</div>
 						}
 					>
@@ -61,11 +85,13 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Username</div>
-							<Input name="username" value={authorization.data.username ?? ""} onChange={(e) => handleChangeData("username", e.target.value)}/>
+							<Input name="username" value={authorization.data.username ?? ""}
+								   onChange={(e) => handleChangeData("username", e.target.value)}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Password</div>
-							<Input name="password" value={authorization.data.password ?? ""} onChange={(e) => handleChangeData("password", e.target.value)}/>
+							<Input name="password" value={authorization.data.password ?? ""}
+								   onChange={(e) => handleChangeData("password", e.target.value)}/>
 						</div>
 					</div>
 				}
@@ -73,7 +99,8 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Token</div>
-							<Input name="token" value={authorization.data.token ?? ""} onChange={(e) => handleChangeData("bearer_token", e.target.value)}/>
+							<Input name="token" value={authorization.data.token ?? ""}
+								   onChange={(e) => handleChangeData("bearer_token", e.target.value)}/>
 						</div>
 					</div>
 				}
@@ -81,13 +108,24 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Algorithm</div>
-							<Input name="algorithm" value={authorization.data.algorithm ?? ""} onChange={(e) => handleChangeData("algorithm", e.target.value)}/>
+							<Select
+								className="select"
+								style={{width: 280}}
+								value={authorization.data.algorithm ?? "HS256"}
+								name="algorithm"
+								onChange={(value) => handleChangeData("algorithm", value)}
+								options={[
+									{value: 'HS256', label: 'HS256'},
+									{value: 'HS384', label: 'HS384'},
+									{value: 'HS512', label: 'HS512'},
+								]}
+							/>
 						</div>
 						<div className="form-row">
 							<div className="title">Secret</div>
 							<div className="input-group">
-								<Input name="secret" value={authorization.data.secret ?? ""} onChange={(e) => handleChangeData("secret", e.target.value)}/>
-								<Checkbox value={authorization.data.encoded ?? false} onChange={(e) => handleChangeData("encoded", e.target.checked)}>Secret Base64 encoded</Checkbox>
+								<Input name="secret" value={authorization.data.secret ?? ""}
+									   onChange={(e) => handleChangeData("secret", e.target.value)}/>
 							</div>
 						</div>
 						<div className="form-row">

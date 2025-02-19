@@ -120,7 +120,7 @@
   border-bottom: none;
   color: $content-color-secondary;
   font-weight: $text-weight-thick;
-
+  margin-bottom: 12px;
   & > .table-header {
     display: grid;
     grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
@@ -250,6 +250,7 @@
   .right-container {
     height: 100%;
     padding-left: 12px;
+    padding-bottom: 12px;
     border-left: 1px solid $border-color-default;
 
     .empty-message {
@@ -280,10 +281,14 @@
           margin-right: $spacing-l;
         }
 
-        input {
+        input, .select {
           margin-top: $spacing-m;
           min-width: 196px;
           max-width: 280px;
+
+          .ant-select-selector {
+            font-size: $text-size-m !important;
+          }
         }
 
         .input-group {

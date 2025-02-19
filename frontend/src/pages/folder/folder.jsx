@@ -14,7 +14,7 @@ import _ from "lodash";
 export default function FolderPage(){
 	const {workspace, folders, setRequests, setFolders} = useContext(WorkspaceContext);
 	const [folder, setFolder] = useState(null);
-
+	const [folderCollection, setFolderCollection] = useState(null);
 	const [name, setName] = useState("");
 	const [content, setContent] = useState("");
 	const [authorization, setAuthorization] = useState({type: 1, data: {}});
@@ -35,12 +35,14 @@ export default function FolderPage(){
 				setContent(folder.content);
 				setAuthorization(folder.authorization);
 				setScripts(folder.scripts);
+				setFolderCollection(result.data.collection);
 			} else {
-				console.log(result.message);
+				console.error(result.message);
 			}
 		}
 
 		if(workspace){
+			setFolder(null);
 			fetchFolder();
 		}
 	}, [folder_id, workspace]);
@@ -56,7 +58,7 @@ export default function FolderPage(){
 			label: "Authorization",
 			key: 2,
 			children: <FolderDisplayAuthorization folder={folder} authorization={authorization}
-												  setAuthorization={setAuthorization}/>
+												  setAuthorization={setAuthorization} folderCollection={folderCollection}/>
 		},
 		{
 			label: "Scripts",

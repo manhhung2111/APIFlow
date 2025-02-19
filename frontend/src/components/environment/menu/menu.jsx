@@ -28,9 +28,6 @@ export default function EnvironmentMenu(){
 	const globalEnv = environments.find(e => e.scope === 0);
 	const envs = environments.filter(e => e.scope === 1);
 
-	console.log(globalEnv);
-	console.log(envs)
-
 	return (
 		<div className="environment-master-menu">
 			<EnvironmentMenuItem environment={globalEnv}/>

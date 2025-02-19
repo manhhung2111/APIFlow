@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import logger from "@utils/logger";
 import {DBWorkspace} from "@dev/workspace";
 import {DBRequest} from "@dev/request";
+import {DBCollection, DBCollectionLoader} from "@dev/collection";
 
 export const createNewFolder = async (request: Request, response: Response) => {
     logger.info("[Controller] Create new folder");
@@ -111,7 +112,9 @@ export const getFolderById = async (request: Request, response: Response) => {
             response.status(204).json(Code.error(Code.INVALID_DATA));
         }
 
-        response.status(200).json(Code.success("Get folder successfully.", {folder: folder.release()}));
+        let collection = await DBCollection.initialize(folder.object!.collection_id) as DBCollection;
+
+        response.status(200).json(Code.success("Get folder successfully.", {folder: folder.release(), collection: collection.release()}));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
