@@ -6,6 +6,7 @@ import Client from "@dev/client";
 import UUID from "@utils/uuid";
 import {RequestServiceReader} from "@services/request";
 import {Code, HTMLInput, Validation} from "@ap/core";
+import BackblazeService from "@services/backblaze";
 
 export default class Reader extends DBReader<DRequest>{
 	constructor(obj: HydratedDocument<DRequest> | null | undefined){
@@ -34,7 +35,7 @@ export default class Reader extends DBReader<DRequest>{
 		this._obj.headers = request_reader.getHeaders();
 		this._obj.scripts = request_reader.getScripts();
 
-		this.readBody();
+		await this.readBody();
 	}
 
 
@@ -88,7 +89,7 @@ export default class Reader extends DBReader<DRequest>{
 	}
 
 
-	private readBody() {
+	private async readBody() {
 		this._obj.body.type = HTMLInput.inputInt("body_type");
 
 		let data = Buffer.from(HTMLInput.inputRaw("body_data"), 'base64').toString('utf8');
@@ -100,7 +101,13 @@ export default class Reader extends DBReader<DRequest>{
 			const selected = body_data.form_data[index].selected;
 			const key = body_data.form_data[index].key;
 			const type = body_data.form_data[index].type;
-			const value = body_data.form_data[index].value;
+			let value = body_data.form_data[index].value;
+			if (type == "file") {
+				const files = HTMLInput.inputFile(`form_data_value_${index}`);
+				const file_export = await BackblazeService.uploadFile(files[files.length - 1]);
+				value = file_export;
+			}
+
 			const content = body_data.form_data[index].content;
 
 			form_data.push({selected, key, type, value, content});

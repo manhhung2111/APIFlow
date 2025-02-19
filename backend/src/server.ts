@@ -5,14 +5,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import morgan from "morgan";
-import {
-	CollectionRoute,
-	EnvironmentRoute,
-	FolderRoute,
-	RequestRoute,
-	UserRoute,
-	WorkspaceRoute,
-} from "@routes";
+import {CollectionRoute, EnvironmentRoute, FolderRoute, RequestRoute, UserRoute, WorkspaceRoute,} from "@routes";
 import {HTMLInput} from "@ap/core";
 import logger from "@utils/logger";
 import {sendRequest} from "@controllers/request";
@@ -26,9 +19,9 @@ const db_name = process.env.DB_NAME;
 
 // Config CORS
 app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
-	origin: "http://localhost:3000",
-	optionsSuccessStatus: 200,
-	credentials: true,
+    origin: "http://localhost:3000",
+    optionsSuccessStatus: 200,
+    credentials: true,
 }));
 
 // Body form data
@@ -39,10 +32,13 @@ app.use(express.urlencoded({extended: false, limit: "1mb"}));
 app.use(cookieParser(process.env.COOKIES_SECRET));
 
 // Read files
-const upload = multer({storage: multer.memoryStorage()});
+const upload = multer({
+    storage: multer.memoryStorage()
+});
+
 app.use(upload.any(), (request, response, next) => {
-	HTMLInput.readRequest(request);
-	next();
+    HTMLInput.readRequest(request);
+    next();
 });
 
 // Logger HTTP request
@@ -58,20 +54,20 @@ app.use("/requests", RequestRoute);
 app.use("/environments", EnvironmentRoute);
 
 
-(async function (){
-	try{
-		// Connect to database
+(async function () {
+    try {
+        // Connect to database
 
-		await mongoose.connect(
-			`mongodb+srv://${db_username}:${db_password}@hongkong-1.x4eds.mongodb.net/${db_name}`,
-		).then(() => {
-			logger.info(`Connect to database successfully.`);
-		});
+        await mongoose.connect(
+            `mongodb+srv://${db_username}:${db_password}@hongkong-1.x4eds.mongodb.net/${db_name}`,
+        ).then(() => {
+            logger.info(`Connect to database successfully.`);
+        });
 
-		app.listen(port, () => {
-			logger.info(`Server is running on port ${port}`);
-		});
-	} catch (error){
-		logger.error((error as Error).stack);
-	}
+        app.listen(port, () => {
+            logger.info(`Server is running on port ${port}`);
+        });
+    } catch (error) {
+        logger.error((error as Error).stack);
+    }
 })();

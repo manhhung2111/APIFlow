@@ -14,7 +14,12 @@ export default class RequestFormData extends RequestBody{
 			const selected = body_data.form_data[index].selected;
 			const key = body_data.form_data[index].key;
 			const type = body_data.form_data[index].type;
-			const value = body_data.form_data[index].value;
+
+			let value = body_data.form_data[index].value;
+			if (type == "file") {
+				const files = HTMLInput.inputFile(`form_data_value_${index}`);
+				value = files[files.length - 1];
+			}
 			const content = body_data.form_data[index].content;
 
 			form_data.push({selected, key, type, value, content});
