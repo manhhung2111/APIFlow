@@ -85,8 +85,8 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Token</div>
-							<Input name="token" value={authorization.data.token ?? ""}
-								   onChange={(e) => handleChangeData("token", e.target.value)}/>
+							<Input name="token" value={authorization.data.bearer_token ?? ""}
+								   onChange={(e) => handleChangeData("bearer_token", e.target.value)}/>
 						</div>
 					</div>
 				}

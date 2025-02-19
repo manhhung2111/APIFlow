@@ -29,6 +29,11 @@ export default function RequestResponseSide() {
 		if (!response) return "";
 
 		let time = response.time;
+
+		if (!time) {
+			return <span className="time">N/A</span>;
+		}
+
 		if (time >= 1000) {
 			return <span className="time">{`${(time / 1000).toFixed(0)} s`}</span>; // Convert to seconds with 2 decimal places
 		}
@@ -36,7 +41,7 @@ export default function RequestResponseSide() {
 	}
 
 	const sizeHTML = () => {
-		if (!response) return "";
+		if (!response || !response.response_size) return "N/A";
 
 		let totalSize = response.response_size.body + response.response_size.headers;
 		if (totalSize === 0) {

@@ -179,11 +179,13 @@ export const sendRequest = async (request: Request, response: Response) => {
     } catch (error) {
         if (axios.isAxiosError(error)) {
             const axios_error = error as AxiosError;
-            response.status(502).json(Code.error(axios_error.message, {
-                "status": axios_error.response?.status,
-                "body": axios_error.response?.data || {},
-                "headers": axios_error.response?.headers || [],
-                "statusText": axios_error.response?.statusText || "",
+            response.status(400).json(Code.success(axios_error.message, {
+                "response" : {
+                    "status": axios_error.response?.status,
+                    "body": axios_error.response?.data || {},
+                    "headers": axios_error.response?.headers || [],
+                    "statusText": axios_error.response?.statusText || "",
+                }
             }));
             return;
         }

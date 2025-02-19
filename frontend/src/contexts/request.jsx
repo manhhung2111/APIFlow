@@ -76,6 +76,7 @@ export default function RequestContextProvider(props){
 
 		if(workspace){
 			setRequest(null);
+			setResponse(null);
 			fetchData();
 		}
 	}, [request_id, workspace]);
@@ -101,7 +102,7 @@ export default function RequestContextProvider(props){
 
 	const handleSend = async () => {
 		// Construct authorization type and data if the authorization type is inherit
-		let refactor_auth = {};
+		let refactor_auth = authorization;
 		if (authorization.type === Request.AUTHORIZATION.InheritAuth.value) {
 			if (requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value) {
 				refactor_auth.type = requestFolder.authorization.type;
@@ -115,7 +116,6 @@ export default function RequestContextProvider(props){
 		const response = await RequestService.send(request, method, url, params, refactor_auth, headers, body, scripts);
 
 		if (response.code === 0) {
-			toast.success(response.message);
 			setResponse(response.data.response);
 		} else {
 			toast.error(response.message);

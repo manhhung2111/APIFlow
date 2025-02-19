@@ -107,8 +107,8 @@ export default class RequestService{
 		if (this._body.type == RequestBody.FormData){
 			const form_data = new FormData();
 
-			this._body.data.forEach((row: { key: string; value: string | Express.Multer.File[]; } | null) => {
-				if (typeof row === "object" && row !== null && "key" in row && "value" in row){
+			this._body.data.forEach((row: { key: string; value: string | Express.Multer.File[]; selected: boolean } | null) => {
+				if (typeof row === "object" && row !== null && "key" in row && "value" in row && "selected" in row && row.selected){
 					const {key, value} = row as {key: string; value: string | Express.Multer.File[]};
 					if (Array.isArray(value)){
 						for (const file of value){
@@ -124,7 +124,9 @@ export default class RequestService{
 		} else if (this._body.type == RequestBody.FormEncoded){
 			request_body = new URLSearchParams(
 				Object.fromEntries(
-					this._body.data.map(({ key, value }: { key: string; value: string }) => [key, value])
+					this._body.data
+						.filter(({ selected }: { selected: boolean }) => selected) // ✅ Only include selected fields
+						.map(({ key, value }: { key: string; value: string }) => [key, value])
 				)
 			).toString();
 		} else if (this._body.type == RequestBody.FormRaw){
@@ -170,6 +172,8 @@ export default class RequestService{
 			const token = await JWT.signToken(payload_decode, secret, algorithm);
 			headers["Authorization"] = "Bearer " + token;
 		}
+
+		console.log(headers)
 
 		return headers;
 	}
