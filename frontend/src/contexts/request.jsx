@@ -3,12 +3,13 @@ import {useParams} from "react-router";
 import RequestService from "@services/request.jsx";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {toast} from "react-toastify";
+import _ from "lodash";
 
 export const RequestContext = createContext({});
 
 export default function RequestContextProvider(props){
 	const {children} = props;
-	const {workspace} = useContext(WorkspaceContext);
+	const {workspace, requests, setRequests} = useContext(WorkspaceContext);
 
 	let [request, setRequest] = useState(null);
 	let [requestFolder, setRequestFolder] = useState(null);
@@ -180,6 +181,27 @@ export default function RequestContextProvider(props){
 
 	}
 
+
+	const handleChangeName = async (value) => {
+		if (value == name) return;
+		const response = await RequestService.updateName(request, value);
+
+		if (response.code === 0) {
+			setName(response.data.request.name);
+			setRequest(response.data.request);
+
+			const clone = _.cloneDeep(requests);
+			for (const e of clone) {
+				if(e._id === request._id){
+					e.name = value;
+				}
+			}
+			setRequests(clone);
+		} else {
+			toast.error(response.message);
+		}
+	}
+
 	const actionManagers = [
 		{key: `add_example_${request?._id}`, label: "Add example", onClick: handleAddExample},
 		{key: `duplicate_${request?._id}`, label: "Duplicate",},
@@ -208,7 +230,7 @@ export default function RequestContextProvider(props){
 			setRequest,
 			requestFolder, setRequestFolder,
 			requestCollection, setRequestCollection,
-			handleSave, actionManagers, handleSend, method, setMethod
+			handleSave, actionManagers, handleSend, method, setMethod, handleChangeName
 		}}>
 			{children}
 		</RequestContext.Provider>

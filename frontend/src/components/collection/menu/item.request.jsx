@@ -27,6 +27,14 @@ export default function RequestMenuItem({request}){
 		</span>
 	}
 
+	const actionManagers = [
+		{key: `add_example_${request?._id}`, label: "Add example"},
+		{key: `documentation_${request?._id}`, label: "View documentation"},
+		{key: `duplicate_${request?._id}`, label: "Duplicate",},
+		{key: `delete_${request?._id}`, label: "Delete", danger: 1},
+	]
+
+
 	return (<div className={`menu-item request-menu-item ${collapsed ? "-collapsed" : ""}`}>
 		<div className="main-item">
 			<span className="dd-cion dropdown-icon" onClick={handleToggleMenu}>
@@ -40,7 +48,7 @@ export default function RequestMenuItem({request}){
 			</NavLink>
 
 			<div className="item-side">
-				<ActionManager am={Request.am(request)}/>
+				<ActionManager am={actionManagers}/>
 			</div>
 		</div>
 

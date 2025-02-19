@@ -95,6 +95,10 @@
         .label {
           font-size: $text-size-m;
           color: $content-color-secondary;
+          max-width: 150px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
 

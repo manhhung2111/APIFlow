@@ -228,7 +228,7 @@ export const updateRequestName = async (request: Request, response: Response) =>
 
         await request.save();
 
-        response.status(201).json(Code.success("Update request name successfully!"));
+        response.status(201).json(Code.success("Update request name successfully!", {request: request.release()}));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));

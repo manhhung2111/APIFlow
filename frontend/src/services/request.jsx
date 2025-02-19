@@ -47,4 +47,17 @@ export default class RequestService {
 			throw new Error(error.message || 'Delete request failed');
 		}
 	}
+
+	static async updateName(request, name) {
+		try {
+			const data = {
+				"name": name,
+				workspace_id: request.workspace_id,
+			}
+
+			return await axios.put(`/requests/${request._id}/name`, data);
+		} catch (error) {
+			throw new Error(error.message || 'Save request failed');
+		}
+	}
 }

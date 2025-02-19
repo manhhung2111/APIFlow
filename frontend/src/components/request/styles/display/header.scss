@@ -17,6 +17,26 @@
         align-items: center;
       }
     }
+
+    .ant-breadcrumb-link {
+      a {
+        font-size: 12px;
+      }
+      .ant-typography {
+        margin: 0;
+        font-size: 12px;
+      }
+      .ant-typography-edit-content {
+        padding: 0;
+        margin-left: 4px;
+        width: fit-content;
+        min-width: 200px;
+
+        .ant-input {
+          font-size: 12px;
+        }
+      }
+    }
   }
 
   .rdh-actions {
