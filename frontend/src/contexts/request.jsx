@@ -87,6 +87,14 @@ export default function RequestContextProvider(props){
 		if (response.code === 0) {
 			toast.success(response.message);
 			setRequest(response.data.request);
+
+			const clone = _.cloneDeep(requests);
+			for (const e of clone) {
+				if(e._id === request._id){
+					e.method = method;
+				}
+			}
+			setRequests(clone);
 		} else {
 			toast.error(response.message);
 		}
