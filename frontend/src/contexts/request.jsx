@@ -102,7 +102,7 @@ export default function RequestContextProvider(props){
 
 	const handleSend = async () => {
 		// Construct authorization type and data if the authorization type is inherit
-		let refactor_auth = authorization;
+		let refactor_auth = _.cloneDeep(authorization);
 		if (authorization.type === Request.AUTHORIZATION.InheritAuth.value) {
 			if (requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value) {
 				refactor_auth.type = requestFolder.authorization.type;
