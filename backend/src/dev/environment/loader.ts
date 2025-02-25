@@ -13,4 +13,20 @@ export default class Loader{
 
 		return await DBEnvironment.find(condition) as DBEnvironment[];
 	}
+
+	public static async globalsEnvByWorkspace(workspace: HydratedDocument<DWorkspace> | string) {
+		let workspace_id: string;
+
+		// Ensure workspace is a HydratedDocument before accessing _id
+		if (typeof workspace !== "string") {
+			workspace_id = workspace._id.toString();
+		} else {
+			workspace_id = workspace;
+		}
+
+		const condition = new DBCondition().setFilter({ workspace_id: workspace_id, scope: 0 });
+
+		return await DBEnvironment.findOne(condition) as DBEnvironment;
+	}
+
 }

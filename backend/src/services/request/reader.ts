@@ -2,6 +2,10 @@ import {AuthorizationFactory} from "@services/authorization";
 import {RequestBodyFactory} from "@services/request";
 import {Code, HTMLInput} from "@ap/core";
 
+type ScriptSchema = {
+	pre_request: string;
+	post_response: string;
+};
 
 export default class RequestServiceReader{
 	private METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE"];
@@ -15,8 +19,7 @@ export default class RequestServiceReader{
 	private _cookies: Array<object> = [];
 	private _headers: Array<any> = [];
 	private _body: RequestBodyFactory | null = null;
-	private _environment: Array<object> = [];
-	private _scripts: object = {};
+	private _scripts: ScriptSchema = {pre_request: "", post_response: ""};
 
 	public readMethod(){
 		this._method = HTMLInput.inputInline("method");
@@ -136,10 +139,6 @@ export default class RequestServiceReader{
 		return this;
 	}
 
-	public readEnvironment(){
-		return this;
-	}
-
 	public readScripts(){
 		let data = Buffer.from(HTMLInput.inputRaw("scripts"), 'base64').toString('utf8');
 
@@ -178,10 +177,6 @@ export default class RequestServiceReader{
 
 	public getBody(){
 		return this._body!.release();
-	}
-
-	public getEnvironment(){
-		return this._environment;
 	}
 
 	public getScripts(){

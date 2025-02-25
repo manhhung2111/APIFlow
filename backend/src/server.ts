@@ -8,7 +8,6 @@ import morgan from "morgan";
 import {CollectionRoute, EnvironmentRoute, FolderRoute, RequestRoute, UserRoute, WorkspaceRoute,} from "@routes";
 import {HTMLInput} from "@ap/core";
 import logger from "@utils/logger";
-import {sendRequest} from "@controllers/request";
 
 dotenv.config();
 const app = express();
@@ -43,8 +42,6 @@ app.use(upload.any(), (request, response, next) => {
 
 // Logger HTTP request
 app.use(morgan("dev", {stream: {write: (message) => logger.info(message.trim())}}));
-
-app.post("/send", sendRequest)
 
 app.use("/users", UserRoute);
 app.use("/workspaces", WorkspaceRoute);

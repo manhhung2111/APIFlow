@@ -10,7 +10,7 @@ export const RequestContext = createContext({});
 
 export default function RequestContextProvider(props){
 	const {children} = props;
-	const {workspace, requests, setRequests, activeCollection, setActiveCollection} = useContext(WorkspaceContext);
+	const {workspace, requests, setRequests, activeCollection, setActiveCollection, activeEnvironment} = useContext(WorkspaceContext);
 
 	let [request, setRequest] = useState(null);
 	let [requestFolder, setRequestFolder] = useState(null);
@@ -126,7 +126,7 @@ export default function RequestContextProvider(props){
 			}
 		}
 
-		const response = await RequestService.send(request, method, url, params, refactor_auth, headers, body, scripts);
+		const response = await RequestService.send(request, method, url, params, refactor_auth, headers, body, scripts, activeEnvironment);
 
 		if (response.code === 0) {
 			setResponse(response.data.response);

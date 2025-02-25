@@ -9,7 +9,7 @@ export default function WorkspaceContextProvider(props){
 	const {workspace_id} = useParams();
 
 	const [workspace, setWorkspace] = useState(null);
-	const [activeEnvironment, setActiveEnvironment] = useState(null);
+	const [activeEnvironment, setActiveEnvironment] = useState(-1);
 	const [activeCollection, setActiveCollection] = useState(null);
 
 	const [collections, setCollections] = useState(null);

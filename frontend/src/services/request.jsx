@@ -76,7 +76,7 @@ export default class RequestService {
 		}
 	}
 
-	static async send(request, method, url, params, authorization, headers, body, scripts) {
+	static async send(request, method, url, params, authorization, headers, body, scripts, active_environment) {
 		try {
 			const formData = new FormData();
 
@@ -106,6 +106,7 @@ export default class RequestService {
 				}
 			});
 
+			formData.append("active_environment", active_environment);
 			return await axios.post(`/requests/${request._id}/send`, formData);
 		} catch (error) {
 			throw new Error(error.message || 'Send request failed');

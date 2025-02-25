@@ -139,12 +139,6 @@ export const sendRequest = async (request: Request, response: Response) => {
     logger.info("[Controller] Send a request");
 
     try {
-        const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
-        if (!request.good()) {
-            response.status(404).json(Code.error(Code.INVALID_DATA));
-            return;
-        }
-
         const request_reader = new RequestServiceReader()
             .readMethod()
             .readURL()

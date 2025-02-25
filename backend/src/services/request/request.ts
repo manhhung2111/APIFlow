@@ -1,9 +1,12 @@
 import {RequestBody} from "@services/request/index";
 import axios from "axios";
-import {Code, JWT} from "@ap/core";
+import {Code, HTMLInput, JWT} from "@ap/core";
 import FormData from "form-data";
 import {Authorization} from "@services/authorization";
 import BackblazeService from "@services/backblaze";
+import {DBRequest} from "@dev/request";
+import {DBCollection} from "@dev/collection";
+import {DBEnvironment, DBEnvironmentLoader} from "@dev/environment";
 
 export default class RequestService {
     private _method: string = "";
@@ -14,7 +17,7 @@ export default class RequestService {
     private _cookies: Array<object> = [];
     private _headers: Array<any> = [];
     private _body: { type?: number, data?: any } = {};
-    private _environment: Array<object> = [];
+    private _environment: Record<string, string> = {};
     private _scripts: object = {};
 
 
@@ -60,11 +63,6 @@ export default class RequestService {
         return this;
     }
 
-    public setEnvironment(environment: Array<object>) {
-        this._environment = environment;
-        return this;
-    }
-
     public setScripts(scripts: object) {
         this._scripts = scripts;
         return this;
@@ -72,6 +70,8 @@ export default class RequestService {
 
 
     public async send() {
+        await this.readEnvironments();
+
         let url = this.convertRequestUrl();
         let headers = await this.convertRequestHeaders();
         let body = await this.convertRequestBody();
@@ -113,15 +113,18 @@ export default class RequestService {
 
             for (const row of this._body.data) {
                 if (typeof row === "object" && row !== null && "key" in row && "value" in row && "selected" in row && row.selected) {
-                    const {key, value} = row as { key: string; value: string | Express.Multer.File | any };
+                    let {key, value} = row as { key: string; value: string | Express.Multer.File | any };
                     if (!value) continue;
+
+                    key = this.replaceEnvVariables(key);
+
                     if (typeof value === "object" && "buffer" in value) {
                         form_data.append(key, value.buffer, {filename: value.originalname});
                     } else if (typeof value === "object" && "id" in value) {
                         const file = await BackblazeService.downloadFileById(value.id);
                         form_data.append(key, file.data);
                     } else {
-                        form_data.append(key, value);
+                        form_data.append(key, this.replaceEnvVariables(value));
                     }
                 }
             }
@@ -131,14 +134,18 @@ export default class RequestService {
             request_body = new URLSearchParams(
                 Object.fromEntries(
                     this._body.data
-                        .filter(({selected}: { selected: boolean }) => selected) // ✅ Only include selected fields
-                        .map(({key, value}: { key: string; value: string }) => [key, value])
+                        .filter(({selected}: { selected: boolean }) => selected)
+                        .map(({key, value}: { key: string; value: string }) => [
+                            this.replaceEnvVariables(key),
+                            this.replaceEnvVariables(value)
+                        ])
                 )
             ).toString();
         } else if (this._body.type == RequestBody.FormRaw) {
-            request_body = JSON.stringify(this._body.data);
+            request_body = JSON.stringify(
+                JSON.parse(this.replaceEnvVariables(JSON.stringify(this._body.data)))
+            );
         }
-
 
         return request_body;
     }
@@ -146,7 +153,7 @@ export default class RequestService {
     private async convertRequestHeaders() {
         const headers: any = {};
         this._headers.forEach((header) => {
-            headers[header.key] = header.value;
+            headers[this.replaceEnvVariables(header.key)] = this.replaceEnvVariables(header.value);
         });
 
         if (this._body.type == RequestBody.FormData) {
@@ -159,10 +166,10 @@ export default class RequestService {
 
         // Construct authorization
         if (this._authorization.type == Authorization.BasicAuth) {
-            const credential = this._authorization.data.username + ":" + this._authorization.data.password;
+            const credential = this.replaceEnvVariables(this._authorization.data.username) + ":" + this.replaceEnvVariables(this._authorization.data.password);
             headers["Authorization"] = Buffer.from(credential, "utf-8").toString("base64");
         } else if (this._authorization.type == Authorization.BearerTokenAuth) {
-            headers["Authorization"] = "Bearer " + this._authorization.data.bearer_token;
+            headers["Authorization"] = "Bearer " + this.replaceEnvVariables(this._authorization.data.bearer_token);
         } else if (this._authorization.type == Authorization.JWTBearerAuth) {
             const algorithm = this._authorization.data.algorithm;
             const secret = this._authorization.data.secret;
@@ -184,7 +191,7 @@ export default class RequestService {
     }
 
     private convertRequestUrl() {
-        let url = this._url;
+        let url = this.replaceEnvVariables(this._url);
 
         for (const variable of this._path_variables) {
             const value = encodeURIComponent(variable.value);
@@ -196,7 +203,7 @@ export default class RequestService {
 
         this._params.forEach((param) => {
             if (!param.selected) return;
-            params.set(param.key, param.value);
+            params.set(this.replaceEnvVariables(param.key), this.replaceEnvVariables(param.value));
         });
 
         url = `${base_url}?${params.toString()}`;
@@ -211,4 +218,61 @@ export default class RequestService {
             return 0;
         }
     }
+
+    private async readEnvironments() {
+        const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
+        if (!request.good()) {
+            return;
+        }
+
+        // Get collection environment
+        const collection = await DBCollection.initialize(request.object!.collection_id) as DBCollection;
+        if (!collection.good()) {
+            return;
+        }
+
+        // Get globals variable and active variable
+        const globalEnv = await DBEnvironmentLoader.globalsEnvByWorkspace(request.object!.workspace_id.toString());
+        if (!globalEnv.good()) {
+            return;
+        }
+
+        let activeEnv = null;
+        activeEnv = await DBEnvironment.initialize(HTMLInput.inputInline("active_environment")) as DBEnvironment;
+        if (!activeEnv.good()) {
+            return;
+        }
+
+        const environments: Record<string, string> = {};
+
+        for (const entry of globalEnv.object!.variables) {
+            if (entry.selected) {
+                environments[entry.variable] = entry.current_value;
+            }
+        }
+
+        for (const entry of collection.object!.variables) {
+            if (entry.selected) {
+                environments[entry.variable] = entry.current_value;
+            }
+        }
+
+        for (const entry of activeEnv?.object!.variables) {
+            if (entry.selected) {
+                environments[entry.variable] = entry.current_value;
+            }
+        }
+
+        this._environment = environments;
+    }
+
+    private replaceEnvVariables(input: any): any {
+        if (typeof input === "string") {
+            return input.replace(/\{\{(.*?)\}\}/g, (match, variable) => {
+                return this._environment[variable.trim()] ?? match; // Replace if found, else keep original
+            });
+        }
+        return input;
+    }
+
 }

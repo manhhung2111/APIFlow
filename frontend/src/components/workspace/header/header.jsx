@@ -36,7 +36,7 @@ export default function WorkspaceSuperHeader(){
 					<Select
 						defaultValue={activeEnvironment || -1}
 						style={{ width: "170px"}}
-						handleChange={(value) => setActiveEnvironment(value)}
+						onChange={(value) => setActiveEnvironment(value)}
 						options={envOptions}
 					/>
 				</div>
