@@ -42,7 +42,7 @@ export default class RequestService {
 			// Add files if exists
 			body.data.form_data.forEach((row, index) => {
 				if (row.type === "file") {
-					if (Object.keys(row.value)) {
+					if (row.value && Object.keys(row.value)) {
 						formData.append(`form_data_value_${index}`, row.value);
 					}
 				}
@@ -100,7 +100,7 @@ export default class RequestService {
 			// Add files if exists
 			body.data.form_data.forEach((row, index) => {
 				if (row.type === "file") {
-					if (Object.keys(row.value)) {
+					if (row.value && Object.keys(row.value)) {
 						formData.append(`form_data_value_${index}`, row.value);
 					}
 				}

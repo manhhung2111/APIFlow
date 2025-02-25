@@ -1,5 +1,6 @@
 import {RequestBody} from "@services/request";
 import {HTMLInput} from "@ap/core";
+import BackblazeService from "@services/backblaze";
 
 export default class RequestFormData extends RequestBody{
 	protected type = RequestBody.FormData;
@@ -18,7 +19,10 @@ export default class RequestFormData extends RequestBody{
 			let value = body_data.form_data[index].value;
 			if (type == "file") {
 				const files = HTMLInput.inputFile(`form_data_value_${index}`);
-				value = files[files.length - 1];
+
+				if (files && files.length > 0) {
+					value = files[files.length - 1];
+				}
 			}
 			const content = body_data.form_data[index].content;
 

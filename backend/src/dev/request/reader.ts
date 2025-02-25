@@ -104,8 +104,14 @@ export default class Reader extends DBReader<DRequest>{
 			let value = body_data.form_data[index].value;
 			if (type == "file") {
 				const files = HTMLInput.inputFile(`form_data_value_${index}`);
-				const file_export = await BackblazeService.uploadFile(files[files.length - 1]);
-				value = file_export;
+				if (files && files.length > 0) {
+					const file_export = await BackblazeService.uploadFile(files[files.length - 1]);
+					value = file_export;
+				}
+
+				if (!value && !value.id && !files) {
+					value = "";
+				}
 			}
 
 			const content = body_data.form_data[index].content;

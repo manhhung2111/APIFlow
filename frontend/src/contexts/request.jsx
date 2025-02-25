@@ -33,39 +33,44 @@ export default function RequestContextProvider(props){
 	let [response, setResponse] = useState(null)
 
 	const {request_id} = useParams();
+
+	const updateRequest = async (request) => {
+		setRequest(request);
+		setName(request.name);
+		setUrl(request.url);
+		setMethod(request.method);
+		setParams([...request.params, {selected: 1, key: '', value: '', content: ''}]);
+		setAuthorization(request.authorization);
+		setHeaders([...request.headers, {selected: 1, key: '', value: '', content: ''}]);
+		setBody({
+			type: request.body.type,
+			data: {
+				form_data: [...request.body.data.form_data, {
+					selected: 1,
+					key: '',
+					type: 'text',
+					value: '',
+					content: ''
+				}],
+				form_encoded: [...request.body.data.form_encoded, {
+					selected: 1,
+					key: '',
+					value: '',
+					content: ''
+				}],
+				form_raw: request.body.data.form_raw
+			}
+		});
+		setScripts(request.scripts);
+	}
+
 	useEffect(() => {
 		const fetchData = async() => {
 			const response = await RequestService.getById(request_id, workspace._id);
 
 			if(response.code === 0){
 				const request = response.data.request;
-				setRequest(request);
-				setName(request.name);
-				setUrl(request.url);
-				setMethod(request.method);
-				setParams([...request.params, {selected: 1, key: '', value: '', content: ''}]);
-				setAuthorization(request.authorization);
-				setHeaders([...request.headers, {selected: 1, key: '', value: '', content: ''}]);
-				setBody({
-					type: request.body.type,
-					data: {
-						form_data: [...request.body.data.form_data, {
-							selected: 1,
-							key: '',
-							type: 'text',
-							value: '',
-							content: ''
-						}],
-						form_encoded: [...request.body.data.form_encoded, {
-							selected: 1,
-							key: '',
-							value: '',
-							content: ''
-						}],
-						form_raw: request.body.data.form_raw
-					}
-				});
-				setScripts(request.scripts);
+				await updateRequest(request);
 
 				setRequestFolder(response.data?.folder ?? null);
 				setRequestCollection(response.data.collection);
@@ -86,7 +91,8 @@ export default function RequestContextProvider(props){
 
 		if (response.code === 0) {
 			toast.success(response.message);
-			setRequest(response.data.request);
+			let request = response.data.request;
+			await updateRequest(request);
 
 			const clone = _.cloneDeep(requests);
 			for (const e of clone) {

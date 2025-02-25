@@ -24,17 +24,22 @@ export default class BackblazeService{
 			const response = await this._b2.getUploadUrl({bucketId: process.env.BACKBLAZE_B2_BUCKET_ID || ""});
 			const {uploadUrl, authorizationToken} = response.data;
 
+			const timestamp = Date.now();
+			const formattedTimestamp = new Date(timestamp).toISOString().replace(/[:.]/g, "-"); // Avoid invalid characters
+			const newFileName = `${TimeUtils.getCurrentDate()}/${formattedTimestamp}-${file.originalname}`;
+
 			const upload_result = await this._b2.uploadFile({
 				uploadUrl: uploadUrl,
 				uploadAuthToken: authorizationToken,
-				fileName: TimeUtils.getCurrentDate() + "/" + file.originalname,
+				fileName: newFileName,
 				mime: file.mimetype,
 				data: file.buffer,
 			});
 
 			return {
-				file_id: upload_result.data.fileId,
-				file_name: upload_result.data.fileName,
+				id: upload_result.data.fileId,
+				name: file.originalname,
+				upload_name: upload_result.data.fileName,
 				content_type: upload_result.data.contentType,
 				content_length: upload_result.data.contentLength,
 				uploaded_at: upload_result.data.uploadTimestamp,
@@ -55,7 +60,7 @@ export default class BackblazeService{
 		try{
 			await this._b2.authorize();
 
-			const file = await this._b2.downloadFileById({fileId: id, responseType: "document"});
+			const file = await this._b2.downloadFileById({fileId: id, responseType: "stream"});
 
 			return file;
 		} catch (error){

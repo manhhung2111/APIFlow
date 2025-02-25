@@ -19,6 +19,7 @@ export default class HTMLInput{
 	public static readRequest(request: Request){
 		this._cur_request = request;
 
+		this._files = {};
 		if (!request.files) return;
 
 		if (Array.isArray(request.files)){

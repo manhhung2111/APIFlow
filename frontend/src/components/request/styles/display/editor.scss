@@ -454,20 +454,39 @@
         .value-col {
           border-left: 1px solid $border-color-default;
           border-right: 1px solid $border-color-default;
-
-          .file-upload {
-            font-size: $text-size-m;
-            cursor: pointer;
-            padding: 5px 5px 5px 0;
+          .file-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             flex: 1;
-            border-radius: $border-radius-default;
-          }
 
-          .file-upload::file-selector-button {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-            font-weight: $text-weight-thick;
+            label {
+              cursor: pointer;
+              padding: 4px;
+              border-radius: $border-radius-default;
+              &:hover {
+                background-color: $background-color-secondary;
+              }
+            }
+
+            .file-info {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              flex: 1;
+              p {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                width: 80%;
+              }
+
+              .anticon {
+                &:hover {
+                  color: $content-color-error-2;
+                }
+              }
+            }
           }
         }
 

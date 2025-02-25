@@ -3,6 +3,7 @@ import axios from "axios";
 import {Code, JWT} from "@ap/core";
 import FormData from "form-data";
 import {Authorization} from "@services/authorization";
+import BackblazeService from "@services/backblaze";
 
 export default class RequestService {
     private _method: string = "";
@@ -73,7 +74,7 @@ export default class RequestService {
     public async send() {
         let url = this.convertRequestUrl();
         let headers = await this.convertRequestHeaders();
-        let body = this.convertRequestBody();
+        let body = await this.convertRequestBody();
 
         try {
             const startTime = performance.now();
@@ -104,26 +105,26 @@ export default class RequestService {
     }
 
 
-    private convertRequestBody() {
+    private async convertRequestBody() {
         let request_body: any = null;
 
         if (this._body.type == RequestBody.FormData) {
             const form_data = new FormData();
 
-            this._body.data.forEach((row: {
-                key: string;
-                value: string | Express.Multer.File;
-                selected: boolean
-            } | null) => {
+            for (const row of this._body.data) {
                 if (typeof row === "object" && row !== null && "key" in row && "value" in row && "selected" in row && row.selected) {
-                    const {key, value} = row as { key: string; value: string | Express.Multer.File };
+                    const {key, value} = row as { key: string; value: string | Express.Multer.File | any };
+                    if (!value) continue;
                     if (typeof value === "object" && "buffer" in value) {
                         form_data.append(key, value.buffer, {filename: value.originalname});
+                    } else if (typeof value === "object" && "id" in value) {
+                        const file = await BackblazeService.downloadFileById(value.id);
+                        form_data.append(key, file.data);
                     } else {
                         form_data.append(key, value);
                     }
                 }
-            });
+            }
 
             request_body = form_data;
         } else if (this._body.type == RequestBody.FormEncoded) {

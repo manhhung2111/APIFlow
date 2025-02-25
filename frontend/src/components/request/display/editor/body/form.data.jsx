@@ -1,4 +1,4 @@
-import {DeleteOutlined} from "@ant-design/icons";
+import {CloseOutlined, DeleteOutlined} from "@ant-design/icons";
 import {Checkbox, Input, Select} from 'antd';
 import {useContext, useRef} from "react";
 import {RequestContext} from "@contexts/request.jsx";
@@ -25,7 +25,7 @@ export default function RequestEditorBodyFormData(){
 			setTimeout(() => {
 				containerRef.current?.scrollTo({top: containerRef.current.scrollHeight, behavior: "smooth"});
 			}, 50);
-		}else {
+		} else {
 			setBody(clone);
 		}
 	};
@@ -50,7 +50,8 @@ export default function RequestEditorBodyFormData(){
 					{body.data["form_data"].map((row, index) => {
 						let prefixName = 'request_query_body_form_data';
 						let actionHtml = !(index === body.data["form_data"].length - 1) ?
-							<DeleteOutlined className="remove-icon" size='16' onClick={() => handleRemoveRow(index)}/> : '';
+							<DeleteOutlined className="remove-icon" size='16'
+											onClick={() => handleRemoveRow(index)}/> : '';
 						let selectedHtml = !(index === body.data["form_data"].length - 1) ?
 							<Checkbox name={`${prefixName}_selected_${index}`} checked={row.selected} onChange={(e) =>
 								handleInputChange(index, "selected", e.target.checked)
@@ -90,11 +91,23 @@ export default function RequestEditorBodyFormData(){
 										/>
 									}
 									{row.type === "file" &&
-										<input type="file" className="file-upload"
-											   id={`file-upload-${index}`}
-											   name={`${prefixName}_value_${index}`}
-											   onChange={(e) => handleInputChange(index, "value", e.target.files[0])}
-										/>
+										<div className="file-input">
+											<input type="file" className="file-upload"
+												   id={`file-upload-${index}`}
+												   name={`${prefixName}_value_${index}`}
+												   onChange={(e) => handleInputChange(index, "value", e.target.files[0])}
+												   style={{display: "none"}}
+											/>
+											<label htmlFor={`file-upload-${index}`}>Choose File</label>
+											{row.value && (
+												<div className="file-info">
+													<p>{row.value.name}</p>
+													<CloseOutlined onClick={() => handleInputChange(index, "value", null)} />
+												</div>
+											)
+											}
+										</div>
+
 									}
 								</div>
 								<div className="col content-col">
