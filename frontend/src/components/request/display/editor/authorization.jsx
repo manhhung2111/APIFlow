@@ -5,10 +5,12 @@ import {Empty, Input, Select} from "antd";
 import 'codemirror/mode/javascript/javascript';
 import CodeEditor from "@components/app/editor/code.editor.jsx";
 import _ from "lodash";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function RequestEditorAuthorization(){
-	let {authorization, setAuthorization, requestFolder, requestCollection} = useContext(RequestContext);
-
+	let {authorization, setAuthorization, requestFolder} = useContext(RequestContext);
+	let {activeCollection} = useContext(WorkspaceContext);
+	
 	const handleChangeType = (authType) => {
 		setAuthorization(() => ({type: authType, data: {}}));
 	}
@@ -32,14 +34,14 @@ export default function RequestEditorAuthorization(){
 					return <div>This request is using JWT Token from folder <b>{requestFolder.name}</b></div>;
 				}
 			} else {
-				if(requestCollection?.authorization.type === Request.AUTHORIZATION.BasicAuth.value){
-					return <div>This request is using Basic Auth from collection <b>{requestCollection.name}</b></div>;
-				} else if(requestCollection?.authorization.type === Request.AUTHORIZATION.NoAuth.value){
-					return <div>This request is using No Auth from collection <b>{requestCollection.name}</b></div>;
-				} else if(requestCollection?.authorization.type === Request.AUTHORIZATION.BearerToken.value){
-					return <div>This request is using Bearer Token from collection <b>{requestCollection.name}</b></div>;
+				if(activeCollection?.authorization.type === Request.AUTHORIZATION.BasicAuth.value){
+					return <div>This request is using Basic Auth from collection <b>{activeCollection.name}</b></div>;
+				} else if(activeCollection?.authorization.type === Request.AUTHORIZATION.NoAuth.value){
+					return <div>This request is using No Auth from collection <b>{activeCollection.name}</b></div>;
+				} else if(activeCollection?.authorization.type === Request.AUTHORIZATION.BearerToken.value){
+					return <div>This request is using Bearer Token from collection <b>{activeCollection.name}</b></div>;
 				} else {
-					return <div>This request is using JWT Token from collection <b>{requestCollection.name}</b></div>;
+					return <div>This request is using JWT Token from collection <b>{activeCollection.name}</b></div>;
 				}
 			}
 		}

@@ -6,11 +6,13 @@ import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import ActionManager from "@utils/action.manager.jsx";
 import {Typography } from 'antd';
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 const { Paragraph } = Typography;
 
 export default function RequestDisplayHeader(){
-	const {request, requestFolder, requestCollection, handleSave, actionManagers, name, handleChangeName} = useContext(RequestContext);
+	const {request, requestFolder, handleSave, actionManagers, name, handleChangeName} = useContext(RequestContext);
+	const {activeCollection} = useContext(WorkspaceContext);
 
 	const constructBreadCrumbs = () => {
 		const breadCrumbs = [{
@@ -19,7 +21,7 @@ export default function RequestDisplayHeader(){
 
 		breadCrumbs.push({
 			title: <NavLink
-				to={`/workspace/${request.workspace_id}/collection/${requestCollection?._id}`}>{requestCollection?.name}</NavLink>
+				to={`/workspace/${request.workspace_id}/collection/${activeCollection?._id}`}>{activeCollection?.name}</NavLink>
 		});
 
 		if(requestFolder){
@@ -53,7 +55,7 @@ export default function RequestDisplayHeader(){
 			{request && <Breadcrumb
 				className="rdh-breadcrumb"
 				separator=""
-				items={constructBreadCrumbs(request, requestFolder, requestCollection)}
+				items={constructBreadCrumbs(request, requestFolder, activeCollection)}
 			/>}
 			{!request && <Skeleton.Input className="rdh-actions" active/>}
 			{request &&

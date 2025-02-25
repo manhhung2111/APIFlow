@@ -10,11 +10,10 @@ export const RequestContext = createContext({});
 
 export default function RequestContextProvider(props){
 	const {children} = props;
-	const {workspace, requests, setRequests} = useContext(WorkspaceContext);
+	const {workspace, requests, setRequests, activeCollection, setActiveCollection} = useContext(WorkspaceContext);
 
 	let [request, setRequest] = useState(null);
 	let [requestFolder, setRequestFolder] = useState(null);
-	let [requestCollection, setRequestCollection] = useState(null);
 
 	let [name, setName] = useState("");
 	let [method, setMethod] = useState("");
@@ -73,7 +72,7 @@ export default function RequestContextProvider(props){
 				await updateRequest(request);
 
 				setRequestFolder(response.data?.folder ?? null);
-				setRequestCollection(response.data.collection);
+				setActiveCollection(response.data.collection);
 			} else {
 				toast.error(response.message);
 			}
@@ -122,8 +121,8 @@ export default function RequestContextProvider(props){
 				refactor_auth.type = requestFolder.authorization.type;
 				refactor_auth.data = requestFolder.authorization.data;
 			} else {
-				refactor_auth.type = requestCollection.authorization.type;
-				refactor_auth.data = requestCollection.authorization.data;
+				refactor_auth.type = activeCollection.authorization.type;
+				refactor_auth.data = activeCollection.authorization.data;
 			}
 		}
 
@@ -184,7 +183,6 @@ export default function RequestContextProvider(props){
 			request,
 			setRequest,
 			requestFolder, setRequestFolder,
-			requestCollection, setRequestCollection,
 			handleSave, actionManagers, handleSend, method, setMethod, handleChangeName
 		}}>
 			{children}

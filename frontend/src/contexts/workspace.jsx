@@ -1,9 +1,6 @@
 import {createContext, useEffect, useState} from "react";
 import {useParams} from "react-router";
 import WorkspaceService from "@services/workspace.js";
-import CollectionService from "@services/collection.js";
-import FolderService from "@services/folder.js";
-import RequestService from "@services/request.jsx";
 
 export const WorkspaceContext = createContext({});
 
@@ -12,6 +9,9 @@ export default function WorkspaceContextProvider(props){
 	const {workspace_id} = useParams();
 
 	const [workspace, setWorkspace] = useState(null);
+	const [activeEnvironment, setActiveEnvironment] = useState(null);
+	const [activeCollection, setActiveCollection] = useState(null);
+
 	const [collections, setCollections] = useState(null);
 	const [folders, setFolders] = useState(null);
 	const [requests, setRequests] = useState(null);
@@ -20,10 +20,10 @@ export default function WorkspaceContextProvider(props){
 	const [activeMenuKey, setActiveMenuKey] = useState(1);
 
 	useEffect(() => {
-		const getWorkspace = async () => {
+		const getWorkspace = async() => {
 			const response = await WorkspaceService.getById(workspace_id);
 
-			if (response.code === 0){
+			if(response.code === 0){
 				const workspace = response.data.workspace;
 				setWorkspace(workspace);
 				setCollections(response.data.collections);
@@ -37,7 +37,6 @@ export default function WorkspaceContextProvider(props){
 
 		getWorkspace();
 	}, [workspace_id]);
-
 
 	return (
 		<WorkspaceContext.Provider value={{
@@ -53,6 +52,8 @@ export default function WorkspaceContextProvider(props){
 			setEnvironments,
 			activeMenuKey,
 			setActiveMenuKey,
+			activeEnvironment, setActiveEnvironment,
+			activeCollection, setActiveCollection,
 		}}>
 			{children}
 		</WorkspaceContext.Provider>

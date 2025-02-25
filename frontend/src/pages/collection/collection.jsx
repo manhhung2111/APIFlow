@@ -17,8 +17,7 @@ import FolderService from "@services/folder.js";
 import _ from "lodash";
 
 export default function CollectionPage(){
-	const {workspace, collections, setCollections, setFolders, setRequests} = useContext(WorkspaceContext);
-	const [collection, setCollection] = useState(null);
+	const {workspace, collections, setCollections, setFolders, setRequests, activeCollection, setActiveCollection} = useContext(WorkspaceContext);
 
 	const [name, setName] = useState("");
 	const [content, setContent] = useState("");
@@ -37,7 +36,7 @@ export default function CollectionPage(){
 
 			if(result.code === 0){
 				const collection = result.data.collection;
-				setCollection(collection);
+				setActiveCollection(collection);
 				setName(collection.name);
 				setContent(collection.content);
 				setAuthorization(collection.authorization);
@@ -54,7 +53,7 @@ export default function CollectionPage(){
 		}
 
 		if(workspace){
-			setCollection(null);
+			setActiveCollection(null);
 			fetchCollection();
 		}
 	}, [collection_id, workspace]);
@@ -63,48 +62,48 @@ export default function CollectionPage(){
 		{
 			label: "Overview",
 			key: 1,
-			children: <CollectionDisplayOverview collection={collection} name={name} setName={setName} content={content}
+			children: <CollectionDisplayOverview collection={activeCollection} name={name} setName={setName} content={content}
 												 setContent={setContent}/>
 		},
 		{
 			label: "Authorization",
 			key: 2,
-			children: <CollectionDisplayAuthorization collection={collection} authorization={authorization}
+			children: <CollectionDisplayAuthorization collection={activeCollection} authorization={authorization}
 													  setAuthorization={setAuthorization}/>
 		},
 		{
 			label: "Scripts",
 			key: 3,
-			children: <CollectionDisplayScripts collection={collection} scripts={scripts} setScripts={setScripts}/>
+			children: <CollectionDisplayScripts collection={activeCollection} scripts={scripts} setScripts={setScripts}/>
 		},
 		{
 			label: "Variables",
 			key: 4,
-			children: <CollectionDisplayVariables collection={collection} variables={variables}
+			children: <CollectionDisplayVariables collection={activeCollection} variables={variables}
 												  setVariables={setVariables}/>
 		},
 	]
 
 	const handleSave =  async () => {
-		const result = await CollectionService.save(collection, name, content, authorization, scripts, variables);
+		const result = await CollectionService.save(activeCollection, name, content, authorization, scripts, variables);
 
 		if (result.code === 0){
 			toast.success(result.message);
 			const clone = _.cloneDeep(collections);
 			for (const e of clone) {
-				if (e._id === collection._id) {
+				if (e._id === activeCollection._id) {
 					e.name = name;
 				}
 			}
 			setCollections(clone);
-			setCollection(result.data.collection);
+			setActiveCollection(result.data.collection);
 		} else {
 			toast.error(result.message);
 		}
 	}
 
 	const handleAddRequest = async () => {
-		const result = await CollectionService.addRequest(collection);
+		const result = await CollectionService.addRequest(activeCollection);
 
 		if (result.code === 0) {
 			setRequests(prev => [...prev, result.data.request]);
@@ -115,7 +114,7 @@ export default function CollectionPage(){
 	}
 
 	const handleAddFolder = async () => {
-		const result = await FolderService.create(collection);
+		const result = await FolderService.create(activeCollection);
 
 		if (result.code === 0) {
 			setFolders(prev => [...prev, result.data.folder]);
@@ -126,34 +125,34 @@ export default function CollectionPage(){
 	}
 
 	const handleDelete = async () => {
-		const result = await CollectionService.delete(collection);
+		const result = await CollectionService.delete(activeCollection);
 
 		if (result.code === 0) {
 			setCollections(prev => {
-				return prev.filter(e => e._id !== collection._id);
+				return prev.filter(e => e._id !== activeCollection._id);
 			});
 			toast.success(result.message);
-			navigate(`/workspace/${collection.workspace_id}`);
+			navigate(`/workspace/${activeCollection.workspace_id}`);
 		} else {
 			toast.error(result.message);
 		}
 	}
 
 	const actionManagers = [
-		{key: `add_request_${collection?._id}`, label: "Add request", onClick: handleAddRequest},
-		{key: `add_folder_${collection?._id}`, label: "Add folder", onClick: handleAddFolder},
-		{key: `duplicate_${collection?._id}`, label: "Duplicate",},
-		{key: `export_${collection?._id}`, label: "Export",},
-		{key: `delete_${collection?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+		{key: `add_request_${activeCollection?._id}`, label: "Add request", onClick: handleAddRequest},
+		{key: `add_folder_${activeCollection?._id}`, label: "Add folder", onClick: handleAddFolder},
+		{key: `duplicate_${activeCollection?._id}`, label: "Duplicate",},
+		{key: `export_${activeCollection?._id}`, label: "Export",},
+		{key: `delete_${activeCollection?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
 	];
 
 	return (
 		<div className="collection-page">
 			<div className="header">
-				{collection && <div className="inner-header">
+				{activeCollection && <div className="inner-header">
 					<div className="text">
 						<CollectionIcon/>
-						{collection.name}
+						{activeCollection.name}
 					</div>
 					<div className="side">
 						<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
@@ -162,14 +161,14 @@ export default function CollectionPage(){
 						<ActionManager am={actionManagers} />
 					</div>
 				</div>}
-				{!collection && <Skeleton.Input active={true}/>}
+				{!activeCollection && <Skeleton.Input active={true}/>}
 			</div>
 			<div className="main">
-				{!collection && <div style={{padding: "16px"}}>
+				{!activeCollection && <div style={{padding: "16px"}}>
 					<Skeleton active/>
 				</div>
 				}
-				{collection && <Tabs
+				{activeCollection && <Tabs
 					tabBarGutter={16}
 					items={items}
 				/>}
