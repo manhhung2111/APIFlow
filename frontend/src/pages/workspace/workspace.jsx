@@ -3,6 +3,7 @@ import MasterMenu from "@layout/menu/menu.jsx";
 import {Outlet} from "react-router";
 import WorkspaceContextProvider from "@contexts/workspace.jsx";
 import './styles/workspace.scss'
+import WorkspaceSuperHeader from "@components/workspace/header/header.jsx";
 
 export default function WorkspacePage(){
 	return (
@@ -15,7 +16,7 @@ export default function WorkspacePage(){
 					</div>
 					<div className="master-main-wrapper">
 						<div className="mmw-header">
-
+							<WorkspaceSuperHeader />
 						</div>
 						<div className="mmw-main">
 							<Outlet/>

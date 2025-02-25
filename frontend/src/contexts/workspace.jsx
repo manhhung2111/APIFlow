@@ -35,6 +35,9 @@ export default function WorkspaceContextProvider(props){
 			}
 		}
 
+		setWorkspace(null);
+		setActiveEnvironment(null);
+		setActiveCollection(null);
 		getWorkspace();
 	}, [workspace_id]);
 
