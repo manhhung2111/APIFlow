@@ -3,8 +3,6 @@ import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {Select, Skeleton} from "antd";
 import DataTableIcon from "@assets/icons/data.table.jsx";
 import "../styles/header.scss";
-import AppInputVariable from "@components/app/input/variable/input.jsx";
-import HighlightedInput from "@components/app/input/variable/test.jsx";
 
 export default function WorkspaceSuperHeader(){
 	const {workspace, environments, setActiveEnvironment, activeEnvironment} = useContext(WorkspaceContext);
@@ -31,11 +29,8 @@ export default function WorkspaceSuperHeader(){
 		{workspace && <>
 			<div className="main">
 				<div className="info">
-					{/*<h3>{workspace?.name}</h3>*/}
-					{/*{workspace?.content && <p className="desc">{workspace?.content}</p>}*/}
-					{/*<AppInputVariable name="test" value={""} placeholder="Testing 123" onChange={(value) => {*/}
-					{/*	console.log(value)}} />*/}
-					<HighlightedInput />
+					<h3>{workspace?.name}</h3>
+					{workspace?.content && <p className="desc">{workspace?.content}</p>}
 				</div>
 				<div className="environment-select">
 					<Select

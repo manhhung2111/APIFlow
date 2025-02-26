@@ -17,6 +17,7 @@ export default function WorkspaceContextProvider(props){
 	const [requests, setRequests] = useState(null);
 	const [environments, setEnvironments] = useState([]);
 
+	const [variables, setVariables] = useState([]);
 	const [activeMenuKey, setActiveMenuKey] = useState(1);
 
 	useEffect(() => {
@@ -41,6 +42,76 @@ export default function WorkspaceContextProvider(props){
 		getWorkspace();
 	}, [workspace_id]);
 
+	useEffect(() => {
+		let _variables = getVariablesList();
+		console.log("Update variable list");
+		setVariables(_variables);
+	}, [activeEnvironment, activeCollection]);
+
+	function processVariables(variables_list, scope, seen_variables) {
+		let result = [];
+
+		for (let i = variables_list.length - 1; i >= 0; i--) {
+			const variable = variables_list[i];
+			if (!variable.selected) continue; // Skip unselected variables
+
+			let existing = seen_variables.get(variable.variable);
+
+			let temp_var = {
+				scope: scope,
+				name: variable.variable,
+				type: variable.type || "",
+				initial_value: variable.initial_value,
+				current_value: variable.current_value,
+				is_overridden: ''
+			};
+
+			// Check if the variable is overridden by an earlier scope
+			if (existing !== undefined) {
+				temp_var.is_overridden = existing.scope;
+			} else {
+				// Add the variable to the seen list if not overridden
+				seen_variables.set(variable.variable, {
+					scope: scope,
+					name: variable.variable,
+					initial_value: variable.initial_value,
+					current_value: variable.current_value
+				});
+			}
+
+			// Add the variable to the temporary list
+			result.push(temp_var);
+		}
+
+		// Return the reversed list (since we iterate backward)
+		return result;
+	}
+
+	function getVariablesList() {
+		const globalEnv = environments.find(e => e.scope === 0) || {};
+
+		let activeEnv = {};
+		if (activeEnvironment != -1) {
+			activeEnv = environments.find(e => e.scope === 1 && e._id === activeEnvironment) || {};
+		}
+
+		let collectionVariables = [];
+		if (activeCollection) {
+			collectionVariables = activeCollection.variables;
+		}
+
+		let _variables = [];
+		let seenVariables = new Map();
+
+		_variables.push(...processVariables(activeEnv?.variables || [], 'Environment', seenVariables));
+		_variables.push(...processVariables(collectionVariables, 'Collection', seenVariables));
+		_variables.push(...processVariables(globalEnv?.variables || [], 'Global', seenVariables));
+
+		_variables = _variables.reverse();
+
+		return _variables;
+	}
+
 	return (
 		<WorkspaceContext.Provider value={{
 			workspace,
@@ -57,6 +128,7 @@ export default function WorkspaceContextProvider(props){
 			setActiveMenuKey,
 			activeEnvironment, setActiveEnvironment,
 			activeCollection, setActiveCollection,
+			variables, setVariables
 		}}>
 			{children}
 		</WorkspaceContext.Provider>

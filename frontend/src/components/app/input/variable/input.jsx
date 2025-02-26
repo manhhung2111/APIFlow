@@ -1,166 +1,270 @@
+import React, { useState, useRef, useEffect, useContext } from "react";
 import AppInputVariableTooltip from "@components/app/input/variable/tooltip.jsx";
-import "../../styles/variable.scss";
-import {useContext, useEffect, useRef, useState} from "react";
-import {WorkspaceContext} from "@contexts/workspace.jsx";
-import AppInputVariableSuggestionBox from "@components/app/input/variable/suggestion.box.jsx";
 import Environment from "@components/environment/environment.jsx";
+import { WorkspaceContext } from "@contexts/workspace.jsx";
+import AppInputVariableSuggestionBox from "@components/app/input/variable/suggestion.box.jsx";
+import "../../styles/variable.scss";
 
-export default function AppInputVariable({name, value, onChange, placeholder}) {
-	const {activeCollection, activeEnvironment, environments} = useContext(WorkspaceContext);
-	const [variables, setVariables] = useState([]);
+const AppInputVariable = ({ placeholder, text, setText }) => {
+	const { activeCollection, activeEnvironment, environments, variables } = useContext(WorkspaceContext);
 
-	const [inputValue, setInputValue] = useState(value);
-	const [highlightedContent, setHighlightedContent] = useState(value);
-	const [showSuggestions, setShowSuggestions] = useState(false);
+	const contentRef = useRef(null);
 	const [tooltipData, setTooltipData] = useState(null);
-	const editableDivRef = useRef(null);
-	const tooltipRef = useRef(null);
+	const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+	const tooltipTimeoutRef = useRef(null);
 
+	const [suggestions, setSuggestions] = useState(null);
+	const [suggestionsPosition, setSuggestionsPosition] = useState({ top: 0, left: 0 });
+	const suggestionBoxRef = useRef(null);
 
-	useEffect(() => {
-		setHighlightedContent(highlightVariables(inputValue, variables));
-		attachTooltipEvents();
-	}, [inputValue]);
+	const saveCaretPosition = () => {
+		const selection = window.getSelection();
+		if (!selection.rangeCount) return null;
+		const range = selection.getRangeAt(0);
+		const preCaretRange = range.cloneRange();
+		preCaretRange.selectNodeContents(contentRef.current);
+		preCaretRange.setEnd(range.endContainer, range.endOffset);
+		return preCaretRange.toString().length;
+	};
 
-	function processVariables(variables_list, scope, seen_variables) {
-		let result = [];
+	const restoreCaretPosition = (offset) => {
+		const selection = window.getSelection();
+		const range = document.createRange();
+		let charIndex = 0;
+		const nodeStack = [contentRef.current];
+		let node;
 
-		for (let i = variables_list.length - 1; i >= 0; i--) {
-			const variable = variables_list[i];
-			if (!variable.selected) continue; // Skip unselected variables
+		while ((node = nodeStack.pop())) {
+			if (node.nodeType === 3) {
+				const nextCharIndex = charIndex + node.length;
+				if (offset >= charIndex && offset <= nextCharIndex) {
+					range.setStart(node, offset - charIndex);
+					range.collapse(true);
+					selection.removeAllRanges();
+					selection.addRange(range);
+					return;
+				}
+				charIndex = nextCharIndex;
+			} else {
+				let i = node.childNodes.length;
+				while (i--) nodeStack.push(node.childNodes[i]);
+			}
+		}
+	};
 
-			let existing = seen_variables.get(variable.variable);
+	const updateHighlighting = () => {
+		if (!contentRef.current) return;
 
-			let temp_var = {
-				scope: scope,
-				name: variable.variable,
-				type: variable.type || "",
-				initial_value: variable.initial_value,
-				current_value: variable.current_value,
-				is_overridden: ''
+		const caretPos = document.activeElement === contentRef.current ? saveCaretPosition() : null;
+		const textContent = text;
+		const fragment = document.createDocumentFragment();
+
+		let lastIndex = 0;
+		const regex = /\{\{(\w+)\}\}/g; // Match exactly {{word}}
+		let match;
+
+		while ((match = regex.exec(textContent)) !== null) {
+			const [fullMatch, variableName] = match;
+			const startIndex = match.index;
+			const endIndex = startIndex + fullMatch.length;
+
+			// Append text before the match
+			if (startIndex > lastIndex) {
+				fragment.appendChild(document.createTextNode(textContent.slice(lastIndex, startIndex)));
+			}
+
+			// Process the variable
+			let variable = Environment.parseVariable(variableName, variables);
+			let variableClass = variable.scope ? "resolved" : "unresolved";
+
+			const span = document.createElement("span");
+			span.style.cursor = "auto";
+			span.className = `highlighted ${variableClass}`;
+			span.textContent = `{{${variableName}}}`; // Include the braces in the span
+
+			span.onmouseover = () => {
+				if (tooltipTimeoutRef.current) clearTimeout(tooltipTimeoutRef.current); // Clear hide timeout
+				setTooltipData(variable);
+				setTooltipPosition({ top: span.getBoundingClientRect().bottom + 5, left: span.getBoundingClientRect().left });
 			};
 
-			// Check if the variable is overridden by an earlier scope
-			if (existing !== undefined) {
-				temp_var.is_overridden = existing.scope;
-			} else {
-				// Add the variable to the seen list if not overridden
-				seen_variables.set(variable.variable, {
-					scope: scope,
-					name: variable.variable,
-					initial_value: variable.initial_value,
-					current_value: variable.current_value
-				});
-			}
+			span.onmouseleave = () => {
+				tooltipTimeoutRef.current = setTimeout(() => {
+					setTooltipData(null);
+				}, 200); // Delay to prevent flickering
+			};
 
-			// Add the variable to the temporary list
-			result.push(temp_var);
+			fragment.appendChild(span);
+			lastIndex = endIndex;
 		}
 
-		// Return the reversed list (since we iterate backward)
-		return result;
-	}
-
-	function getVariablesList() {
-		const globalEnv = environments.find(e => e.scope === 0) || {};
-
-		let activeEnv = {};
-		if (activeEnvironment != -1) {
-			activeEnv = environments.find(e => e.scope === 1 && e._id === activeEnvironment) || {};
+		// Append any remaining text after the last match
+		if (lastIndex < textContent.length) {
+			fragment.appendChild(document.createTextNode(textContent.slice(lastIndex)));
 		}
 
-		let collectionVariables = [];
-		if (activeCollection) {
-			collectionVariables = activeCollection.variables;
+		// Update the DOM
+		contentRef.current.innerHTML = "";
+		contentRef.current.appendChild(fragment);
+
+		// Restore the caret position only if the content is focused
+		if (caretPos !== null) {
+			restoreCaretPosition(caretPos);
 		}
-
-		let _variables = [];
-		let seenVariables = new Map();
-
-		_variables.push(...processVariables(activeEnv?.variables || [], 'Environment', seenVariables));
-		_variables.push(...processVariables(collectionVariables, 'Collection', seenVariables));
-		_variables.push(...processVariables(globalEnv?.variables || [], 'Global', seenVariables));
-
-		_variables = _variables.reverse();
-
-		return _variables;
-	}
-
-	const handleInput = (event) => {
-		// let caretPosition = Environment.getCaretCharacterOffsetWithin(editableDivRef?.current);
-		const rawText = event.target.innerText;
-
-		setInputValue(rawText);
-		onChange(rawText);
-
-		// Environment.setCaretPosition(editableDivRef?.current, caretPosition);
-
-		// setShowSuggestions(rawText.includes("{"));
 	};
-
-
-
-	const highlightVariables = (text, variables) => {
-		return text.replace(/{{(\w+)}}/g, (match, variableName) => {
-			let variable = Environment.parseVariable(variableName, variables);
-
-			let variable_class = 'unresolved';
-
-			if(variable.scope) {
-				variable_class = `resolved`;
-			}
-
-			let data_variable = JSON.stringify({
-				...variable
-			});
-
-			return `<span class='highlighted ${variable_class}' data-variable='${data_variable}' >${match}</span>`;
-		});
-	};
-
-	const attachTooltipEvents = () => {
-		const spans = editableDivRef.current?.querySelectorAll("span.highlighted") || [];
-		spans.forEach(span => {
-			span.addEventListener("mouseenter", (e) => {
-				const variableData = JSON.parse(span.getAttribute("data-variable"));
-				setTooltipData(variableData);
-
-				const rect = span.getBoundingClientRect();
-				tooltipRef.current.style.position = "fixed";
-				tooltipRef.current.style.top = `${rect.bottom + window.scrollY + 5}px`;
-				tooltipRef.current.style.left = `${rect.left + window.scrollX}px`;
-				tooltipRef.current.style.display = "block";
-			});
-
-			span.addEventListener("mouseleave", () => {
-				setTimeout(() => {
-					tooltipRef.current.style.display = "none";
-				}, 200);
-			});
-		});
-	};
-
 
 	useEffect(() => {
-		let _variables = getVariablesList();
-		setVariables(_variables);
-	}, [activeEnvironment, activeCollection]);
+		if (contentRef.current && contentRef.current.innerHTML.trim() === "") {
+			updateHighlighting();
+		}
 
-	return (<div className="app-input-highlight__wrapper">
-		<div
-			className="editable"
-			contentEditable
-			ref={editableDivRef}
-			spellCheck={false}
-			onInput={handleInput}
-			dangerouslySetInnerHTML={{__html: highlightedContent}}
-			data-placeholder={placeholder}
-		></div>
-		<input type="hidden" value={inputValue} name={name}/>
+		const handleClickOutside = (event) => {
+			if (
+				suggestionBoxRef.current &&
+				!suggestionBoxRef.current.contains(event.target) &&
+				contentRef.current &&
+				!contentRef.current.contains(event.target)
+			) {
+				setSuggestions(null); // Hide suggestions when clicking outside
+			}
+		};
 
-		<div ref={tooltipRef} className="tooltip" style={{display: "none"}}>
-			{tooltipData && <AppInputVariableTooltip variable={tooltipData}/>}
+		document.addEventListener("click", handleClickOutside);
+
+		const editableDiv = contentRef.current;
+		if (!editableDiv) return;
+
+		editableDiv.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			document.removeEventListener("click", handleClickOutside);
+			editableDiv.removeEventListener("keydown", handleKeyDown);
+		};
+	}, []);
+
+	useEffect(() => {
+		updateHighlighting();
+		handleShowSuggestionBox();
+	}, [text]);
+
+	useEffect(() => {
+		updateHighlighting();
+	}, [variables]);
+
+	const handleInput = () => {
+		setText(contentRef.current.innerText);
+	};
+
+	const handleShowSuggestionBox = () => {
+		const selection = window.getSelection();
+		if (!selection.rangeCount) return;
+
+		const range = selection.getRangeAt(0);
+		const rect = range.getBoundingClientRect();
+
+		const lastIndexOfOpenBrace = text.lastIndexOf('{');
+		const lastIndexOfCloseBrace = text.lastIndexOf('}');
+
+		if (lastIndexOfOpenBrace > lastIndexOfCloseBrace) {
+			const query = text.substring(lastIndexOfOpenBrace + 1).trim();
+
+			const suggestions = variables.filter(variable => variable.name.toLowerCase().includes(query.toLowerCase()));
+			setSuggestions([...suggestions]);
+			setSuggestionsPosition({
+				top: rect.bottom + window.scrollY + 7, // Convert to absolute position
+				left: rect.left + window.scrollX
+			});
+
+		} else {
+			setSuggestions(null);
+		}
+	}
+
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			event.preventDefault(); // Prevents adding a new line
+		}
+	};
+
+	const handleSelectSuggestion = (variable) => {
+		const lastIndexOfOpenBrace = text.lastIndexOf('{');
+		let newText = text;
+		if (lastIndexOfOpenBrace !== -1) {
+			 newText = newText.slice(0, lastIndexOfOpenBrace + 1);
+		}
+
+		while (newText.endsWith('{')) {
+			newText = newText.slice(0, -1);
+		}
+
+		newText += "{{" + variable.name + "}}";
+		setText(newText);
+		setSuggestions(null);
+
+		requestAnimationFrame(() => {
+			if (contentRef.current) {
+				contentRef.current.focus();
+				moveCaretToEnd(contentRef.current);
+			}
+		});
+
+		const moveCaretToEnd = (element) => {
+			const selection = window.getSelection();
+			const range = document.createRange();
+			range.selectNodeContents(element);
+			range.collapse(false); // Move caret to the end
+			selection.removeAllRanges();
+			selection.addRange(range);
+		};
+	}
+
+	return (
+		<div className="app-input-highlight__wrapper">
+			<div
+				className="editable"
+				ref={contentRef}
+				contentEditable
+				suppressContentEditableWarning
+				onInput={handleInput}
+				spellCheck={false}
+				data-placeholder={placeholder || ""}
+			/>
+			{tooltipData && (
+				<div
+					style={{
+						position: "fixed",
+						top: tooltipPosition.top,
+						left: tooltipPosition.left,
+						zIndex: 101
+					}}
+					onMouseEnter={() => {
+						requestAnimationFrame(() => {
+							if (tooltipTimeoutRef.current) {
+								clearTimeout(tooltipTimeoutRef.current)
+							}
+						})
+					}}
+					onMouseLeave={() => {
+						setTooltipData(null);
+					}}
+				>
+					<AppInputVariableTooltip variable={tooltipData} />
+				</div>
+			)}
+			{suggestions && (
+				<div style={{
+					position: "fixed",
+					top: suggestionsPosition.top,
+					left: suggestionsPosition.left,
+					zIndex: 100
+				}}
+					 ref={suggestionBoxRef}
+				>
+					<AppInputVariableSuggestionBox variables={suggestions} onSelect={(value) => handleSelectSuggestion(value)}/>
+				</div>
+			)}
 		</div>
-		<AppInputVariableSuggestionBox/>
-	</div>)
-}
+	);
+};
+
+export default AppInputVariable;

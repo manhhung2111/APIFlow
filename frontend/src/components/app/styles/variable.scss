@@ -346,12 +346,12 @@
   position: relative;
   width: 100%;
   cursor: auto;
-
+  height: 100%;
   .editable {
     outline: none;
     border: 1px solid transparent;
     padding: 6px 8px;
-    border-radius: 3px;
+    border-radius: $border-radius-default;
     color: #212121;
     box-sizing: border-box;
     white-space: pre-wrap;
@@ -361,6 +361,9 @@
     word-wrap: anywhere;
     overflow-wrap: anywhere;
     max-width: 100%;
+    width: 100%;
+    height: 100%;
+    border: 1px solid #EDEDED;
     &:focus {
       border-color: lightgrey;
     }

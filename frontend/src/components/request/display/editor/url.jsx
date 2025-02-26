@@ -3,6 +3,7 @@ import {SendOutlined} from "@ant-design/icons";
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import Request from "@components/request/request.jsx";
+import AppInputVariable from "@components/app/input/variable/input.jsx";
 
 export default function RequestEditorUrl(){
 	const {request, url, setUrl, params, setParams, handleSend, method, setMethod} = useContext(RequestContext);
@@ -28,9 +29,8 @@ export default function RequestEditorUrl(){
 		return params;
 	};
 
-	const handleChangeUrl = (e) => {
-		const newUrl = e.target.value;
-
+	const handleChangeUrl = (newUrl) => {
+		console.log(newUrl);
 		const newParams = buildParamsFromUrl(newUrl);
 
 		// Handle update existing params, only update selected params and index remained the same
@@ -84,8 +84,9 @@ export default function RequestEditorUrl(){
 						options={Object.values(Request.METHODS)}
 						onChange={handleChangeMethod}
 					/>
-					<Input className="url" placeholder="Enter URL or paste text" value={url}
-						   onChange={handleChangeUrl}/>
+					<div className="url">
+						<AppInputVariable placeholder="Enter URL or paste text" setText={(value) => handleChangeUrl(value)} text={url}/>
+					</div>
 				</>}
 				{!request && <Skeleton.Input style={{width: "60vw"}} active={true} />}
 			</Space.Compact>
