@@ -184,7 +184,6 @@
   width: 400px;
   border-radius: 4px;
   z-index: 6;
-  display: none;
 
   .variable-suggestion__wrapper.empty {
     height: 200px;
@@ -250,6 +249,7 @@
           font-weight: bolder;
           padding: 2px;
           font-size: 12px;
+          line-height: 1;
 
           &.collection {
             background-color: #ffb400;
@@ -382,16 +382,21 @@
     }
 
     span.highlighted {
+      border-radius: $border-radius-default;
+      padding: 0 2px 1px;
       &.unresolved {
         color: #8e1a10;
-        background-color: #ffe3e7;
+        background-color: #ffebe7;
+        border: 1px dashed #fbc3ba;
 
         &:hover {
           opacity: 0.8;
         }
       }
       &.resolved {
-        color: #ff6c37;
+        color: #0053B8;
+        background-color: $background-color-secondary;
+        border: 1px solid $border-color-default;
       }
     }
   }

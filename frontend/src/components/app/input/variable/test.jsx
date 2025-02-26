@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import AppInputVariableTooltip from "@components/app/input/variable/tooltip.jsx";
 import Environment from "@components/environment/environment.jsx";
 import { WorkspaceContext } from "@contexts/workspace.jsx";
+import AppInputVariableSuggestionBox from "@components/app/input/variable/suggestion.box.jsx";
+import log from "eslint-plugin-react/lib/util/log.js";
 
 const HighlightedInput = ({ placeholder }) => {
 	const { activeCollection, activeEnvironment, environments } = useContext(WorkspaceContext);
@@ -13,7 +15,9 @@ const HighlightedInput = ({ placeholder }) => {
 	const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
 	const tooltipTimeoutRef = useRef(null);
 
-
+	const [suggestions, setSuggestions] = useState(null);
+	const [suggestionsPosition, setSuggestionsPosition] = useState({ top: 0, left: 0 });
+	const suggestionBoxRef = useRef(null);
 
 	const saveCaretPosition = () => {
 		const selection = window.getSelection();
@@ -89,7 +93,7 @@ const HighlightedInput = ({ placeholder }) => {
 			span.onmouseleave = () => {
 				tooltipTimeoutRef.current = setTimeout(() => {
 					setTooltipData(null);
-				}, 1000); // Delay to prevent flickering
+				}, 200); // Delay to prevent flickering
 			};
 
 
@@ -112,10 +116,35 @@ const HighlightedInput = ({ placeholder }) => {
 		if (contentRef.current && contentRef.current.innerHTML.trim() === "") {
 			updateHighlighting();
 		}
+
+		const handleClickOutside = (event) => {
+			if (
+				suggestionBoxRef.current &&
+				!suggestionBoxRef.current.contains(event.target) &&
+				contentRef.current &&
+				!contentRef.current.contains(event.target)
+			) {
+				setSuggestions(null); // Hide suggestions when clicking outside
+			}
+		};
+
+		document.addEventListener("click", handleClickOutside);
+
+		const editableDiv = contentRef.current;
+		if (!editableDiv) return;
+
+		editableDiv.addEventListener("keydown", handleKeyDown);
+
+		return () => {
+			document.removeEventListener("click", handleClickOutside);
+			editableDiv.removeEventListener("keydown", handleKeyDown);
+		};
 	}, []);
+
 
 	useEffect(() => {
 		updateHighlighting();
+		handleShowSuggestionBox();
 	}, [text]);
 
 	useEffect(() => {
@@ -191,6 +220,69 @@ const HighlightedInput = ({ placeholder }) => {
 		return _variables;
 	}
 
+	const handleShowSuggestionBox = () => {
+		const selection = window.getSelection();
+		if (!selection.rangeCount) return;
+
+		const range = selection.getRangeAt(0);
+		const rect = range.getBoundingClientRect();
+
+		const lastIndexOfOpenBrace = text.lastIndexOf('{');
+		const lastIndexOfCloseBrace = text.lastIndexOf('}');
+
+		if (lastIndexOfOpenBrace > lastIndexOfCloseBrace) {
+			const query = text.substring(lastIndexOfOpenBrace + 1).trim();
+			console.log("helklo", query)
+			const suggestions = variables.filter(variable => variable.name.toLowerCase().includes(query.toLowerCase()));
+			setSuggestions([...suggestions, ...suggestions]);
+			setSuggestionsPosition({
+				top: rect.bottom + window.scrollY + 7, // Convert to absolute position
+				left: rect.left + window.scrollX
+			});
+
+		} else {
+			setSuggestions(null);
+		}
+	}
+
+	const handleKeyDown = (event) => {
+		if (event.key === "Enter") {
+			event.preventDefault(); // Prevents adding a new line
+		}
+	};
+
+	const handleSelectSuggestion = (variable) => {
+		const lastIndexOfOpenBrace = text.lastIndexOf('{');
+		let newText = text;
+		if (lastIndexOfOpenBrace !== -1) {
+			 newText = newText.slice(0, lastIndexOfOpenBrace + 1);
+		}
+
+		while (newText.endsWith('{')) {
+			newText = newText.slice(0, -1);
+		}
+
+		newText += "{{" + variable.name + "}}";
+		setText(newText);
+		setSuggestions(null);
+
+		requestAnimationFrame(() => {
+			if (contentRef.current) {
+				contentRef.current.focus();
+				moveCaretToEnd(contentRef.current);
+			}
+		});
+
+		const moveCaretToEnd = (element) => {
+			const selection = window.getSelection();
+			const range = document.createRange();
+			range.selectNodeContents(element);
+			range.collapse(false); // Move caret to the end
+			selection.removeAllRanges();
+			selection.addRange(range);
+		};
+	}
+
 	return (
 		<div className="app-input-highlight__wrapper">
 			<div
@@ -209,7 +301,7 @@ const HighlightedInput = ({ placeholder }) => {
 						position: "fixed",
 						top: tooltipPosition.top,
 						left: tooltipPosition.left,
-						zIndex: 100
+						zIndex: 101
 					}}
 					onMouseEnter={() => {
 						requestAnimationFrame(() => {
@@ -223,6 +315,18 @@ const HighlightedInput = ({ placeholder }) => {
 					}}
 				>
 					<AppInputVariableTooltip variable={tooltipData} />
+				</div>
+			)}
+			{suggestions && (
+				<div style={{
+					position: "fixed",
+					top: suggestionsPosition.top,
+					left: suggestionsPosition.left,
+					zIndex: 100
+				}}
+					 ref={suggestionBoxRef}
+				>
+					<AppInputVariableSuggestionBox variables={suggestions} onSelect={(value) => handleSelectSuggestion(value)}/>
 				</div>
 			)}
 		</div>
