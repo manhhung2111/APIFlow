@@ -14,7 +14,7 @@ export default function RequestSidebar() {
 	return (
 		<div className="request-sidebar">
 			{items.map((item, index) => (
-				<Tooltip key={`rs-sidebar-${index}`} overlayClassName={"rs-tooltip"} color={"white"} arrow={false} placement="leftTop" title={item.label} onClick={() => {setShowDrawer(true)}}>
+				<Tooltip key={`rs-sidebar-${index}`} overlayClassName={"rs-tooltip.jsx"} color={"white"} arrow={false} placement="leftTop" title={item.label} onClick={() => {setShowDrawer(true)}}>
 					<div className="rs-item">
 						{item.icon}
 					</div>

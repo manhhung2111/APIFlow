@@ -6,7 +6,7 @@ export const WorkspaceContext = createContext({});
 
 export default function WorkspaceContextProvider(props){
 	const {children} = props;
-	const {workspace_id} = useParams();
+	const {workspace_id, collection_id} = useParams();
 
 	const [workspace, setWorkspace] = useState(null);
 	const [activeEnvironment, setActiveEnvironment] = useState(-1);

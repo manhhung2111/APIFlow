@@ -42,7 +42,7 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
 		const requests_compact = requests.map(request => request.release());
 
 		const environments = await DBEnvironmentLoader.byWorkspace(workspace.object!);
-		const environments_compact = environments.map(environment => environment.releaseCompact());
+		const environments_compact = environments.map(environment => environment.release());
 
 		response.status(200).json(Code.success(`Get workspace-${workspace_id} successfully.`, {
 			workspace: workspace.release(),

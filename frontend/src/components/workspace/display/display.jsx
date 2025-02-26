@@ -1,5 +1,5 @@
 import {UserOutlined} from "@ant-design/icons";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {Skeleton, Tabs} from "antd";
 import '../styles/display.scss';
@@ -7,7 +7,11 @@ import WorkspaceDisplayOverview from "@components/workspace/display/overview.jsx
 import WorkspaceDisplaySettings from "@components/workspace/display/settings.jsx";
 
 export default function WorkspaceDisplay() {
-	const {workspace} = useContext(WorkspaceContext);
+	const {workspace, setActiveCollection} = useContext(WorkspaceContext);
+
+	useEffect(() => {
+		setActiveCollection(null);
+	}, [])
 
 	const items = [
 		{label: "Overview", key: 1, children: <WorkspaceDisplayOverview />},
