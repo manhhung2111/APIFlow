@@ -113,7 +113,8 @@ export default class HTMLInput{
 		} else{
 			text = Word.addSmartQuote(raw);
 		}
-		text = sanitizeHtml(text);
+
+		text = this.sanitize(text);
 
 		return text;
 	}
@@ -195,7 +196,18 @@ export default class HTMLInput{
 	}
 
 	public static inputEditor(field: string){
-		return "";
+		if (!this._cur_request){
+			throw new Code("Please read the request to use request data");
+		}
+
+		const raw = htmlDecode(this.inputRaw(field));
+
+		let text: string;
+		text = Word.addSmartQuote(raw);
+
+		text = sanitizeHtml(text);
+
+		return text;
 	}
 
 	public static inputFile(field: string){

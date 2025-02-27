@@ -3,6 +3,7 @@ import {Checkbox, Input} from 'antd';
 import {useContext, useRef} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
+import AppInputVariable from "@components/app/input/variable/input.jsx";
 
 export default function RequestEditorHeaders(){
 	let {headers, setHeaders} = useContext(RequestContext);
@@ -65,18 +66,22 @@ export default function RequestEditorHeaders(){
 									{selectedHtml}
 								</div>
 								<div className="col key-col">
-									<Input placeholder="Key" variant="borderless" name={`${prefixName}_key_${index}`}
-										   value={row.key}
-										   onChange={(e) => handleInputChange(index, "key", e.target.value)}
-										   disabled={row.disabled ? true : false}
-									/>
+									<AppInputVariable placeholder="Key" setText={(value) => handleInputChange(index, "key", value)} text={row.key}/>
+
+									{/*<Input placeholder="Key" variant="borderless" name={`${prefixName}_key_${index}`}*/}
+									{/*	   value={row.key}*/}
+									{/*	   onChange={(e) => handleInputChange(index, "key", e.target.value)}*/}
+									{/*	   disabled={row.disabled ? true : false}*/}
+									{/*/>*/}
 								</div>
 								<div className="col value-col">
-									<Input placeholder="Value" variant="borderless"
-										   name={`${prefixName}_value_${index}`} value={row.value}
-										   onChange={(e) => handleInputChange(index, "value", e.target.value)}
-										   disabled={row.disabled ? true : false}
-									/>
+									{/*<Input placeholder="Value" variant="borderless"*/}
+									{/*	   name={`${prefixName}_value_${index}`} value={row.value}*/}
+									{/*	   onChange={(e) => handleInputChange(index, "value", e.target.value)}*/}
+									{/*	   disabled={row.disabled ? true : false}*/}
+									{/*/>*/}
+									<AppInputVariable placeholder="Value" setText={(value) => handleInputChange(index, "value", value)} text={row.value}/>
+
 								</div>
 								<div className="col content-col">
 									<Input placeholder="Description" variant="borderless"

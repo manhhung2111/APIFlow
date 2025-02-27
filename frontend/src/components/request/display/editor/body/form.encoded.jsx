@@ -3,6 +3,7 @@ import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
 import {DeleteOutlined} from "@ant-design/icons";
 import {Checkbox, Input} from "antd";
+import AppInputVariable from "@components/app/input/variable/input.jsx";
 
 export default function RequestEditorBodyFormEncoded() {
 	let {body, setBody} = useContext(RequestContext);
@@ -59,14 +60,16 @@ export default function RequestEditorBodyFormEncoded() {
 									{selectedHtml}
 								</div>
 								<div className="col key-col">
-									<Input placeholder="Key" variant="borderless" name={`${prefixName}_key_${index}`}
-										   value={row.key}
-										   onChange={(e) => handleInputChange(index, "key", e.target.value)}/>
+									{/*<Input placeholder="Key" variant="borderless" name={`${prefixName}_key_${index}`}*/}
+									{/*	   value={row.key}*/}
+									{/*	   onChange={(e) => handleInputChange(index, "key", e.target.value)}/>*/}
+									<AppInputVariable placeholder="Key" setText={(value) => handleInputChange(index, "key", value)} text={row.key}/>
 								</div>
 								<div className="col value-col">
-									<Input placeholder="Value" variant="borderless"
-										   name={`${prefixName}_value_${index}`} value={row.value}
-										   onChange={(e) => handleInputChange(index, "value", e.target.value)}/>
+									{/*<Input placeholder="Value" variant="borderless"*/}
+									{/*	   name={`${prefixName}_value_${index}`} value={row.value}*/}
+									{/*	   onChange={(e) => handleInputChange(index, "value", e.target.value)}/>*/}
+									<AppInputVariable placeholder="Value" setText={(value) => handleInputChange(index, "value", value)} text={row.value}/>
 								</div>
 								<div className="col content-col">
 									<Input placeholder="Description" variant="borderless"

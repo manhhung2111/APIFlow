@@ -350,7 +350,7 @@
   .editable {
     outline: none;
     border: 1px solid transparent;
-    padding: 6px 8px;
+    padding: 4px 8px;
     border-radius: $border-radius-default;
     color: #212121;
     box-sizing: border-box;
@@ -363,19 +363,19 @@
     max-width: 100%;
     width: 100%;
     height: 100%;
-    border: 1px solid #EDEDED;
     &:focus {
-      border-color: lightgrey;
+      border-color: #EDEDED;
     }
 
     &::before {
       content: attr(placeholder);
       position: absolute;
-      top: 6px; /* Adjust to align with padding */
+      top: 4px; /* Adjust to align with padding */
       left: 8px; /* Adjust to align with padding */
-      color: grey;
+      color: $content-color-tertiary;
       display: block;
       cursor: text;
+      font-weight: $text-weight-regular;
       white-space: pre-wrap;
       z-index: 1;
     }

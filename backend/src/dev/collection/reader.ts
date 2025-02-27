@@ -33,7 +33,7 @@ export default class Reader extends DBReader<DCollection> {
     }
 
     public readContent() {
-        this._obj.content = HTMLInput.inputSafe("content", false);
+        this._obj.content = HTMLInput.inputEditor("content");
     }
 
     public readName() {

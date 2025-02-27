@@ -152,10 +152,14 @@ const AppInputVariable = ({ placeholder, text, setText }) => {
 	}, [variables]);
 
 	const handleInput = () => {
-		setText(contentRef.current.innerText);
+		setText(contentRef.current.innerText.trim());
 	};
 
 	const handleShowSuggestionBox = () => {
+		if (document.activeElement !== contentRef.current) {
+			return;
+		}
+
 		const selection = window.getSelection();
 		if (!selection.rangeCount) return;
 
@@ -227,7 +231,7 @@ const AppInputVariable = ({ placeholder, text, setText }) => {
 				suppressContentEditableWarning
 				onInput={handleInput}
 				spellCheck={false}
-				data-placeholder={placeholder || ""}
+				placeholder={placeholder || ""}
 			/>
 			{tooltipData && (
 				<div

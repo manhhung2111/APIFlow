@@ -3,6 +3,7 @@ import {Checkbox, Input} from 'antd';
 import {useContext, useRef} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
+import AppInputVariable from "@components/app/input/variable/input.jsx";
 
 export default function RequestEditorParams(){
 	let {params, setParams, url, setUrl} = useContext(RequestContext);
@@ -38,17 +39,20 @@ export default function RequestEditorParams(){
 
 	const handleBuildUrl = (params) => {
 		let queryString = "";
-		params.forEach(row => {
-			if (!row.selected) return;
+
+		for (let i = 0; i < params.length - 1; i++) {
+			const row = params[i];
+			if (!row.selected) continue;
 
 			if (queryString) queryString += '&';
 			if (row.key) queryString += row.key;
 			if (row.value) queryString += `=${row.value}`;
-		});
-
+		}
+		console.log(queryString);
 		if (queryString) queryString = '?' + queryString;
 		let baseUrl = url.split('?')[0];
 		const newUrl = baseUrl + queryString;
+		// console.log(newUrl)
 
 		setUrl(newUrl);
 	}
@@ -81,14 +85,10 @@ export default function RequestEditorParams(){
 									{selectedHtml}
 								</div>
 								<div className="col key-col">
-									<Input placeholder="Key" variant="borderless" name={`${prefixName}_key_${index}`}
-										   value={row.key}
-										   onChange={(e) => handleInputChange(index, "key", e.target.value)}/>
+									<AppInputVariable placeholder="Key" setText={(value) => handleInputChange(index, "key", value)} text={row.key}/>
 								</div>
 								<div className="col value-col">
-									<Input placeholder="Value" variant="borderless"
-										   name={`${prefixName}_value_${index}`} value={row.value}
-										   onChange={(e) => handleInputChange(index, "value", e.target.value)}/>
+									<AppInputVariable placeholder="Value" setText={(value) => handleInputChange(index, "value", value)} text={row.value}/>
 								</div>
 								<div className="col content-col">
 									<Input placeholder="Description" variant="borderless"

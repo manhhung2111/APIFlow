@@ -6,6 +6,7 @@ import 'codemirror/mode/javascript/javascript';
 import CodeEditor from "@components/app/editor/code.editor.jsx";
 import _ from "lodash";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
+import AppInputVariable from "@components/app/input/variable/input.jsx";
 
 export default function RequestEditorAuthorization(){
 	let {authorization, setAuthorization, requestFolder} = useContext(RequestContext);
@@ -87,13 +88,11 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Username</div>
-							<Input name="username" value={authorization.data.username ?? ""}
-								   onChange={(e) => handleChangeData("username", e.target.value)}/>
+							<AppInputVariable placeholder="Username" setText={(value) => handleChangeData("username", value)} text={authorization.data.username ?? ""}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Password</div>
-							<Input name="password" value={authorization.data.password ?? ""}
-								   onChange={(e) => handleChangeData("password", e.target.value)}/>
+							<AppInputVariable placeholder="Password" setText={(value) => handleChangeData("password", value)} text={authorization.data.password ?? ""}/>
 						</div>
 					</div>
 				}
@@ -101,8 +100,7 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Token</div>
-							<Input name="token" value={authorization.data.bearer_token ?? ""}
-								   onChange={(e) => handleChangeData("bearer_token", e.target.value)}/>
+							<AppInputVariable placeholder="Token" setText={(value) => handleChangeData("bearer_token", value)} text={authorization.data.bearer_token ?? ""}/>
 						</div>
 					</div>
 				}

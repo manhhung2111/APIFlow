@@ -30,7 +30,6 @@ export default function RequestEditorUrl(){
 	};
 
 	const handleChangeUrl = (newUrl) => {
-		console.log(newUrl);
 		const newParams = buildParamsFromUrl(newUrl);
 
 		// Handle update existing params, only update selected params and index remained the same
