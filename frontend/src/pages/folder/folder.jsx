@@ -1,12 +1,12 @@
 import {useContext, useEffect, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
-import {useParams} from "react-router";
+import {NavLink, useParams} from "react-router";
 import FolderService from "@services/folder.js";
 import FolderDisplayOverview from "@components/folder/display/overview.jsx";
 import FolderDisplayAuthorization from "@components/folder/display/authorization.jsx";
 import FolderDisplayScripts from "@components/folder/display/scripts.jsx";
 import {toast} from "react-toastify";
-import {Button, Skeleton, Tabs} from "antd";
+import {Breadcrumb, Button, Skeleton, Tabs} from "antd";
 import {FolderOutlined, SaveOutlined} from "@ant-design/icons";
 import ActionManager from "@utils/action.manager.jsx";
 import _ from "lodash";
@@ -115,13 +115,28 @@ export default function FolderPage(){
 		{key: `delete_${folder?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
 	];
 
+
+
 	return (
 		<div className="collection-page">
 			<div className="header">
 				{folder && <div className="inner-header">
 					<div className="text">
-						<FolderOutlined/>
-						{folder.name}
+						<Breadcrumb
+							separator=""
+							items={[
+								{
+									title: <FolderOutlined style={{marginTop: "3px", marginRight: "5px"}}/>,
+								},
+								{
+									title: <NavLink to={`/workspace/${folder?.workspace_id}/collection/${activeCollection?._id}`}>{activeCollection?.name}</NavLink>,
+								},
+								{type: 'separator'},
+								{
+									title: folder.name,
+								},
+							]}
+						/>
 					</div>
 					<div className="side">
 						<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>

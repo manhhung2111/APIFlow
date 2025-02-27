@@ -15,6 +15,10 @@
         width: fit-content;
         font-weight: $text-weight-thick;
 
+        .ant-breadcrumb-link {
+          font-size: $text-size-m;
+        }
+
         .anticon {
           font-size: $text-size-xl;
           color: $content-color-secondary;
@@ -220,11 +224,14 @@
           margin-right: $spacing-l;
         }
 
-        input, .select {
+        input, .select, .app-input-highlight__wrapper {
           margin-top: $spacing-m;
           min-width: 196px;
           max-width: 280px;
-
+          .editable {
+            border: 1px solid #EDEDED;
+            border-radius: $border-radius-default;
+          }
           .ant-select-selector {
             font-size: $text-size-m !important;
           }

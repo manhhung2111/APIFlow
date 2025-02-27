@@ -27,6 +27,11 @@
         border-bottom: 1px solid $border-color-default;
         display: flex;
         flex-direction: column;
+        box-sizing: border-box;
+      }
+
+      .rm-response {
+        height: calc(100vh - 48px - 40px - 48px - 47vh);
       }
     }
   }
