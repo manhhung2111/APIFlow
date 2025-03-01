@@ -174,7 +174,7 @@ export const sendRequest = async (request: Request, response: Response) => {
         if (axios.isAxiosError(error)) {
             const axios_error = error as AxiosError;
             response.status(400).json(Code.success(axios_error.message, {
-                "response" : {
+                "response": {
                     "status": axios_error.response?.status,
                     "body": axios_error.response?.data || {},
                     "headers": axios_error.response?.headers || [],
@@ -252,44 +252,3 @@ export const updateRequestContent = async (request: Request, response: Response)
         response.status(500).json(Code.error((error as Error).message));
     }
 };
-
-export const saveExampleFromResponse = async (request: Request, response: Response) => {
-    logger.info("[Controller] Save example from response");
-
-    try {
-        const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
-        if (!request.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
-        }
-
-        await request.reader().readExampleFromResponse();
-
-        await request.save();
-
-        response.status(201).json(Code.success("Save example from response successfully!", {request: request.release()}));
-    } catch (error) {
-        logger.error((error as Error).stack);
-        response.status(500).json(Code.error((error as Error).message));
-    }
-};
-
-export const saveExampleFromRequest = async (request: Request, response: Response) => {
-    logger.info("[Controller] Save example from request");
-
-    try {
-        const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
-        if (!request.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
-        }
-
-        await request.reader().readExampleFromRequest();
-
-        await request.save();
-
-        response.status(201).json(Code.success("Add example successfully!", {request: request.release()}));
-    } catch (error) {
-        logger.error((error as Error).stack);
-        response.status(500).json(Code.error((error as Error).message));
-    }
-};
-

@@ -9,7 +9,7 @@ export default class DBRequest extends DBModel<DRequest>{
 
 	release(): object{
 		return this.export(["_id", "user_id", "workspace_id", "collection_id", "folder_id", "name",
-			"content", "method", "url", "params", "headers", "authorization", "body", "scripts", "examples",
+			"content", "method", "url", "params", "headers", "authorization", "body", "scripts",
 			"tag", "data", "token", "created_at", "updated_at"]);
 	}
 

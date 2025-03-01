@@ -5,7 +5,15 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import morgan from "morgan";
-import {CollectionRoute, EnvironmentRoute, FolderRoute, RequestRoute, UserRoute, WorkspaceRoute,} from "@routes";
+import {
+    CollectionRoute,
+    EnvironmentRoute,
+    ExampleRoute,
+    FolderRoute,
+    RequestRoute,
+    UserRoute,
+    WorkspaceRoute,
+} from "@routes";
 import {HTMLInput} from "@ap/core";
 import logger from "@utils/logger";
 
@@ -49,6 +57,7 @@ app.use("/collections", CollectionRoute);
 app.use("/folders", FolderRoute);
 app.use("/requests", RequestRoute);
 app.use("/environments", EnvironmentRoute);
+app.use("/examples", ExampleRoute);
 
 
 (async function () {

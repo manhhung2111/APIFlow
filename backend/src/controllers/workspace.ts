@@ -7,6 +7,7 @@ import {DBCollectionLoader} from "@dev/collection";
 import {DBFolderLoader} from "@dev/folder";
 import {DBRequestLoader} from "@dev/request";
 import {DBEnvironmentLoader} from "@dev/environment";
+import {DBExampleLoader} from "@dev/example";
 
 export const getAllWorkspaces = async (request: Request, response: Response) => {
 	logger.info("[Controller] Get all workspaces");
@@ -44,12 +45,16 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
 		const environments = await DBEnvironmentLoader.byWorkspace(workspace.object!);
 		const environments_compact = environments.map(environment => environment.release());
 
+		const examples = await DBExampleLoader.byWorkspace(workspace.object!);
+		const examples_compact = examples.map(example => example.releaseCompact());
+
 		response.status(200).json(Code.success(`Get workspace-${workspace_id} successfully.`, {
 			workspace: workspace.release(),
 			collections: collections_compact,
 			folders: folders_compact,
 			requests: requests_compact,
 			environments: environments_compact,
+			examples: examples_compact,
 		}));
 	} catch (error){
 		logger.error((error as Error).stack);

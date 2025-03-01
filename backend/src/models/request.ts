@@ -32,7 +32,6 @@ const schema = new Schema<DRequest>({
 		post_response: {type: String, default: ""},
 	},
 
-	examples: {type: [Object], default: []},
 	tag: {type: Number, enum: [0, 1, 2], default: 0},
 
 	data: {type: Schema.Types.Mixed, default: {}},

@@ -72,7 +72,6 @@ export interface DRequest {
         post_response: string;
     };
 
-    examples: Array<object>
     tag?: number;
 
     data: object | {};
@@ -215,4 +214,24 @@ export interface DActivityLog {
 
     created_at?: number;
     updated_at?: number;
+}
+
+export interface DExample {
+    user_id: string;
+
+    name: string,
+
+    request: object;
+    response: object;
+
+    request_id: string;
+    folder_id: string | null;
+    collection_id: string;
+    workspace_id: string;
+
+    data: object | {};
+
+    token: string;
+    created_at: number;
+    updated_at: number;
 }
