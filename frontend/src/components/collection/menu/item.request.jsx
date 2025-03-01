@@ -8,9 +8,10 @@ import RequestService from "@services/request.jsx";
 import {toast} from "react-toastify";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import _ from "lodash";
+import ExampleService from "@services/example.js";
 
-export default function RequestMenuItem({request}){
-	const {requests, setRequests} = useContext(WorkspaceContext);
+export default function RequestMenuItem({request, examples: requestExamples}){
+	const {setExamples} = useContext(WorkspaceContext);
 	const [collapsed, setCollapsed] = useState(true);
 	// Toggle function
 	const handleToggleMenu = () => {
@@ -32,17 +33,10 @@ export default function RequestMenuItem({request}){
 	}
 
 	const handleAddExample = async () => {
-		const result = await RequestService.addExample(request);
+		const result = await ExampleService.createFromRequest(request);
 
 		if (result.code === 0) {
-			const clone = _.cloneDeep(requests);
-			for (let i = 0; i < clone.length; i += 1) {
-				if (clone[i]._id == request._id) {
-					clone[i] = result.data.request;
-				}
-			}
-
-			setRequests(prev => clone);
+			setExamples(prev => [...prev, result.data.example]);
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
@@ -60,9 +54,9 @@ export default function RequestMenuItem({request}){
 	return (<div className={`menu-item request-menu-item ${collapsed ? "-collapsed" : ""}`}>
 		<div className="main-item">
 			<span className="dd-cion dropdown-icon" onClick={handleToggleMenu}>
-				{request?.examples.length > 0 && <DropdownIcon/>}
+				{requestExamples?.length > 0 && <DropdownIcon/>}
 			</span>
-			{request?.examples.length === 0 && <span style={{height: 14, width: 14}}>&nbsp;</span>}
+			{requestExamples?.length === 0 && <span style={{height: 14, width: 14}}>&nbsp;</span>}
 
 			<NavLink className="item" title={request.name} to={`request/${request._id}`} onClick={handleNavigate}>
 				<div className="icon">{getRequestIcon()}</div>
@@ -76,7 +70,7 @@ export default function RequestMenuItem({request}){
 
 		<div className="sub-items">
 			<div className="group-items">
-				{request.examples.map(example => {
+				{requestExamples?.map(example => {
 					return <ExampleMenuItem key={`example-${example._id}`} example={example}/>
 				})}
 			</div>

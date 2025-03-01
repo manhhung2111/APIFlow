@@ -21,6 +21,7 @@ export default class Reader extends DBReader<DExample> {
             .readParams()
             .readHeaders()
 
+        this._obj.token = UUID.randomTokenSize32();
         this._obj.user_id = Client.viewer._id.toString();
         this._obj.workspace_id = HTMLInput.inputInline("workspace_id");
         this._obj.collection_id = HTMLInput.inputInline("collection_id");
@@ -43,6 +44,7 @@ export default class Reader extends DBReader<DExample> {
 
 
     public async readRequest(request: DBRequest) {
+        this._obj.token = UUID.randomTokenSize32();
         this._obj.user_id = Client.viewer._id.toString();
         this._obj.workspace_id = request.object!.workspace_id.toString();
         this._obj.collection_id = request.object!.collection_id.toString();

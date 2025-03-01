@@ -17,6 +17,7 @@ import PublicRoute from "@layout/routes/public.jsx";
 import CollectionPage from "@pages/collection/collection.jsx";
 import FolderPage from "@pages/folder/folder.jsx";
 import EnvironmentPage from "@pages/environment/environment.jsx";
+import ExamplePage from "@pages/example/example.jsx";
 
 function App(){
 	return (
@@ -27,6 +28,7 @@ function App(){
 					<Route path="workspace/:workspace_id/" element={<WorkspacePage/>}>
 						<Route index element={<WorkspaceDisplay/>}/>
 						<Route path="request/:request_id/" element={<RequestPage/>}/>
+						<Route path="example/:example_id" element={<ExamplePage/>}/>
 						<Route path="collection/:collection_id" element={<CollectionPage/>}/>
 						<Route path="folder/:folder_id" element={<FolderPage/>}/>
 						<Route path="environment/:environment_id" element={<EnvironmentPage/>}/>

@@ -6,10 +6,11 @@ import RequestService from "@services/request.jsx";
 import {toast} from "react-toastify";
 import _ from "lodash";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
+import ExampleService from "@services/example.js";
 
 export default function RequestResponseSide() {
 	let {response, request, method, url, params, headers, body} = useContext(RequestContext);
-	const {requests, setRequests} = useContext(WorkspaceContext);
+	const {setExamples} = useContext(WorkspaceContext);
 
 	const statusHTML = () => {
 		if (!response) return "";
@@ -64,17 +65,10 @@ export default function RequestResponseSide() {
 
 	const handleSaveResponse = async () => {
 		const saveResponse = {body: response.body, headers: response.headers};
-		const result = await RequestService.saveExample(request, method, url, params, headers, body, saveResponse);
+		const result = await ExampleService.createFromResponse(request, method, url, params, headers, body, saveResponse);
 
 		if (result.code === 0) {
-			const clone = _.cloneDeep(requests);
-			for (let i = 0; i < clone.length; i += 1) {
-				if (clone[i]._id == request._id) {
-					clone[i] = result.data.request;
-				}
-			}
-
-			setRequests(prev => clone);
+			setExamples(prev => [...prev, result.data.example]);
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);

@@ -8,7 +8,7 @@ import {toast} from "react-toastify";
 import {useNavigate} from "react-router";
 
 export default function CollectionMenu(){
-	const {workspace, collections, folders, requests, setCollections} = useContext(WorkspaceContext);
+	const {workspace, collections, folders, requests, examples, setCollections} = useContext(WorkspaceContext);
 	const navigate = useNavigate();
 
 	const handleAddCollection = async () => {
@@ -38,9 +38,10 @@ export default function CollectionMenu(){
 				{collections.map(collection => {
 					const associatedFolders = folders?.filter(folder => folder.collection_id === collection._id) || [];
 					const associatedRequests = requests?.filter(request => request.collection_id === collection._id) || [];
+					const associatedExamples = examples?.filter(example => example.collection_id === collection._id) || [];
 
 					return <CollectionMenuItem key={`collection-${collection._id}`} collection={collection}
-											   folders={associatedFolders} requests={associatedRequests}/>;
+											   folders={associatedFolders} requests={associatedRequests} examples={examples}/>;
 				})}
 			</div>}
 		</div>

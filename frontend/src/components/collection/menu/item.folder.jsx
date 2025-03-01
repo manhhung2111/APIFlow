@@ -1,7 +1,6 @@
 import {NavLink, useLocation, useMatch, useNavigate} from "react-router";
 import ActionManager from "@utils/action.manager.jsx";
 import RequestMenuItem from "@components/collection/menu/item.request.jsx";
-import Folder from "@components/folder/folder.jsx";
 import {FolderOutlined} from "@ant-design/icons";
 import {useContext, useEffect, useState} from "react";
 import DropdownIcon from "@assets/icons/drop.down.jsx";
@@ -9,7 +8,7 @@ import FolderService from "@services/folder.js";
 import {toast} from "react-toastify";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 
-export default function FolderMenuItem({folder, requests}){
+export default function FolderMenuItem({folder, requests, examples}){
 	const {setRequests, setFolders} = useContext(WorkspaceContext);
 
 	const location = useLocation();
@@ -35,7 +34,7 @@ export default function FolderMenuItem({folder, requests}){
 	}
 
 	useEffect(() => {
-		if (isActive) {
+		if(isActive){
 			setCollapsed(false);
 		}
 	}, [isActive]);
@@ -99,7 +98,9 @@ export default function FolderMenuItem({folder, requests}){
 					</p>}
 
 					{requests.length > 0 && requests.map(request => {
-						return <RequestMenuItem key={`request-${request._id}`} request={request}/>
+						const associatedExamples = examples.filter(example => example.request_id === request._id);
+
+						return <RequestMenuItem key={`request-${request._id}`} request={request} examples={associatedExamples}/>
 					})}
 				</div>
 			</div>

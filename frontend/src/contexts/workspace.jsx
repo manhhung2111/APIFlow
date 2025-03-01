@@ -12,10 +12,11 @@ export default function WorkspaceContextProvider(props){
 	const [activeEnvironment, setActiveEnvironment] = useState(-1);
 	const [activeCollection, setActiveCollection] = useState(null);
 
-	const [collections, setCollections] = useState(null);
-	const [folders, setFolders] = useState(null);
-	const [requests, setRequests] = useState(null);
+	const [collections, setCollections] = useState([]);
+	const [folders, setFolders] = useState([]);
+	const [requests, setRequests] = useState([]);
 	const [environments, setEnvironments] = useState([]);
+	const [examples, setExamples] = useState([]);
 
 	const [variables, setVariables] = useState([]);
 	const [activeMenuKey, setActiveMenuKey] = useState(1);
@@ -31,6 +32,7 @@ export default function WorkspaceContextProvider(props){
 				setFolders(response.data.folders);
 				setRequests(response.data.requests);
 				setEnvironments(response.data.environments);
+				setExamples(response.data.examples);
 			} else {
 				alert(response.message);
 			}
@@ -48,12 +50,12 @@ export default function WorkspaceContextProvider(props){
 		setVariables(_variables);
 	}, [activeEnvironment, activeCollection]);
 
-	function processVariables(variables_list, scope, seen_variables) {
+	function processVariables(variables_list, scope, seen_variables){
 		let result = [];
 
-		for (let i = variables_list.length - 1; i >= 0; i--) {
+		for (let i = variables_list.length - 1 ; i >= 0 ; i--) {
 			const variable = variables_list[i];
-			if (!variable.selected) continue; // Skip unselected variables
+			if(!variable.selected) continue; // Skip unselected variables
 
 			let existing = seen_variables.get(variable.variable);
 
@@ -67,7 +69,7 @@ export default function WorkspaceContextProvider(props){
 			};
 
 			// Check if the variable is overridden by an earlier scope
-			if (existing !== undefined) {
+			if(existing !== undefined){
 				temp_var.is_overridden = existing.scope;
 			} else {
 				// Add the variable to the seen list if not overridden
@@ -87,16 +89,16 @@ export default function WorkspaceContextProvider(props){
 		return result;
 	}
 
-	function getVariablesList() {
+	function getVariablesList(){
 		const globalEnv = environments.find(e => e.scope === 0) || {};
 
 		let activeEnv = {};
-		if (activeEnvironment != -1) {
+		if(activeEnvironment != -1){
 			activeEnv = environments.find(e => e.scope === 1 && e._id === activeEnvironment) || {};
 		}
 
 		let collectionVariables = [];
-		if (activeCollection) {
+		if(activeCollection){
 			collectionVariables = activeCollection.variables;
 		}
 
@@ -128,7 +130,8 @@ export default function WorkspaceContextProvider(props){
 			setActiveMenuKey,
 			activeEnvironment, setActiveEnvironment,
 			activeCollection, setActiveCollection,
-			variables, setVariables
+			variables, setVariables,
+			examples, setExamples
 		}}>
 			{children}
 		</WorkspaceContext.Provider>
