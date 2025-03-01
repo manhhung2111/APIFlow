@@ -35,7 +35,8 @@ export default class Reader extends DBReader<DRequest>{
 		this._obj.headers = request_reader.getHeaders();
 		this._obj.scripts = request_reader.getScripts();
 
-		await this.readBody();
+		this._obj.body.type = HTMLInput.inputInt("body_type");
+		this._obj.body.data = await this.readBody();
 	}
 
 
@@ -88,10 +89,53 @@ export default class Reader extends DBReader<DRequest>{
 
 	}
 
+	public async readExampleFromResponse() {
+		const request_reader = new RequestServiceReader();
+		request_reader.readMethod()
+			.readURL()
+			.readParams()
+			.readHeaders()
+
+		let example = {
+			_id: UUID.randomTokenSize24(),
+			name: HTMLInput.inputInline("name"),
+			method: request_reader.getMethod(),
+			url: request_reader.getURL(),
+			params: request_reader.getParams(),
+			headers: request_reader.getHeaders(),
+			body: {
+				type: HTMLInput.inputInt("body_type"),
+				data: await this.readBody()
+			},
+			response: this.readResponse()
+		};
+
+		this._obj.examples.push(example);
+	}
+
+	public async readExampleFromRequest() {
+		let example = {
+			_id: UUID.randomTokenSize24(),
+			name: this._obj.name,
+			method: this._obj.method,
+			url: this._obj.url,
+			params: this._obj.params,
+			headers: this._obj.headers,
+			body: this._obj.body,
+			response: {
+				body: "",
+				headers: {}
+			}
+		};
+
+		this._obj.examples.push(example);
+	}
+
+	public async readExample() {
+
+	}
 
 	private async readBody() {
-		this._obj.body.type = HTMLInput.inputInt("body_type");
-
 		let data = Buffer.from(HTMLInput.inputRaw("body_data"), 'base64').toString('utf8');
 		let body_data = JSON.parse(data);
 
@@ -133,10 +177,20 @@ export default class Reader extends DBReader<DRequest>{
 		// Read form raw
 		let form_raw = body_data.form_raw;
 
-		this._obj.body.data = {
+		return {
 			form_data: form_data,
 			form_encoded: form_encoded,
 			form_raw: form_raw
 		};
+	}
+
+	private readResponse() {
+		let data = Buffer.from(HTMLInput.inputRaw("response"), 'base64').toString('utf8');
+		let response_data = JSON.parse(data);
+
+		return {
+			body: response_data.body,
+			headers: response_data.headers,
+		}
 	}
 }

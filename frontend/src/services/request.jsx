@@ -113,4 +113,46 @@ export default class RequestService {
 		}
 	}
 
+
+	static async saveExample(request, method, url, params, headers, body, response) {
+		try {
+			const formData = new FormData();
+
+			formData.append("method", method);
+			formData.append("url", url);
+			formData.append("name", request.name);
+
+			formData.append("params", btoa(JSON.stringify(params)));
+			formData.append("headers", btoa(JSON.stringify(headers)));
+
+			formData.append("body_type", body.type);
+			formData.append("body_data", btoa(JSON.stringify(body.data)));
+
+			formData.append("workspace_id", request.workspace_id);
+
+			// Add files if exists
+			body.data.form_data.forEach((row, index) => {
+				if (row.type === "file") {
+					if (row.value && Object.keys(row.value)) {
+						formData.append(`form_data_value_${index}`, row.value);
+					}
+				}
+			});
+
+			formData.append("response", btoa(JSON.stringify(response)));
+
+			return await axios.post(`/requests/${request._id}/examples`, formData);
+		} catch (error) {
+			throw new Error(error.message || 'Save request failed');
+		}
+	}
+
+	static async addExample(request) {
+		try {
+			return await axios.post(`/requests/${request._id}/add.examples`, {request_id: request._id, workspace_id: request.workspace_id});
+		} catch (error) {
+			throw new Error(error.message || 'Save request failed');
+		}
+	}
+
 }

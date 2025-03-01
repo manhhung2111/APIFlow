@@ -3,10 +3,14 @@ import {NavLink, useNavigate} from "react-router";
 import ExampleMenuItem from "@components/collection/menu/item.example.jsx";
 import Request from "@components/request/request.jsx";
 import DropdownIcon from "@assets/icons/drop.down.jsx";
-import {useState} from "react";
+import {useContext, useState} from "react";
+import RequestService from "@services/request.jsx";
+import {toast} from "react-toastify";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
+import _ from "lodash";
 
 export default function RequestMenuItem({request}){
-
+	const {requests, setRequests} = useContext(WorkspaceContext);
 	const [collapsed, setCollapsed] = useState(true);
 	// Toggle function
 	const handleToggleMenu = () => {
@@ -27,8 +31,26 @@ export default function RequestMenuItem({request}){
 		</span>
 	}
 
+	const handleAddExample = async () => {
+		const result = await RequestService.addExample(request);
+
+		if (result.code === 0) {
+			const clone = _.cloneDeep(requests);
+			for (let i = 0; i < clone.length; i += 1) {
+				if (clone[i]._id == request._id) {
+					clone[i] = result.data.request;
+				}
+			}
+
+			setRequests(prev => clone);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
-		{key: `add_example_${request?._id}`, label: "Add example"},
+		{key: `add_example_${request?._id}`, label: "Add example", onClick: handleAddExample},
 		{key: `documentation_${request?._id}`, label: "View documentation"},
 		{key: `duplicate_${request?._id}`, label: "Duplicate",},
 		{key: `delete_${request?._id}`, label: "Delete", danger: 1},
@@ -42,7 +64,7 @@ export default function RequestMenuItem({request}){
 			</span>
 			{request?.examples.length === 0 && <span style={{height: 14, width: 14}}>&nbsp;</span>}
 
-			<NavLink className="item" title={request.name} to={`request/${request._id}`}>
+			<NavLink className="item" title={request.name} to={`request/${request._id}`} onClick={handleNavigate}>
 				<div className="icon">{getRequestIcon()}</div>
 				<div className="label">{request.name}</div>
 			</NavLink>

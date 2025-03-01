@@ -13,6 +13,7 @@ import {
 	updateRequest,
 	updateRequestContent,
 	updateRequestName,
+	saveExampleFromResponse, saveExampleFromRequest
 } from "@controllers/request";
 
 const router = express.Router();
@@ -32,6 +33,8 @@ router.put("/:request_id/move", workspaceEditable, moveRequest);
 // Create routes
 router.post("/", workspaceEditable, createNewRequest);
 router.post("/:request_id/duplicate", workspaceEditable, duplicateRequest);
+router.post("/:request_id/examples", workspaceEditable, saveExampleFromResponse);
+router.post("/:request_id/add.examples", workspaceEditable, saveExampleFromRequest);
 
 // Delete routes
 router.delete("/:request_id", workspaceEditable, deleteRequest);

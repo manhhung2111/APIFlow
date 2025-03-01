@@ -1,6 +1,7 @@
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import {Editor} from "@monaco-editor/react";
+import AppPDFViewer from "@components/app/editor/pdf.jsx";
 
 export default function RequestResponseBody(){
 	let {response} = useContext(RequestContext);
@@ -22,6 +23,7 @@ export default function RequestResponseBody(){
 					"readOnly": true
 				}}
 			/>
+			{/*{response.headers["content-type"] === "application/pdf" && <AppPDFViewer data={response.body} />}*/}
 		</div>
 	)
 }

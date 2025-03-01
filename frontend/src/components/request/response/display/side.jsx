@@ -2,9 +2,14 @@ import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import {Button, Tag} from "antd";
 import BookmarkAddIcon from "@assets/icons/bookmark.add.jsx";
+import RequestService from "@services/request.jsx";
+import {toast} from "react-toastify";
+import _ from "lodash";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function RequestResponseSide() {
-	let {response} = useContext(RequestContext);
+	let {response, request, method, url, params, headers, body} = useContext(RequestContext);
+	const {requests, setRequests} = useContext(WorkspaceContext);
 
 	const statusHTML = () => {
 		if (!response) return "";
@@ -57,13 +62,31 @@ export default function RequestResponseSide() {
 		return <span className="size">{Math.floor(totalSize / Math.pow(k, i)) + ' ' + units[i]}</span>;
 	}
 
+	const handleSaveResponse = async () => {
+		const saveResponse = {body: response.body, headers: response.headers};
+		const result = await RequestService.saveExample(request, method, url, params, headers, body, saveResponse);
+
+		if (result.code === 0) {
+			const clone = _.cloneDeep(requests);
+			for (let i = 0; i < clone.length; i += 1) {
+				if (clone[i]._id == request._id) {
+					clone[i] = result.data.request;
+				}
+			}
+
+			setRequests(prev => clone);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
 
 	return (
 		<div className="request-response-side">
 			{statusHTML()}
 			{timeHTML()}
 			{sizeHTML()}
-			<Button icon={<BookmarkAddIcon />} type="text" size={"small"} className="save-btn">Save Response</Button>
+			<Button icon={<BookmarkAddIcon />} type="text" size={"small"} className="save-btn" onClick={handleSaveResponse}>Save Response</Button>
 		</div>
 	)
 }
