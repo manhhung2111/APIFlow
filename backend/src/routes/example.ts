@@ -11,6 +11,7 @@ import {
     getExampleById,
     moveExample,
     updateExampleName,
+    updateExample
 } from "@controllers/example";
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.get("/:example_id", workspaceViewable, getExampleById);
 
 // Edit routes
 router.put("/:example_id/name", workspaceEditable, updateExampleName);
+router.put("/:example_id", workspaceEditable, updateExample);
 router.put("/:example_id/move", workspaceEditable, moveExample);
 
 // Create routes

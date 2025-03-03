@@ -1,13 +1,12 @@
-import {Button, Input, Select, Skeleton, Space} from "antd";
-import {SendOutlined} from "@ant-design/icons";
+import {Button, Select, Skeleton, Space} from "antd";
 import {useContext, useState} from "react";
-import {RequestContext} from "@contexts/request.jsx";
 import Request from "@components/request/request.jsx";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
-import log from "eslint-plugin-react/lib/util/log.js";
+import {ExampleContext} from "@contexts/example.jsx";
+import NorthEastIcon from "@assets/icons/north.east.jsx";
 
-export default function RequestEditorUrl(){
-	const {request, url, setUrl, params, setParams, handleSend, method, setMethod} = useContext(RequestContext);
+export default function ExampleEditorUrl(){
+	const {example, url, setUrl, params, setParams, method, setMethod} = useContext(ExampleContext);
 
 	const [options, setOptions] = useState(Object.values(Request.METHODS));
 
@@ -82,10 +81,11 @@ export default function RequestEditorUrl(){
 		setOptions(temp);
 	};
 
+
 	return (
 		<div className="request-editor-url">
 			<Space.Compact className="editor-url">
-				{request && <>
+				{example && <>
 					<Select
 						showSearch
 						placeholder="Search to Select"
@@ -96,15 +96,16 @@ export default function RequestEditorUrl(){
 						onSearch={handleSearch}
 					/>
 					<div className="url">
-						<AppInputVariable placeholder="Enter URL or paste text" setText={(value) => handleChangeUrl(value)} text={url}/>
+						<AppInputVariable placeholder="Enter URL or paste text"
+										  setText={(value) => handleChangeUrl(value)} text={url}/>
 					</div>
 				</>}
-				{!request && <Skeleton.Input style={{width: "60vw"}} active={true} />}
+				{!example && <Skeleton.Input style={{width: "60vw"}} active={true}/>}
 			</Space.Compact>
 			<div className="editor-action">
-				{!request && <Skeleton.Button />}
-				{request && <Button type="primary" icon={<SendOutlined />} onClick={handleSend}>
-					Send
+				{!example && <Skeleton.Button/>}
+				{example && <Button type="primary" icon={<NorthEastIcon/>}>
+					Try
 				</Button>}
 			</div>
 

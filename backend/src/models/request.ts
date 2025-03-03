@@ -42,6 +42,7 @@ const schema = new Schema<DRequest>({
 		updatedAt: "updated_at",
 		currentTime: () => Date.now(),
 	},
+	minimize: false,
 });
 
 

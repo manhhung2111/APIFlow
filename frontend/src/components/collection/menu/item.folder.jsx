@@ -16,7 +16,7 @@ export default function FolderMenuItem({folder, requests, examples}){
 	const isFolderActive = useMatch(`folder/${folder._id}`);
 
 	// Check if any request link is active
-	const isChildActive = requests.some(request => location.pathname.includes(request._id));
+	const isChildActive = requests.some(request => location.pathname.includes(request._id)) || examples.some(example => location.pathname.includes(example._id));
 
 	// If either the collection or any child is active
 	const isActive = isFolderActive || isChildActive;

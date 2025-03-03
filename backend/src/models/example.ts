@@ -22,6 +22,7 @@ const schema = new Schema<DExample>({
         updatedAt: "updated_at",
         currentTime: () => Date.now(),
     },
+    minimize: false,
 });
 
 

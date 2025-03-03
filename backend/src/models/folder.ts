@@ -27,6 +27,7 @@ const schema = new Schema<DFolder>({
 		updatedAt: "updated_at",
 		currentTime: () => Date.now(),
 	},
+	minimize: false,
 });
 
 

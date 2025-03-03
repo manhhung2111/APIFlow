@@ -36,6 +36,7 @@ const schema = new Schema<DCollection>({
 		updatedAt: "updated_at",
 		currentTime: () => Date.now(),
 	},
+	minimize: false,
 });
 
 

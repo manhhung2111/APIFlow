@@ -19,6 +19,7 @@ const schema = new Schema<DWorkspace>({
 		updatedAt: "updated_at",
 		currentTime: () => Date.now(),
 	},
+	minimize: false,
 });
 
 

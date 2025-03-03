@@ -2,8 +2,10 @@
 
 .request-response {
   flex: 1;
+
   .empty-response {
     margin: 0 auto;
+
     .empty-response-img {
       width: 200px;
       display: block;
@@ -26,6 +28,7 @@
     align-items: center;
     justify-content: space-between;
     font-size: $text-size-m;
+
     & > h3 {
       font-size: $text-size-m;
       color: $content-color-primary;
@@ -37,8 +40,22 @@
       gap: 8px;
       color: $content-color-secondary;
 
+      .select-title {
+        font-size: $text-size-s;
+        color: $content-color-secondary;
+        font-weight: $text-weight-bold;
+      }
+      .ant-select-selection-wrap {
+        height: fit-content;
+        line-height: 1;
+      }
+      .ant-select-selection-item {
+        font-size: $text-size-m;
+      }
+
       .save-btn {
         color: $content-color-secondary;
+
         &:hover {
           color: $content-color-primary
         }
@@ -53,6 +70,7 @@
   .ant-tabs-top > .ant-tabs-nav {
     margin-bottom: 8px;
     padding: 0 16px;
+
     &::before {
       border: none;
     }
@@ -62,9 +80,10 @@
     }
   }
 
-  & >.ant-tabs {
+  & > .ant-tabs {
     display: flex;
     flex-direction: column;
+
     & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
       .ant-tabs-tab {
         color: $content-color-secondary;
@@ -92,6 +111,7 @@
   overflow: hidden;
   overflow-y: auto;
   scrollbar-gutter: stable;
+
   &::-webkit-scrollbar-thumb {
     background-color: darkgrey;
   }
@@ -102,13 +122,18 @@
     border-radius: $border-radius-l;
   }
 
+  .app-code-editor {
+    border: 1px solid $border-color-default;
+  }
+
   .ant-table {
     font-size: $text-size-m;
+
     .ant-table-content {
       thead {
         th {
           color: $content-color-secondary;
-          padding:8px;
+          padding: 8px;
         }
       }
 
@@ -127,6 +152,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
     img {
       width: 150px;
     }

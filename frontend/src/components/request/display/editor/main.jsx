@@ -18,13 +18,9 @@ export default function RequestEditorUrlMain() {
 		{label: "Scripts", key: 5, children: <RequestEditorScripts/>},
 	]
 
-	const rightSide = {
-		right: <Button color="#1F509A" variant="link"> Cookies </Button>
-	}
-
 	return (
 		<div className="request-editor-url-main">
-			{request && <Tabs tabBarExtraContent={rightSide} items={items} size={"small"} tabBarGutter={16}/>}
+			{request && <Tabs items={items} size={"small"} tabBarGutter={16}/>}
 			{!request && <div style={{padding: 16}}><Skeleton active={true} /></div>}
 		</div>
 	);

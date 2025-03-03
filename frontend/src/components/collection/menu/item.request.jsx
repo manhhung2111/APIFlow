@@ -1,9 +1,9 @@
 import ActionManager from "@utils/action.manager.jsx";
-import {NavLink, useNavigate} from "react-router";
+import {NavLink, useLocation, useMatch, useNavigate} from "react-router";
 import ExampleMenuItem from "@components/collection/menu/item.example.jsx";
 import Request from "@components/request/request.jsx";
 import DropdownIcon from "@assets/icons/drop.down.jsx";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import RequestService from "@services/request.jsx";
 import {toast} from "react-toastify";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
@@ -19,6 +19,16 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 	};
 	const navigate = useNavigate();
 
+	const location = useLocation();
+
+	// Check if any request link is active
+	const isChildActive = requestExamples.some(example => location.pathname.includes(example._id));
+
+	useEffect(() => {
+		if(isChildActive){
+			setCollapsed(false);
+		}
+	}, [isChildActive]);
 	const handleNavigate = () => {
 		setCollapsed(false);
 	}

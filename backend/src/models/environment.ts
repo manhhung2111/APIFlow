@@ -26,6 +26,7 @@ const schema = new Schema<DEnvironment>({
         updatedAt: "updated_at",
         currentTime: () => Date.now(),
     },
+    minimize: false,
 });
 
 

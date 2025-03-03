@@ -1,7 +1,7 @@
 import axios from "@configs/axios.js";
 
-export default class ExampleService {
-	static async createFromResponse(request, method, url, params, headers, body, response) {
+export default class ExampleService{
+	static async createFromResponse(request, method, url, params, headers, body, response){
 		try {
 			const formData = new FormData();
 
@@ -22,8 +22,8 @@ export default class ExampleService {
 
 			// Add files if exists
 			body.data.form_data.forEach((row, index) => {
-				if (row.type === "file") {
-					if (row.value && Object.keys(row.value)) {
+				if(row.type === "file"){
+					if(row.value && Object.keys(row.value)){
 						formData.append(`form_data_value_${index}`, row.value);
 					}
 				}
@@ -37,11 +37,62 @@ export default class ExampleService {
 		}
 	}
 
-	static async createFromRequest(request) {
+	static async createFromRequest(request){
 		try {
 			return await axios.post(`/examples/request`, {request_id: request._id, workspace_id: request.workspace_id});
 		} catch (error) {
 			throw new Error(error.message || 'Save request failed');
+		}
+	}
+
+	static async getById(example_id, workspace_id){
+		try {
+			return await axios.get(`/examples/${example_id}?workspace_id=${workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Get example by id failed');
+		}
+	}
+
+	static async save(example, method, url, params, headers, body, response){
+		try {
+			const formData = new FormData();
+
+			formData.append("method", method);
+			formData.append("url", url);
+
+			formData.append("params", btoa(JSON.stringify(params)));
+			formData.append("headers", btoa(JSON.stringify(headers)));
+			formData.append("response", btoa(JSON.stringify(response)));
+
+			formData.append("body_type", body.type);
+			formData.append("body_data", btoa(JSON.stringify(body.data)));
+
+			formData.append("workspace_id", example.workspace_id);
+			// Add files if exists
+			body.data.form_data.forEach((row, index) => {
+				if(row.type === "file"){
+					if(row.value && Object.keys(row.value)){
+						formData.append(`form_data_value_${index}`, row.value);
+					}
+				}
+			});
+
+			return await axios.put(`/examples/${example._id}`, formData);
+		} catch (error) {
+			throw new Error(error.message || 'Save example failed');
+		}
+	}
+
+	static async updateName(example, name){
+		try {
+			const data = {
+				"name": name,
+				workspace_id: example.workspace_id,
+			}
+
+			return await axios.put(`/examples/${example._id}/name`, data);
+		} catch (error) {
+			throw new Error(error.message || 'Save example name failed');
 		}
 	}
 }

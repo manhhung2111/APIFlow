@@ -8,6 +8,7 @@ import {HTMLInput} from "@ap/core";
 import BackblazeService from "@services/backblaze";
 import Client from "@dev/client";
 import {DBRequest} from "@dev/request";
+import {response} from "express";
 
 export default class Reader extends DBReader<DExample> {
     constructor(obj: HydratedDocument<DExample> | null | undefined) {
@@ -61,12 +62,30 @@ export default class Reader extends DBReader<DExample> {
 
         this._obj.response = {
             body: "",
-            headers: {}
+            headers: {},
+            status: "",
         }
     }
 
     public async read() {
+        const request_reader = new RequestServiceReader();
+        request_reader.readMethod()
+            .readURL()
+            .readParams()
+            .readHeaders()
 
+        this._obj.request = {
+            method: request_reader.getMethod(),
+            url: request_reader.getURL(),
+            params: request_reader.getParams(),
+            headers: request_reader.getHeaders(),
+            body: {
+                type: HTMLInput.inputInt("body_type"),
+                data: await this.readBody()
+            },
+        };
+
+        this._obj.response = this.readResponseData();
     }
 
     async duplicate(old_example: DBExample) {
@@ -129,6 +148,7 @@ export default class Reader extends DBReader<DExample> {
         return {
             body: response_data.body,
             headers: response_data.headers,
+            status: response_data.status,
         }
     }
 }

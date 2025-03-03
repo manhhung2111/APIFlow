@@ -19,7 +19,7 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 
 	// Check if any folder or request link is active
 	const isChildActive = folders.some(folder => location.pathname.includes(folder._id)) ||
-		requests.some(request => location.pathname.includes(request._id));
+		requests.some(request => location.pathname.includes(request._id)) || examples.some(example => location.pathname.includes(example._id));
 
 	// If either the collection or any child is active
 	const isActive = isCollectionActive || isChildActive;
