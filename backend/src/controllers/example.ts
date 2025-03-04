@@ -44,7 +44,20 @@ export const createNewExampleFromResponse = async (request: Request, response: R
 };
 
 export const deleteExample = async (request: Request, response: Response) => {
+    logger.info("[Controller] Delete an example");
+    try {
+        const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
+        if (!example.good()){
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
 
+        await example.delete();
+
+        response.status(200).json(Code.success(`Delete example "${example.object!.name}" successfully`));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
 };
 
 export const duplicateExample = async (request: Request, response: Response) => {
@@ -86,7 +99,19 @@ export const getExampleById = async (request: Request, response: Response) => {
 };
 
 export const updateExampleName = async (request: Request, response: Response) => {
+    logger.info("[Controller] Update example from response");
+    try {
+        const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
 
+        await example.reader().readName();
+
+        await example.save();
+
+        response.status(201).json(Code.success("Save example name successfully!", {example: example.release()}));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
 };
 
 export const moveExample = async (request: Request, response: Response) => {

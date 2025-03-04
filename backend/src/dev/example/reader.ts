@@ -4,7 +4,7 @@ import {DExample} from "@db-schemas";
 import {DBExample} from "@dev/example";
 import {RequestServiceReader} from "@services/request";
 import UUID from "@utils/uuid";
-import {HTMLInput} from "@ap/core";
+import {Code, HTMLInput, Validation} from "@ap/core";
 import BackblazeService from "@services/backblaze";
 import Client from "@dev/client";
 import {DBRequest} from "@dev/request";
@@ -90,6 +90,19 @@ export default class Reader extends DBReader<DExample> {
 
     async duplicate(old_example: DBExample) {
 
+    }
+
+    public async readName() {
+        const name = HTMLInput.inputInline("name");
+        if (Validation.isEmpty(name)){
+            throw new Code("Example name must not be empty");
+        }
+
+        if (name.length > 255){
+            throw new Code("Example name must not exceed 255 characters");
+        }
+
+        this._obj.name = name;
     }
 
     private async readBody() {

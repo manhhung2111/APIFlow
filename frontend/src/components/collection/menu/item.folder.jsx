@@ -1,4 +1,4 @@
-import {NavLink, useLocation, useMatch, useNavigate} from "react-router";
+import {NavLink, useLocation, useMatch, useNavigate, useParams} from "react-router";
 import ActionManager from "@utils/action.manager.jsx";
 import RequestMenuItem from "@components/collection/menu/item.request.jsx";
 import {FolderOutlined} from "@ant-design/icons";
@@ -12,6 +12,7 @@ export default function FolderMenuItem({folder, requests, examples}){
 	const {setRequests, setFolders} = useContext(WorkspaceContext);
 
 	const location = useLocation();
+	const {folder_id} = useParams();
 
 	const isFolderActive = useMatch(`folder/${folder._id}`);
 
@@ -44,6 +45,7 @@ export default function FolderMenuItem({folder, requests, examples}){
 
 		if(result.code === 0){
 			setRequests(prev => [...prev, result.data.request]);
+			navigate(`request/${result.data.request._id}`);
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
@@ -57,6 +59,9 @@ export default function FolderMenuItem({folder, requests, examples}){
 			setFolders(prev => {
 				return prev.filter(e => e._id !== folder._id);
 			});
+			if (folder_id == folder._id) {
+				navigate(`collection/${folder.collection_id}`);
+			}
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);

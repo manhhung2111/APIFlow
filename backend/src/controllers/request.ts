@@ -42,7 +42,7 @@ export const deleteRequest = async (request: Request, response: Response) => {
         await request.on().deleted(session);
 
         await session.commitTransaction();
-        response.status(204).json(Code.success(`Delete request \"${request.getField("name")}\" successfully.`));
+        response.status(200).json(Code.success(`Delete request \"${request.getField("name")}\" successfully.`));
     } catch (error) {
         await session.abortTransaction();
 

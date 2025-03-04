@@ -95,4 +95,12 @@ export default class ExampleService{
 			throw new Error(error.message || 'Save example name failed');
 		}
 	}
+
+	static async delete(example) {
+		try {
+			return await axios.delete(`/examples/${example._id}?workspace_id=${example.workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Delete example failed');
+		}
+	}
 }

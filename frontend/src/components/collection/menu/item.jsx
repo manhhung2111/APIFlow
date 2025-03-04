@@ -48,6 +48,7 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 
 		if (result.code === 0) {
 			setRequests(prev => [...prev, result.data.request]);
+			navigate(`request/${result.data.request._id}`);
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
@@ -59,6 +60,7 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 
 		if (result.code === 0) {
 			setFolders(prev => [...prev, result.data.folder]);
+			navigate(`folder/${result.data.folder._id}`);
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);

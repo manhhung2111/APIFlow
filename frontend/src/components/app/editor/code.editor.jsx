@@ -6,7 +6,7 @@ export default function CodeEditor(props){
 
 	const onMount = (editor) => {
 		editorRef.current = editor;
-		editor.focus();
+		// editor.focus();
 	}
 
 	const {value, setValue, options} = props;

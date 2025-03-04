@@ -1,5 +1,5 @@
 import ActionManager from "@utils/action.manager.jsx";
-import {NavLink, useLocation, useMatch, useNavigate} from "react-router";
+import {NavLink, useLocation, useMatch, useNavigate, useParams} from "react-router";
 import ExampleMenuItem from "@components/collection/menu/item.example.jsx";
 import Request from "@components/request/request.jsx";
 import DropdownIcon from "@assets/icons/drop.down.jsx";
@@ -11,13 +11,14 @@ import _ from "lodash";
 import ExampleService from "@services/example.js";
 
 export default function RequestMenuItem({request, examples: requestExamples}){
-	const {setExamples} = useContext(WorkspaceContext);
+	const {setExamples, requests, setRequests} = useContext(WorkspaceContext);
 	const [collapsed, setCollapsed] = useState(true);
 	// Toggle function
 	const handleToggleMenu = () => {
 		setCollapsed((prev) => !prev);
 	};
 	const navigate = useNavigate();
+	const {request_id} = useParams();
 
 	const location = useLocation();
 
@@ -47,6 +48,28 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 
 		if (result.code === 0) {
 			setExamples(prev => [...prev, result.data.example]);
+			navigate(`example/${result.data.example._id}`);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+
+	const handleDelete = async () => {
+		const result = await RequestService.delete(request);
+
+		if (result.code === 0) {
+			setRequests(prev => prev.filter(e => e._id != request._id));
+
+			if (request_id == request._id) {
+				if (request.folder_id) {
+					navigate(`folder/${request.folder_id}`);
+				} else {
+					navigate(`collection/${request.collection_id}`);
+				}
+			}
+
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
@@ -57,7 +80,7 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 		{key: `add_example_${request?._id}`, label: "Add example", onClick: handleAddExample},
 		{key: `documentation_${request?._id}`, label: "View documentation"},
 		{key: `duplicate_${request?._id}`, label: "Duplicate",},
-		{key: `delete_${request?._id}`, label: "Delete", danger: 1},
+		{key: `delete_${request?._id}`, label: "Delete", danger: 1, onClick: handleDelete},
 	]
 
 

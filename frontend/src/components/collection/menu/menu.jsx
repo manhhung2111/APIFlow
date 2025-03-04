@@ -41,7 +41,7 @@ export default function CollectionMenu(){
 					const associatedExamples = examples?.filter(example => example.collection_id === collection._id) || [];
 
 					return <CollectionMenuItem key={`collection-${collection._id}`} collection={collection}
-											   folders={associatedFolders} requests={associatedRequests} examples={examples}/>;
+											   folders={associatedFolders} requests={associatedRequests} examples={associatedExamples}/>;
 				})}
 			</div>}
 		</div>
