@@ -11,7 +11,7 @@ import FolderService from "@services/folder.js";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function CollectionMenuItem({collection, folders, requests, examples}){
-	const {setRequests, setFolders, setCollections} = useContext(WorkspaceContext);
+	const {setRequests, setFolders, setCollections, setExamples} = useContext(WorkspaceContext);
 
 	const location = useLocation();
 
@@ -81,11 +81,34 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 		}
 	}
 
+
+	const handleDuplicate = async () => {
+		const result = await CollectionService.duplicate(collection);
+
+		if (result.code === 0) {
+			const newCollection = result.data.collection;
+			const newFolders = result.data.folders;
+			const newRequests = result.data.requests;
+			const newExamples = result.data.examples;
+
+			setFolders(prev => [...prev, ...newFolders]);
+			setRequests(prev => [...prev, ...newRequests]);
+			setExamples(prev => [...prev, ...newExamples]);
+			setCollections(prev => [...prev, newCollection]);
+
+			navigate(`collection/${newCollection._id}`);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
 		{key: `edit_${collection._id}`, label: "Edit", onClick: () => {navigate(`collection/${collection._id}`)}},
 		{key: `add_request_${collection._id}`, label: "Add request",	onClick: handleAddRequest},
 		{key: `add_folder_${collection._id}`, label: "Add folder", onClick: handleAddFolder},
-		{key: `duplicate_${collection._id}`, label: "Duplicate",},
+		{key: `documentation_${collection._id}`, label: "View documentation",},
+		{key: `duplicate_${collection._id}`, label: "Duplicate", onClick: handleDuplicate},
 		{key: `export_${collection._id}`, label: "Export",},
 		{key: `delete_${collection._id}`, label: "Delete", onClick: handleDelete, danger: 1},
 	];

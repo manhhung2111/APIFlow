@@ -9,7 +9,7 @@ import {toast} from "react-toastify";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function FolderMenuItem({folder, requests, examples}){
-	const {setRequests, setFolders} = useContext(WorkspaceContext);
+	const {setRequests, setFolders, setExamples} = useContext(WorkspaceContext);
 
 	const location = useLocation();
 	const {folder_id} = useParams();
@@ -59,9 +59,28 @@ export default function FolderMenuItem({folder, requests, examples}){
 			setFolders(prev => {
 				return prev.filter(e => e._id !== folder._id);
 			});
-			if (folder_id == folder._id) {
+			if(folder_id == folder._id){
 				navigate(`collection/${folder.collection_id}`);
 			}
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
+	const handleDuplicate = async() => {
+		const result = await FolderService.duplicate(folder);
+
+		if(result.code === 0){
+			const newFolder = result.data.folder;
+			const newRequests = result.data.requests;
+			const newExamples = result.data.examples;
+
+			setFolders(prev => [...prev, newFolder]);
+			setRequests(prev => [...prev, ...newRequests]);
+			setExamples(prev => [...prev, ...newExamples]);
+
+			navigate(`folder/${newFolder._id}`);
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
@@ -75,7 +94,7 @@ export default function FolderMenuItem({folder, requests, examples}){
 			}
 		},
 		{key: `add_request_${folder?._id}`, label: "Add request", onClick: handleAddRequest},
-		{key: `duplicate_${folder?._id}`, label: "Duplicate",},
+		{key: `duplicate_${folder?._id}`, label: "Duplicate", onClick: handleDuplicate},
 		{key: `delete_${folder?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
 	];
 
@@ -105,7 +124,8 @@ export default function FolderMenuItem({folder, requests, examples}){
 					{requests.length > 0 && requests.map(request => {
 						const associatedExamples = examples.filter(example => example.request_id === request._id);
 
-						return <RequestMenuItem key={`request-${request._id}`} request={request} examples={associatedExamples}/>
+						return <RequestMenuItem key={`request-${request._id}`} request={request}
+												examples={associatedExamples}/>
 					})}
 				</div>
 			</div>

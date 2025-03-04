@@ -1,7 +1,6 @@
 import ActionManager from "@utils/action.manager.jsx";
 import {NavLink, useNavigate, useParams} from "react-router";
 import BookmarkIcon from "@assets/icons/bookmark.jsx";
-import FolderService from "@services/folder.js";
 import {toast} from "react-toastify";
 import ExampleService from "@services/example.js";
 import {useContext} from "react";
@@ -13,7 +12,7 @@ export default function ExampleMenuItem({example}){
 	const {example_id} = useParams();
 	const navigate = useNavigate();
 
-	const handleDelete = async () => {
+	const handleDelete = async() => {
 		const result = await ExampleService.delete(example);
 
 		if(result.code === 0){
@@ -21,7 +20,7 @@ export default function ExampleMenuItem({example}){
 				return prev.filter(e => e._id !== example._id);
 			});
 
-			if (example_id == example._id) {
+			if(example_id == example._id){
 				navigate(`request/${example.request_id}`);
 			}
 
@@ -31,8 +30,22 @@ export default function ExampleMenuItem({example}){
 		}
 	}
 
+	const handleDuplicate = async() => {
+		const result = await ExampleService.duplicate(example);
+
+		if(result.code === 0){
+			const newExample = result.data.example;
+
+			setExamples(prev => [...prev, newExample]);
+			navigate(`example/${newExample._id}`);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
-		{key: `duplicate_${example?._id}`, label: "Duplicate",},
+		{key: `duplicate_${example?._id}`, label: "Duplicate", onClick: handleDuplicate},
 		{key: `delete_${example?._id}`, label: "Delete", danger: 1, onClick: handleDelete},
 	]
 

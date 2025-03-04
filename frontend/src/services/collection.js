@@ -62,4 +62,12 @@ export default class CollectionService{
 			throw new Error(error.message || 'Create new collection failed');
 		}
 	}
+
+	static async duplicate(collection){
+		try {
+			return await axios.post(`/collections/${collection._id}/duplicate?workspace_id=${collection.workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Create new collection failed');
+		}
+	}
 }

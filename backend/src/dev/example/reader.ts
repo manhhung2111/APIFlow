@@ -89,7 +89,12 @@ export default class Reader extends DBReader<DExample> {
     }
 
     async duplicate(old_example: DBExample) {
-
+        this._obj.token = UUID.randomTokenSize32();
+        this._obj.user_id = Client.viewer._id.toString();
+        this._obj.workspace_id = old_example.object!.workspace_id.toString();
+        this._obj.name = old_example.object!.name + " (Copy)";
+        this._obj.request = old_example.object!.request;
+        this._obj.response = old_example.object!.response;
     }
 
     public async readName() {

@@ -103,4 +103,13 @@ export default class ExampleService{
 			throw new Error(error.message || 'Delete example failed');
 		}
 	}
+
+
+	static async duplicate(example) {
+		try {
+			return await axios.post(`/examples/${example._id}/duplicate?workspace_id=${example.workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Create new request failed');
+		}
+	}
 }

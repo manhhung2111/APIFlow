@@ -64,4 +64,13 @@ export default class FolderService{
 			throw new Error(error.message || 'Delete folder failed');
 		}
 	}
+
+
+	static async duplicate(folder) {
+		try {
+			return await axios.post(`/folders/${folder._id}/duplicate?workspace_id=${folder.workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Create new folder failed');
+		}
+	}
 }

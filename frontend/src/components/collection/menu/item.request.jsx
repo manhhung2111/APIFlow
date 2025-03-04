@@ -9,6 +9,7 @@ import {toast} from "react-toastify";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import _ from "lodash";
 import ExampleService from "@services/example.js";
+import FolderService from "@services/folder.js";
 
 export default function RequestMenuItem({request, examples: requestExamples}){
 	const {setExamples, requests, setRequests} = useContext(WorkspaceContext);
@@ -30,6 +31,7 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 			setCollapsed(false);
 		}
 	}, [isChildActive]);
+
 	const handleNavigate = () => {
 		setCollapsed(false);
 	}
@@ -55,7 +57,6 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 		}
 	}
 
-
 	const handleDelete = async () => {
 		const result = await RequestService.delete(request);
 
@@ -76,10 +77,27 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 		}
 	}
 
+	const handleDuplicate = async () => {
+		const result = await RequestService.duplicate(request);
+
+		if(result.code === 0){
+			const newRequest = result.data.request;
+			const newExamples = result.data.examples;
+
+			setRequests(prev => [...prev, newRequest]);
+			setExamples(prev => [...prev, ...newExamples]);
+
+			navigate(`request/${newRequest._id}`);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
 		{key: `add_example_${request?._id}`, label: "Add example", onClick: handleAddExample},
 		{key: `documentation_${request?._id}`, label: "View documentation"},
-		{key: `duplicate_${request?._id}`, label: "Duplicate",},
+		{key: `duplicate_${request?._id}`, label: "Duplicate", onClick: handleDuplicate},
 		{key: `delete_${request?._id}`, label: "Delete", danger: 1, onClick: handleDelete},
 	]
 

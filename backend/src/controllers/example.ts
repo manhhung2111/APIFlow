@@ -47,7 +47,7 @@ export const deleteExample = async (request: Request, response: Response) => {
     logger.info("[Controller] Delete an example");
     try {
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
-        if (!example.good()){
+        if (!example.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
         }
 
@@ -61,7 +61,27 @@ export const deleteExample = async (request: Request, response: Response) => {
 };
 
 export const duplicateExample = async (request: Request, response: Response) => {
+    logger.info("[Controller] Duplicate an example");
+    try {
+        const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
+        if (!example.good()) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
 
+        const new_example = await DBExample.initialize() as DBExample;
+
+        await new_example.reader().duplicate(example);
+        new_example.object!.collection_id = example.object!.collection_id;
+        new_example.object!.folder_id = example.object!.folder_id;
+        new_example.object!.request_id = example.object!.request_id;
+
+        await new_example.save();
+
+        response.status(200).json(Code.success(`Duplicate example "${example.object!.name}" successfully`, {example: new_example.release()}));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
 };
 
 export const getAllExamples = async (request: Request, response: Response) => {

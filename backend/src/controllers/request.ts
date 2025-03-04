@@ -8,6 +8,7 @@ import {RequestService, RequestServiceReader} from "@services/request";
 import axios, {AxiosError} from "axios";
 import {DBFolder} from "@dev/folder";
 import {DBCollection} from "@dev/collection";
+import {DBExample} from "@dev/example";
 
 export const createNewRequest = async (request: Request, response: Response) => {
     logger.info("[Controller] Create new request");
@@ -68,13 +69,19 @@ export const duplicateRequest = async (request: Request, response: Response) => 
         const new_request = await DBRequest.initialize() as DBRequest;
 
         await new_request.reader().duplicate(old_request);
+        new_request.object!.collection_id = old_request.object!.collection_id;
+        new_request.object!.folder_id = old_request.object!.folder_id;
 
         await new_request.save(session);
 
-        await new_request.on().duplicated(old_request, session);
+        const examples = await new_request.on().duplicated(old_request, session);
 
+        const examplesRelease = examples.map((example: DBExample) => example.release());
         await session.commitTransaction();
-        response.status(204).json(Code.success(`Duplicate request \"${old_request.getField("name")}\" successfully.`));
+        response.status(201).json(Code.success(`Duplicate request \"${old_request.getField("name")}\" successfully.`, {
+            request: new_request.release(),
+            examples: examplesRelease
+        }));
     } catch (error) {
         await session.abortTransaction();
 

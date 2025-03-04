@@ -5,7 +5,8 @@ import mongoose from "mongoose";
 import logger from "@utils/logger";
 import {DBWorkspace} from "@dev/workspace";
 import {DBRequest} from "@dev/request";
-import {DBCollection, DBCollectionLoader} from "@dev/collection";
+import {DBCollection} from "@dev/collection";
+import {DBExample} from "@dev/example";
 
 export const createNewFolder = async (request: Request, response: Response) => {
     logger.info("[Controller] Create new folder");
@@ -67,13 +68,21 @@ export const duplicateFolder = async (request: Request, response: Response) => {
         const new_folder = await DBFolder.initialize() as DBFolder;
 
         await new_folder.reader().duplicate(old_folder);
+        new_folder.object!.collection_id = old_folder.object!.collection_id;
 
         await new_folder.save(session);
 
-        await new_folder.on().duplicated(old_folder, session);
+        const [requests, examples] = await new_folder.on().duplicated(old_folder, session);
+
+        const requestsRelease = requests.map((request: DBRequest) => request.release());
+        const examplesRelease = examples.map((example: DBExample) => example.release());
 
         await session.commitTransaction();
-        response.status(201).json(Code.success("Duplicate folder successfully!"));
+        response.status(201).json(Code.success("Duplicate folder successfully!", {
+            folder: new_folder.release(),
+            requests: requestsRelease,
+            examples: examplesRelease
+        }));
     } catch (error) {
         await session.abortTransaction();
 
@@ -114,7 +123,10 @@ export const getFolderById = async (request: Request, response: Response) => {
 
         let collection = await DBCollection.initialize(folder.object!.collection_id) as DBCollection;
 
-        response.status(200).json(Code.success("Get folder successfully.", {folder: folder.release(), collection: collection.release()}));
+        response.status(200).json(Code.success("Get folder successfully.", {
+            folder: folder.release(),
+            collection: collection.release()
+        }));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
@@ -148,7 +160,7 @@ export const updateFolder = async (request: Request, response: Response) => {
 export const createNewRequestFromFolder = async (request: Request, response: Response) => {
     logger.info("[Controller] Create request from folder");
 
-    try{
+    try {
         const request = await DBRequest.initialize() as DBRequest;
 
         await request.reader().readFolder();
@@ -156,7 +168,7 @@ export const createNewRequestFromFolder = async (request: Request, response: Res
         await request.save();
 
         response.status(200).json(Code.success("Create new request successfully", {request: request.release()}));
-    } catch (error){
+    } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
     }

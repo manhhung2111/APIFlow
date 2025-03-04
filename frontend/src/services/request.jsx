@@ -112,4 +112,12 @@ export default class RequestService {
 			throw new Error(error.message || 'Send request failed');
 		}
 	}
+
+	static async duplicate(request) {
+		try {
+			return await axios.post(`/requests/${request._id}/duplicate?workspace_id=${request.workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Create new request failed');
+		}
+	}
 }

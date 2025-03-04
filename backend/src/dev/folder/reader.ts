@@ -1,6 +1,6 @@
 import {HydratedDocument} from "mongoose";
 import {DBReader} from "@ap/db";
-import {DFolder} from "@db-schemas";
+import {DCollection, DFolder} from "@db-schemas";
 import {DBFolder} from "@dev/folder/index";
 import Client from "@dev/client";
 import UUID from "@utils/uuid";
@@ -31,7 +31,13 @@ export default class Reader extends DBReader<DFolder>{
 
 
 	public async duplicate(old_folder: DBFolder){
-
+		this._obj.user_id = Client.viewer._id.toString();
+		this._obj.token = UUID.randomTokenSize32();
+		this._obj.workspace_id = old_folder.object!.workspace_id.toString();
+		this._obj.name = old_folder.object!.name + " (Copy)";
+		this._obj.content = old_folder.object!.content;
+		this._obj.authorization = old_folder.object!.authorization;
+		this._obj.scripts = old_folder.object!.scripts;
 	}
 
 

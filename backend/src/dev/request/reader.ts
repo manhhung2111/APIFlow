@@ -1,6 +1,6 @@
 import {HydratedDocument} from "mongoose";
 import {DBReader} from "@ap/db";
-import {DRequest} from "@db-schemas";
+import {DCollection, DRequest} from "@db-schemas";
 import {DBRequest} from "@dev/request";
 import Client from "@dev/client";
 import UUID from "@utils/uuid";
@@ -86,7 +86,18 @@ export default class Reader extends DBReader<DRequest>{
 	}
 
 	public async duplicate(old_request: DBRequest){
+		this._obj.user_id = Client.viewer._id.toString();
+		this._obj.token = UUID.randomTokenSize32();
+		this._obj.workspace_id = old_request.object!.workspace_id;
+		this._obj.name = old_request.object!.name + " (Copy)";
 
+		this._obj.method = old_request.object!.method;
+		this._obj.url = old_request.object!.url;
+		this._obj.params = old_request.object!.params;
+		this._obj.authorization = old_request.object!.authorization;
+		this._obj.headers = old_request.object!.headers;
+		this._obj.scripts = old_request.object!.scripts;
+		this._obj.body = old_request.object!.body;
 	}
 
 	private async readBody() {
