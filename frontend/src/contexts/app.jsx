@@ -24,15 +24,6 @@ export default function AppContextProvider(props){
 				if(response.code === 0){
 					setUser(response.data.user);
 					localStorage.setItem("user", JSON.stringify(response.data.user));
-
-					const workspaceResponse = await WorkspaceService.mine();
-
-					if(workspaceResponse.code === 0){
-						setWorkspaces([...workspaceResponse.data.workspaces]);
-					} else {
-						toast.error(workspaceResponse.message);
-					}
-
 				} else {
 					setUser(null);
 					localStorage.removeItem("user");
@@ -57,8 +48,25 @@ export default function AppContextProvider(props){
 			navigate('/login', {replace: true});
 		}
 
-		console.log(user);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (user) {
+				const workspaceResponse = await WorkspaceService.mine();
+
+				if(workspaceResponse.code === 0){
+					setWorkspaces([...workspaceResponse.data.workspaces]);
+				} else {
+					toast.error(workspaceResponse.message);
+				}
+			}
+		}
+
+		if (user) {
+			fetchData();
+		}
 	}, [user]);
 
 	if(fetching){
