@@ -1,9 +1,12 @@
 import {Checkbox, Input} from "antd";
 import {DeleteOutlined, SearchOutlined} from "@ant-design/icons";
 import _ from "lodash";
-import {useRef} from "react";
+import {useContext, useRef} from "react";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function CollectionDisplayVariables({collection, variables, setVariables}){
+	const {workspace} = useContext(WorkspaceContext);
+
 	const containerRef = useRef(null);
 
 	const handleInputChange = (index, field, value) => {
@@ -46,13 +49,13 @@ export default function CollectionDisplayVariables({collection, variables, setVa
 				</div>
 				<div className="table-body">
 					{variables.map((row, index) => {
-						let actionHtml = !(index === variables.length - 1) ?
+						let actionHtml = !(index === variables.length - 1 || !workspace.can?.editable) ?
 							<DeleteOutlined className="remove-icon" size='16'
 											onClick={() => handleRemoveRow(index)}/> : '';
 						let selectedHtml = !(index === variables.length - 1) ?
 							<Checkbox checked={row.selected} onChange={(e) =>
 								handleInputChange(index, "selected", e.target.checked)
-							}/> : '';
+							} disabled={!workspace.can?.editable}/> : '';
 
 						return (
 							<div className="row" key={index}>
@@ -61,15 +64,18 @@ export default function CollectionDisplayVariables({collection, variables, setVa
 								</div>
 								<div className="col key-col">
 									<Input placeholder="Key" variant="borderless" value={row.variable}
-										   onChange={(e) => handleInputChange(index, "variable", e.target.value)}/>
+										   onChange={(e) => handleInputChange(index, "variable", e.target.value)}
+										   disabled={!workspace.can?.editable}/>
 								</div>
 								<div className="col value-col">
 									<Input placeholder="Value" variant="borderless" value={row.initial_value}
-										   onChange={(e) => handleInputChange(index, "initial_value", e.target.value)}/>
+										   onChange={(e) => handleInputChange(index, "initial_value", e.target.value)}
+										   disabled={!workspace.can?.editable}/>
 								</div>
 								<div className="col content-col">
 									<Input placeholder="Description" variant="borderless" value={row.current_value}
-										   onChange={(e) => handleInputChange(index, "current_value", e.target.value)}/>
+										   onChange={(e) => handleInputChange(index, "current_value", e.target.value)}
+										   disabled={!workspace.can?.editable}/>
 								</div>
 								<div className="col action-col">
 									{actionHtml}

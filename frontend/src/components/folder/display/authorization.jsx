@@ -1,12 +1,14 @@
 import _ from "lodash";
-import {Checkbox, Empty, Input, Select} from "antd";
+import {Empty, Input, Select} from "antd";
 import CodeEditor from "@components/app/editor/code.editor.jsx";
-import Collection from "@components/collection/collection.jsx";
 import Request from "@components/request/request.jsx";
-import {NavLink} from "react-router";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
+import {useContext} from "react";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function FolderDisplayAuthorization({folder, authorization, setAuthorization, folderCollection}){
+	const {workspace} = useContext(WorkspaceContext);
+
 	const handleChangeType = (authType) => {
 		setAuthorization(() => ({type: authType, data: {}}));
 	}
@@ -43,6 +45,7 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 					options={Object.values(Request.AUTHORIZATION)}
 					className="auth-selector"
 					popupClassName="auth-selector-items"
+					disabled={!workspace.can?.editable}
 				/>
 			</div>
 			<div className="right-container">
@@ -72,11 +75,17 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Username</div>
-							<AppInputVariable placeholder="Username" setText={(value) => handleChangeData("username", value)} text={authorization.data.username ?? ""}/>
+							<AppInputVariable placeholder="Username"
+											  setText={(value) => handleChangeData("username", value)}
+											  text={authorization.data.username ?? ""}
+											  disabled={!workspace.can?.editable}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Password</div>
-							<AppInputVariable placeholder="Password" setText={(value) => handleChangeData("password", value)} text={authorization.data.password ?? ""}/>
+							<AppInputVariable placeholder="Password"
+											  setText={(value) => handleChangeData("password", value)}
+											  text={authorization.data.password ?? ""}
+											  disabled={!workspace.can?.editable}/>
 						</div>
 					</div>
 				}
@@ -84,7 +93,10 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Token</div>
-							<AppInputVariable placeholder="Token" setText={(value) => handleChangeData("bearer_token", value)} text={authorization.data.bearer_token ?? ""}/>
+							<AppInputVariable placeholder="Token"
+											  setText={(value) => handleChangeData("bearer_token", value)}
+											  text={authorization.data.bearer_token ?? ""}
+											  disabled={!workspace.can?.editable}/>
 						</div>
 					</div>
 				}
@@ -103,12 +115,14 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 									{value: 'HS384', label: 'HS384'},
 									{value: 'HS512', label: 'HS512'},
 								]}
+								disabled={!workspace.can?.editable}
 							/>
 						</div>
 						<div className="form-row">
 							<div className="title">Secret</div>
 							<Input name="secret" value={authorization.data.secret ?? ""}
-								   onChange={(e) => handleChangeData("secret", e.target.value)}/>
+								   onChange={(e) => handleChangeData("secret", e.target.value)}
+								   disabled={!workspace.can?.editable}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Payload</div>
@@ -116,7 +130,11 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 								<CodeEditor
 									value={authorization.data.payload ?? ""}
 									setValue={(value) => handleChangeData("payload", value)}
-									options={{lineNumbers: "off", language: "json"}}
+									options={{
+										lineNumbers: "off",
+										language: "json",
+										"readOnly": !workspace.can?.editable
+									}}
 								/>
 							</div>
 						</div>

@@ -12,7 +12,14 @@ import ActionManager from "@utils/action.manager.jsx";
 import _ from "lodash";
 
 export default function FolderPage(){
-	const {workspace, folders, setRequests, setFolders, activeCollection, setActiveCollection} = useContext(WorkspaceContext);
+	const {
+		workspace,
+		folders,
+		setRequests,
+		setFolders,
+		activeCollection,
+		setActiveCollection
+	} = useContext(WorkspaceContext);
 	const [folder, setFolder] = useState(null);
 	const [name, setName] = useState("");
 	const [content, setContent] = useState("");
@@ -57,7 +64,8 @@ export default function FolderPage(){
 			label: "Authorization",
 			key: 2,
 			children: <FolderDisplayAuthorization folder={folder} authorization={authorization}
-												  setAuthorization={setAuthorization} folderCollection={activeCollection}/>
+												  setAuthorization={setAuthorization}
+												  folderCollection={activeCollection}/>
 		},
 		{
 			label: "Scripts",
@@ -115,8 +123,6 @@ export default function FolderPage(){
 		{key: `delete_${folder?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
 	];
 
-
-
 	return (
 		<div className="collection-page">
 			<div className="header">
@@ -129,7 +135,8 @@ export default function FolderPage(){
 									title: <FolderOutlined style={{marginTop: "3px", marginRight: "5px"}}/>,
 								},
 								{
-									title: <NavLink to={`/workspace/${folder?.workspace_id}/collection/${activeCollection?._id}`}>{activeCollection?.name}</NavLink>,
+									title: <NavLink
+										to={`/workspace/${folder?.workspace_id}/collection/${activeCollection?._id}`}>{activeCollection?.name}</NavLink>,
 								},
 								{type: 'separator'},
 								{
@@ -139,10 +146,12 @@ export default function FolderPage(){
 						/>
 					</div>
 					<div className="side">
-						<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
-							Save
-						</Button>
-						<ActionManager am={actionManagers}/>
+						{workspace?.can?.editable && <>
+							<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
+								Save
+							</Button>
+							<ActionManager am={actionManagers}/>
+						</>}
 					</div>
 				</div>}
 				{!folder && <Skeleton.Input active={true}/>}

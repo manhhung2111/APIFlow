@@ -1,7 +1,10 @@
 import {Input} from "antd";
 import TextEditor from "@components/app/editor/text.editor.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
+import {useContext} from "react";
 
 export default function FolderDisplayOverview({folder, name, setName, content, setContent}){
+	const {workspace} = useContext(WorkspaceContext);
 
 	const handleChangeContent = (quill, quillRef) => {
 		if(quill){
@@ -16,10 +19,10 @@ export default function FolderDisplayOverview({folder, name, setName, content, s
 			<div className="main">
 				<div className="row">
 					<Input className="workspace-name" placeholder={"Folder name"} value={name}
-						   onChange={(e) => setName(e.target.value)}/>
+						   onChange={(e) => setName(e.target.value)} disabled={!workspace.can?.editable}/>
 				</div>
 				<div className="row">
-					<TextEditor handleChange={handleChangeContent} value={content}/>
+					<TextEditor handleChange={handleChangeContent} value={content} readOnly={!workspace.can?.editable}/>
 				</div>
 			</div>
 			<div className="sidebar">

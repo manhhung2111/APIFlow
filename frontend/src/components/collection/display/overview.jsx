@@ -2,8 +2,11 @@ import {Input} from "antd";
 import TextEditor from "@components/app/editor/text.editor.jsx";
 import {NavLink} from "react-router";
 import {ArrowRightOutlined} from "@ant-design/icons";
+import {useContext} from "react";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function CollectionDisplayOverview({collection, name, setName, content, setContent}){
+	const {workspace} = useContext(WorkspaceContext);
 
 	const handleChangeContent = (quill, quillRef) => {
 		if(quill){
@@ -18,10 +21,12 @@ export default function CollectionDisplayOverview({collection, name, setName, co
 			<div className="main">
 				<div className="row">
 					<Input className="workspace-name" placeholder={"Collection name"} value={name}
-						   onChange={(e) => setName(e.target.value)}/>
+						   onChange={(e) => setName(e.target.value)}
+						disabled={!workspace.can?.editable}
+					/>
 				</div>
 				<div className="row">
-					<TextEditor handleChange={handleChangeContent} value={content}/>
+					<TextEditor handleChange={handleChangeContent} value={content} readOnly={!workspace.can?.editable}/>
 				</div>
 				<div className="footer">
 					<NavLink to={"documentation"}>View complete documentation <ArrowRightOutlined/></NavLink>

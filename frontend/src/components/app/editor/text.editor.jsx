@@ -2,12 +2,12 @@ import React, {useEffect} from "react";
 
 import { useQuill } from "react-quilljs";
 
-export default function TextEditor({handleChange, value}) {
+export default function TextEditor({handleChange, value, readOnly = false}) {
 	const theme = 'snow';
 	// const theme = 'bubble';
 	const formats = ['header', 'bold', 'italic', 'underline', 'strike', 'align', 'list', 'indent'];
 	const modules = {
-		toolbar: [
+		toolbar: readOnly ? false : [
 			[{ header: [1, 2, 3, 4, 5, 6, false] }],
 			['bold', 'italic', 'underline', 'strike'],
 			[{ align: [] }],
@@ -23,8 +23,11 @@ export default function TextEditor({handleChange, value}) {
 	useEffect(() => {
 		if (quill) {
 			quill.clipboard.dangerouslyPasteHTML(value || '');
+			quill.enable(!readOnly);
 		}
-		handleChange(quill, quillRef);
+		if (!readOnly) {
+			handleChange(quill, quillRef);
+		}
 	}, [quill]);
 
 	return (

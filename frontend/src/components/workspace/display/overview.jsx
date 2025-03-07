@@ -54,10 +54,13 @@ export default function WorkspaceDisplayOverview(){
 						   onChange={(e) => {
 							   setName(e.target.value);
 							   setChanged(true);
-						   }}/>
+						   }}
+						disabled={!workspace.can?.editable}
+					/>
+
 				</div>
 				<div className="row">
-					<TextEditor handleChange={handleChangeContent} value={content}/>
+					<TextEditor handleChange={handleChangeContent} value={content} readOnly={!workspace.can?.editable}/>
 				</div>
 				{changed && <div className="footer">
 					<Button className="submit-btn" color="geekblue" variant="solid" onClick={handleSave}>

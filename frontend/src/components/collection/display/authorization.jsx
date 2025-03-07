@@ -1,9 +1,13 @@
 import _ from "lodash";
-import {Checkbox, Empty, Input, Select} from "antd";
+import {Empty, Input, Select} from "antd";
 import CodeEditor from "@components/app/editor/code.editor.jsx";
 import Collection from "@components/collection/collection.jsx";
+import {useContext} from "react";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function CollectionDisplayAuthorization({collection, authorization, setAuthorization}){
+	const {workspace} = useContext(WorkspaceContext);
+
 	const handleChangeType = (authType) => {
 		setAuthorization(() => ({type: authType, data: {}}));
 	}
@@ -26,6 +30,7 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 					options={Object.values(Collection.AUTHORIZATION)}
 					className="auth-selector"
 					popupClassName="auth-selector-items"
+					disabled={!workspace.can?.editable}
 				/>
 			</div>
 			<div className="right-container">
@@ -45,12 +50,16 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 						<div className="form-row">
 							<div className="title">Username</div>
 							<Input name="username" value={authorization.data.username ?? ""}
-								   onChange={(e) => handleChangeData("username", e.target.value)}/>
+								   onChange={(e) => handleChangeData("username", e.target.value)}
+								   disabled={!workspace.can?.editable}
+							/>
 						</div>
 						<div className="form-row">
 							<div className="title">Password</div>
 							<Input name="password" value={authorization.data.password ?? ""}
-								   onChange={(e) => handleChangeData("password", e.target.value)}/>
+								   onChange={(e) => handleChangeData("password", e.target.value)}
+								   disabled={!workspace.can?.editable}
+							/>
 						</div>
 					</div>
 				}
@@ -59,7 +68,9 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 						<div className="form-row">
 							<div className="title">Token</div>
 							<Input name="token" value={authorization.data.bearer_token ?? ""}
-								   onChange={(e) => handleChangeData("bearer_token", e.target.value)}/>
+								   onChange={(e) => handleChangeData("bearer_token", e.target.value)}
+								   disabled={!workspace.can?.editable}
+							/>
 						</div>
 					</div>
 				}
@@ -78,13 +89,16 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 									{value: 'HS384', label: 'HS384'},
 									{value: 'HS512', label: 'HS512'},
 								]}
+								disabled={!workspace.can?.editable}
 							/>
 						</div>
 						<div className="form-row">
 							<div className="title">Secret</div>
 							<div className="input-group">
 								<Input name="secret" value={authorization.data.secret ?? ""}
-									   onChange={(e) => handleChangeData("secret", e.target.value)}/>
+									   onChange={(e) => handleChangeData("secret", e.target.value)}
+									   disabled={!workspace.can?.editable}
+								/>
 							</div>
 						</div>
 						<div className="form-row">
@@ -93,7 +107,7 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 								<CodeEditor
 									value={authorization.data.payload ?? ""}
 									setValue={(value) => handleChangeData("payload", value)}
-									options={{lineNumbers: "off", language: "json"}}
+									options={{lineNumbers: "off", language: "json", readOnly: !workspace.can?.editable}}
 								/>
 							</div>
 						</div>

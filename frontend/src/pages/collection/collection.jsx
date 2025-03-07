@@ -10,14 +10,21 @@ import CollectionDisplayAuthorization from "@components/collection/display/autho
 import CollectionDisplayScripts from "@components/collection/display/scripts.jsx";
 import CollectionDisplayVariables from "@components/collection/display/variables.jsx";
 import {SaveOutlined} from "@ant-design/icons";
-import Collection from "@components/collection/collection.jsx";
 import ActionManager from "@utils/action.manager.jsx";
 import {toast} from "react-toastify";
 import FolderService from "@services/folder.js";
 import _ from "lodash";
 
 export default function CollectionPage(){
-	const {workspace, collections, setCollections, setFolders, setRequests, activeCollection, setActiveCollection} = useContext(WorkspaceContext);
+	const {
+		workspace,
+		collections,
+		setCollections,
+		setFolders,
+		setRequests,
+		activeCollection,
+		setActiveCollection
+	} = useContext(WorkspaceContext);
 
 	const [name, setName] = useState("");
 	const [content, setContent] = useState("");
@@ -62,7 +69,8 @@ export default function CollectionPage(){
 		{
 			label: "Overview",
 			key: 1,
-			children: <CollectionDisplayOverview collection={activeCollection} name={name} setName={setName} content={content}
+			children: <CollectionDisplayOverview collection={activeCollection} name={name} setName={setName}
+												 content={content}
 												 setContent={setContent}/>
 		},
 		{
@@ -74,7 +82,8 @@ export default function CollectionPage(){
 		{
 			label: "Scripts",
 			key: 3,
-			children: <CollectionDisplayScripts collection={activeCollection} scripts={scripts} setScripts={setScripts}/>
+			children: <CollectionDisplayScripts collection={activeCollection} scripts={scripts}
+												setScripts={setScripts}/>
 		},
 		{
 			label: "Variables",
@@ -84,14 +93,14 @@ export default function CollectionPage(){
 		},
 	]
 
-	const handleSave =  async () => {
+	const handleSave = async() => {
 		const result = await CollectionService.save(activeCollection, name, content, authorization, scripts, variables);
 
-		if (result.code === 0){
+		if(result.code === 0){
 			toast.success(result.message);
 			const clone = _.cloneDeep(collections);
 			for (const e of clone) {
-				if (e._id === activeCollection._id) {
+				if(e._id === activeCollection._id){
 					e.name = name;
 				}
 			}
@@ -102,10 +111,10 @@ export default function CollectionPage(){
 		}
 	}
 
-	const handleAddRequest = async () => {
+	const handleAddRequest = async() => {
 		const result = await CollectionService.addRequest(activeCollection);
 
-		if (result.code === 0) {
+		if(result.code === 0){
 			setRequests(prev => [...prev, result.data.request]);
 			toast.success(result.message);
 		} else {
@@ -113,10 +122,10 @@ export default function CollectionPage(){
 		}
 	}
 
-	const handleAddFolder = async () => {
+	const handleAddFolder = async() => {
 		const result = await FolderService.create(activeCollection);
 
-		if (result.code === 0) {
+		if(result.code === 0){
 			setFolders(prev => [...prev, result.data.folder]);
 			toast.success(result.message);
 		} else {
@@ -124,10 +133,10 @@ export default function CollectionPage(){
 		}
 	}
 
-	const handleDelete = async () => {
+	const handleDelete = async() => {
 		const result = await CollectionService.delete(activeCollection);
 
-		if (result.code === 0) {
+		if(result.code === 0){
 			setCollections(prev => {
 				return prev.filter(e => e._id !== activeCollection._id);
 			});
@@ -155,10 +164,12 @@ export default function CollectionPage(){
 						{activeCollection.name}
 					</div>
 					<div className="side">
-						<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
-							Save
-						</Button>
-						<ActionManager am={actionManagers} />
+						{workspace?.can?.editable && <>
+							<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
+								Save
+							</Button>
+							<ActionManager am={actionManagers}/>
+						</>}
 					</div>
 				</div>}
 				{!activeCollection && <Skeleton.Input active={true}/>}

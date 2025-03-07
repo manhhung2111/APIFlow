@@ -39,7 +39,7 @@ export default function MasterMenu(){
 				</div>
 
 				<div className="right-section">
-					{workspace && <>
+					{workspace && workspace.can?.editable && <>
 						<Button size={"small"} color="default" variant="filled"
 								onClick={() => setNewModalVisibility(true)}>New</Button>
 						<Button size={"small"} color="default" variant="filled">Import</Button>

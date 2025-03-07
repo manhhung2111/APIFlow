@@ -27,6 +27,7 @@ export default function CodeEditor(props){
 					"fontSize": 12,
 					"renderLineHighlight": "none",
 					"lineNumbers": options?.lineNumbers ?? "on",
+					"readOnly": options?.readOnly ?? "false",
 				}}
 			/>
 		</div>

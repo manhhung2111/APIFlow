@@ -5,7 +5,7 @@ import { WorkspaceContext } from "@contexts/workspace.jsx";
 import AppInputVariableSuggestionBox from "@components/app/input/variable/suggestion.box.jsx";
 import "../../styles/variable.scss";
 
-const AppInputVariable = ({ placeholder, text, setText }) => {
+const AppInputVariable = ({ placeholder, text, setText, disabled = false }) => {
 	const { activeCollection, activeEnvironment, environments, variables } = useContext(WorkspaceContext);
 
 	const contentRef = useRef(null);
@@ -144,7 +144,9 @@ const AppInputVariable = ({ placeholder, text, setText }) => {
 
 	useEffect(() => {
 		updateHighlighting();
-		handleShowSuggestionBox();
+		if (!disabled) {
+			handleShowSuggestionBox();
+		}
 	}, [text]);
 
 	useEffect(() => {
@@ -152,7 +154,9 @@ const AppInputVariable = ({ placeholder, text, setText }) => {
 	}, [variables]);
 
 	const handleInput = () => {
-		setText(contentRef.current.innerText.trim());
+		if (!disabled) {
+			setText(contentRef.current.innerText.trim());
+		}
 	};
 
 	const handleShowSuggestionBox = () => {
@@ -223,15 +227,16 @@ const AppInputVariable = ({ placeholder, text, setText }) => {
 	}
 
 	return (
-		<div className="app-input-highlight__wrapper">
+		<div className={`app-input-highlight__wrapper ${disabled ? 'disabled' : ''}`}>
 			<div
 				className="editable"
 				ref={contentRef}
-				contentEditable
+				contentEditable={!disabled}
 				suppressContentEditableWarning
 				onInput={handleInput}
 				spellCheck={false}
 				placeholder={placeholder || ""}
+				style={disabled ? { cursor: "not-allowed" } : {}}
 			/>
 			{tooltipData && (
 				<div
