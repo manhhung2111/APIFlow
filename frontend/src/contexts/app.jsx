@@ -22,13 +22,9 @@ export default function AppContextProvider(props){
 
 				if(response.code === 0){
 					setUser(response.data.user);
+					setUsers(response.data.users);
+					setWorkspaces(response.data.workspaces);
 					localStorage.setItem("user", JSON.stringify(response.data.user));
-
-					const usersResult = await UserService.getAll();
-					if(usersResult.code === 0){
-						console.log(usersResult.data.users)
-						setUsers(usersResult.data.users);
-					}
 				} else {
 					setUser(null);
 					localStorage.removeItem("user");

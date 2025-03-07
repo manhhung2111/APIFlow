@@ -4,15 +4,26 @@ import {DBUser, DBUserLoader} from "@dev/user";
 import UserService from "@services/user";
 import logger from "@utils/logger";
 import Client from "@dev/client";
+import {DBWorkspaceLoader} from "@dev/workspace";
 
 export const loginUser = async (request: Request, response: Response) => {
     try {
         const user = await UserService.login();
 
+        const users = await DBUserLoader.all();
+        const usersRelease = users.map(user => user.releaseCompact());
+
+        const workspaces = await DBWorkspaceLoader.mine(user.object!._id.toString());
+        const workspaces_compact = workspaces.map(workspace => workspace.releaseCompact());
+
         const access_token = await JWT.signToken({user_id: user.getField("_id")});
 
         response.cookie("access_token", access_token, {signed: true, maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true});
-        response.status(200).json(Code.success("Login successful", {user: user.release()}));
+        response.status(200).json(Code.success("Login successful", {
+            user: user.release(),
+            users: usersRelease,
+            workspaces: workspaces_compact
+        }));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
@@ -43,26 +54,41 @@ export const resetPassword = async (request: Request, response: Response) => {
 };
 
 export const verifyUser = async (request: Request, response: Response) => {
-    const token = HTMLInput.signedCookies("access_token");
+    logger.info("[Controller] Verify user");
+    try {
+        const token = HTMLInput.signedCookies("access_token");
 
-    if (!token) {
-        response.status(401).json(Code.error("Authorization token required"));
-        return;
+        if (!token) {
+            response.status(401).json(Code.error("Authorization token required"));
+            return;
+        }
+
+        const payload = await JWT.verifyToken(token);
+        if (typeof payload === "string") {
+            response.status(401).json(Code.error("Invalid or missing user_id in token payload"));
+            return;
+        }
+
+        const user = await Client.authenticate(payload.user_id);
+        if (!user) {
+            response.status(401).json(Code.error("Cannot authenticate user."));
+            return;
+        }
+
+        const users = await DBUserLoader.all();
+        const usersRelease = users.map(user => user.releaseCompact());
+
+        const workspaces = await DBWorkspaceLoader.mine(user.object!._id.toString());
+        const workspaces_compact = workspaces.map(workspace => workspace.releaseCompact());
+
+        response.status(200).json(Code.success("User verified successful", {
+            user: user.release(), users: usersRelease,
+            workspaces: workspaces_compact
+        }));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
     }
-
-    const payload = await JWT.verifyToken(token);
-    if (typeof payload === "string") {
-        response.status(401).json(Code.error("Invalid or missing user_id in token payload"));
-        return;
-    }
-
-    const user = await Client.authenticate(payload.user_id);
-    if (!user) {
-        response.status(401).json(Code.error("Cannot authenticate user."));
-        return;
-    }
-
-    response.status(200).json(Code.success("User verified successful", {user: user.release()}));
 };
 
 export const logoutUser = async (request: Request, response: Response) => {
