@@ -613,9 +613,9 @@
           border-left: 1px solid $border-color-default;
         }
 
-        &:nth-child(3) {
-          border-right: 1px solid $border-color-default;
-        }
+        //&:nth-child(3) {
+        //  border-right: 1px solid $border-color-default;
+        //}
       }
     }
 
@@ -662,6 +662,10 @@
           }
         }
 
+        .app-input-highlight__wrapper {
+          height: 28.31px;
+        }
+
         .key-col,
         .value-col,
         .content-col {
@@ -675,7 +679,7 @@
 
         .value-col {
           border-left: 1px solid $border-color-default;
-          border-right: 1px solid $border-color-default;
+          //border-right: 1px solid $border-color-default;
         }
 
         .action-col {

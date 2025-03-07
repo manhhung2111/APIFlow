@@ -18,7 +18,7 @@ export default function ExampleDisplayHeader(){
 		name,
 		handleChangeName
 	} = useContext(ExampleContext);
-	const {activeCollection} = useContext(WorkspaceContext);
+	const {activeCollection, workspace} = useContext(WorkspaceContext);
 
 	const constructBreadCrumbs = () => {
 		const breadCrumbs = [{
@@ -47,13 +47,13 @@ export default function ExampleDisplayHeader(){
 		breadCrumbs.push({type: 'separator'});
 		breadCrumbs.push({
 			title: <Paragraph
-				editable={{
+				editable={workspace?.can?.editable ? {
 					icon: <EditOutlined/>,
 					tooltip: 'Click to edit example name',
 					onChange: handleChangeName,
 					enterIcon: <EnterOutlined/>,
 					autoSize: {minRows: 1, maxRows: 2},
-				}}
+				} : null}
 			>
 				{name}
 			</Paragraph>
@@ -71,7 +71,7 @@ export default function ExampleDisplayHeader(){
 				items={constructBreadCrumbs(example, request, exampleFolder, activeCollection)}
 			/>}
 			{!request && <Skeleton.Input className="rdh-actions" active/>}
-			{request &&
+			{request && workspace?.can?.editable &&
 				<div>
 					<Button color="default" variant="text" icon={<SaveOutlined style={{fontSize: "14px"}}/>}
 							onClick={handleSave}>

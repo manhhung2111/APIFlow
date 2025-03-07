@@ -4,8 +4,10 @@ import {useContext, useRef} from "react";
 import _ from "lodash";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
 import {ExampleContext} from "@contexts/example.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function ExampleEditorHeaders(){
+	const {workspace} = useContext(WorkspaceContext);
 	let {headers, setHeaders} = useContext(ExampleContext);
 	const containerRef = useRef(null);
 
@@ -47,12 +49,12 @@ export default function ExampleEditorHeaders(){
 				<div className="table-body">
 					{headers.map((row, index) => {
 						let prefixName = 'request_headers';
-						let actionHtml = !(index === headers.length - 1) ?
+						let actionHtml = !(index === headers.length - 1 || !workspace?.can?.editable) ?
 							<DeleteOutlined className="remove-icon" size='16'
 											onClick={() => handleRemoveRow(index)}/> : '';
 						let selectedHtml = !(index === headers.length - 1) ?
 							<Checkbox name={`${prefixName}_selected_${index}`} checked={row.selected}
-									  disabled={row.disabled ? true : false} onChange={(e) =>
+									  disabled={!workspace?.can?.editable} onChange={(e) =>
 								handleInputChange(index, "selected", e.target.checked)
 							}/> : '';
 
@@ -68,7 +70,7 @@ export default function ExampleEditorHeaders(){
 								<div className="col key-col">
 									<AppInputVariable placeholder="Key"
 													  setText={(value) => handleInputChange(index, "key", value)}
-													  text={row.key}/>
+													  text={row.key} disabled={!workspace?.can?.editable}/>
 
 									{/*<Input placeholder="Key" variant="borderless" name={`${prefixName}_key_${index}`}*/}
 									{/*	   value={row.key}*/}
@@ -84,14 +86,14 @@ export default function ExampleEditorHeaders(){
 									{/*/>*/}
 									<AppInputVariable placeholder="Value"
 													  setText={(value) => handleInputChange(index, "value", value)}
-													  text={row.value}/>
+													  text={row.value} disabled={!workspace?.can?.editable}/>
 
 								</div>
 								<div className="col content-col">
 									<Input placeholder="Description" variant="borderless"
 										   name={`${prefixName}_content_${index}`} value={row.content}
 										   onChange={(e) => handleInputChange(index, "content", e.target.value)}
-										   disabled={row.disabled ? true : false}
+										   disabled={!workspace?.can?.editable}
 									/>
 								</div>
 								<div className="col action-col">

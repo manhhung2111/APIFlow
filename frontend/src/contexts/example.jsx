@@ -33,8 +33,8 @@ export default function ExampleContextProvider(props){
 		setName(example.name);
 		setUrl(request.url);
 		setMethod(request.method);
-		setParams([...request.params, {selected: 1, key: '', value: '', content: ''}]);
-		setHeaders([...request.headers, {selected: 1, key: '', value: '', content: ''}]);
+		setParams([...request.params, {key: '', value: ''}]);
+		setHeaders([...request.headers, {key: '', value: ''}]);
 		setBody({
 			type: request.body.type,
 			data: {
@@ -90,7 +90,7 @@ export default function ExampleContextProvider(props){
 	const handleSave = async() => {
 		const response = {
 			body: responseBody,
-			headers: Object.fromEntries(responseHeaders.slice(0, -1).map(({ key, value }) => [key, value])),
+			headers: Object.fromEntries(responseHeaders.slice(0, -1).map(({key, value}) => [key, value])),
 			status: responseStatus
 		};
 

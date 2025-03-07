@@ -1,11 +1,12 @@
 import {useContext, useRef} from "react";
-import {Input} from "antd";
 import {ExampleContext} from "@contexts/example.jsx";
 import _ from "lodash";
 import {DeleteOutlined} from "@ant-design/icons";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function ExampleResponseHeaders(){
+	const {workspace} = useContext(WorkspaceContext);
 	let {responseHeaders: headers, setResponseHeaders: setHeaders} = useContext(ExampleContext);
 	const containerRef = useRef(null);
 
@@ -43,7 +44,7 @@ export default function ExampleResponseHeaders(){
 				</div>
 				<div className="table-body">
 					{headers.map((row, index) => {
-						let actionHtml = !(index === headers.length - 1) ?
+						let actionHtml = !(index === headers.length - 1 || !workspace?.can?.editable) ?
 							<DeleteOutlined className="remove-icon" size='16'
 											onClick={() => handleRemoveRow(index)}/> : '';
 
@@ -58,7 +59,7 @@ export default function ExampleResponseHeaders(){
 								<div className="col key-col">
 									<AppInputVariable placeholder="Key"
 													  setText={(value) => handleInputChange(index, "key", value)}
-													  text={row.key}/>
+													  text={row.key} disabled={!workspace?.can?.editable}/>
 
 									{/*<Input placeholder="Key" variant="borderless" name={`${prefixName}_key_${index}`}*/}
 									{/*	   value={row.key}*/}
@@ -74,7 +75,7 @@ export default function ExampleResponseHeaders(){
 									{/*/>*/}
 									<AppInputVariable placeholder="Value"
 													  setText={(value) => handleInputChange(index, "value", value)}
-													  text={row.value}/>
+													  text={row.value} disabled={!workspace?.can?.editable}/>
 
 								</div>
 								<div className="col action-col">

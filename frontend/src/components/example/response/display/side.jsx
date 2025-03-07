@@ -2,8 +2,10 @@ import {useContext, useState} from "react";
 import {Select} from "antd";
 import {ExampleContext} from "@contexts/example.jsx";
 import Request from "@components/request/request.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function ExampleResponseSide(){
+	const {workspace} = useContext(WorkspaceContext);
 	let {responseStatus, setResponseStatus} = useContext(ExampleContext);
 
 	const [options, setOptions] = useState(Request.STATUS_CODES());
@@ -33,6 +35,7 @@ export default function ExampleResponseSide(){
 				value={responseStatus || ""}
 				onChange={handleChangeStatus}
 				style={{width: 190, fontSize: 12}}
+				disabled={!workspace?.can?.editable}
 			/>
 		</div>
 	)

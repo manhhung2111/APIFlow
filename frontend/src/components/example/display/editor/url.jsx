@@ -4,8 +4,10 @@ import Request from "@components/request/request.jsx";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
 import {ExampleContext} from "@contexts/example.jsx";
 import NorthEastIcon from "@assets/icons/north.east.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function ExampleEditorUrl(){
+	const {workspace} = useContext(WorkspaceContext);
 	const {example, url, setUrl, params, setParams, method, setMethod} = useContext(ExampleContext);
 
 	const [options, setOptions] = useState(Object.values(Request.METHODS));
@@ -94,10 +96,11 @@ export default function ExampleEditorUrl(){
 						options={options}
 						onChange={handleChangeMethod}
 						onSearch={handleSearch}
+						disabled={!workspace?.can?.editable}
 					/>
 					<div className="url">
 						<AppInputVariable placeholder="Enter URL or paste text"
-										  setText={(value) => handleChangeUrl(value)} text={url}/>
+										  setText={(value) => handleChangeUrl(value)} text={url} disabled={!workspace?.can?.editable}/>
 					</div>
 				</>}
 				{!example && <Skeleton.Input style={{width: "60vw"}} active={true}/>}

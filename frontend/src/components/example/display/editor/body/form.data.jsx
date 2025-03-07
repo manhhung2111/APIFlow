@@ -4,8 +4,10 @@ import {useContext, useRef} from "react";
 import _ from "lodash";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
 import {ExampleContext} from "@contexts/example.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function ExampleEditorBodyFormData(){
+	const {workspace} = useContext(WorkspaceContext);
 	let {body, setBody} = useContext(ExampleContext);
 	const containerRef = useRef(null);
 
@@ -50,13 +52,13 @@ export default function ExampleEditorBodyFormData(){
 				<div className="table-body">
 					{body.data["form_data"].map((row, index) => {
 						let prefixName = 'request_query_body_form_data';
-						let actionHtml = !(index === body.data["form_data"].length - 1) ?
+						let actionHtml = !(index === body.data["form_data"].length - 1 || !workspace?.can?.editable) ?
 							<DeleteOutlined className="remove-icon" size='16'
 											onClick={() => handleRemoveRow(index)}/> : '';
 						let selectedHtml = !(index === body.data["form_data"].length - 1) ?
 							<Checkbox name={`${prefixName}_selected_${index}`} checked={row.selected} onChange={(e) =>
 								handleInputChange(index, "selected", e.target.checked)
-							}/> : '';
+							} disabled={!workspace?.can?.editable}/> : '';
 
 						return (
 							<div className="row" key={index}>
@@ -71,7 +73,7 @@ export default function ExampleEditorBodyFormData(){
 										{/*	   onChange={(e) => handleInputChange(index, "key", e.target.value)}/>*/}
 										<AppInputVariable placeholder="Key"
 														  setText={(value) => handleInputChange(index, "key", value)}
-														  text={row.key}/>
+														  text={row.key} disabled={!workspace?.can?.editable}/>
 									</div>
 									<div className="type-col">
 										<Select
@@ -83,6 +85,7 @@ export default function ExampleEditorBodyFormData(){
 												{value: 'text', label: 'Text'},
 												{value: 'file', label: 'File'},
 											]}
+											disabled={!workspace?.can?.editable}
 										/>
 									</div>
 								</div>
@@ -95,7 +98,8 @@ export default function ExampleEditorBodyFormData(){
 										// />
 										<AppInputVariable placeholder="Value"
 														  setText={(value) => handleInputChange(index, "value", value)}
-														  text={row.value}/>
+														  text={row.value}
+														  disabled={!workspace?.can?.editable}/>
 									}
 									{row.type === "file" &&
 										<div className="file-input">
@@ -104,13 +108,15 @@ export default function ExampleEditorBodyFormData(){
 												   name={`${prefixName}_value_${index}`}
 												   onChange={(e) => handleInputChange(index, "value", e.target.files[0])}
 												   style={{display: "none"}}
+												   disabled={!workspace?.can?.editable}
 											/>
 											<label htmlFor={`file-upload-${index}`}>Choose File</label>
 											{row.value && (
 												<div className="file-info">
 													<p>{row.value.name}</p>
-													<CloseOutlined
-														onClick={() => handleInputChange(index, "value", null)}/>
+													{!workspace?.can?.editable &&
+														<CloseOutlined
+															onClick={() => handleInputChange(index, "value", null)}/>}
 												</div>
 											)
 											}
@@ -121,7 +127,7 @@ export default function ExampleEditorBodyFormData(){
 								<div className="col content-col">
 									<Input placeholder="Description" variant="borderless"
 										   name={`${prefixName}_content_${index}`} value={row.content}
-										   onChange={(e) => handleInputChange(index, "content", e.target.value)}/>
+										   onChange={(e) => handleInputChange(index, "content", e.target.value)} disabled={!workspace?.can?.editable}/>
 								</div>
 								<div className="col action-col">
 									{actionHtml}

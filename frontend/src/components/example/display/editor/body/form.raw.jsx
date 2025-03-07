@@ -2,8 +2,10 @@ import CodeEditor from "@components/app/editor/code.editor.jsx";
 import {useContext} from "react";
 import _ from "lodash";
 import {ExampleContext} from "@contexts/example.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function ExampleEditorBodyFormRaw(){
+	const {workspace} = useContext(WorkspaceContext);
 	let {body, setBody} = useContext(ExampleContext);
 
 	const handleChangeRawBody = (value) => {
@@ -16,7 +18,7 @@ export default function ExampleEditorBodyFormRaw(){
 		<div className="request-editor-body-form-raw">
 			<CodeEditor
 				value={body.data["form_raw"]} setValue={handleChangeRawBody}
-				options={{language: "json"}}
+				options={{language: "json", "readOnly": !workspace?.can?.editable}}
 			/>
 		</div>
 	)
