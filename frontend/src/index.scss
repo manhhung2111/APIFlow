@@ -352,3 +352,12 @@
     }
   }
 }
+
+
+.ant-select-outlined.ant-select-disabled:not(.ant-select-customize-input) .ant-select-selector {
+  background-color: transparent;
+}
+
+.ant-input-outlined.ant-input-disabled, .ant-input-outlined[disabled] {
+  background-color: transparent;
+}

@@ -4,8 +4,10 @@ import {useContext, useRef} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import _ from "lodash";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function RequestEditorParams(){
+	const {workspace} = useContext(WorkspaceContext);
 	let {params, setParams, url, setUrl} = useContext(RequestContext);
 	const containerRef = useRef(null);
 
@@ -40,23 +42,22 @@ export default function RequestEditorParams(){
 	const handleBuildUrl = (params) => {
 		let queryString = "";
 
-		for (let i = 0; i < params.length - 1; i++) {
+		for (let i = 0 ; i < params.length - 1 ; i++) {
 			const row = params[i];
-			if (!row.selected) continue;
+			if(!row.selected) continue;
 
-			if (queryString) queryString += '&';
-			if (row.key) queryString += row.key;
-			if (row.value) queryString += `=${row.value}`;
+			if(queryString) queryString += '&';
+			if(row.key) queryString += row.key;
+			if(row.value) queryString += `=${row.value}`;
 		}
 		console.log(queryString);
-		if (queryString) queryString = '?' + queryString;
+		if(queryString) queryString = '?' + queryString;
 		let baseUrl = url.split('?')[0];
 		const newUrl = baseUrl + queryString;
 		// console.log(newUrl)
 
 		setUrl(newUrl);
 	}
-
 
 	return (
 		<div className="request-editor request-editor-params" ref={containerRef}>
@@ -72,12 +73,13 @@ export default function RequestEditorParams(){
 				<div className="table-body">
 					{params?.length > 0 && params.map((row, index) => {
 						let prefixName = 'request_query_params';
-						let actionHtml = !(index === params.length - 1) ?
-							<DeleteOutlined className="remove-icon" size='16' onClick={() => handleRemoveRow(index)}/> : '';
+						let actionHtml = !(index === params.length - 1 || !workspace?.can?.editable) ?
+							<DeleteOutlined className="remove-icon" size='16'
+											onClick={() => handleRemoveRow(index)}/> : '';
 						let selectedHtml = !(index === params.length - 1) ?
 							<Checkbox name={`${prefixName}_selected_${index}`} checked={row.selected} onChange={(e) =>
 								handleInputChange(index, "selected", e.target.checked)
-							}/> : '';
+							} disabled={!workspace?.can?.editable}/> : '';
 
 						return (
 							<div className="row" key={index}>
@@ -85,15 +87,20 @@ export default function RequestEditorParams(){
 									{selectedHtml}
 								</div>
 								<div className="col key-col">
-									<AppInputVariable placeholder="Key" setText={(value) => handleInputChange(index, "key", value)} text={row.key}/>
+									<AppInputVariable placeholder="Key"
+													  setText={(value) => handleInputChange(index, "key", value)}
+													  text={row.key} disabled={!workspace?.can?.editable}/>
 								</div>
 								<div className="col value-col">
-									<AppInputVariable placeholder="Value" setText={(value) => handleInputChange(index, "value", value)} text={row.value}/>
+									<AppInputVariable placeholder="Value"
+													  setText={(value) => handleInputChange(index, "value", value)}
+													  text={row.value} disabled={!workspace?.can?.editable}/>
 								</div>
 								<div className="col content-col">
 									<Input placeholder="Description" variant="borderless"
 										   name={`${prefixName}_content_${index}`} value={row.content}
-										   onChange={(e) => handleInputChange(index, "content", e.target.value)}/>
+										   onChange={(e) => handleInputChange(index, "content", e.target.value)}
+										   disabled={!workspace?.can?.editable}/>
 								</div>
 								<div className="col action-col">
 									{actionHtml}

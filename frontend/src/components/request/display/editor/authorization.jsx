@@ -9,9 +9,10 @@ import {WorkspaceContext} from "@contexts/workspace.jsx";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
 
 export default function RequestEditorAuthorization(){
+	const {workspace} = useContext(WorkspaceContext);
 	let {authorization, setAuthorization, requestFolder} = useContext(RequestContext);
 	let {activeCollection} = useContext(WorkspaceContext);
-	
+
 	const handleChangeType = (authType) => {
 		setAuthorization(() => ({type: authType, data: {}}));
 	}
@@ -58,6 +59,7 @@ export default function RequestEditorAuthorization(){
 					options={Object.values(Request.AUTHORIZATION)}
 					className="auth-selector"
 					popupClassName="auth-selector-items"
+					disabled={!workspace?.can?.editable}
 				/>
 				<p>The authorization header will be automatically generated when you send the request.</p>
 			</div>
@@ -88,11 +90,17 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Username</div>
-							<AppInputVariable placeholder="Username" setText={(value) => handleChangeData("username", value)} text={authorization.data.username ?? ""}/>
+							<AppInputVariable placeholder="Username"
+											  setText={(value) => handleChangeData("username", value)}
+											  text={authorization.data.username ?? ""}
+											  disabled={!workspace?.can?.editable}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Password</div>
-							<AppInputVariable placeholder="Password" setText={(value) => handleChangeData("password", value)} text={authorization.data.password ?? ""}/>
+							<AppInputVariable placeholder="Password"
+											  setText={(value) => handleChangeData("password", value)}
+											  text={authorization.data.password ?? ""}
+											  disabled={!workspace?.can?.editable}/>
 						</div>
 					</div>
 				}
@@ -100,7 +108,10 @@ export default function RequestEditorAuthorization(){
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Token</div>
-							<AppInputVariable placeholder="Token" setText={(value) => handleChangeData("bearer_token", value)} text={authorization.data.bearer_token ?? ""}/>
+							<AppInputVariable placeholder="Token"
+											  setText={(value) => handleChangeData("bearer_token", value)}
+											  text={authorization.data.bearer_token ?? ""}
+											  disabled={!workspace?.can?.editable}/>
 						</div>
 					</div>
 				}
@@ -119,13 +130,16 @@ export default function RequestEditorAuthorization(){
 									{value: 'HS384', label: 'HS384'},
 									{value: 'HS512', label: 'HS512'},
 								]}
+								disabled={!workspace?.can?.editable}
 							/>
 						</div>
 						<div className="form-row">
 							<div className="title">Secret</div>
 							<div className="input-group">
 								<Input name="secret" value={authorization.data.secret ?? ""}
-									   onChange={(e) => handleChangeData("secret", e.target.value)}/>
+									   onChange={(e) => handleChangeData("secret", e.target.value)}
+									   disabled={!workspace?.can?.editable}
+								/>
 							</div>
 						</div>
 						<div className="form-row">
@@ -134,7 +148,11 @@ export default function RequestEditorAuthorization(){
 								<CodeEditor
 									value={authorization.data.payload ?? ""}
 									setValue={(value) => handleChangeData("payload", value)}
-									options={{lineNumbers: "off", language: "json"}}
+									options={{
+										lineNumbers: "off",
+										language: "json",
+										"readOnly": !workspace?.can?.editable
+									}}
 								/>
 							</div>
 						</div>

@@ -4,8 +4,10 @@ import _ from "lodash";
 import {DeleteOutlined} from "@ant-design/icons";
 import {Checkbox, Input} from "antd";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
-export default function RequestEditorBodyFormEncoded() {
+export default function RequestEditorBodyFormEncoded(){
+	const {workspace} = useContext(WorkspaceContext);
 	let {body, setBody} = useContext(RequestContext);
 	const containerRef = useRef(null);
 
@@ -33,7 +35,6 @@ export default function RequestEditorBodyFormEncoded() {
 		setBody(clone);
 	};
 
-
 	return (
 		<div className="request-editor-body-form-encoded" ref={containerRef}>
 			<div className="request-table">
@@ -47,12 +48,13 @@ export default function RequestEditorBodyFormEncoded() {
 				<div className="table-body">
 					{body.data["form_encoded"].map((row, index) => {
 						let prefixName = 'request_body_encoded';
-						let actionHtml = !(index === body.data["form_encoded"].length - 1) ?
-							<DeleteOutlined className="remove-icon" size='16' onClick={() => handleRemoveRow(index)}/> : '';
+						let actionHtml = !(index === body.data["form_encoded"].length - 1 || !workspace?.can?.editable) ?
+							<DeleteOutlined className="remove-icon" size='16'
+											onClick={() => handleRemoveRow(index)}/> : '';
 						let selectedHtml = !(index === body.data["form_encoded"].length - 1) ?
 							<Checkbox name={`${prefixName}_selected_${index}`} checked={row.selected} onChange={(e) =>
 								handleInputChange(index, "selected", e.target.checked)
-							}/> : '';
+							} disabled={!workspace?.can?.editable}/> : '';
 
 						return (
 							<div className="row" key={index}>
@@ -63,18 +65,23 @@ export default function RequestEditorBodyFormEncoded() {
 									{/*<Input placeholder="Key" variant="borderless" name={`${prefixName}_key_${index}`}*/}
 									{/*	   value={row.key}*/}
 									{/*	   onChange={(e) => handleInputChange(index, "key", e.target.value)}/>*/}
-									<AppInputVariable placeholder="Key" setText={(value) => handleInputChange(index, "key", value)} text={row.key}/>
+									<AppInputVariable placeholder="Key"
+													  setText={(value) => handleInputChange(index, "key", value)}
+													  text={row.key} disabled={!workspace?.can?.editable}/>
 								</div>
 								<div className="col value-col">
 									{/*<Input placeholder="Value" variant="borderless"*/}
 									{/*	   name={`${prefixName}_value_${index}`} value={row.value}*/}
 									{/*	   onChange={(e) => handleInputChange(index, "value", e.target.value)}/>*/}
-									<AppInputVariable placeholder="Value" setText={(value) => handleInputChange(index, "value", value)} text={row.value}/>
+									<AppInputVariable placeholder="Value"
+													  setText={(value) => handleInputChange(index, "value", value)}
+													  text={row.value} disabled={!workspace?.can?.editable}/>
 								</div>
 								<div className="col content-col">
 									<Input placeholder="Description" variant="borderless"
 										   name={`${prefixName}_content_${index}`} value={row.content}
-										   onChange={(e) => handleInputChange(index, "content", e.target.value)}/>
+										   onChange={(e) => handleInputChange(index, "content", e.target.value)}
+										   disabled={!workspace?.can?.editable}/>
 								</div>
 								<div className="col action-col">
 									{actionHtml}

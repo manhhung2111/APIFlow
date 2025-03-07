@@ -1,12 +1,13 @@
-import {Button, Input, Select, Skeleton, Space} from "antd";
+import {Button, Select, Skeleton, Space} from "antd";
 import {SendOutlined} from "@ant-design/icons";
 import {useContext, useState} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import Request from "@components/request/request.jsx";
 import AppInputVariable from "@components/app/input/variable/input.jsx";
-import log from "eslint-plugin-react/lib/util/log.js";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function RequestEditorUrl(){
+	const {workspace} = useContext(WorkspaceContext);
 	const {request, url, setUrl, params, setParams, handleSend, method, setMethod} = useContext(RequestContext);
 
 	const [options, setOptions] = useState(Object.values(Request.METHODS));
@@ -75,7 +76,7 @@ export default function RequestEditorUrl(){
 	}
 
 	const handleSearch = (query) => {
-		let temp =  Object.values(Request.METHODS).filter(method => {
+		let temp = Object.values(Request.METHODS).filter(method => {
 				return method.value.toLowerCase().includes(query.toLowerCase())
 			}
 		);
@@ -94,16 +95,19 @@ export default function RequestEditorUrl(){
 						options={options}
 						onChange={handleChangeMethod}
 						onSearch={handleSearch}
+						disabled={!workspace?.can?.editable}
 					/>
 					<div className="url">
-						<AppInputVariable placeholder="Enter URL or paste text" setText={(value) => handleChangeUrl(value)} text={url}/>
+						<AppInputVariable placeholder="Enter URL or paste text"
+										  setText={(value) => handleChangeUrl(value)} text={url}
+										  disabled={!workspace.can?.editable}/>
 					</div>
 				</>}
-				{!request && <Skeleton.Input style={{width: "60vw"}} active={true} />}
+				{!request && <Skeleton.Input style={{width: "60vw"}} active={true}/>}
 			</Space.Compact>
 			<div className="editor-action">
-				{!request && <Skeleton.Button />}
-				{request && <Button type="primary" icon={<SendOutlined />} onClick={handleSend}>
+				{!request && <Skeleton.Button/>}
+				{request && <Button type="primary" icon={<SendOutlined/>} onClick={handleSend}>
 					Send
 				</Button>}
 			</div>

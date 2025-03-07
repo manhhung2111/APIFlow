@@ -11,6 +11,7 @@ import {WorkspaceContext} from "@contexts/workspace.jsx";
 const { Paragraph } = Typography;
 
 export default function RequestDisplayHeader(){
+	const {workspace} = useContext(WorkspaceContext);
 	const {request, requestFolder, handleSave, actionManagers, name, handleChangeName} = useContext(RequestContext);
 	const {activeCollection} = useContext(WorkspaceContext);
 
@@ -34,13 +35,13 @@ export default function RequestDisplayHeader(){
 		breadCrumbs.push({type: 'separator'});
 		breadCrumbs.push({
 			title: <Paragraph
-				editable={{
+				editable={workspace?.can?.editable ? {
 					icon: <EditOutlined />,
 					tooltip: 'Click to edit request',
 					onChange: handleChangeName,
 					enterIcon: <EnterOutlined />,
 					autoSize: {minRows: 1, maxRows: 2},
-				}}
+				} : null}
 			>
 				{name}
 			</Paragraph>
@@ -58,7 +59,7 @@ export default function RequestDisplayHeader(){
 				items={constructBreadCrumbs(request, requestFolder, activeCollection)}
 			/>}
 			{!request && <Skeleton.Input className="rdh-actions" active/>}
-			{request &&
+			{request && workspace?.can?.editable &&
 				<div>
 					<Button color="default" variant="text" icon={<SaveOutlined style={{fontSize: "14px"}}/>}
 							onClick={handleSave}>
