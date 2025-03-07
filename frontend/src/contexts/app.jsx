@@ -1,8 +1,6 @@
 import {createContext, useEffect, useState} from "react";
 import {ConfigProvider} from "antd";
 import UserService from "@services/user.js";
-import WorkspaceService from "@services/workspace.js";
-import {toast} from "react-toastify";
 import PageLoader from "@components/app/utils/loader.jsx";
 import {useNavigate} from "react-router";
 
@@ -12,6 +10,7 @@ export default function AppContextProvider(props){
 	const {children} = props;
 
 	const [user, setUser] = useState(null);
+	const [users, setUsers] = useState([]);
 	const [workspaces, setWorkspaces] = useState([]);
 	const [fetching, setFetching] = useState(true);
 	const navigate = useNavigate();
@@ -24,6 +23,12 @@ export default function AppContextProvider(props){
 				if(response.code === 0){
 					setUser(response.data.user);
 					localStorage.setItem("user", JSON.stringify(response.data.user));
+
+					const usersResult = await UserService.getAll();
+					if(usersResult.code === 0){
+						console.log(usersResult.data.users)
+						setUsers(usersResult.data.users);
+					}
 				} else {
 					setUser(null);
 					localStorage.removeItem("user");
@@ -37,7 +42,7 @@ export default function AppContextProvider(props){
 			} finally {
 				setFetching(false);
 			}
-		};
+		}
 
 		if(localStorage.getItem("user")){
 			if(!user){
@@ -49,24 +54,6 @@ export default function AppContextProvider(props){
 		}
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user]);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			if (user) {
-				const workspaceResponse = await WorkspaceService.mine();
-
-				if(workspaceResponse.code === 0){
-					setWorkspaces([...workspaceResponse.data.workspaces]);
-				} else {
-					toast.error(workspaceResponse.message);
-				}
-			}
-		}
-
-		if (user) {
-			fetchData();
-		}
 	}, [user]);
 
 	if(fetching){
@@ -81,7 +68,7 @@ export default function AppContextProvider(props){
 				}
 			}}
 		>
-			<AppContext.Provider value={{user, setUser, workspaces, setWorkspaces}}>
+			<AppContext.Provider value={{user, setUser, workspaces, setWorkspaces, users, setUsers}}>
 				{children}
 			</AppContext.Provider>
 		</ConfigProvider>

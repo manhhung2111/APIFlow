@@ -1,26 +1,54 @@
 import {WorkspaceContext} from "@contexts/workspace.jsx";
-import {useContext} from "react";
-import {Button, ColorPicker, Mentions} from "antd";
+import React, {useContext, useEffect, useState} from "react";
+import {Button, ColorPicker} from "antd";
+import AppInputUser from "@components/app/input/user/user.jsx";
+import {AppContext} from "@contexts/app.jsx";
+import WorkspaceService from "@services/workspace.js";
+import {toast} from "react-toastify";
 
 export default function WorkspaceDisplaySettings(){
 	const {workspace, setWorkspace} = useContext(WorkspaceContext);
+	const {users} = useContext(AppContext);
+	const [editors, setEditors] = useState(workspace.editors || []);
+	const [commenters, setCommenters] = useState(workspace.commenters || []);
+	const [viewers, setViewers] = useState(workspace.viewers || []);
 
-	const options = [
-		{value: "mason", label: "Mason"},
-		{value: "ngoclinh", label: "Ngoc Linh"}
-	]
+	const [hasChanges, setHasChanges] = useState(false);
 
-	const handleSelectEditor = (option) => {
+	useEffect(() => {
+		if(
+			editors !== workspace.editors ||
+			commenters !== workspace.commenters ||
+			viewers !== workspace.viewers
+		){
+			setHasChanges(true);
+		} else {
+			setHasChanges(false);
+		}
+	}, [editors, commenters, viewers, workspace]);
 
-	}
+	const handleCancel = () => {
+		setEditors(workspace.editors || []);
+		setCommenters(workspace.commenters || []);
+		setViewers(workspace.viewers || []);
+		setHasChanges(false);
+	};
 
-	const handleSelectCommenters = (option) => {
+	// Cancel function
+	const handleSave = async () => {
+		const editorsList = editors.join(",");
+		const commentersList = commenters.join(",");
+		const viewersList = viewers.join(",");
 
-	}
-
-	const handleSelectViewers = (option) => {
-
-	}
+		const result = await WorkspaceService.saveAccessList(workspace, editorsList, commentersList, viewersList);
+		if (result.code === 0) {
+			setWorkspace(result.data.workspace);
+			setHasChanges(false);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	};
 
 	return (
 		<div className="workspace-display-settings">
@@ -29,34 +57,23 @@ export default function WorkspaceDisplaySettings(){
 				<p>Manage access list of your workspace</p>
 				<div className="row">
 					<h4>Editors</h4>
-					<Mentions
-						autoSize
-						style={{width: '100%'}}
-						options={options}
-						onSelect={(option) => handleSelectEditor(option)}
-						placeholder={"Use @ to add an user"}
-					/>
+					<AppInputUser value={editors} setValue={setEditors}/>
 				</div>
 				<div className="row">
 					<h4>Commenters</h4>
-					<Mentions
-						autoSize
-						style={{width: '100%'}}
-						options={options}
-						onSelect={(option) => handleSelectCommenters(option)}
-						placeholder={"Use @ to add an user"}
-					/>
+					<AppInputUser value={commenters} setValue={setCommenters}/>
 				</div>
 				<div className="row">
 					<h4>Viewers</h4>
-					<Mentions
-						autoSize
-						style={{width: '100%'}}
-						options={options}
-						onSelect={(option) => handleSelectViewers(option)}
-						placeholder={"Use @ to add an user"}
-					/>
+					<AppInputUser value={viewers} setValue={setViewers}/>
 				</div>
+
+				{hasChanges && (
+					<div className="button-row">
+						<Button className="save-btn" onClick={handleSave}>Save</Button>
+						<Button color="default" variant="filled" onClick={handleCancel}>Cancel</Button>
+					</div>
+				)}
 			</div>
 			<div className="section">
 				<h3>Workspace theme</h3>

@@ -34,4 +34,13 @@ export default class WorkspaceService {
 			throw new Error(error.message || 'Create workspace failed');
 		}
 	}
+
+
+	static async saveAccessList(workspace, editors, commenters, viewers) {
+		try {
+			return await axios.put(`/workspaces/${workspace._id}/access`, {editors, commenters, viewers});
+		} catch (error) {
+			throw new Error(error.message || 'Save access list failed');
+		}
+	}
 }

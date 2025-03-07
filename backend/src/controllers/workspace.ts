@@ -128,7 +128,7 @@ export const deleteWorkspace = async (request: Request, response: Response) => {
 
 		await workspace.delete(session);
 
-		await workspace.on().deleted();
+		await workspace.on().deleted(session);
 
 		await session.commitTransaction();
 
@@ -140,5 +140,25 @@ export const deleteWorkspace = async (request: Request, response: Response) => {
 		response.status(500).json(Code.error((error as Error).message));
 	} finally{
 		await session.endSession();
+	}
+};
+
+export const updateWorkspaceAccessList = async (request: Request, response: Response) => {
+	logger.info("[Controller] Update workspace access list");
+
+	try{
+		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
+		if (!workspace.good()){
+			response.status(204).json(Code.error(Code.INVALID_DATA));
+		}
+
+		await workspace.reader().readUsers();
+
+		await workspace.save();
+
+		response.status(201).json(Code.success(`Update workspace members successfully.`, {workspace: workspace.release()}));
+	} catch (error){
+		logger.error((error as Error).stack);
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };

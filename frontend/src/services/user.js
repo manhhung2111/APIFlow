@@ -35,4 +35,20 @@ export default class UserService {
 			throw new Error(error?.message || 'Verification failed');
 		}
 	}
+
+	static async search(query) {
+		try {
+			return await axios.get('/users?query=' + query);
+		} catch (error) {
+			throw new Error(error?.message || 'Get all users failed');
+		}
+	}
+
+	static async getAll() {
+		try {
+			return await axios.get('/users/all');
+		} catch (error) {
+			throw new Error(error?.message || 'Get all users failed');
+		}
+	}
 }

@@ -1,8 +1,20 @@
 import express from "express";
 
-import {forgotPassword, loginUser, logoutUser, registerUser, resetPassword, verifyUser} from "@controllers/user";
+import {
+    forgotPassword,
+    getAllUsers,
+    loginUser,
+    logoutUser,
+    registerUser,
+    resetPassword,
+    searchUsers,
+    verifyUser
+} from "@controllers/user";
 
 const router = express.Router();
+
+router.get("/", searchUsers);
+router.get("/all", getAllUsers);
 
 // Authentication routes
 router.post("/login", loginUser);

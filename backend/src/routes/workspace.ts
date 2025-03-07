@@ -7,7 +7,7 @@ import {
 	deleteWorkspace,
 	getAllWorkspaces,
 	getWorkspaceById,
-	updateWorkspace,
+	updateWorkspace, updateWorkspaceAccessList,
 } from "@controllers/workspace";
 
 const router = express.Router();
@@ -23,6 +23,7 @@ router.post("/", createNewWorkspace);
 
 // Edit routes
 router.put("/:workspace_id", workspaceEditable, updateWorkspace);
+router.put("/:workspace_id/access", workspaceAdmin, updateWorkspaceAccessList);
 
 router.delete("/:workspace_id", workspaceAdmin, deleteWorkspace);
 

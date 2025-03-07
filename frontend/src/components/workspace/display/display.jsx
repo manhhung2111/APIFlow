@@ -14,10 +14,14 @@ export default function WorkspaceDisplay() {
 	}, [])
 
 	const items = [
-		{label: "Overview", key: 1, children: <WorkspaceDisplayOverview />},
-		{label: "Settings", key: 2, children: <WorkspaceDisplaySettings />},
-	]
+		{ label: "Overview", key: 1, children: <WorkspaceDisplayOverview /> },
+		...(workspace?.can?.full_access
+			? [{ label: "Settings", key: 2, children: <WorkspaceDisplaySettings /> }]
+			: [])
+	];
 
+	console.log("items", items);
+	console.log("worksapce", workspace?.can?.full_access)
 	return (
 		<div className="workspace-display">
 			<div className="header">

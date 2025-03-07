@@ -5,7 +5,7 @@ import './styles/home.scss'
 import {NavLink, useNavigate} from "react-router";
 import NorthEastIcon from "@assets/icons/north.east.jsx";
 import {BarChartOutlined, TeamOutlined, UserOutlined} from "@ant-design/icons";
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {AppContext} from "@contexts/app.jsx";
 import EmptyMain from "@assets/images/empty.main.svg";
 import Analytics from "@assets/images/analytics.svg";
@@ -14,9 +14,27 @@ import Integration from "@assets/images/integration.svg";
 import MenuBook from "@assets/images/menu.book.svg";
 import PasswordAuthorization from "@assets/images/password.authorization.svg";
 import QuickReference from "@assets/images/quick.reference.svg";
+import WorkspaceService from "@services/workspace.js";
+import {toast} from "react-toastify";
 
 export default function HomePage(){
-	let {workspaces} = useContext(AppContext);
+	let {workspaces, setWorkspaces, user} = useContext(AppContext);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (user) {
+				const workspaceResponse = await WorkspaceService.mine();
+
+				if(workspaceResponse.code === 0){
+					setWorkspaces([...workspaceResponse.data.workspaces]);
+				} else {
+					toast.error(workspaceResponse.message);
+				}
+			}
+		}
+
+		fetchData();
+	}, [])
 
 
 	return (

@@ -188,6 +188,19 @@
       }
     }
 
+    .button-row {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      .save-btn {
+        background-color: $base-color-brand;
+        color: white;
+      }
+      button {
+        font-size: $text-size-m;
+      }
+    }
+
     .color-row {
       margin-top: 16px;
       display: flex;

@@ -3,14 +3,18 @@ import {QuestionCircleOutlined, SettingOutlined, UserOutlined} from "@ant-design
 import {NavLink, useNavigate} from "react-router";
 import AccountProfileIcon from "@assets/icons/account.profile.jsx";
 import SignOutIcon from "@assets/icons/signout.jsx";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {AppContext} from "@contexts/app.jsx";
 import UserService from "@services/user.js";
 import {toast} from "react-toastify";
+import UserAccountSettings from "@components/user/account.settings.jsx";
 
 export default function SuperHeaderSide(){
 	const {setUser} = useContext(AppContext);
 	const navigate = useNavigate();
+
+	const [open, setOpen] = useState(false);
+
 
 	const handleSignOut = async () => {
 		const response = await UserService.logout();
@@ -29,7 +33,8 @@ export default function SuperHeaderSide(){
 		{
 			label: 'Account Settings',
 			key: '1',
-			icon: <AccountProfileIcon style={{fontSize: "14px"}}/>
+			icon: <AccountProfileIcon style={{fontSize: "14px"}}/>,
+			onClick: () => setOpen(true),
 		},
 		{
 			label: 'Sign Out',
@@ -41,7 +46,7 @@ export default function SuperHeaderSide(){
 
 	return (
 		<div className="super-header-side">
-			<NavLink to={"helpdesk"} className="shs-item"><QuestionCircleOutlined style={{fontSize: "16px"}}/></NavLink>
+			<QuestionCircleOutlined style={{fontSize: "16px"}} className="shs-item"/>
 			<SettingOutlined style={{fontSize: "16px"}} className="shs-item"/>
 			<Dropdown
 				trigger={['click']}
@@ -53,6 +58,7 @@ export default function SuperHeaderSide(){
 			>
 				<Avatar style={{ backgroundColor: '#1F509A' }} icon={<UserOutlined/>} size={"small"}/>
 			</Dropdown>
+			<UserAccountSettings open={open} setOpen={setOpen} />
 		</div>
 	);
 }

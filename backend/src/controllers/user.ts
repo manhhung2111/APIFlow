@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {Code, HTMLInput, JWT} from "@ap/core";
-import {DBUser} from "@dev/user";
+import {DBUser, DBUserLoader} from "@dev/user";
 import UserService from "@services/user";
 import logger from "@utils/logger";
 import Client from "@dev/client";
@@ -81,4 +81,32 @@ export const logoutUser = async (request: Request, response: Response) => {
 
     response.cookie("access_token", "", {signed: true, maxAge: 0, httpOnly: true});
     response.status(200).json(Code.success("Logout successful"));
+};
+
+export const searchUsers = async (request: Request, response: Response) => {
+    logger.info("[Controller] Search users by query")
+    try {
+        const users = await DBUserLoader.searchByQuery();
+
+        const usersRelease = users.map(user => user.releaseCompact());
+
+        response.status(201).json(Code.success("Fetch user successfully", {users: usersRelease}));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
+};
+
+export const getAllUsers = async (request: Request, response: Response) => {
+    logger.info("[Controller] Get all users")
+    try {
+        const users = await DBUserLoader.all();
+
+        const usersRelease = users.map(user => user.releaseCompact());
+
+        response.status(201).json(Code.success("Get all users successfully", {users: usersRelease}));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
 };

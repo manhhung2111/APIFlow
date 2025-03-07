@@ -40,26 +40,39 @@ abstract class DBModel<T>{
 		}
 	}
 
-	public static async find<T>(this: {new(): DBModel<T>}, condition: DBCondition): Promise<DBModel<T>[]>{
-		try{
+	public static async find<T>(
+		this: { new(): DBModel<T> },
+		condition: DBCondition | null = null
+	): Promise<DBModel<T>[]> {
+		try {
 			const instance = new this();
-			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
 
-			const documents = await instance._db
-				.find(filter, condition.projection, {
-					limit: condition.limit,
-					skip: condition.skip,
-				})
-				.sort(condition.sort).exec();
+			// If condition is null, load all documents with no restrictions
+			const filter: FilterQuery<T> = condition?.filter as FilterQuery<T> || {};
+			const projection = condition?.projection || {};
+			const limit = condition?.limit ?? 0; // 0 means no limit (load all)
+			const skip = condition?.skip ?? 0; // Default: 0 (no skipping)
+			const sort = condition?.sort || {}; // No sorting if not specified
+
+			const query = instance._db.find(filter, projection);
+
+			// Apply optional query modifications
+			if (limit > 0) query.limit(limit);
+			if (skip > 0) query.skip(skip);
+			if (Object.keys(sort).length > 0) query.sort(sort);
+
+			const documents = await query.exec();
+
 			return documents.map((doc) => {
 				const obj = new this();
 				obj._setObject(doc);
 				return obj;
 			});
-		} catch (error){
+		} catch (error) {
 			throw new Code((error as Error).message);
 		}
 	}
+
 
 	public static async deleteOne<T>(this: {
 		new(): DBModel<T>
