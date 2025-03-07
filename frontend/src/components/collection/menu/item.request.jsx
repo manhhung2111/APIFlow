@@ -12,7 +12,7 @@ import ExampleService from "@services/example.js";
 import FolderService from "@services/folder.js";
 
 export default function RequestMenuItem({request, examples: requestExamples}){
-	const {setExamples, requests, setRequests} = useContext(WorkspaceContext);
+	const {workspace, setExamples, requests, setRequests} = useContext(WorkspaceContext);
 	const [collapsed, setCollapsed] = useState(true);
 	// Toggle function
 	const handleToggleMenu = () => {
@@ -115,7 +115,7 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 			</NavLink>
 
 			<div className="item-side">
-				<ActionManager am={actionManagers}/>
+				{workspace?.can?.editable && <ActionManager am={actionManagers}/>}
 			</div>
 		</div>
 

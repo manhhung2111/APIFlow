@@ -7,7 +7,7 @@ import {WorkspaceContext} from "@contexts/workspace.jsx";
 import EnvironmentService from "@services/environment.js";
 
 export default function EnvironmentMenuItem({environment}){
-	const {setEnvironments} = useContext(WorkspaceContext);
+	const {workspace, setEnvironments} = useContext(WorkspaceContext);
 	const navigate = useNavigate();
 
 	const handleDelete = async() => {
@@ -38,7 +38,7 @@ export default function EnvironmentMenuItem({environment}){
 			</NavLink>
 
 			<div className="item-side">
-				{environment.scope === 1 && <ActionManager am={actionManagers}/>}
+				{environment.scope === 1 && workspace?.can?.editable && <ActionManager am={actionManagers}/>}
 			</div>
 		</div>
 	)

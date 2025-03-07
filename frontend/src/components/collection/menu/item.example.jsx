@@ -7,7 +7,7 @@ import {useContext} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function ExampleMenuItem({example}){
-	const {setExamples} = useContext(WorkspaceContext);
+	const {workspace, setExamples} = useContext(WorkspaceContext);
 
 	const {example_id} = useParams();
 	const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function ExampleMenuItem({example}){
 			</NavLink>
 
 			<div className="item-side">
-				<ActionManager am={actionManagers}/>
+				{workspace?.can?.editable && <ActionManager am={actionManagers}/>}
 			</div>
 		</div>
 	</div>)

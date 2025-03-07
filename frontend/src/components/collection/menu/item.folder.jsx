@@ -9,7 +9,7 @@ import {toast} from "react-toastify";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function FolderMenuItem({folder, requests, examples}){
-	const {setRequests, setFolders, setExamples} = useContext(WorkspaceContext);
+	const {workspace, setRequests, setFolders, setExamples} = useContext(WorkspaceContext);
 
 	const location = useLocation();
 	const {folder_id} = useParams();
@@ -111,7 +111,7 @@ export default function FolderMenuItem({folder, requests, examples}){
 				</NavLink>
 
 				<div className="item-side">
-					<ActionManager am={actionManagers}/>
+					{workspace?.can?.editable && <ActionManager am={actionManagers}/>}
 				</div>
 			</div>
 

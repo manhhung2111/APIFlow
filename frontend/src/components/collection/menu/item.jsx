@@ -11,7 +11,7 @@ import FolderService from "@services/folder.js";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function CollectionMenuItem({collection, folders, requests, examples}){
-	const {setRequests, setFolders, setCollections, setExamples} = useContext(WorkspaceContext);
+	const {workspace, setRequests, setFolders, setCollections, setExamples} = useContext(WorkspaceContext);
 
 	const location = useLocation();
 
@@ -129,7 +129,7 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 				</NavLink>
 
 				<div className="item-side">
-					<ActionManager am={actionManagers}/>
+					{workspace?.can?.editable && <ActionManager am={actionManagers}/>}
 				</div>
 			</div>
 

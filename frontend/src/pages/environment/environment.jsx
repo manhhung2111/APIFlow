@@ -1,6 +1,6 @@
 import {useContext, useEffect, useRef, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
-import {useLocation, useMatch, useNavigate, useParams} from "react-router";
+import {useMatch, useNavigate, useParams} from "react-router";
 import EnvironmentService from "@services/environment.js";
 import _ from "lodash";
 import {Button, Checkbox, Input, Select, Skeleton} from "antd";
@@ -26,8 +26,6 @@ export default function EnvironmentPage(){
 		setVisibility(prev => ({...prev, [index]: !prev[index]}));
 	};
 
-
-
 	useEffect(() => {
 		async function fetchEnvironment(){
 			const result = await EnvironmentService.getById(environment_id, workspace._id);
@@ -52,7 +50,6 @@ export default function EnvironmentPage(){
 			fetchEnvironment();
 		}
 	}, [environment_id, workspace]);
-
 
 	useEffect(() => {
 		setActiveMenuKey(2);
@@ -131,10 +128,11 @@ export default function EnvironmentPage(){
 						{environment.name}
 					</div>
 					<div className="side">
-						<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
-							Save
-						</Button>
-						{environment.scope === 1 && <ActionManager am={actionManagers}/>}
+						{workspace?.can?.editable &&
+							<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
+								Save
+							</Button>}
+						{environment.scope === 1 && workspace?.can?.editable && <ActionManager am={actionManagers}/>}
 					</div>
 				</div>}
 				{!environment && <Skeleton.Input active={true}/>}
@@ -172,13 +170,13 @@ export default function EnvironmentPage(){
 							let actionHtml = !(index === variables.length - 1) ?
 								<>
 									{showIcon}
-									<DeleteOutlined className="remove-icon" size='16'
-													onClick={() => handleRemoveRow(index)}/>
+									{workspace?.can?.editable && <DeleteOutlined className="remove-icon" size='16'
+																				 onClick={() => handleRemoveRow(index)}/>}
 								</> : '';
 							let selectedHtml = !(index === variables.length - 1) ?
 								<Checkbox checked={row.selected} onChange={(e) =>
 									handleInputChange(index, "selected", e.target.checked)
-								}/> : '';
+								} disabled={!workspace?.can?.editable}/> : '';
 
 							return (
 								<div className="row" key={index}>
@@ -187,7 +185,8 @@ export default function EnvironmentPage(){
 									</div>
 									<div className="col key-col">
 										<Input placeholder="Variable" variant="borderless" value={row.variable}
-											   onChange={(e) => handleInputChange(index, "variable", e.target.value)}/>
+											   onChange={(e) => handleInputChange(index, "variable", e.target.value)}
+											   disabled={!workspace?.can?.editable}/>
 									</div>
 									<div className=" col type-col">
 										<Select
@@ -199,6 +198,7 @@ export default function EnvironmentPage(){
 												{value: 'text', label: 'Text'},
 												{value: 'password', label: 'Secret'},
 											]}
+											disabled={!workspace?.can?.editable}
 										/>
 									</div>
 									<div className="col value-col">
@@ -206,6 +206,7 @@ export default function EnvironmentPage(){
 											   value={row.initial_value}
 											   onChange={(e) => handleInputChange(index, "initial_value", e.target.value)}
 											   type={row.type === "password" ? visibility[index] ? "text" : "password" : "text"}
+											   disabled={!workspace?.can?.editable}
 										/>
 									</div>
 									<div className="col content-col">
@@ -213,6 +214,7 @@ export default function EnvironmentPage(){
 											   value={row.current_value}
 											   onChange={(e) => handleInputChange(index, "current_value", e.target.value)}
 											   type={row.type === "password" ? visibility[index] ? "text" : "password" : "text"}
+											   disabled={!workspace?.can?.editable}
 										/>
 									</div>
 									<div className="col action-col">
