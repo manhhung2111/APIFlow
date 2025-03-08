@@ -49,14 +49,14 @@ export default function HomePage(){
 						<Button className="cta-btn" color="default" variant="outlined">Create Team</Button>
 					</div>
 					<div className="menu-section">
-						<NavLink className="link-btn" to={"/workspaces"}> <UserOutlined/> Workspaces</NavLink>
-						<NavLink className="link-btn" to={"/teams"}><TeamOutlined/> Teams</NavLink>
-						<NavLink className="link-btn" to={"/reports"}><BarChartOutlined/> Reports</NavLink>
+						<NavLink className="link-btn" to={"/"}> <UserOutlined/> Workspaces</NavLink>
+						<NavLink className="link-btn" to={"/"}><TeamOutlined/> Teams</NavLink>
+						<NavLink className="link-btn" to={"/"}><BarChartOutlined/> Reports</NavLink>
 					</div>
 					<div className="menu-section">
-						<NavLink className="link-ref" to={"/introduction"}>What is APIFlow <NorthEastIcon/> </NavLink>
-						<NavLink className="link-ref" to={"/doc"}>Learning Center <NorthEastIcon/></NavLink>
-						<NavLink className="link-ref" to={"/reports"}>Reports <NorthEastIcon/></NavLink>
+						<NavLink className="link-ref" to={"/"}>What is APIFlow <NorthEastIcon/> </NavLink>
+						<NavLink className="link-ref" to={"/"}>Learning Center <NorthEastIcon/></NavLink>
+						<NavLink className="link-ref" to={"/"}>Reports <NorthEastIcon/></NavLink>
 					</div>
 				</div>
 				<div className="master-main">

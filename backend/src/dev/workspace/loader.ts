@@ -6,8 +6,14 @@ import {DBWorkspace} from "@dev/workspace";
 export default class Loader {
     public static async mine(user_id: String | null = null) {
         const sc = new DBCondition().setFilter({
-            user_id: {$eq: Client?.viewer?._id?.toString() ?? user_id},
+            $or: [
+                {user_id: {$eq: Client?.viewer?._id?.toString() ?? user_id}},
+                {editors: {$in: [Client?.viewer?._id?.toString() ?? user_id]}},
+                {commenters: {$in: [Client?.viewer?._id?.toString() ?? user_id]}},
+                {viewers: {$in: [Client?.viewer?._id?.toString() ?? user_id]}}
+            ]
         }).setLimit(DBWorkspace.PAGE_SIZE);
+
 
         let page_query = HTMLInput.page();
         if (!Validation.isInt(page_query) || Number(page_query) <= 0) {

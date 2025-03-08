@@ -5,13 +5,14 @@
   display: grid;
   grid-template-columns: 1fr 48px;
   align-items: center;
-
+  width: calc(100vw - 330px);
   .main {
     display: grid;
     grid-template-columns: 1fr 0.15fr;
     align-items: center;
     height: 40px;
     gap: 16px;
+    width: calc(100vw - 330px - 48px);
     .info {
       display: flex;
       align-items: center;
@@ -24,7 +25,7 @@
         font-weight: $text-weight-bold;
         color: $content-color-primary;
         line-height: 1;
-        max-width: 30%;
+        max-width: 400px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -34,7 +35,7 @@
         position: relative;
         line-height: 1;
         padding-left: 8px;
-        width: 50%;
+        width: 800px;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -72,7 +73,6 @@
 
   .side {
     padding: 4px;
-
     display: flex;
     align-items: center;
     justify-content: center;
