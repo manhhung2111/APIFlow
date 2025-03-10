@@ -1,0 +1,109 @@
+@use "@styles/variables" as *;
+
+.environment-master-menu {
+  margin-top: 4px;
+  .environment-menu-item {
+    position: relative;
+    box-sizing: border-box;
+    display: flex;
+    border-radius: $border-radius-default;
+    padding: 4px 8px;
+    height: 28px;
+
+    &:hover {
+      background-color: $highlight-background-color-primary;
+
+      .item-side {
+        display: block;
+      }
+    }
+
+    .item {
+      flex: 1;
+      display: flex;
+      gap: 6px;
+
+      &.active {
+        .icon {
+          color: $content-color-primary;
+        }
+
+        .label {
+          color: $content-color-primary;
+        }
+      }
+
+      align-items: center;
+      //padding: 4px 8px;
+      box-sizing: border-box;
+      cursor: pointer;
+      color: $content-color-primary;
+
+      .icon {
+        color: $content-color-secondary;
+        flex: 0 0 8px;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: $text-size-l;
+      }
+
+      .label {
+        font-size: $text-size-m;
+        color: $content-color-secondary;
+      }
+
+    }
+
+    .item-side {
+      display: none;
+      border-radius: $border-radius-default;
+      height: fit-content;
+
+      .ant-btn {
+        padding: 0;
+        height: fit-content;
+        width: fit-content;
+      }
+    }
+  }
+
+  hr {
+    border: none;  /* Removes default border */
+    height: 1px;   /* Adjust thickness */
+    background-color: $border-color-default;  /* Change color */
+    width: 96%;
+    margin: 8px auto;  /* Center the line */
+  }
+
+  .empty-collections {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    img {
+      width: 90%;
+    }
+    h4 {
+      margin-top: 8px;
+      width: 90%;
+      font-weight: $text-weight-bold;
+      color: $content-color-primary;
+      text-align: center;
+    }
+
+    p {
+      font-size: $text-size-m;
+      color: $content-color-secondary;
+      width: 90%;
+      text-align: center;
+    }
+
+    button {
+      margin-top: 4px;
+      font-size: $text-size-m;
+    }
+  }
+
+}

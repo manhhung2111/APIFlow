@@ -31,7 +31,8 @@ export type MongoDBValue =
 	| null
 	| RegExp
 	| Date
-	| Array<string | number | boolean>;
+	| Array<string | number | boolean>
+	| {[key: string]: any};
 
 /**
  * Recursive type for MongoDB query conditions

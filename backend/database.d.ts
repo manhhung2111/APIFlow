@@ -2,108 +2,87 @@ import {Types} from 'mongoose';
 
 export interface DUser {
     email: string,
+    username: string,
     password: string,
-    first_name?: string,
-    last_name?: string,
+    name?: string,
 
     oauth_provider?: string,
     oauth_id?: string,
     remember_token?: string,
 
-    data?: object | {},
+    data: object | {},
 
-    created_at?: number,
-    updated_at?: number,
+    created_at: number,
+    updated_at: number,
 }
 
 export interface DWorkspace {
-    user_id: Types.ObjectId,
+    user_id: string,
 
     name: string,
-    content?: string,
+    content: string,
 
-    viewers: Array<Types.ObjectId>,
-    commenters: Array<Types.ObjectId>,
-    editors: Array<Types.ObjectId>,
+    viewers: Array<string>,
+    commenters: Array<string>,
+    editors: Array<string>,
 
-    data?: object | {},
+    data: object | {},
     token: string,
 
-    created_at?: number,
-    updated_at?: number,
-}
-
-export interface DWorkspaceFollowing {
-    user_id: Types.ObjectId,
-    creator_id: Types.ObjectId,
-    workspace_id: Types.ObjectId,
-
-    name: string,
-    content?: string,
-
-    viewing?: 0 | 1,
-    commenting?: 0 | 1,
-    editing?: 0 | 1,
-
-    viewers: Array<Types.ObjectId>,
-    commenters: Array<Types.ObjectId>,
-    editors: Array<Types.ObjectId>,
-
-    data?: object | {},
-    token: string,
-
-    created_at?: number,
-    updated_at?: number,
+    created_at: number,
+    updated_at: number,
 }
 
 export interface DRequest {
-    user_id: Types.ObjectId;
+    user_id: string;
 
-    workspace_id: Types.ObjectId;
-    collection_id: Types.ObjectId;
-    folder_id?: Types.ObjectId | null;
+    workspace_id: string;
+    collection_id: string;
+    folder_id?: string | null;
 
     name: string;
-    content?: string;
+    content: string;
 
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    method: string;
     url: string;
 
-    params?: Array<{
-        key?: string;
-        value?: string;
-        description?: string;
+    params: Array<{
+        selected: boolean,
+        key: string;
+        value: string;
+        content: string;
     }>;
-    headers?: Array<{
-        key?: string;
-        value?: string;
-        description?: string;
+    headers: Array<{
+        selected: boolean,
+        key: string;
+        value: string;
+        content: string;
     }>;
-    authorization?: {
-        authorization_type: 0 | 1 | 2 | 3 | 4;
-        authorization_data?: object;
+    authorization: {
+        type: number;
+        data: object;
     };
-    body?: {
-        body_type: 0 | 1 | 2 | 3;
-        body_data?: object;
+    body: {
+        type: number;
+        data: object;
     };
-    scripts?: {
-        pre_script?: string;
-        post_script?: string;
+    scripts: {
+        pre_request: string;
+        post_response: string;
     };
 
-    tag?: 0 | 1 | 2;
+    tag?: number;
 
-    data?: object | {};
+    data: object | {};
     token: string;
 
-    created_at?: number;
-    updated_at?: number;
+    created_at: number;
+    updated_at: number;
 }
 
 export interface DRequestHistory {
-    user_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
+    user_id: string;
+    workspace_id: string;
 
     request: object;
     response: {
@@ -117,48 +96,59 @@ export interface DRequestHistory {
     data?: object | {};
     token: string;
 
-    created_at?: number;
-    updated_at?: number;
+    created_at: number;
+    updated_at: number;
 }
 
 export interface DFolder {
-    user_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
-    collection_id: Types.ObjectId;
+    user_id: string;
+    workspace_id: string;
+    collection_id: string;
 
     name: string;
-    content?: string;
+    content: string;
 
-    data?: object | {};
+    authorization: {
+        type: number;
+        data: object;
+    };
+
+    scripts: {
+        pre_request: string;
+        post_response: string;
+    };
+
+    data: object | {};
     token: string;
 
-    created_at?: number;
-    updated_at?: number;
+    created_at: number;
+    updated_at: number;
 }
 
 export interface DEnvironment {
-    user_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
+    user_id: string;
+    workspace_id: string;
 
     name: string;
 
-    scope: 0 | 1;
-    variables?: Array<{
-        variable?: string;
-        type?: "text" | "password";
-        initial_value?: string;
-        current_value?: string;
+    scope: number;
+    variables: Array<{
+        selected: boolean,
+        variable: string;
+        type: "text" | "password";
+        initial_value: string;
+        current_value: string;
     }>;
 
-    data?: object | {};
+    data: object | {};
     token: string;
 
-    created_at?: number;
-    updated_at?: number;
+    created_at: number;
+    updated_at: number;
 }
 
 export interface DComment {
-    user_id: Types.ObjectId;
+    user_id: string;
     meta_type?: string;
 
     obj_key: string;
@@ -166,7 +156,7 @@ export interface DComment {
 
     title?: string;
     content?: string;
-    followers?: Types.ObjectId[];
+    followers?: string[];
     status?: number;
 
     data?: object | {};
@@ -177,21 +167,38 @@ export interface DComment {
 }
 
 export interface DCollection {
-    user_id: Types.ObjectId;
-    workspace_id: Types.ObjectId;
+    user_id: string;
+    workspace_id: string;
 
     name: string;
     content?: string;
 
+    authorization: {
+        type: number;
+        data: object;
+    };
+
+    scripts: {
+        pre_request: string;
+        post_response: string;
+    };
+
+    variables: Array<{
+        selected: boolean,
+        variable: string;
+        initial_value: string;
+        current_value: string;
+    }>;
+
     data?: object | {};
     token: string;
 
-    created_at?: number;
-    updated_at?: number;
+    created_at: number;
+    updated_at: number;
 }
 
 export interface DActivityLog {
-    user_id: Types.ObjectId;
+    user_id:string;
     meta_type?: string;
 
     name?: string;
@@ -206,4 +213,24 @@ export interface DActivityLog {
 
     created_at?: number;
     updated_at?: number;
+}
+
+export interface DExample {
+    user_id: string;
+
+    name: string,
+
+    request: object;
+    response: object;
+
+    request_id: string;
+    folder_id: string | null;
+    collection_id: string;
+    workspace_id: string;
+
+    data: object | {};
+
+    token: string;
+    created_at: number;
+    updated_at: number;
 }

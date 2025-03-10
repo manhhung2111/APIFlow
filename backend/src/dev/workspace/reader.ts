@@ -1,0 +1,60 @@
+import {HydratedDocument} from "mongoose";
+import {DBReader} from "@ap/db";
+import {DWorkspace} from "@db-schemas";
+import {Code, HTMLInput, Validation} from "@ap/core";
+import Client from "@dev/client";
+import UUID from "@utils/uuid";
+import {DBUserLoader} from "@dev/user";
+
+export default class Reader extends DBReader<DWorkspace> {
+    constructor(obj: HydratedDocument<DWorkspace> | null | undefined) {
+        super(obj);
+    }
+
+    public async read() {
+        if (this.isCreating()) {
+            this._obj.user_id = Client.viewer._id.toString();
+            this._obj.token = UUID.randomTokenSize32();
+        }
+
+        await this.readName();
+        await this.readContent();
+        await this.readUsers();
+    }
+
+    public async readName() {
+        const name = HTMLInput.inputInline("name");
+        if (Validation.isEmpty(name)) {
+            throw new Code("Workspace name must not be empty");
+        }
+
+        if (name.length > 255) {
+            throw new Code("Workspace name too long, exceeds 255 characters");
+        }
+
+        this._obj.name = name;
+    }
+
+    public async readContent() {
+        this._obj.content = HTMLInput.inputEditor("content");
+    }
+
+
+    public async readUsers() {
+        this._obj.viewers = HTMLInput.inputList("viewers");
+        this._obj.commenters = HTMLInput.inputList("commenters");
+        this._obj.editors = HTMLInput.inputList("editors");
+    }
+
+
+    private async usernamesToIds(field: string) {
+        const usernames = HTMLInput.inputInline(field).match(/@(\w+)/g)?.map(user => user.slice(1)) || [];
+
+        if (usernames.length === 0) {
+            return [];
+        }
+
+        const users = await DBUserLoader.byUsernames(usernames);
+        return users.map(user => user.getField("_id"));
+    }
+}

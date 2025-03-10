@@ -2,7 +2,7 @@ import {model, Schema} from "mongoose";
 import {DComment} from "@db-schemas";
 
 const schema = new Schema<DComment>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
+	user_id: {type: String, required: true},
 	meta_type: {type: String, required: true},
 
 	obj_key: {type: String, required: true, unique: true},

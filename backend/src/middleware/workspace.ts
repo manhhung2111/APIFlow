@@ -1,65 +1,50 @@
 import {NextFunction, Request, Response} from "express";
+import {DBWorkspace} from "@dev/workspace";
+import {Code, HTMLInput} from "@ap/core";
+import logger from "@utils/logger";
 
-export const workspaceViewable = async (request: Request, response: Response, next: NextFunction) => {
-	const {_id} = response.locals.user;
-	const {workspace_id} = request.body;
+const createWorkspaceMiddleware = (checkPermission: (workspace: DBWorkspace) => boolean) =>
+	async (request: Request, response: Response, next: NextFunction) => {
+		try{
+			logger.info("Request into workspace middleware");
+			const workspace_id = HTMLInput.inputInline("workspace_id") || HTMLInput.param("workspace_id") || HTMLInput.query("workspace_id");
 
-	/**
-	 * TODO: Load document from WorkspaceFollowing collection to check permission
-	 * if (!acl?.viewable) {
-	 *     response.status(403).json({
-	 *       ...Code.error("You don't have permission to access this resource"),
-	 *     });
-	 *   }
-	 */
+			console.log(HTMLInput.param("workspace_id"));
+			if (!workspace_id){
+				response.status(400).json(Code.error("Invalid workspace"));
+				return;
+			}
 
-	next();
-};
+			const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+			if (!workspace.good()){
+				response.status(400).json(Code.error("Invalid workspace"));
+				return;
+			}
 
-export const workspaceCommentable = async (request: Request, response: Response, next: NextFunction) => {
-	const {_id} = response.locals.user;
-	const {workspace_id} = request.body;
+			if (!checkPermission(workspace)){
+				response.status(403).json(Code.error(Code.INVALID_AUTHORIZATION));
+				return;
+			}
 
-	/**
-	 * TODO: Load document from WorkspaceFollowing collection to check permission
-	 * if (!acl?.commentable) {
-	 *     response.status(403).json({
-	 *       ...Code.error("You don't have permission to access this resource"),
-	 *     });
-	 *   }
-	 */
+			return next();
+		} catch (error){
+			logger.error((error as Error).stack);
+			response.status(500).json(Code.error((error as Error).message));
+		}
+	};
 
-	next();
-};
+export const workspaceViewable = createWorkspaceMiddleware((workspace) =>
+	workspace.acl().canView(),
+);
 
-export const workspaceEditable = async (request: Request, response: Response, next: NextFunction) => {
-	const {_id} = response.locals.user;
-	const {workspace_id} = request.body;
+export const workspaceCommentable = createWorkspaceMiddleware((workspace) =>
+	workspace.acl().canComment(),
+);
 
-	/**
-	 * TODO: Load document from WorkspaceFollowing collection to check permission
-	 * if (!acl?.editable) {
-	 *     response.status(403).json({
-	 *       ...Code.error("You don't have permission to access this resource"),
-	 *     });
-	 *   }
-	 */
+export const workspaceEditable = createWorkspaceMiddleware((workspace) =>
+	workspace.acl().canEdit(),
+);
 
-	next();
-};
-
-export const workspaceAdmin = async (request: Request, response: Response, next: NextFunction) => {
-	const {_id} = response.locals.user;
-	const {workspace_id} = request.body;
-
-	/**
-	 * TODO: Load document from WorkspaceFollowing collection to check permission
-	 * if (!acl?.full_access) {
-	 *     response.status(403).json({
-	 *       ...Code.error("You don't have permission to access this resource"),
-	 *     });
-	 *   }
-	 */
-
-	next();
-};
+export const workspaceAdmin = createWorkspaceMiddleware((workspace) =>
+	workspace.acl().isAdmin(),
+);

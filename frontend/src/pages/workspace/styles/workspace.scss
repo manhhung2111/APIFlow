@@ -1,0 +1,15 @@
+@use "@styles/variables" as *;
+
+.workspace-page {
+  .master-main-wrapper {
+    .mmw-header {
+      height: 40px;
+      border-bottom: 1px solid $border-color-default;
+    }
+
+    .mmw-main {
+      position: relative;
+      height: calc(100vh - 48px - 40px);
+    }
+  }
+}

@@ -1,21 +1,32 @@
-import {Code, JWT} from "@ap/core";
+import {Code, HTMLInput, JWT} from "@ap/core";
 import {NextFunction, Request, Response} from "express";
+import Client from "@dev/client";
+import logger from "@utils/logger";
 
 export default async function authentication(request: Request, response: Response, next: NextFunction){
 	try{
-		const token = request.headers.authorization?.split(" ")[1];
+		logger.info("Request into authentication middleware");
+		const token = HTMLInput.signedCookies("access_token");
 		if (!token){
 			response.status(401).json(Code.error("Authorization token required"));
 			return;
 		}
 
-		response.locals.user = await JWT.verifyToken(token);
-		next();
-	} catch (error){
-		if (error instanceof Error){
-			response.status(500).json(Code.error(error.message));
+		const payload = await JWT.verifyToken(token);
+		if (typeof payload === "string"){
+			response.status(401).json(Code.error("Invalid or missing user_id in token payload"));
+			return;
 		}
-		response.status(500).json(Code.error(Code.UNKNOWN_ERROR));
+
+		if (!await Client.authenticate(payload.user_id)){
+			response.status(401).json(Code.error("Cannot authenticate user."));
+			return;
+		}
+
+		return next();
+	} catch (error){
+		logger.error((error as Error).stack);
+		response.status(500).json(Code.error((error as Error).message));
 	}
 };
 

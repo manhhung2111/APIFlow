@@ -1,101 +1,200 @@
-import {FilterQuery, HydratedDocument, Model} from "mongoose";
+import {ClientSession, FilterQuery, HydratedDocument, Model} from "mongoose";
 import {DBCondition} from "@ap/db";
-import {Code} from "@ap/core";
+import {Code, Validation} from "@ap/core";
 
 abstract class DBModel<T>{
+	public static PAGE_SIZE = 200;
+	public object: HydratedDocument<T> | null | undefined;
 	protected abstract _db: Model<T>;
-	protected _object: HydratedDocument<T> | null | undefined;
 
-	abstract release(): object;
-
-	public async initialize(_id: string = ""){
-		if (!_id){
-			this._object = new this._db();
-			return;
-		}
-		this._object = await this.findById(_id);
-	}
-
-	public good(): boolean{
-		return this._object !== null && this._object !== undefined;
-	}
-
-	public async findById(_id: string): Promise<HydratedDocument<T> | null>{
-		if (!_id) return null;
-
+	public static async initialize<T>(this: new () => DBModel<T>, _id: string = ""){
 		try{
-			return await this._db.findById(_id).exec();
-		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
+			let instance = new this();
+			let document: HydratedDocument<T> | null = new instance._db();
+			if (_id){
+				document = await instance._db.findById(_id).exec();
 			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			instance._setObject(document);
+			return instance;
+		} catch (error){
+			throw new Code((error as Error).message);
 		}
 	}
 
-	public async findOne(condition: DBCondition): Promise<HydratedDocument<T> | null>{
+	public static async findOne<T>(this: {new(): DBModel<T>}, condition: DBCondition){
 		try{
 			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
-			return await this._db.findOne(
+			let instance = new this();
+			const document = await instance._db.findOne(
 				filter, condition.projection,
 				{
 					limit: condition.limit,
 					skip: condition.skip,
 				},
 			).sort(condition.sort);
+
+			instance._setObject(document);
+			return instance;
 		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
-			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			throw new Code((error as Error).message);
 		}
 	}
 
-	public async save(): Promise<void>{
-		if (!this._object || !this._object._id){
+	public static async find<T>(
+		this: { new(): DBModel<T> },
+		condition: DBCondition | null = null
+	): Promise<DBModel<T>[]> {
+		try {
+			const instance = new this();
+
+			// If condition is null, load all documents with no restrictions
+			const filter: FilterQuery<T> = condition?.filter as FilterQuery<T> || {};
+			const projection = condition?.projection || {};
+			const limit = condition?.limit ?? 0; // 0 means no limit (load all)
+			const skip = condition?.skip ?? 0; // Default: 0 (no skipping)
+			const sort = condition?.sort || {}; // No sorting if not specified
+
+			const query = instance._db.find(filter, projection);
+
+			// Apply optional query modifications
+			if (limit > 0) query.limit(limit);
+			if (skip > 0) query.skip(skip);
+			if (Object.keys(sort).length > 0) query.sort(sort);
+
+			const documents = await query.exec();
+
+			return documents.map((doc) => {
+				const obj = new this();
+				obj._setObject(doc);
+				return obj;
+			});
+		} catch (error) {
+			throw new Code((error as Error).message);
+		}
+	}
+
+
+	public static async deleteOne<T>(this: {
+		new(): DBModel<T>
+	}, condition: DBCondition, session: ClientSession | null = null){
+		try{
+			const derived_class = new this();
+			derived_class._validCondition(condition);
+			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
+
+			if (session){
+				return derived_class._db.deleteOne(filter).session(session);
+			}
+			return await derived_class._db.deleteOne(filter);
+		} catch (error){
+			throw new Code((error as Error).message);
+		}
+	}
+
+	public static async deleteMany<T>(this: {
+		new(): DBModel<T>
+	}, condition: DBCondition, session: ClientSession | null = null){
+		try{
+			const derived_class = new this();
+			derived_class._validCondition(condition);
+
+			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
+
+			if (session){
+				return derived_class._db.deleteMany(filter).session(session);
+			}
+			return await derived_class._db.deleteMany(filter);
+		} catch (error){
+			throw new Code((error as Error).message);
+		}
+	}
+
+	public static async insertMany<T>(this: {
+		new(): DBModel<T>
+	}, documents: HydratedDocument<T>[], session: ClientSession | null = null){
+		try{
+			const derived_class = new this();
+
+			if (session){
+				return derived_class._db.insertMany(documents, {session});
+			}
+			return await derived_class._db.insertMany(documents);
+		} catch (error){
+			throw new Code((error as Error).message);
+		}
+	}
+
+	abstract release(): object;
+
+	public good(): boolean{
+		return this.object !== null && this.object !== undefined;
+	}
+
+	public async save(session: ClientSession | null = null){
+		if (!this.object){
 			throw new Code("Invalid object to be saved.");
 		}
 
 		try{
-			await this._object.save();
-		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
+			if (session){
+				return await this.object.save({session});
 			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			return await this.object.save();
+		} catch (error){
+			throw new Code((error as Error).message);
 		}
 	}
 
-	public async find(condition: DBCondition): Promise<HydratedDocument<T>[]>{
+	public async delete(session: ClientSession | null = null){
+		if (!this.object){
+			throw new Code("Invalid object to be deleted.");
+		}
+
 		try{
-			const filter: FilterQuery<T> = condition.filter as FilterQuery<T>;
-			return await this._db.find(
-				filter, condition.projection,
-				{
-					limit: condition.limit,
-					skip: condition.skip,
-				},
-			).sort(condition.sort);
-		} catch (error){
-			if (error instanceof Error){
-				throw new Code(error.message);
+			if (session){
+				return await this.object.deleteOne({session});
 			}
-			throw new Code(Code.UNKNOWN_ERROR);
+			return await this.object.deleteOne();
+		} catch (error){
+			throw new Code((error as Error).message);
 		}
 	}
 
-	protected export(fields: Array<string>): object{
+	public getField(field: string){
+		if (!this.object) return "";
+		return this.object.get(field);
+	}
+
+
+	public setField(key: string, value: any){
+		if (!this.object) return;
+		this.object.set(key, value);
+	}
+
+
+	protected export(fields: Array<string>) {
 		let data: Record<string, any> = {};
 
-		if (!this._object) return data;
+		if (!this.good()) return data;
 
 		for (const field of fields){
-			if (field in this._object.schema.paths){
-				data[field] = this._object[field as keyof typeof this._object];
+			if (field in this.object!.toObject()){
+				data[field] = this.object!.get(field);
 			}
 		}
 
 		return data;
+	}
+
+	private _setObject(obj: HydratedDocument<T> | null): void{
+		this.object = obj;
+	}
+
+	private _validCondition(condition: DBCondition): void{
+		if (Validation.isEmpty(condition.filter)){
+			throw new Code("Empty filter is passed when calling delete operation.");
+		}
+		// Other logic
 	}
 }
 

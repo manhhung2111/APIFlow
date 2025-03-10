@@ -1,0 +1,45 @@
+@use "@styles/variables" as *;
+
+.request-page {
+  height: fit-content;
+  .ant-btn {
+    font-size: $text-size-m;
+  }
+  position: relative;
+
+  .main-wrapper {
+    position: absolute;
+    right: 48px;
+    width: calc(100% - 48px);
+    display: flex;
+    flex-direction: column;
+
+    .request-header {
+      height: 48px;
+      padding: 8px 16px;
+    }
+
+    .request-main {
+      flex: 1;
+
+      .rm-editor {
+        height: 47vh;
+        border-bottom: 1px solid $border-color-default;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+      }
+
+      .rm-response {
+        height: calc(100vh - 48px - 40px - 48px - 47vh);
+      }
+    }
+  }
+
+  .request-sidebar {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+  }
+}

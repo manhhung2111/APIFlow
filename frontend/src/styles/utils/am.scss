@@ -1,0 +1,13 @@
+@use "@styles/variables" as *;
+
+.action-manager {
+
+}
+
+.action-manager-dd {
+  width: 150px;
+  color: $content-color-primary;
+  .ant-dropdown-menu {
+    border-radius: 4px;
+  }
+}

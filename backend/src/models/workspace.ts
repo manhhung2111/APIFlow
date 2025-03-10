@@ -2,16 +2,16 @@ import {model, Schema} from "mongoose";
 import {DWorkspace} from "@db-schemas";
 
 const schema = new Schema<DWorkspace>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
+	user_id: {type: String, required: true},
 
 	name: {type: String, required: true},
-	content: String,
+	content: {type: String, default: ""},
 
-	viewers: [{type: Schema.Types.ObjectId, ref: "User"}],
-	commenters: [{type: Schema.Types.ObjectId, ref: "User"}],
-	editors: [{type: Schema.Types.ObjectId, ref: "User"}],
+	viewers: {type: [String], index: true},
+	commenters: {type: [String], index: true},
+	editors: {type: [String], index: true},
 
-	data: Schema.Types.Mixed,
+	data: {type: Schema.Types.Mixed, default: {}},
 	token: {type: String, required: true, unique: true},
 }, {
 	timestamps: {
@@ -19,6 +19,7 @@ const schema = new Schema<DWorkspace>({
 		updatedAt: "updated_at",
 		currentTime: () => Date.now(),
 	},
+	minimize: false,
 });
 
 

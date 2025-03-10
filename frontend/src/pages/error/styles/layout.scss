@@ -1,0 +1,65 @@
+@use "@styles/variables" as *;
+
+.error-page {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 60px;
+  padding-top: 32px;
+  box-sizing: border-box;
+
+
+  &::before {
+    background: linear-gradient(0deg, $base-color-brand 0, rgba(255, 180, 0, 0) 100%);
+    content: "";
+    height: 100vh;
+    left: 50%;
+    position: fixed;
+    transform: translateX(-50%) translateY(50%);
+    width: 100%;
+    z-index: -1;
+  }
+
+  .lb-image {
+    width: 64px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+  }
+
+  .container {
+    max-width: 360px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+    background-color: $background-color-primary;
+    border-radius: $border-radius-l;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    .error-image {
+      width: 80%;
+      aspect-ratio: 1/1;
+      border: none;
+      outline: none;
+    }
+
+    p {
+      font-size: $text-size-l;
+    }
+
+    a {
+      color: $content-color-link;
+      text-decoration: none;
+      font-size: $text-size-l;
+
+      &:hover {
+        color: $content-color-link;
+        text-decoration: underline;
+      }
+    }
+  }
+}

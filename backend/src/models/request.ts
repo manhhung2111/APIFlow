@@ -2,35 +2,39 @@ import {model, Schema} from "mongoose";
 import {DRequest} from "@db-schemas";
 
 const schema = new Schema<DRequest>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
-	workspace_id: {type: Schema.Types.ObjectId, ref: "Workspace", required: true},
-	collection_id: {type: Schema.Types.ObjectId, ref: "Collection", required: true},
-	folder_id: {type: Schema.Types.ObjectId, ref: "Folder", default: null},
+	user_id: {type: String, required: true, index: true},
+	workspace_id: {type: String, required: true, index: true},
+	collection_id: {type: String, required: true, index: true},
+	folder_id: {type: String, default: null, index: true},
 
 	name: {type: String, required: true},
-	content: String,
+	content: {type: String, default: ""},
 
 	method: {type: String, required: true, enum: ["GET", "POST", "PUT", "PATCH", "DELETE"], default: "GET"},
-	url: {type: String, required: true},
+	url: {type: String, default: ""},
 
-	params: [{key: String, value: String, description: String}],
-	headers: [{key: String, value: String, description: String}],
+	params: [{selected: Boolean, key: String, value: String, content: String}],
+	headers: [{selected: Boolean, key: String, value: String, content: String}],
 	authorization: {
-		authorization_type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
-		authorization_data: Schema.Types.Mixed,
+		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
+		data: {type: Schema.Types.Mixed, default: {}},
 	},
 	body: {
-		body_type: {type: Number, enum: [0, 1, 2, 3], default: 0},
-		body_data: Schema.Types.Mixed,
+		type: {type: Number, enum: [0, 1, 2, 3], default: 0},
+		data: {type: Schema.Types.Mixed, default: {
+			form_data: [],
+			form_encoded: [],
+			form_raw: ""
+		}},
 	},
 	scripts: {
-		pre_script: {type: String, default: ""},
-		post_script: {type: String, default: ""},
+		pre_request: {type: String, default: ""},
+		post_response: {type: String, default: ""},
 	},
 
 	tag: {type: Number, enum: [0, 1, 2], default: 0},
 
-	data: Schema.Types.Mixed,
+	data: {type: Schema.Types.Mixed, default: {}},
 	token: {type: String, required: true, unique: true},
 }, {
 	timestamps: {
@@ -38,6 +42,7 @@ const schema = new Schema<DRequest>({
 		updatedAt: "updated_at",
 		currentTime: () => Date.now(),
 	},
+	minimize: false,
 });
 
 

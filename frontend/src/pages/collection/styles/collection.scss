@@ -1,0 +1,429 @@
+@use "@styles/variables" as *;
+
+.collection-page {
+  .header {
+    padding: 8px 16px;
+    border-bottom: 1px solid $border-color-default;
+
+    .inner-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 32px;
+      .text {
+        font-size: $text-size-m;
+        color: $content-color-primary;
+        width: fit-content;
+        font-weight: $text-weight-thick;
+
+        .ant-breadcrumb-link {
+          font-size: $text-size-m;
+        }
+
+        .anticon {
+          font-size: $text-size-xl;
+          color: $content-color-secondary;
+          margin-right: 6px;
+        }
+      }
+
+      button {
+        font-size: $text-size-m;
+      }
+
+      .anticon {
+        font-size: $text-size-l;
+      }
+    }
+  }
+
+  & > .main {
+    height: calc(100vh - 48px - 40px - 49px);
+    min-height: 100px;
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgrey;
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 4px;
+      border-radius: $border-radius-l;
+    }
+
+    .ant-tabs-top > .ant-tabs-nav {
+      margin-bottom: 8px;
+
+      &::before {
+        border: none;
+      }
+
+      .ant-tabs-tab {
+        padding: 0;
+      }
+    }
+
+    & > .ant-tabs {
+      display: flex;
+      flex-direction: column;
+
+      & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          color: $content-color-secondary;
+          border-bottom: 1px solid transparent;
+          font-size: $text-size-m;
+
+          &.ant-tabs-tab-active {
+            border-bottom-color: $base-color-brand;
+
+            .ant-tabs-tab-btn {
+              color: $content-color-primary;
+            }
+          }
+        }
+      }
+
+      & > .ant-tabs-nav {
+        padding: 8px 16px;
+      }
+    }
+  }
+}
+
+.collection-page .collection-display-overview {
+  width: 920px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  gap: 20px;
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .row {
+      .workspace-name {
+        font-size: $text-size-xxxl;
+        border-color: transparent;
+        border-radius: $border-radius-default;
+
+        &:focus {
+          border-color: $content-color-link;
+          box-shadow: none;
+        }
+      }
+
+      .text-editor {
+        height: 300px;
+      }
+    }
+
+    .footer {
+      margin-top: 40px;
+      border-top: 1px solid $border-color-default;
+      padding: 8px 0;
+
+      a {
+        display: block;
+      }
+    }
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .row {
+      h5 {
+        font-weight: $text-weight-bold;
+        color: $content-color-secondary;
+        font-size: $text-size-m;
+      }
+
+      p {
+        font-size: $text-size-m;
+        color: $content-color-primary;
+      }
+    }
+  }
+}
+
+.collection-page .collection-display-authorization {
+  width: 600px;
+  margin: 0 auto;
+
+  p {
+    color: $content-color-secondary;
+    font-size: $text-size-m;
+  }
+
+  .left-container {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $border-color-default;
+
+    h3 {
+      font-weight: 600;
+      color: #6B6B6B;
+      font-size: 13px;
+    }
+
+    .auth-selector {
+      width: 100%;
+      margin-bottom: 8px;
+      font-size: $text-size-m !important;
+
+      .ant-select-selector {
+        font-size: $text-size-m;
+      }
+    }
+  }
+
+  .right-container {
+    height: 100%;
+    padding-top: 12px;
+    font-size: $text-size-m;
+
+    .ant-input {
+      font-size: $text-size-m;
+    }
+
+    .empty-message {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      font-size: $text-size-m;
+    }
+
+    .form-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .form-row {
+        display: flex;
+        align-items: center;
+
+        .title {
+          display: flex;
+          flex: 1;
+          min-width: 196px;
+          max-width: 280px;
+          align-self: flex-start;
+          padding-top: $spacing-m;
+          margin-right: $spacing-l;
+        }
+
+        input, .select, .app-input-highlight__wrapper {
+          margin-top: $spacing-m;
+          min-width: 196px;
+          max-width: 280px;
+          .editable {
+            border: 1px solid #EDEDED;
+            border-radius: $border-radius-default;
+          }
+          .ant-select-selector {
+            font-size: $text-size-m !important;
+          }
+        }
+
+        .input-group {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          gap: 8px;
+
+          .ant-checkbox-wrapper {
+            font-size: $text-size-m;
+          }
+
+          .app-code-editor {
+            border: 1px solid $border-color-default;
+            width: 280px !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.collection-page .collection-display-scripts {
+  border-bottom: 1px solid $border-color-default;
+
+  & > .ant-tabs {
+    & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
+      border-right: 1px solid $border-color-default;
+
+      .ant-tabs-tab {
+        color: $content-color-secondary;
+        font-size: $text-size-m;
+        padding: 8px 8px 8px 16px;
+
+        &.ant-tabs-tab-active {
+          background-color: $background-color-tertiary;
+
+          .ant-tabs-tab-btn {
+            color: $content-color-primary;
+          }
+        }
+      }
+
+    }
+
+    .ant-tabs-ink-bar {
+      background-color: transparent;
+      display: none;
+    }
+
+    .ant-tabs-tabpane {
+      padding-left: 0;
+    }
+  }
+
+  .app-code-editor {
+    section {
+      height: 40vh !important;
+    }
+  }
+}
+
+.collection-page .collection-display-variables {
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .subtitle {
+    color: $content-color-secondary;
+    font-size: $text-size-m;
+    span {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  .search-btn {
+    margin-top: 8px;
+    width: fit-content;
+    font-size: $text-size-m;
+  }
+
+  .variables-table {
+    border: 1px solid $border-color-default;
+    border-bottom: none;
+    color: $content-color-secondary;
+    font-weight: $text-weight-thick;
+    font-size: $text-size-m;
+
+    .ant-input {
+      font-size: $text-size-m;
+    }
+
+    & > .table-header {
+      display: grid;
+      grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
+      border-bottom: 1px solid $border-color-default;
+
+      div {
+        padding: 10px;
+
+        &:nth-child(2),
+        &:nth-child(3) {
+          border-left: 1px solid $border-color-default;
+        }
+
+        &:nth-child(3) {
+          border-right: 1px solid $border-color-default;
+        }
+      }
+    }
+
+    & > .table-body {
+      & > .row {
+        display: grid;
+        grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
+        border-bottom: 1px solid $border-color-default;
+
+        &.disabled {
+          cursor: not-allowed;
+          background-color: rgba(239, 239, 239, 0.3);
+
+          input {
+            cursor: not-allowed;
+            background-color: transparent;
+          }
+        }
+
+        input[type='text'] {
+          flex: 1;
+          padding: 4px 8px;
+          border-radius: 3px;
+          outline: none;
+          border: 1px solid transparent;
+          color: #212121;
+
+          &:focus {
+            border-color: $border-color-default;
+          }
+        }
+
+        .selected-col {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 4px;
+
+          input[type='checkbox'] {
+            width: 16px;
+            aspect-ratio: 1/1;
+            cursor: pointer;
+            border-radius: 4px;
+          }
+        }
+
+        .key-col,
+        .value-col,
+        .content-col {
+          display: flex;
+          padding: 4px;
+        }
+
+        .key-col {
+          border-left: 1px solid $border-color-default;
+        }
+
+        .value-col {
+          border-left: 1px solid $border-color-default;
+          border-right: 1px solid $border-color-default;
+        }
+
+        .action-col {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .remove-icon {
+            cursor: pointer;
+            color: grey;
+            position: relative;
+
+            &:hover {
+              color: #9c3328;
+            }
+          }
+        }
+      }
+    }
+  }
+}

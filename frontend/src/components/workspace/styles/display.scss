@@ -1,0 +1,235 @@
+@use "@styles/variables" as *;
+
+.workspace-display {
+  .header {
+    padding: 8px 16px;
+    border-bottom: 1px solid $border-color-default;
+
+    .text {
+      font-size: $text-size-m;
+      color: $content-color-primary;
+      width: fit-content;
+      font-weight: $text-weight-thick;
+
+      .anticon {
+        font-size: $text-size-xl;
+        color: $content-color-secondary;
+        margin-right: 6px;
+      }
+    }
+  }
+
+  & > .main {
+    height: calc(100vh - 48px - 40px - 37px);
+    min-height: 100px;
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgrey;
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 4px;
+      border-radius: $border-radius-l;
+    }
+
+    .ant-tabs-top > .ant-tabs-nav {
+      margin-bottom: 8px;
+
+      &::before {
+        border: none;
+      }
+
+      .ant-tabs-tab {
+        padding: 0;
+      }
+    }
+
+    & > .ant-tabs {
+      display: flex;
+      flex-direction: column;
+
+      & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
+        .ant-tabs-tab {
+          color: $content-color-secondary;
+          border-bottom: 1px solid transparent;
+          font-size: $text-size-m;
+
+          &.ant-tabs-tab-active {
+            border-bottom-color: $base-color-brand;
+
+            .ant-tabs-tab-btn {
+              color: $content-color-primary;
+            }
+          }
+        }
+      }
+
+      & > .ant-tabs-nav {
+        padding: 8px 16px;
+      }
+    }
+  }
+}
+
+
+.workspace-display .workspace-display-overview {
+  width: 920px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: 2.5fr 1fr;
+  gap: 20px;
+
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .row {
+      .workspace-name {
+        font-size: $text-size-xxxl;
+        border-color: transparent;
+        border-radius: $border-radius-default;
+
+        &:focus {
+          border-color: $content-color-link;
+          box-shadow: none;
+        }
+      }
+
+      .text-editor {
+        height: 300px;
+      }
+    }
+
+    .footer {
+      margin-top: 40px;
+      display: flex;
+      gap: 16px;
+
+      button {
+        font-size: $text-size-m;
+
+        &.submit-btn {
+          background-color: $base-color-brand;
+
+          &:hover {
+            filter: brightness(90%);
+          }
+        }
+      }
+    }
+  }
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .row {
+      h5 {
+        font-weight: $text-weight-bold;
+        color: $content-color-secondary;
+        font-size: $text-size-m;
+      }
+
+      p {
+        font-size: $text-size-m;
+        color: $content-color-primary;
+      }
+    }
+  }
+}
+
+.workspace-display .workspace-display-settings {
+  width: 520px;
+  margin: 0 auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .section {
+    &:not(:first-of-type) {
+      border-top: 1px solid $border-color-default;
+      padding-top: 16px;
+    }
+
+    & > h3 {
+      color: $content-color-secondary;
+      font-size: $text-size-l;
+      font-weight: $text-weight-bold;
+    }
+
+    & > p {
+      color: $content-color-secondary;
+      font-size: $text-size-m;
+    }
+
+    .row {
+      margin-top: 16px;
+
+      h4 {
+        font-size: $text-size-m;
+        color: $content-color-secondary;
+        font-weight: $text-weight-thick;
+      }
+
+      .ant-mentions {
+        font-size: $text-size-m;
+
+        textarea {
+          height: fit-content;
+        }
+      }
+    }
+
+    .button-row {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      .save-btn {
+        background-color: $base-color-brand;
+        color: white;
+      }
+      button {
+        font-size: $text-size-m;
+      }
+    }
+
+    .color-row {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .left-section {
+        font-size: $text-size-m;
+
+        .title {
+          color: $content-color-primary;
+        }
+
+        .subtitle {
+          color: $content-color-secondary;
+        }
+      }
+
+      .right-section {
+        .ant-color-picker-trigger-text {
+          font-size: $text-size-m;
+        }
+      }
+    }
+
+    .delete-btn {
+      font-size: $text-size-m;
+      margin-top: 16px;
+    }
+
+  }
+}

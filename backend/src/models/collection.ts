@@ -2,13 +2,33 @@ import {model, Schema} from "mongoose";
 import {DCollection} from "@db-schemas";
 
 const schema = new Schema<DCollection>({
-	user_id: {type: Schema.Types.ObjectId, ref: "User", required: true},
-	workspace_id: {type: Schema.Types.ObjectId, ref: "Workspace", required: true},
+	user_id: {type: String, required: true, index: true},
+	workspace_id: {type: String, required: true, index: true},
 
 	name: {type: String, required: true},
-	content: String,
+	content: {type: String, default: ""},
 
-	data: Schema.Types.Mixed,
+	authorization: {
+		type: {type: Number, enum: [1, 2, 3, 4], default: 1},
+		data: {type: Schema.Types.Mixed, default: {}},
+	},
+
+	scripts: {
+		pre_request: {type: String, default: ""},
+		post_response: {type: String, default: ""},
+	},
+
+	variables: [
+		{
+			selected: Boolean,
+			variable: String,
+			type: {type: String, enum: ["text", "password"], default: "text"},
+			initial_value: String,
+			current_value: String,
+		},
+	],
+
+	data: {type: Schema.Types.Mixed, default: {}},
 	token: {type: String, required: true, unique: true},
 }, {
 	timestamps: {
@@ -16,6 +36,7 @@ const schema = new Schema<DCollection>({
 		updatedAt: "updated_at",
 		currentTime: () => Date.now(),
 	},
+	minimize: false,
 });
 
 

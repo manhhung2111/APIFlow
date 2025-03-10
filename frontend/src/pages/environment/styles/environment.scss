@@ -1,0 +1,205 @@
+@use "@styles/variables" as *;
+
+.environment-page {
+  .header {
+    padding: 8px 16px;
+    border-bottom: 1px solid $border-color-default;
+
+    .inner-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .text {
+        font-size: $text-size-m;
+        color: $content-color-primary;
+        width: fit-content;
+        font-weight: $text-weight-thick;
+
+        .anticon {
+          font-size: $text-size-xl;
+          color: $content-color-secondary;
+          margin-right: 6px;
+        }
+      }
+
+      button {
+        font-size: $text-size-m;
+      }
+
+      .anticon {
+        font-size: $text-size-l;
+      }
+    }
+  }
+
+  .main {
+    padding: 0 16px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    height: calc(100vh - 48px - 40px - 49px);
+    min-height: 100px;
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgrey;
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 4px;
+      border-radius: $border-radius-l;
+    }
+
+
+    .subtitle {
+      padding-top: 16px;
+      color: $content-color-secondary;
+      font-size: $text-size-m;
+      span {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+
+    .search-btn {
+      margin-top: 8px;
+      width: fit-content;
+      font-size: $text-size-m;
+    }
+
+    .variables-table {
+      border: 1px solid $border-color-default;
+      border-bottom: none;
+      color: $content-color-secondary;
+      font-weight: $text-weight-thick;
+      font-size: $text-size-m;
+
+      .ant-input {
+        font-size: $text-size-m;
+      }
+
+      & > .table-header {
+        display: grid;
+        grid-template-columns: minmax(30px, 0.1fr) 1fr 75px 1fr 1fr minmax(20px, 0.1fr);
+        border-bottom: 1px solid $border-color-default;
+
+        div {
+          padding: 10px;
+
+          &:nth-child(2),
+          &:nth-child(3), &:nth-child(5) {
+            border-left: 1px solid $border-color-default;
+          }
+
+          &:nth-child(3) {
+            border-right: 1px solid $border-color-default;
+          }
+        }
+      }
+
+      & > .table-body {
+        & > .row {
+          display: grid;
+          grid-template-columns: minmax(30px, 0.1fr) 1fr  75px 1fr 1fr minmax(20px, 0.1fr);
+          border-bottom: 1px solid $border-color-default;
+
+          &.disabled {
+            cursor: not-allowed;
+            background-color: rgba(239, 239, 239, 0.3);
+
+            input {
+              cursor: not-allowed;
+              background-color: transparent;
+            }
+          }
+
+          input[type='text'], input[type='password'] {
+            flex: 1;
+            padding: 4px 8px;
+            border-radius: 3px;
+            outline: none;
+            border: 1px solid transparent;
+            color: #212121;
+
+            &:focus {
+              border-color: $border-color-default;
+            }
+          }
+
+          .selected-col {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 4px;
+
+            input[type='checkbox'] {
+              width: 16px;
+              aspect-ratio: 1/1;
+              cursor: pointer;
+              border-radius: 4px;
+            }
+          }
+
+          .key-col,
+          .value-col,
+          .content-col {
+            display: flex;
+            padding: 4px;
+          }
+
+          .key-col {
+            border-left: 1px solid $border-color-default;
+          }
+
+          .value-col {
+            //border-left: 1px solid $border-color-default;
+          }
+
+          .content-col {
+            border-left: 1px solid $border-color-default;
+          }
+
+          .type-col {
+            border-left: 1px solid $border-color-default;
+            border-right: 1px solid $border-color-default;
+            height: 100%;
+            .ant-select {
+              .ant-select-selector {
+                border: none;
+                box-shadow: none;
+                .ant-select-selection-item {
+                  font-size: $text-size-m;
+                }
+              }
+
+              .ant-select-arrow {
+                font-size: $text-size-xs;
+              }
+            }
+          }
+
+          .action-col {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 6px;
+            padding-right: 5px;
+            .remove-icon {
+              cursor: pointer;
+              color: grey;
+              position: relative;
+
+              &:hover {
+                color: #9c3328;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

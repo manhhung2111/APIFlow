@@ -1,6 +1,7 @@
-import {NextFunction, Request, Response} from "express";
+import {Request} from "express";
 import {Code, Validation, Word} from "@ap/core";
-import html_entities from "html-entities";
+import {decode as htmlDecode} from "html-entities";
+import sanitizeHtml from 'sanitize-html';
 
 export default class HTMLInput{
 	public static GET = 1;
@@ -8,50 +9,103 @@ export default class HTMLInput{
 	public static PUT = 3;
 	public static DELETE = -1;
 
-	private static request: Request | null | undefined;
+	private static _cur_request: Request | null = null;
 	private static MAX_TITLE_CHAR = 1023;
 	private static allowed_tags = [
 		"b", "center", "i", "u", "br", "p", "h1", "h2", "h3", "h4", "h5", "h6", "ul", "li", "url", "img", "code", "small", "big", "tab", "quote", "sub", "sup", "link", "image", "pre", "label",
 	];
+	private static _files: any = {};
 
-	public static readRequest(request: Request, response: Response, next: NextFunction){
-		this.request = request;
-		next();
-	}
+	public static readRequest(request: Request){
+		this._cur_request = request;
 
-	public static pageCounter(){
+		this._files = {};
+		if (!request.files) return;
 
+		if (Array.isArray(request.files)){
+			request.files.forEach(file => {
+				if (!this._files[file.fieldname]) this._files[file.fieldname] = [];
+				this._files[file.fieldname].push(file);
+			});
+		} else if (typeof request.files === "object"){
+			for (const field in Object.keys(request.files)){
+				const files = request.files[field];
+
+				this._files[field] = [...files];
+			}
+		}
 	}
 
 	public static param(field: string = ""){
-		if (!this.request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.request.params[field];
+		const value = this._cur_request.params[field];
+		if (value === undefined || value === null){
+			// throw new Code(`Param \"${field}\" does not exist in the URL.`);
+			return "";
+		}
 
-		if (!value) return "";
+		return value;
+	}
+
+	public static page() {
+		if (!this._cur_request){
+			throw new Code("Please read the request to use request data");
+		}
+
+		const value = this._cur_request.query["page"];
+		if (value === undefined || value === null){
+			return 0;
+		}
+
 		return value;
 	}
 
 	public static query(field: string = ""){
-		if (!this.request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const value = this.request.query[field];
+		const value = this._cur_request.query[field];
+		if (value === undefined || value === null){
+			// throw new Code(`Query \"${field}\" does not exist in the URL.`);
+			return "";
+		}
+
+		return value as string;
+	}
+
+	public static cookies(field: string = ""){
+		if (!this._cur_request){
+			throw new Code("Please read the request to use request data");
+		}
+
+		const value = this._cur_request.cookies[field];
 
 		if (!value) return "";
 		return value;
 	}
 
 
-	public static inputSafe(field: string, limit_character: boolean = true){
-		if (!this.request){
+	public static signedCookies(field: string = ""){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
-		const raw = html_entities.decode(this.inputRaw(field));
+		const value = this._cur_request.signedCookies[field];
+
+		if (!value) return "";
+		return value;
+	}
+
+	public static inputSafe(field: string, limit_character: boolean = true){
+		if (!this._cur_request){
+			throw new Code("Please read the request to use request data");
+		}
+
+		const raw = htmlDecode(this.inputRaw(field));
 
 		let text: string;
 		if (limit_character){
@@ -59,13 +113,14 @@ export default class HTMLInput{
 		} else{
 			text = Word.addSmartQuote(raw);
 		}
+
 		text = this.sanitize(text);
 
 		return text;
 	}
 
 	public static inputInline(field: string){
-		if (!this.request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
@@ -86,7 +141,7 @@ export default class HTMLInput{
 	}
 
 	public static inputInlineNoLimit(field: string){
-		if (!this.request){
+		if (!this._cur_request){
 			throw new Code("Please read the request to use request data");
 		}
 
@@ -140,6 +195,25 @@ export default class HTMLInput{
 		return result;
 	}
 
+	public static inputEditor(field: string){
+		if (!this._cur_request){
+			throw new Code("Please read the request to use request data");
+		}
+
+		const raw = htmlDecode(this.inputRaw(field));
+
+		let text: string;
+		text = Word.addSmartQuote(raw);
+
+		text = sanitizeHtml(text);
+
+		return text;
+	}
+
+	public static inputFile(field: string){
+		return this._files[field];
+	}
+
 	private static sanitize(text: string, style: string = ""): string{
 		if (!text) return "";
 
@@ -177,16 +251,18 @@ export default class HTMLInput{
 		);
 
 		// Step 3: Convert BBCode back to HTML
-		text = text.replace(new RegExp(bb.join("|"), "gi"), (match) => {
-			const index = bb.indexOf(match);
-			return index !== -1 ? html[index] : match;
-		});
+		const bbToHtmlMap: Record<string, string> = {};
+		for (let i = 0; i < bb.length; i++) {
+			bbToHtmlMap[bb[i]] = html[i];
+		}
+
+		text = text.replace(new RegExp(bb.join("|"), "gi"), (match) => bbToHtmlMap[match] || match);
 
 		return text;
 	}
 
-	private static inputRaw(field: string): string{
-		let value = this.request?.body[field];
+	public static inputRaw(field: string): string{
+		let value = this._cur_request?.body[field] ?? "";
 
 		try{
 			let json_value = JSON.parse(value);
@@ -196,9 +272,15 @@ export default class HTMLInput{
 				value = json_value?.toString() ?? ""; // If it's not an object, just treat it as a string
 			}
 		} catch (error){
+
 		}
 
 		return this.cleanData(value);
+	}
+
+
+	public static inputNoSafe(field: string): string {
+		return this._cur_request?.body[field] ?? "";
 	}
 
 	private static cleanData(text: string): string{

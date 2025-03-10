@@ -1,0 +1,152 @@
+@use "@styles/variables" as *;
+
+.login-page {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 60px;
+  padding-top: 32px;
+  box-sizing: border-box;
+
+  &::before {
+    background: linear-gradient(0deg, $base-color-brand 0, rgba(255, 180, 0, 0) 100%);
+    content: "";
+    height: 100vh;
+    left: 50%;
+    position: fixed;
+    transform: translateX(-50%) translateY(50%);
+    width: 100%;
+    z-index: -1;
+  }
+
+  .lb-image {
+    width: 64px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+  }
+
+  .login-form {
+    max-width: 360px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 32px;
+    background-color: $background-color-primary;
+    border-radius: $border-radius-l;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+    h1 {
+      font-weight: 600;
+      font-size: $text-size-xxxl;
+    }
+
+    .form-input {
+      width: 100%;
+      margin-bottom: 19px;
+      .ant-form-item-label {
+        padding: 0px;
+      }
+
+      .ant-form-item-explain-error {
+        font-size: $text-size-m;
+        color: $content-color-error;
+      }
+
+      .ant-input-status-error {
+        border-color: $content-color-error;
+      }
+
+      label {
+        font-weight: 600;
+        color: #6B6B6B;
+        font-size: $text-size-m;
+      }
+
+      input {
+        font-size: $text-size-m;
+      }
+    }
+
+    .form-input-footer {
+      width: 100%;
+      margin-bottom: 0;
+
+      .ant-form-item-control-input {
+        height: fit-content;
+        min-height: 0;
+      }
+
+      .ant-form-item-control-input-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: $text-size-m;
+      }
+
+      span {
+        font-size: $text-size-m;
+      }
+
+      .link {
+        color: $content-color-link;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .submit-btn {
+      width: 100%;
+      background-color: $background-color-button-primary;
+      font-weight: $text-weight-bold;
+      transition: background-color .2s ease-in-out;
+      color: $content-color-constant;
+      cursor: pointer;
+      padding: 6px 16px;
+      outline: none;
+      border: none;
+      border-radius: $border-radius-default;
+      font-size: $text-size-m;
+      margin-top: 8px;
+
+      &:hover {
+        background-color: $background-color-button-primary-hover;
+      }
+    }
+
+    .btn {
+      width: 100%;
+      font-size: $text-size-m;
+      &:last-of-type {
+        margin-top: 8px;
+      }
+      .ant-btn-icon {
+        position: absolute;
+        left: 10px;
+      }
+    }
+
+    .ant-divider-with-text {
+      margin: 8px 0;
+    }
+
+    .signup-message {
+      font-size: $text-size-m;
+      margin-top: 8px;
+      .link {
+        color: $content-color-link;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
