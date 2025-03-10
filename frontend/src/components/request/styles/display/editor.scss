@@ -583,12 +583,78 @@
     }
   }
 
-  .app-code-editor {
-    section {
-      height: 35vh !important;
+
+}
+
+.request-code-editor {
+  section {
+    height: 35vh !important;
+  }
+
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  height: 100%;
+
+  .snippet-list {
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    height: 35vh;
+
+    & > h3 {
+      color: $content-color-primary;
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 12px;
+      line-height: 1;
+
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #888; /* Customize the scrollbar color */
+      border-radius: 10px; /* Optional: Round the scrollbar corners */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #555; /* Change color on hover */
+    }
+
+    & .base-label {
+      cursor: pointer;
+      color: #6B6B6B;
+      line-height: 20px;
+      font-size: 90%;
+
+      &:hover {
+        color: #212121;
+        text-decoration: none;
+      }
+    }
+
+    & button {
+      border: none;
+      outline: none;
+      background-color: transparent;
+      font-size: $text-size-m;
+      cursor: pointer;
+      color: $content-color-secondary;
+      padding: 2px 0;
+      &:hover {
+        color: $content-color-primary;
+      }
     }
   }
 }
+
 
 .example-response-headers {
   .request-table {

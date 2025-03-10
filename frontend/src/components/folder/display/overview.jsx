@@ -2,6 +2,7 @@ import {Input} from "antd";
 import TextEditor from "@components/app/editor/text.editor.jsx";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {useContext} from "react";
+import TimeUtils from "@utils/time.js";
 
 export default function FolderDisplayOverview({folder, name, setName, content, setContent}){
 	const {workspace} = useContext(WorkspaceContext);
@@ -32,11 +33,11 @@ export default function FolderDisplayOverview({folder, name, setName, content, s
 				</div>
 				<div className="row">
 					<h5>Created at</h5>
-					<p>{folder.created_at}</p>
+					<p>{TimeUtils.formatDate(folder.created_at)}</p>
 				</div>
 				<div className="row">
 					<h5>Last updated at</h5>
-					<p>{folder.updated_at}</p>
+					<p>{TimeUtils.formatDate(folder.updated_at)}</p>
 				</div>
 			</div>
 		</div>

@@ -5,6 +5,7 @@ import TextEditor from "@components/app/editor/text.editor.jsx";
 import {useParams} from "react-router";
 import WorkspaceService from "@services/workspace.js";
 import {toast} from "react-toastify";
+import TimeUtils from "@utils/time.js";
 
 export default function WorkspaceDisplayOverview(){
 	const {workspace, setWorkspace} = useContext(WorkspaceContext);
@@ -78,11 +79,11 @@ export default function WorkspaceDisplayOverview(){
 				</div>
 				<div className="row">
 					<h5>Created at</h5>
-					<p>{workspace.created_at}</p>
+					<p>{TimeUtils.formatDate(workspace.created_at)}</p>
 				</div>
 				<div className="row">
 					<h5>Last updated at</h5>
-					<p>{workspace.updated_at}</p>
+					<p>{TimeUtils.formatDate(workspace.updated_at)}</p>
 				</div>
 			</div>
 		</div>

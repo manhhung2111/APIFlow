@@ -4,6 +4,7 @@ import {NavLink} from "react-router";
 import {ArrowRightOutlined} from "@ant-design/icons";
 import {useContext} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
+import TimeUtils from "@utils/time.js";
 
 export default function CollectionDisplayOverview({collection, name, setName, content, setContent}){
 	const {workspace} = useContext(WorkspaceContext);
@@ -39,11 +40,11 @@ export default function CollectionDisplayOverview({collection, name, setName, co
 				</div>
 				<div className="row">
 					<h5>Created at</h5>
-					<p>{collection.created_at}</p>
+					<p>{TimeUtils.formatDate(collection.created_at)}</p>
 				</div>
 				<div className="row">
 					<h5>Last updated at</h5>
-					<p>{collection.updated_at}</p>
+					<p>{TimeUtils.formatDate(collection.updated_at)}</p>
 				</div>
 			</div>
 		</div>
