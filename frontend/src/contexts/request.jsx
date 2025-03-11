@@ -130,7 +130,9 @@ export default function RequestContextProvider(props){
 
 		if (response.code === 0) {
 			setResponse(response.data.response);
+			setActiveCollection(response.data.collection);
 		} else {
+			setResponse(response.message);
 			toast.error(response.message);
 		}
 	}

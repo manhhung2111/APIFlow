@@ -1,6 +1,7 @@
 import {useContext} from "react";
 import {RequestContext} from "@contexts/request.jsx";
 import {Table} from "antd";
+import {value} from "lodash/seq.js";
 
 export default function RequestResponseCookies(){
 	let {response} = useContext(RequestContext);
@@ -50,25 +51,93 @@ export default function RequestResponseCookies(){
 		},
 	];
 
-	function getCookiesData(){
-		function parseCookie(cookie_string){
+	// function getCookiesData(){
+	// 	function parseCookie(cookie_string) {
+	// 		let cookie_obj = {
+	// 			name: '',
+	// 			value: '',
+	// 			expires: '',
+	// 			domain: '',
+	// 			path: '',
+	// 			secure: false,
+	// 			httpOnly: false
+	// 		};
+	//
+	// 		let cookie_parts = cookie_string.split(';');
+	//
+	// 		for (let i = 0; i < cookie_parts.length; i++) {
+	// 			let part = cookie_parts[i].trim();
+	//
+	// 			// Split only on the first "=" to preserve values containing "="
+	// 			let [key, ...rest] = part.split('=');
+	// 			let value = rest.length > 0 ? rest.join('=') : true;
+	//
+	// 			key = key.trim().toLowerCase();
+	// 			if (typeof value === "string") value = value.trim();
+	//
+	// 			switch (key) {
+	// 				case 'expires': {
+	// 					const expires_date = new Date(value);
+	// 					cookie_obj.expires = Math.floor(expires_date.getTime() / 1000); // Convert to UNIX timestamp (seconds)
+	// 					break;
+	// 				}
+	// 				case 'path':
+	// 					cookie_obj.path = value;
+	// 					break;
+	// 				case 'domain':
+	// 					cookie_obj.domain = value;
+	// 					break;
+	// 				case 'secure':
+	// 					cookie_obj.secure = true;
+	// 					break;
+	// 				case 'httponly':
+	// 					cookie_obj.httpOnly = true;
+	// 					break;
+	// 				default:
+	// 					if (!cookie_obj.name) {
+	// 						cookie_obj.name = key;
+	// 						cookie_obj.value = value;
+	// 					}
+	// 			}
+	// 		}
+	//
+	// 		return cookie_obj;
+	// 	}
+	//
+	// 	const data = [];
+	//
+	// 	const cookies = response.headers["Set-Cookie"] ?? response.headers["set-cookie"] ?? [];
+	// 	for (const cookie of cookies) {
+	// 		console.log(parseCookie(cookie));
+	// 		data.push(parseCookie(cookie))
+	// 	}
+	//
+	// 	return data;
+	// }
+
+	function getCookiesData() {
+		function parseCookie(cookie_string) {
 			let cookie_obj = {
 				name: '',
 				value: '',
-				expires: '',
+				expires: 'Session',
 				domain: '',
 				path: '',
-				secure: false,
-				httpOnly: false
+				secure: "false",
+				httpOnly: "false"
 			};
 
 			let cookie_parts = cookie_string.split(';');
 
-			for (let i = 0 ; i < cookie_parts.length ; i++) {
+			for (let i = 0; i < cookie_parts.length; i++) {
 				let part = cookie_parts[i].trim();
-				let keyValue = part.split('=');
-				let key = keyValue[0].trim().toLowerCase();
-				let value = keyValue[1] ? keyValue[1].trim() : true;
+
+				// Split only on the first "=" to preserve values containing "="
+				let [key, ...rest] = part.split('=');
+				let value = rest.length > 0 ? rest.join('=') : true;
+
+				key = key.trim().toLowerCase();
+				if (typeof value === "string") value = value.trim();
 
 				switch (key) {
 					case 'expires': {
@@ -83,34 +152,30 @@ export default function RequestResponseCookies(){
 						cookie_obj.domain = value;
 						break;
 					case 'secure':
-						cookie_obj.secure = true;
+						cookie_obj.secure = "true";
 						break;
 					case 'httponly':
-						cookie_obj.httpOnly = true;
+						cookie_obj.httpOnly = "true";
 						break;
 					default:
-						if(!cookie_obj.name){
+						if (!cookie_obj.name) {
 							cookie_obj.name = key;
 							cookie_obj.value = value;
 						}
 				}
 			}
 
-			cookie_obj.httpOnly = cookie_obj.httpOnly ? "true" : "false";
-			cookie_obj.secure = cookie_obj.secure ? "true" : "false";
-
 			return cookie_obj;
-		};
-
-		const data = [];
-
-		if (response.headers["Set-Cookie"]) {
-			for (const cookie of response.headers["Set-Cookie"]) {
-				data.push(parseCookie(cookie))
-			}
 		}
 
-		return data;
+		// Ensure headers exist
+		if (!response || !response.headers) return [];
+
+		const cookiesHeader = response.headers["set-cookie"] ?? response.headers["Set-Cookie"];
+		if (!cookiesHeader) return [];
+
+		const cookiesArray = Array.isArray(cookiesHeader) ? cookiesHeader : [cookiesHeader];
+		return cookiesArray.map(parseCookie);
 	}
 
 	return (

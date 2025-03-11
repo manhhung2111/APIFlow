@@ -19,6 +19,15 @@
     }
   }
 
+  .error-message {
+    margin: 0 16px;
+    padding: 8px;
+    background-color: $background-color-error;
+    text-align: center;
+    color: #8e1a10;
+    font-weight: $text-weight-thick;
+  }
+
 
   .rr-header {
     padding: 8px;

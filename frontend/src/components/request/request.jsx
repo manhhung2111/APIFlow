@@ -113,17 +113,17 @@ export default class Request{
 			{name: "Get a global variable", value: "AP.globals.get(\"variable_key\");"},
 			{name: "Get a collection variable", value: "AP.collectionVariables.get(\"variable_key\");"},
 			{
-				name: "Set an environment variable", value: "await AP.environment.set(\"variable_key\"," +
+				name: "Set an environment variable", value: "AP.environment.set(\"variable_key\"," +
 					" \"variable_value\");"
 			},
-			{name: "Set a global variable", value: "await AP.globals.set(\"variable_key\", \"variable_value\");"},
+			{name: "Set a global variable", value: "AP.globals.set(\"variable_key\", \"variable_value\");"},
 			{
-				name: "Set a collection variable", value: "await AP.collectionVariables.set(\"variable_key\"," +
+				name: "Set a collection variable", value: "AP.collectionVariables.set(\"variable_key\"," +
 					" \"variable_value\");"
 			},
-			{name: "Clear an environment variable", value: "await AP.environment.unset(\"variable_key\");"},
-			{name: "Clear a global variable", value: "await AP.globals.unset(\"variable_key\");"},
-			{name: "Clear a collection variable", value: "await AP.collectionVariables.unset(\"variable_key\");"},
+			{name: "Clear an environment variable", value: "AP.environment.unset(\"variable_key\");"},
+			{name: "Clear a global variable", value: "AP.globals.unset(\"variable_key\");"},
+			{name: "Clear a collection variable", value: "AP.collectionVariables.unset(\"variable_key\");"},
 			{
 				name: "Send a request", value: "try {\n" +
 					"	const response = await AP.sendRequest({\n" +
@@ -146,16 +146,16 @@ export default class Request{
 			{name: "Get a collection variable", value: "AP.collectionVariables.get(\"variable_key\");"},
 			{
 				name: "Set an environment variable",
-				value: "await AP.environment.set(\"variable_key\", \"variable_value\");"
+				value: "AP.environment.set(\"variable_key\", \"variable_value\");"
 			},
-			{name: "Set a global variable", value: "await AP.globals.set(\"variable_key\", \"variable_value\");"},
+			{name: "Set a global variable", value: "AP.globals.set(\"variable_key\", \"variable_value\");"},
 			{
 				name: "Set a collection variable",
-				value: "await AP.collectionVariables.set(\"variable_key\", \"variable_value\");"
+				value: "AP.collectionVariables.set(\"variable_key\", \"variable_value\");"
 			},
-			{name: "Clear an environment variable", value: "await AP.environment.unset(\"variable_key\");"},
-			{name: "Clear a global variable", value: "await AP.globals.unset(\"variable_key\");"},
-			{name: "Clear a collection variable", value: "await AP.collectionVariables.unset(\"variable_key\");"},
+			{name: "Clear an environment variable", value: "AP.environment.unset(\"variable_key\");"},
+			{name: "Clear a global variable", value: "AP.globals.unset(\"variable_key\");"},
+			{name: "Clear a collection variable", value: "AP.collectionVariables.unset(\"variable_key\");"},
 			{
 				name: "Send a request", value: "try {\n" +
 					"	const response = await AP.sendRequest({\n" +
@@ -170,41 +170,41 @@ export default class Request{
 			},
 			{
 				name: "Status code: Code is 200", value: "AP.test(\"Status code is 200\", function () {\n" +
-					"	assertResponse(AP.response).to.have.status(200);\n" +
+					"	AP.response.to.have.status(200);\n" +
 					"});"
 			},
 			{
 				name: "Status code: Successful POST request",
 				value: "AP.test(\"Successful POST request\", function () {\n" +
-					"	assert(AP.response.code).to.be.oneOf([201, 202]);\n" +
+					"	AP.response.code.to.be.oneOf([201, 202]);\n" +
 					"});"
 			},
 			{
 				name: "Status code: Code name has string",
 				value: "AP.test(\"Status code name has string\", function () {\n" +
-					"	assertResponse(AP.response).to.have.status(\"Created\");\n" +
+					"	AP.response.to.have.status(\"Created\");\n" +
 					"});"
 			},
 			{
 				name: "Response body: Contains string", value: "AP.test(\"Body matches string\", function () {\n" +
-					"	assert(AP.response.text()).to.include(\"string_you_want_to_search\");\n" +
+					"	AP.response.text().to.include(\"string_you_want_to_search\");\n" +
 					"});"
 			},
 			{
 				name: "Response body: JSON value check", value: "AP.test(\"Your test name\", function () {\n" +
 					"	var jsonData = AP.response.json();\n" +
-					"	assert(jsonData.value).to.eql(100);\n" +
+					"	jsonData.value.to.eql(100);\n" +
 					"});"
 			},
 			{
 				name: "Response body: Is equal to string", value: "AP.test(\"Body is correct\", function () {\n" +
-					"	assertResponse(AP.response).to.have.body(\"response_body_string\");\n" +
+					"	AP.response.to.have.body(\"response_body_string\");\n" +
 					"});"
 			},
 			{
 				name: "Response headers: Content-Type header check",
 				value: "AP.test(\"Content-Type is present\", function () {\n" +
-					"	assertResponse(AP.response).to.have.header(\"Content-Type\");\n" +
+					"	AP.response.to.have.header(\"Content-Type\");\n" +
 					"});"
 			},
 		];

@@ -153,7 +153,8 @@ export const sendRequest = async (request: Request, response: Response) => {
             .readAuthorization()
             .readCookies()
             .readHeaders()
-            .readBody();
+            .readBody()
+            .readScripts();
 
         const request_service = new RequestService()
             .setMethod(request_reader.getMethod())
@@ -163,6 +164,7 @@ export const sendRequest = async (request: Request, response: Response) => {
             .setHeaders(request_reader.getHeaders())
             .setAuthorization(request_reader.getAuthorization())
             .setBody(request_reader.getBody())
+            .setScripts(request_reader.getScripts());
 
         const result = await request_service.send();
 
@@ -175,7 +177,8 @@ export const sendRequest = async (request: Request, response: Response) => {
                 "time": result.time,
                 "request_size": result.request_size,
                 "response_size": result.response_size,
-            }
+            },
+            "collection": result.collection,
         }));
     } catch (error) {
         if (axios.isAxiosError(error)) {

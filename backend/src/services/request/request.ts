@@ -1,12 +1,14 @@
 import {RequestBody} from "@services/request/index";
 import axios from "axios";
-import {Code, HTMLInput, JWT} from "@ap/core";
+import {Code, HTMLInput, JWT, Scripts} from "@ap/core";
 import FormData from "form-data";
 import {Authorization} from "@services/authorization";
 import BackblazeService from "@services/backblaze";
 import {DBRequest} from "@dev/request";
 import {DBCollection} from "@dev/collection";
 import {DBEnvironment, DBEnvironmentLoader} from "@dev/environment";
+import {DBFolder} from "@dev/folder";
+import vm from 'vm';
 
 export default class RequestService {
     private _method: string = "";
@@ -18,8 +20,15 @@ export default class RequestService {
     private _headers: Array<any> = [];
     private _body: { type?: number, data?: any } = {};
     private _environment: Record<string, string> = {};
-    private _scripts: object = {};
+    private _scripts: any;
 
+    private request: DBRequest | null = null;
+    private folder: DBFolder | null = null;
+    private collection: DBCollection | null = null;
+    private active_env: DBEnvironment | null = null;
+    private global_env: DBEnvironment | null = null;
+
+    private AP = new Scripts();
 
     public setMethod(method: string) {
         this._method = method;
@@ -68,15 +77,27 @@ export default class RequestService {
         return this;
     }
 
-
     public async send() {
-        await this.readEnvironments();
-
-        let url = this.convertRequestUrl();
-        let headers = await this.convertRequestHeaders();
-        let body = await this.convertRequestBody();
-
         try {
+            await this.readAssociatedData();
+            this.AP.setEnvironment(this.active_env)
+                .setGlobals(this.global_env!)
+                .setCollectionVariables(this.collection!);
+
+            await this.runPreRequestScripts(this.collection!.object!.scripts.pre_request);
+            if (this.folder) {
+                await this.runPreRequestScripts(this.folder.object!.scripts.pre_request);
+            }
+            await this.runPreRequestScripts(this._scripts.pre_request || "");
+
+            await this.readEnvironments();
+
+            let url = this.convertRequestUrl();
+            let headers = await this.convertRequestHeaders();
+            let body = await this.convertRequestBody();
+
+            await this.saveEnvironments();
+
             const startTime = performance.now();
             const response = await axios({
                 method: this._method,
@@ -95,7 +116,7 @@ export default class RequestService {
                 body: this.calculateSize(response.data)
             };
 
-            return {...response, time: duration, request_size, response_size};
+            return {...response, time: duration, request_size, response_size, collection: this.collection?.release()};
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw error;
@@ -103,7 +124,6 @@ export default class RequestService {
             throw new Code((error as Error).message);
         }
     }
-
 
     private async convertRequestBody() {
         let request_body: any = null;
@@ -219,10 +239,19 @@ export default class RequestService {
         }
     }
 
-    private async readEnvironments() {
+    private async readAssociatedData() {
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
             return;
+        }
+        this.request = request;
+
+        if (request.object!.folder_id) {
+            const folder = await DBFolder.initialize(request.object!.folder_id) as DBFolder;
+            if (!folder.good()) {
+                return;
+            }
+            this.folder = folder;
         }
 
         // Get collection environment
@@ -230,40 +259,52 @@ export default class RequestService {
         if (!collection.good()) {
             return;
         }
+        this.collection = collection;
 
         // Get globals variable and active variable
         const globalEnv = await DBEnvironmentLoader.globalsEnvByWorkspace(request.object!.workspace_id.toString());
         if (!globalEnv.good()) {
             return;
         }
+        this.global_env = globalEnv
 
-        let activeEnv = null;
-        activeEnv = await DBEnvironment.initialize(HTMLInput.inputInline("active_environment")) as DBEnvironment;
-        if (!activeEnv.good()) {
+        if (HTMLInput.inputInline("active_environment") == "-1" || HTMLInput.inputInt("active_environment") == -1) {
+            return;
+        }
+        let activeEnv = await DBEnvironment.initialize(HTMLInput.inputInline("active_environment")) as DBEnvironment;
+        if (!activeEnv.good() || activeEnv.object?.isNew) {
             return;
         }
 
+        this.active_env = activeEnv;
+    }
+
+    private async readEnvironments() {
         const environments: Record<string, string> = {};
 
-        for (const entry of globalEnv.object!.variables) {
+        const globals = this.global_env?.object?.variables ?? [];
+        for (const entry of globals) {
             if (entry.selected) {
                 environments[entry.variable] = entry.current_value;
             }
         }
 
-        for (const entry of collection.object!.variables) {
+        const collection_variables = this.collection?.object?.variables ?? [];
+        for (const entry of collection_variables) {
             if (entry.selected) {
                 environments[entry.variable] = entry.current_value;
             }
         }
 
-        for (const entry of activeEnv?.object!.variables) {
+        const environment = this.active_env?.object?.variables ?? [];
+        for (const entry of environment) {
             if (entry.selected) {
                 environments[entry.variable] = entry.current_value;
             }
         }
 
         this._environment = environments;
+        console.log(environments)
     }
 
     private replaceEnvVariables(input: any): any {
@@ -275,4 +316,33 @@ export default class RequestService {
         return input;
     }
 
+
+    private async runPreRequestScripts(scriptCode: string) {
+        try {
+            // Create a context where AP can be modified
+            const context = vm.createContext({ AP: this.AP });
+            const script = new vm.Script(scriptCode);
+
+            // Execute the script in the provided context
+            script.runInContext(context);
+        } catch (error) {
+            throw new Error(`There was an error in evaluating the Pre-request Script: ${(error as Error).message}`);
+        }
+    }
+
+    private async saveEnvironments() {
+        try {
+            this.collection!.object!.variables = this.AP.getCollectionVariables();
+            this.global_env!.object!.variables = this.AP.getGlobals();
+            if (this.active_env) {
+                this.active_env.object!.variables = this.AP.getEnvironment();
+            }
+
+            await this.global_env?.save();
+            await this.active_env?.save();
+            await this.collection?.save();
+        } catch (error) {
+            throw new Error((error as Error).message);
+        }
+    }
 }

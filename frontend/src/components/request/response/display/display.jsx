@@ -27,13 +27,17 @@ export default function RequestResponse(){
 		<div className="request-response">
 			<div className="rr-header">
 				<h3>Response</h3>
-				{response && <RequestResponseSide />}
+				{response && !(typeof response === "string") && <RequestResponseSide />}
 			</div>
-			{!response && <div className="empty-response">
+			{response && typeof response === "string" && <div className="error-message">
+				{response}
+			</div>}
+
+			{!response && !(typeof response === "string") && <div className="empty-response">
 				<img className="empty-response-img" src={EmptyResponse} alt="Empty Response"/>
 				<p>Click Send to get a response</p>
 			</div>}
-			{response && <Tabs items={items} size={"small"} tabBarGutter={8}/>}
+			{response && !(typeof response === "string") && <Tabs items={items} size={"small"} tabBarGutter={8}/>}
 		</div>
 	);
 }
