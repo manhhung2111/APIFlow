@@ -296,7 +296,7 @@ export default class RequestService {
             return;
         }
         let activeEnv = await DBEnvironment.initialize(HTMLInput.inputInline("active_environment")) as DBEnvironment;
-        if (!activeEnv.good() || activeEnv.object?.isNew) {
+        if (!activeEnv.good()) {
             return;
         }
 

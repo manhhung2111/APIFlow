@@ -164,7 +164,7 @@ export default class HTMLInput{
 	public static inputInt(field: string){
 		let value = this.inputRaw(field);
 
-		if (!Validation.isInt(value)) return -1;
+		if (!Validation.isInt(value)) return 0;
 		return Number(value);
 	}
 

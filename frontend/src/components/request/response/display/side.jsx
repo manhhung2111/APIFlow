@@ -64,7 +64,10 @@ export default function RequestResponseSide() {
 	}
 
 	const handleSaveResponse = async () => {
-		const saveResponse = {body: response.body, headers: response.headers};
+		if (typeof response.body !== "string") {
+			response.body = JSON.stringify(response.body, null, 2);
+		}
+		const saveResponse = {body: response.body, headers: response.headers, status: response.status + " " + response.statusText};
 		const result = await ExampleService.createFromResponse(request, method, url, params, headers, body, saveResponse);
 
 		if (result.code === 0) {

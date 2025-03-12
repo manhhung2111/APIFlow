@@ -190,7 +190,8 @@ export const sendRequest = async (request: Request, response: Response) => {
                     "body": axios_error.response?.data || {},
                     "headers": axios_error.response?.headers || [],
                     "statusText": axios_error.response?.statusText || "",
-                }
+                    "test_results": []
+                },
             }));
             return;
         }

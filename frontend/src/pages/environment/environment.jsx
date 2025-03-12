@@ -94,6 +94,14 @@ export default function EnvironmentPage(){
 		if(result.code === 0){
 			toast.success(result.message);
 			setEnvironment(result.data.environment);
+
+			const clone = _.cloneDeep(environments);
+			for (const e of clone) {
+				if (e._id === environment._id) {
+					e.variables = result.data.environment.variables;
+				}
+			}
+			setEnvironments(clone);
 		} else {
 			toast.error(result.message);
 		}

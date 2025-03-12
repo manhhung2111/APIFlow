@@ -21,15 +21,15 @@ export default function RequestEditorUrlMain(){
 		}
 
 		let authLabel = <div className="request-editor-tab-label">Authorization</div>
-		if(authorization){
+		if(authorization !== null){
 			let refactor_auth = _.cloneDeep(authorization);
 			if(authorization.type === Request.AUTHORIZATION.InheritAuth.value){
 				if(requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value){
-					refactor_auth.type = requestFolder.authorization.type;
-					refactor_auth.data = requestFolder.authorization.data;
+					refactor_auth.type = requestFolder?.authorization.type;
+					refactor_auth.data = requestFolder?.authorization.data;
 				} else {
-					refactor_auth.type = activeCollection.authorization.type;
-					refactor_auth.data = activeCollection.authorization.data;
+					refactor_auth.type = activeCollection?.authorization.type;
+					refactor_auth.data = activeCollection?.authorization.data;
 				}
 			}
 

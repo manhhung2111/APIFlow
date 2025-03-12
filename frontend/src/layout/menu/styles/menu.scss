@@ -85,6 +85,7 @@
 
         .ant-tabs-tab-btn {
           color: $content-color-primary;
+          text-shadow: none;
         }
       }
 
@@ -100,7 +101,7 @@
 
         .title {
           font-size: $text-size-xs;
-          font-weight: $text-weight-regular;
+          font-weight: $text-weight-thick;
         }
       }
     }

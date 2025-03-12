@@ -23,7 +23,7 @@ export default function RequestResponseTestResults(){
 						let message = testResult.message;
 						if (testResult.extra) message += " | " + testResult.extra;
 
-						return (<div className='test-case'>
+						return (<div className='test-case' key={`test-case-${index}`}>
 							<div className={`status ${testResult.status}`}>{testResult.status}</div>
 							<p className='message'>{message}</p>
 						</div>)

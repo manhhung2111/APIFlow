@@ -117,7 +117,7 @@ export default function RequestContextProvider(props){
 		// Construct authorization type and data if the authorization type is inherit
 		let refactor_auth = _.cloneDeep(authorization);
 		if (authorization.type === Request.AUTHORIZATION.InheritAuth.value) {
-			if (requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value) {
+			if (requestFolder && requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value) {
 				refactor_auth.type = requestFolder.authorization.type;
 				refactor_auth.data = requestFolder.authorization.data;
 			} else {
@@ -130,7 +130,9 @@ export default function RequestContextProvider(props){
 
 		if (response.code === 0) {
 			setResponse(response.data.response);
-			setActiveCollection(response.data.collection);
+			if (response.data.collection) {
+				setActiveCollection(response.data.collection);
+			}
 		} else {
 			setResponse(response.message);
 			toast.error(response.message);

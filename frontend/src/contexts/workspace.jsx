@@ -48,7 +48,7 @@ export default function WorkspaceContextProvider(props){
 		let _variables = getVariablesList();
 		console.log("Update variable list");
 		setVariables(_variables);
-	}, [activeEnvironment, activeCollection]);
+	}, [activeEnvironment, activeCollection, environments]);
 
 	function processVariables(variables_list, scope, seen_variables){
 		let result = [];
