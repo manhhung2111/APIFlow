@@ -14,6 +14,7 @@ import ActionManager from "@utils/action.manager.jsx";
 import {toast} from "react-toastify";
 import FolderService from "@services/folder.js";
 import _ from "lodash";
+import Request from "@components/request/request.jsx";
 
 export default function CollectionPage(){
 	const {
@@ -65,33 +66,50 @@ export default function CollectionPage(){
 		}
 	}, [collection_id, workspace]);
 
-	const items = [
-		{
-			label: "Overview",
-			key: 1,
-			children: <CollectionDisplayOverview collection={activeCollection} name={name} setName={setName}
-												 content={content}
-												 setContent={setContent}/>
-		},
-		{
-			label: "Authorization",
-			key: 2,
-			children: <CollectionDisplayAuthorization collection={activeCollection} authorization={authorization}
-													  setAuthorization={setAuthorization}/>
-		},
-		{
-			label: "Scripts",
-			key: 3,
-			children: <CollectionDisplayScripts collection={activeCollection} scripts={scripts}
-												setScripts={setScripts}/>
-		},
-		{
-			label: "Variables",
-			key: 4,
-			children: <CollectionDisplayVariables collection={activeCollection} variables={variables}
-												  setVariables={setVariables}/>
-		},
-	]
+	const generateItems = () => {
+		let authorizationLabel = <div className="collection-tab">Authorization</div>
+		if(authorization?.type !== Request.AUTHORIZATION.NoAuth.value){
+			authorizationLabel = <div className="collection-tab">Authorization<span className="valid"></span></div>
+		}
+
+		let scriptsLabel = <div className="collection-tab">Scripts</div>
+		if(scripts.pre_request.length > 0 || scripts.post_response.length > 0){
+			scriptsLabel = <div className="collection-tab">Scripts<span className="valid"></span></div>
+		}
+
+		let variablesLabel = <div className="collection-tab">Variables</div>
+		if(variables?.length > 1){
+			variablesLabel = <div className="collection-tab">Variables<span className="valid"></span></div>
+		}
+
+		return [
+			{
+				label: <div className="collection-tab">Overview</div>,
+				key: 1,
+				children: <CollectionDisplayOverview collection={activeCollection} name={name} setName={setName}
+													 content={content}
+													 setContent={setContent}/>
+			},
+			{
+				label: authorizationLabel,
+				key: 2,
+				children: <CollectionDisplayAuthorization collection={activeCollection} authorization={authorization}
+														  setAuthorization={setAuthorization}/>
+			},
+			{
+				label: scriptsLabel,
+				key: 3,
+				children: <CollectionDisplayScripts collection={activeCollection} scripts={scripts}
+													setScripts={setScripts}/>
+			},
+			{
+				label: variablesLabel,
+				key: 4,
+				children: <CollectionDisplayVariables collection={activeCollection} variables={variables}
+													  setVariables={setVariables}/>
+			},
+		]
+	}
 
 	const handleSave = async() => {
 		const result = await CollectionService.save(activeCollection, name, content, authorization, scripts, variables);
@@ -181,7 +199,7 @@ export default function CollectionPage(){
 				}
 				{activeCollection && <Tabs
 					tabBarGutter={16}
-					items={items}
+					items={generateItems()}
 				/>}
 			</div>
 		</div>

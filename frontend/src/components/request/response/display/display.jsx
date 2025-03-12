@@ -68,7 +68,7 @@ export default function RequestResponse(){
 				<p>Click Send to get a response</p>
 			</div>}
 			{response && !(typeof response === "string") &&
-				<Tabs items={generateItems()} size={"small"} tabBarGutter={8}/>}
+				<Tabs items={generateItems()} size={"small"} tabBarGutter={16}/>}
 		</div>
 	);
 }

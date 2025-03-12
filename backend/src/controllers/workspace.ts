@@ -40,7 +40,7 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
 		const folders_compact = folders.map(folder => folder.releaseCompact());
 
 		const requests = await DBRequestLoader.byWorkspace(workspace.object!);
-		const requests_compact = requests.map(request => request.release());
+		const requests_compact = requests.map(request => request.releaseCompact());
 
 		const environments = await DBEnvironmentLoader.byWorkspace(workspace.object!);
 		const environments_compact = environments.map(environment => environment.release());

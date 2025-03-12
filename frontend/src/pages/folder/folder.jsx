@@ -10,6 +10,7 @@ import {Breadcrumb, Button, Skeleton, Tabs} from "antd";
 import {FolderOutlined, SaveOutlined} from "@ant-design/icons";
 import ActionManager from "@utils/action.manager.jsx";
 import _ from "lodash";
+import Request from "@components/request/request.jsx";
 
 export default function FolderPage(){
 	const {
@@ -53,26 +54,39 @@ export default function FolderPage(){
 		}
 	}, [folder_id, workspace]);
 
-	const items = [
-		{
-			label: "Overview",
-			key: 1,
-			children: <FolderDisplayOverview folder={folder} name={name} setName={setName} content={content}
-											 setContent={setContent}/>
-		},
-		{
-			label: "Authorization",
-			key: 2,
-			children: <FolderDisplayAuthorization folder={folder} authorization={authorization}
-												  setAuthorization={setAuthorization}
-												  folderCollection={activeCollection}/>
-		},
-		{
-			label: "Scripts",
-			key: 3,
-			children: <FolderDisplayScripts folder={folder} scripts={scripts} setScripts={setScripts}/>
-		},
-	];
+	const generateItems = () => {
+		let authorizationLabel = <div className="collection-tab">Authorization</div>
+		if(authorization?.type !== Request.AUTHORIZATION.NoAuth.value){
+			authorizationLabel = <div className="collection-tab">Authorization<span className="valid"></span></div>
+		}
+
+		let scriptsLabel = <div className="collection-tab">Scripts</div>
+		if(scripts.pre_request.length > 0 || scripts.post_response.length > 0){
+			scriptsLabel = <div className="collection-tab">Scripts<span className="valid"></span></div>
+		}
+
+		return [
+			{
+				label: <div className="collection-tab">Overview</div>,
+				key: 1,
+				children: <FolderDisplayOverview folder={folder} name={name} setName={setName} content={content}
+												 setContent={setContent}/>
+			},
+			{
+				label: authorizationLabel,
+				key: 2,
+				children: <FolderDisplayAuthorization folder={folder} authorization={authorization}
+													  setAuthorization={setAuthorization}
+													  folderCollection={activeCollection}/>
+			},
+			{
+				label: scriptsLabel,
+				key: 3,
+				children: <FolderDisplayScripts folder={folder} scripts={scripts} setScripts={setScripts}/>
+			},
+		];
+
+	}
 
 	const handleSave = async() => {
 		const result = await FolderService.save(folder, name, content, authorization, scripts);
@@ -163,7 +177,7 @@ export default function FolderPage(){
 				}
 				{folder && <Tabs
 					tabBarGutter={16}
-					items={items}
+					items={generateItems()}
 				/>}
 			</div>
 		</div>
