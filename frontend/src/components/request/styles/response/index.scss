@@ -90,6 +90,34 @@
     .ant-tabs-tab {
       padding: 0;
     }
+
+    .response-tab-label {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      span {
+        display: inline-block;
+        &.error-badge {
+          display: inline-block;
+          width: 5px;  /* Adjust size as needed */
+          height: 5px;
+          background-color: #EB2013;
+          border-radius: 50%;  /* Makes it a circle */
+          margin-left: 2px;
+        }
+
+        &.passed {
+          color: #007f31;
+          font-size: $text-size-m;
+        }
+
+        &.error {
+          color: #8e1a10 !important;
+          font-size: $text-size-m;
+          font-weight: $text-weight-regular;
+        }
+      }
+    }
   }
 
   & > .ant-tabs {
@@ -168,6 +196,10 @@
     img {
       width: 150px;
     }
+  }
+
+  .error-message {
+    margin: 0;
   }
   .test-cases {
     display: flex;
