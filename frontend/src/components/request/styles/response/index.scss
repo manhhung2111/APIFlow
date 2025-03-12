@@ -98,12 +98,12 @@
       span {
         display: inline-block;
         &.error-badge {
-          display: inline-block;
-          width: 5px;  /* Adjust size as needed */
-          height: 5px;
-          background-color: #EB2013;
-          border-radius: 50%;  /* Makes it a circle */
+          display: inline-flex;
+          width: 6px;
+          height: 6px;
           margin-left: 2px;
+          background-color: #EB2013;
+          border-radius: 6px;
         }
 
         &.passed {
@@ -135,6 +135,7 @@
 
           .ant-tabs-tab-btn {
             color: $content-color-primary;
+            text-shadow: none;
           }
         }
       }

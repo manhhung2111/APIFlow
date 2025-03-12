@@ -29,7 +29,7 @@ export default function CollectionDisplayScripts({collection, scripts, setScript
 								  options={{"readOnly": !workspace.can?.editable}}/>
 		},
 		{
-			label: "Post-request",
+			label: "Post-response",
 			key: 2,
 			children: <PostResponseEditor value={scripts["post_response"]} setValue={handleSetPostScripts}
 								  options={{"readOnly": !workspace.can?.editable}}/>

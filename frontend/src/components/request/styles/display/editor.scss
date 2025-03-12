@@ -89,6 +89,30 @@
     display: flex;
     flex-direction: column;
 
+    .request-editor-tab-label {
+      display: flex;
+      align-items: center;
+      span {
+        &.valid {
+            display: inline-flex;
+            width: 6px;
+            height: 6px;
+            margin-left: 4px;
+            border-radius: 6px;
+            background-color: #0CBB52;
+        }
+
+        &.error {
+          display: inline-flex;
+          width: 6px;
+          height: 6px;
+          margin-left: 4px;
+          background-color: #EB2013;
+          border-radius: 6px;
+        }
+      }
+    }
+
     & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
       .ant-tabs-tab {
         color: $content-color-secondary;
@@ -100,6 +124,7 @@
 
           .ant-tabs-tab-btn {
             color: $content-color-primary;
+            text-shadow: none;
           }
         }
       }
@@ -648,6 +673,7 @@
       cursor: pointer;
       color: $content-color-secondary;
       padding: 2px 0;
+
       &:hover {
         color: $content-color-primary;
       }
