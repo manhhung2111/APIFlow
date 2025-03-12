@@ -177,6 +177,7 @@ export const sendRequest = async (request: Request, response: Response) => {
                 "time": result.time,
                 "request_size": result.request_size,
                 "response_size": result.response_size,
+                "test_results": result.test_results,
             },
             "collection": result.collection,
         }));

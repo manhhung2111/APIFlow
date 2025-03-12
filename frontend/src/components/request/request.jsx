@@ -193,7 +193,7 @@ export default class Request{
 			{
 				name: "Response body: JSON value check", value: "AP.test(\"Your test name\", function () {\n" +
 					"	var jsonData = AP.response.json();\n" +
-					"	jsonData.value.to.eql(100);\n" +
+					"	AP.expect(jsonData.value).to.eql(100);\n" +
 					"});"
 			},
 			{

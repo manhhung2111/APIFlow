@@ -61,13 +61,13 @@ export default class Scripts {
         try {
             testFn();
             this._testResults.push({
-                status: "pass",
+                status: "passed",
                 message: name,
                 extra: "",
             });
         } catch (error: any) {
             this._testResults.push({
-                status: "fail",
+                status: "failed",
                 message: name,
                 extra: `AssertionError: ${error.message}`,
             });

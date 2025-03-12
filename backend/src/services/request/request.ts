@@ -116,7 +116,31 @@ export default class RequestService {
                 body: this.calculateSize(response.data)
             };
 
-            return {...response, time: duration, request_size, response_size, collection: this.collection?.release()};
+            this.AP.setResponse(response);
+            let test_results: any;
+
+            // Run Post response request
+            test_results = await this.runPostResponseScripts(this.collection!.object!.scripts.post_response);
+            if (this.folder && !test_results) {
+                test_results = await this.runPostResponseScripts(this.folder.object!.scripts.post_response);
+            }
+            if (!test_results) {
+                test_results = await this.runPostResponseScripts(this._scripts.post_response || "");
+            }
+
+            if (!test_results) {
+                test_results = this.AP.getTestResults();
+                await this.saveEnvironments();
+            }
+
+            return {
+                ...response,
+                time: duration,
+                request_size,
+                response_size,
+                collection: this.collection?.release(),
+                test_results
+            };
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw error;
@@ -320,13 +344,28 @@ export default class RequestService {
     private async runPreRequestScripts(scriptCode: string) {
         try {
             // Create a context where AP can be modified
-            const context = vm.createContext({ AP: this.AP });
+            const context = vm.createContext({AP: this.AP});
             const script = new vm.Script(scriptCode);
 
             // Execute the script in the provided context
             script.runInContext(context);
         } catch (error) {
             throw new Error(`There was an error in evaluating the Pre-request Script: ${(error as Error).message}`);
+        }
+    }
+
+
+    private async runPostResponseScripts(scriptCode: string) {
+        try {
+            // Create a context where AP can be modified
+            const context = vm.createContext({AP: this.AP});
+            const script = new vm.Script(scriptCode);
+
+            // Execute the script in the provided context
+            script.runInContext(context);
+            return "";
+        } catch (error) {
+            return `Couldn't evaluate the test script: ${(error as Error).message}`;
         }
     }
 
