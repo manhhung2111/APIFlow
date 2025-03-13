@@ -224,7 +224,7 @@ export interface DExample {
     response: object;
 
     request_id: string;
-    folder_id: string | null;
+    folder_id?: string | null;
     collection_id: string;
     workspace_id: string;
 

@@ -5,7 +5,7 @@ const schema = new Schema<DExample>({
     user_id: {type: String, required: true},
 
     request_id: {type: String, required: true},
-    folder_id: {type: String, required: true},
+    folder_id: {type: String, default: null},
     collection_id: {type: String, required: true},
     workspace_id: {type: String, required: true},
 
