@@ -106,7 +106,7 @@ export default class RequestService {
 				}
 			});
 
-			formData.append("active_environment", active_environment);
+			formData.append("active_environment", active_environment ?? "-1");
 			return await axios.post(`/requests/${request._id}/send`, formData);
 		} catch (error) {
 			throw new Error(error.message || 'Send request failed');
