@@ -25,7 +25,7 @@ export default function RequestEditorAuthorization(){
 
 	const getInheritAuthMessage = () => {
 		if(authorization.type === Request.AUTHORIZATION.InheritAuth.value){
-			if(requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value){
+			if(requestFolder && requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value){
 				if(requestFolder?.authorization.type === Request.AUTHORIZATION.BasicAuth.value){
 					return <div>This request is using Basic Auth from folder <b>{requestFolder.name}</b></div>;
 				} else if(requestFolder?.authorization.type === Request.AUTHORIZATION.NoAuth.value){
