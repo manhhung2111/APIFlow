@@ -1,12 +1,13 @@
-import {useContext, useEffect, useRef, useState} from "react";
+import React, {useContext, useEffect, useRef, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {useMatch, useNavigate, useParams} from "react-router";
 import EnvironmentService from "@services/environment.js";
 import _ from "lodash";
-import {Button, Checkbox, Input, Select, Skeleton} from "antd";
+import {Button, Checkbox, Input, Select, Skeleton, Typography} from "antd";
 import {
 	DeleteOutlined,
-	EditOutlined, EnterOutlined,
+	EditOutlined,
+	EnterOutlined,
 	EyeInvisibleOutlined,
 	EyeOutlined,
 	SaveOutlined,
@@ -16,13 +17,13 @@ import "./styles/environment.scss";
 import ActionManager from "@utils/action.manager.jsx";
 import EnvironmentIcon from "@assets/icons/environment.jsx";
 import {toast} from "react-toastify";
-import {Typography } from 'antd';
-import RequestService from "@services/request.jsx";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
 
-const { Paragraph } = Typography;
+const {Paragraph} = Typography;
 
 export default function EnvironmentPage(){
 	const {workspace, environments, setEnvironments, setActiveMenuKey} = useContext(WorkspaceContext);
+	const [deleteEnvironmentVisible, setDeleteEnvironmentVisible] = useState(false);
 
 	const {environment_id} = useParams();
 	const navigate = useNavigate();
@@ -108,7 +109,7 @@ export default function EnvironmentPage(){
 
 			const clone = _.cloneDeep(environments);
 			for (const e of clone) {
-				if (e._id === environment._id) {
+				if(e._id === environment._id){
 					e.variables = result.data.environment.variables;
 				}
 			}
@@ -119,14 +120,17 @@ export default function EnvironmentPage(){
 	}
 
 	const handleDelete = async() => {
+		setDeleteEnvironmentVisible(false);
 		const result = await EnvironmentService.delete(environment);
 
 		if(result.code === 0){
 			setEnvironments(prev => {
 				return prev.filter(e => e._id !== environment._id);
 			});
+
+			const globalEnv = environments.find(e => e.scope === 0);
 			toast.success(result.message);
-			// navigate(`/workspace/${collection.workspace_id}`);
+			navigate(`/workspace/${globalEnv.workspace_id}/environment/${globalEnv._id}`);
 		} else {
 			toast.error(result.message);
 		}
@@ -134,15 +138,19 @@ export default function EnvironmentPage(){
 
 	const actionManagers = [
 		{key: `duplicate_${environment?._id}`, label: "Duplicate",},
-		{key: `export_${environment?._id}`, label: "Export",},
-		{key: `delete_${environment?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+		{
+			key: `delete_${environment?._id}`,
+			label: "Delete",
+			onClick: () => setDeleteEnvironmentVisible(true),
+			danger: 1
+		},
 	];
 
-	const handleChangeName = async (value) => {
-		if (value == name) return;
+	const handleChangeName = async(value) => {
+		if(value == name) return;
 		const response = await EnvironmentService.updateName(environment, value);
 
-		if (response.code === 0) {
+		if(response.code === 0){
 			await setName(response.data.environment.name);
 			await setEnvironment(response.data.environment);
 
@@ -166,10 +174,10 @@ export default function EnvironmentPage(){
 						<EnvironmentIcon/>
 						<Paragraph
 							editable={workspace?.can?.editable && environment.scope === 1 ? {
-								icon: <EditOutlined />,
+								icon: <EditOutlined/>,
 								tooltip: 'Click to edit request',
 								onChange: handleChangeName,
-								enterIcon: <EnterOutlined />,
+								enterIcon: <EnterOutlined/>,
 								autoSize: {minRows: 1, maxRows: 2},
 							} : null}
 						>
@@ -274,6 +282,13 @@ export default function EnvironmentPage(){
 						})}
 					</div>
 				</div>}
+				<AppDeleteModal
+					title={`Delete environment "${environment?.name}"?`}
+					content={"Deleting this environment is permanent. All associated variables will be lost forever."}
+					visible={deleteEnvironmentVisible}
+					setVisible={setDeleteEnvironmentVisible}
+					callback={handleDelete}
+				/>
 			</div>
 		</div>
 	)

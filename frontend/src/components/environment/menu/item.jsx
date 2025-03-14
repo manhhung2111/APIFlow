@@ -2,15 +2,18 @@ import {NavLink, useNavigate} from "react-router";
 import ActionManager from "@utils/action.manager.jsx";
 import EnvironmentIcon from "@assets/icons/environment.jsx";
 import {toast} from "react-toastify";
-import {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import EnvironmentService from "@services/environment.js";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
 
-export default function EnvironmentMenuItem({environment}){
+export default function EnvironmentMenuItem({environment, globalEnv}){
 	const {workspace, setEnvironments} = useContext(WorkspaceContext);
 	const navigate = useNavigate();
+	const [deleteEnvironmentVisible, setDeleteEnvironmentVisible] = useState(false);
 
 	const handleDelete = async() => {
+		setDeleteEnvironmentVisible(false);
 		const result = await EnvironmentService.delete(environment);
 
 		if(result.code === 0){
@@ -18,7 +21,7 @@ export default function EnvironmentMenuItem({environment}){
 				return prev.filter(e => e._id !== environment._id);
 			});
 			toast.success(result.message);
-			navigate(`environment/globals`);
+			navigate(`environment/${globalEnv._id}`);
 		} else {
 			toast.error(result.message);
 		}
@@ -26,8 +29,7 @@ export default function EnvironmentMenuItem({environment}){
 
 	const actionManagers = [
 		{key: `duplicate_${environment?._id}`, label: "Duplicate"},
-		{key: `export_${environment._id}`, label: "Export"},
-		{key: `delete_${environment._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+		{key: `delete_${environment._id}`, label: "Delete", onClick: () => setDeleteEnvironmentVisible(true), danger: 1},
 	]
 
 	return (
@@ -40,6 +42,13 @@ export default function EnvironmentMenuItem({environment}){
 			<div className="item-side">
 				{environment.scope === 1 && workspace?.can?.editable && <ActionManager am={actionManagers}/>}
 			</div>
+			<AppDeleteModal
+				title={`Delete environment "${environment?.name}"?`}
+				content={"Deleting this environment is permanent. All associated variables will be lost forever."}
+				visible={deleteEnvironmentVisible}
+				setVisible={setDeleteEnvironmentVisible}
+				callback={handleDelete}
+			/>
 		</div>
 	)
 }

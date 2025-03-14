@@ -31,7 +31,7 @@ export default function WorkspaceNewSelectForm({ visible, setVisible }) {
 			if (result?.code === 0) {
 				toast.success(result?.message);
 				setVisible(false);
-				setEnvironments(prev => [...prev, result.data.collection]);
+				setEnvironments(prev => [...prev, result.data.environment]);
 				navigate(`/workspace/${workspace._id}/environment/${result?.data?.environment._id}`);
 			} else {
 				toast.error(result?.message);

@@ -42,7 +42,7 @@ export default function EnvironmentMenu(){
 			</div>}
 			{workspace && envs.length > 0 && <div className="group-items">
 				{envs.map(env => {
-					return <EnvironmentMenuItem environment={env} key={env._id}/>
+					return <EnvironmentMenuItem environment={env} key={env._id} globalEnv={globalEnv}/>
 				})}
 			</div>}
 		</div>
