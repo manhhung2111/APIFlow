@@ -26,7 +26,7 @@ export default function AppInputVariableTooltip({variable}){
 				<div className="variable-header">
 					<div className={`env-icon ${scope.toLowerCase()}`}>{scope.charAt(0).toUpperCase()}</div>
 					<h4>{name}</h4>
-					{type === "secret" && (
+					{type === "password" && (
 						<div className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
 							{showPassword ? <EyeOutlined/> : <EyeInvisibleOutlined/>}
 						</div>
@@ -35,10 +35,10 @@ export default function AppInputVariableTooltip({variable}){
 
 				<div className="variable-main">
 					<Row title="Initial" value={initial_value} copied={copied}
-						 onCopy={() => handleCopy(initial_value, "initial")} isSecret={type === "secret"}
+						 onCopy={() => handleCopy(initial_value, "initial")} isSecret={type === "password"}
 						 showPassword={showPassword}/>
 					<Row title="Current" value={current_value} copied={copied}
-						 onCopy={() => handleCopy(current_value, "current")} isSecret={type === "secret"}
+						 onCopy={() => handleCopy(current_value, "current")} isSecret={type === "password"}
 						 showPassword={showPassword}/>
 					<div className="row">
 						<p>Scope</p>

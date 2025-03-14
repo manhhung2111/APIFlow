@@ -1,7 +1,10 @@
 import {useState} from "react";
+import {EyeInvisibleOutlined, EyeOutlined} from "@ant-design/icons";
+import _ from "lodash";
 
-export default function AppInputVariableSuggestionBox({variables, onSelect}) {
+export default function AppInputVariableSuggestionBox({variables, onSelect}){
 	const [activeIndex, setActiveIndex] = useState(0);
+	const [showPassword, setShowPassword] = useState(variables.map(() => false));
 
 	const handleHover = (index) => {
 		setActiveIndex(index);
@@ -10,6 +13,18 @@ export default function AppInputVariableSuggestionBox({variables, onSelect}) {
 	const handleClick = (variable) => {
 		onSelect(variable);
 	};
+
+	const handleMouseLeave = (index) => {
+		const clone = _.cloneDeep(showPassword);
+		clone[index] = false;
+		setShowPassword(clone);
+	}
+
+	const handleSetVisibility = (index, value) => {
+		const clone = _.cloneDeep(showPassword);
+		clone[index] = value;
+		setShowPassword(clone);
+	}
 
 	return (
 		<div className="app-input-variable-suggestion-box">
@@ -25,15 +40,26 @@ export default function AppInputVariableSuggestionBox({variables, onSelect}) {
 								className={`variable-item ${index === activeIndex ? "active" : ""}`}
 								onMouseEnter={() => handleHover(index)}
 								onClick={() => handleClick(variable)}
+								onMouseLeave={() => handleMouseLeave(index)}
 							>
 								<div className={`variable-icon ${variable.scope.toLowerCase()}`}>
 									{variable.scope.charAt(0)}
 								</div>
 								<p>{variable.name}</p>
+								{variable.type === "password" && showPassword[index] && <EyeOutlined className="eye-icon" onClick={(event) => {
+										handleSetVisibility(index, false);
+										event.stopPropagation();
+									}}/>
+								}
+								{variable.type === "password" && !showPassword[index] && <EyeInvisibleOutlined className="eye-icon" onClick={(event) => {
+									handleSetVisibility(index, true);
+									event.stopPropagation();
+								}}/>
+								}
 							</div>
 						))}
 					</div>
-					<VariableDetail variable={variables[activeIndex]} />
+					<VariableDetail variable={variables[activeIndex]} visible={showPassword[activeIndex]}/>
 				</div>
 
 			}
@@ -41,21 +67,20 @@ export default function AppInputVariableSuggestionBox({variables, onSelect}) {
 	)
 }
 
-const VariableDetail = ({ variable }) => {
-	if (!variable) return null;
+const VariableDetail = ({variable, visible = true}) => {
+	if(!variable) return null;
 
 	const isOverridden = variable.is_overridden;
-	const isSecret = variable.type === "secret";
 
 	return (
 		<div className="variable-detail">
 			<div className="row">
 				<p>Initial</p>
-				<p className={`value ${isSecret ? "password" : ""}`}>{variable.initial_value}</p>
+				<p className={`value ${!visible && variable.type === "password"  ? "password" : ""}`}>{variable.initial_value}</p>
 			</div>
 			<div className="row">
 				<p>Current</p>
-				<p className={`value ${isSecret ? "password" : ""}`}>{variable.current_value}</p>
+				<p className={`value ${!visible && variable.type === "password" ?  "password" : ""}`}>{variable.current_value}</p>
 			</div>
 			{isOverridden && (
 				<div className="row">
@@ -77,11 +102,11 @@ const VariableDetail = ({ variable }) => {
 };
 
 const overriddenMessage = (variable) => {
-	const { scope, is_overridden: overriddenScope } = variable;
+	const {scope, is_overridden: overriddenScope} = variable;
 	const scopeLower = scope.toLowerCase();
 	const overriddenScopeLower = overriddenScope.toLowerCase();
 
-	if (scope === overriddenScope) {
+	if(scope === overriddenScope){
 		return `The value is overridden because duplicates of this variable are active in the ${scopeLower}. You can enable or disable variables on the ${scopeLower} page.`;
 	}
 

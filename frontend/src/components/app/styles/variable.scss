@@ -88,14 +88,13 @@
   }
 
   .variable-information {
-    user-select: none;
-    cursor: text;
+    cursor: auto;
 
     & > .variable-header {
       margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       position: relative;
 
       .env-icon {
@@ -106,8 +105,9 @@
         height: 20px;
         background-color: #2a91d6;
         color: whitesmoke;
-        font-weight: bolder;
+        font-weight: 500;
         border-radius: 4px;
+        line-height: 1;
 
         &.collection {
           background-color: #ffb400;
@@ -118,11 +118,20 @@
         }
       }
 
+      h4 {
+        color: $content-color-primary;
+        font-weight: $text-weight-bold;
+      }
+
       .anticon {
         position: absolute;
         top: 0;
         right: 3px;
         cursor: pointer;
+        color: $content-color-secondary;
+        &:hover {
+          color: $content-color-primary;
+        }
       }
     }
 
@@ -162,14 +171,19 @@
           border-radius: 4px;
           margin-left: auto;
           cursor: pointer;
-          height: fit-content;
-
+          //height: fit-content;
+          display: flex;
+          width: 16px;
+          height: 16px;
+          align-items: center;
+          justify-content: center;
+          color: $content-color-secondary;
           .base-icon {
             position: relative;
           }
 
           &:hover {
-            background-color: lightgrey;
+            color: $content-color-primary;
           }
         }
       }
@@ -246,10 +260,11 @@
           height: 16px;
           background-color: #2a91d6;
           color: whitesmoke;
-          font-weight: bolder;
+          font-weight: 500;
           padding: 2px;
           font-size: 12px;
           line-height: 1;
+          border-radius: $border-radius-default;
 
           &.collection {
             background-color: #ffb400;
@@ -274,16 +289,13 @@
           background-color: #F2F2F2;
         }
 
-        .action-col {
+        .eye-icon {
           position: absolute;
           top: 50%;
           right: 3px;
           transform: translateY(-50%);
           z-index: 3;
-
-          .base-icon {
-            position: relative;
-          }
+          color: $content-color-secondary;
         }
       }
     }
