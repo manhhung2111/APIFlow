@@ -9,7 +9,6 @@ const AppInputUser = ({value, setValue}) => {
 
 	useEffect(() => {
 		if(value && users.length > 0){
-			console.log("Value",value)
 			const usernames = value
 				.map(id => {
 					const user = users.find(user => user._id == id);
@@ -17,8 +16,6 @@ const AppInputUser = ({value, setValue}) => {
 				})
 				.filter(Boolean) // Remove null/undefined values
 				.join(" "); // Join usernames with a space
-
-			console.log(usernames)
 
 			setInputValue(usernames);
 		}

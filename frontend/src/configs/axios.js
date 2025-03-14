@@ -39,7 +39,7 @@ instance.interceptors.response.use(
 		if(error.response.status === 401){
 			// window.location.href = "/login";
 		} else if(error.response.status === 403){
-			// window.location.href = "/forbidden";
+			window.location.href = "/forbidden";
 		}
 		 else if (error.response.status === 404){
 			window.location.href = "/notfound"

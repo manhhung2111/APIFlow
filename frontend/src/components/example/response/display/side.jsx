@@ -11,7 +11,6 @@ export default function ExampleResponseSide(){
 	const [options, setOptions] = useState(Request.STATUS_CODES());
 
 	const handleChangeStatus = (value) => {
-		console.log(value)
 		setResponseStatus(value);
 	}
 

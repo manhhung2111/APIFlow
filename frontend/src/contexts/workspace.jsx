@@ -34,7 +34,7 @@ export default function WorkspaceContextProvider(props){
 				setEnvironments(response.data.environments);
 				setExamples(response.data.examples);
 			} else {
-				alert(response.message);
+				console.error(response.message);
 			}
 		}
 

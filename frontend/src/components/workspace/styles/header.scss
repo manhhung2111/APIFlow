@@ -1,18 +1,19 @@
 @use "@styles/variables" as *;
 
 .workspace-super-header {
-
-  display: grid;
-  grid-template-columns: 1fr 48px;
+  position: relative;
   align-items: center;
-  width: calc(100vw - 330px);
+  box-sizing: border-box;
   .main {
+    position: absolute;
+    right: 48px;
+    left: 0;
     display: grid;
     grid-template-columns: 1fr 0.15fr;
     align-items: center;
     height: 40px;
     gap: 16px;
-    width: calc(100vw - 330px - 48px);
+    width: calc(100vw - 350px - 48px);
     .info {
       display: flex;
       align-items: center;
@@ -71,43 +72,49 @@
     //border-right: 1px solid $border-color-default;
   }
 
-  .side {
-    padding: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    &::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 25%; // Centers the border vertically
-      height: 50%;
-      width: 1px;
-      background-color: $border-color-default; // Same as original border color
-    }
-
-    .rs-item {
-      width: 100%;
+  .side_wrapper {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 48px;
+    .side {
+      padding: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 8px;
-      cursor: pointer;
-      text-align: center;
-      border-radius: $border-radius-default;
-
-      &:hover {
-        background-color: rgb(237, 237, 237);
-
-        .anticon {
-          color: $content-color-primary;
-        }
+      position: relative;
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 25%; // Centers the border vertically
+        height: 50%;
+        width: 1px;
+        background-color: $border-color-default; // Same as original border color
       }
 
-      .anticon {
-        font-size: 16px;
-        color: $content-color-secondary;
+      .rs-item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        cursor: pointer;
+        text-align: center;
+        border-radius: $border-radius-default;
+
+        &:hover {
+          background-color: rgb(237, 237, 237);
+
+          .anticon {
+            color: $content-color-primary;
+          }
+        }
+
+        .anticon {
+          font-size: 16px;
+          color: $content-color-secondary;
+        }
       }
     }
   }

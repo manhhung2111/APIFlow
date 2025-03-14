@@ -27,12 +27,13 @@ export default function WorkspaceSelectionModal(props){
 			<div className="wsm-main">
 				<h6>Recently visited</h6>
 				<div className="workspace-list">
-					{workspaces.map(workspace => (
+					{workspaces.length > 0 && workspaces.map(workspace => (
 						<NavLink key={`workspace-${workspace._id}`} to={`/workspace/${workspace._id}`} onClick={() => setDropdownVisible(false)}
 								 className="workspace-item">
 							<UserOutlined style={{fontSize: "16px"}}/> &nbsp;{workspace.name}
 						</NavLink>
 					))}
+					{workspaces.length === 0 && <div style={{padding: "4px", paddingLeft: "16px", color: "#6b6b6b"}}>No workspaces found</div>}
 				</div>
 			</div>
 			<WorkspaceFormCreate

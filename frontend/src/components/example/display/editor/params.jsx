@@ -50,11 +50,10 @@ export default function ExampleEditorParams(){
 			if(row.key) queryString += row.key;
 			if(row.value) queryString += `=${row.value}`;
 		}
-		console.log(queryString);
+
 		if(queryString) queryString = '?' + queryString;
 		let baseUrl = url.split('?')[0];
 		const newUrl = baseUrl + queryString;
-		// console.log(newUrl)
 
 		setUrl(newUrl);
 	}

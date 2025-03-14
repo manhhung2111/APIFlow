@@ -3,15 +3,16 @@ import TextEditor from "@components/app/editor/text.editor.jsx";
 import '../styles/form.scss'
 import WorkspaceService from "@services/workspace.js";
 import {toast} from "react-toastify";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 import {AppContext} from "@contexts/app.jsx";
 
 export default function WorkspaceFormCreate({visible, setVisible}){
 	const [form] = Form.useForm();
 	const {setWorkspaces} = useContext(AppContext);
+	const [content, setContent] = useState("");
 
 	const handleSubmit = async (values) => {
-		const response = await WorkspaceService.create(values['name']);
+		const response = await WorkspaceService.create(values['name'], content);
 
 		if (response.code === 0) {
 			toast.success(response.message);
@@ -30,11 +31,7 @@ export default function WorkspaceFormCreate({visible, setVisible}){
 	const handleChangeContent = (quill, quillRef) => {
 		if(quill){
 			quill.on('text-change', (delta, oldDelta, source) => {
-				console.log('Text change!');
-				console.log(quill.getText()); // Get text only
-				console.log(quill.getContents()); // Get delta contents
-				console.log(quill.root.innerHTML); // Get innerHTML using quill
-				console.log(quillRef.current.firstChild.innerHTML); // Get innerHTML using quillRef
+				setContent(quill.root.innerHTML);
 			});
 		}
 	}
@@ -60,7 +57,7 @@ export default function WorkspaceFormCreate({visible, setVisible}){
 					<Input placeholder={"Workspace name"}/>
 				</Form.Item>
 				<Form.Item label="Description" name="content">
-					<TextEditor handleChange={handleChangeContent}/>
+					<TextEditor handleChange={handleChangeContent} value={content}/>
 				</Form.Item>
 				<div className="footer">
 					<Button color="default" variant="filled" onClick={handleCancel}>

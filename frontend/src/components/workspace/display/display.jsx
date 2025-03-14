@@ -20,8 +20,6 @@ export default function WorkspaceDisplay() {
 			: [])
 	];
 
-	console.log("items", items);
-	console.log("worksapce", workspace?.can?.full_access)
 	return (
 		<div className="workspace-display">
 			<div className="header">
@@ -29,11 +27,11 @@ export default function WorkspaceDisplay() {
 					<UserOutlined/>
 					{workspace.name}
 				</div>}
-				{!workspace && <Skeleton.Input active={true} />}
+				{!workspace && <Skeleton.Input active={true} style={{width: 200}} />}
 			</div>
 			<div className="main">
 				{!workspace && <div style={{padding: "16px"}} >
-					<Skeleton active />
+					<Skeleton active style={{width: "50vw"}} />
 				</div>}
 				{workspace && <Tabs
 					tabBarGutter={16}

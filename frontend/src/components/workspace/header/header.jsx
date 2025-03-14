@@ -45,9 +45,11 @@ export default function WorkspaceSuperHeader(){
 					/>
 				</div>
 			</div>
-			<div className="side">
-				<div className="rs-item">
-					<DataTableIcon/>
+			<div className="side_wrapper">
+				<div className="side">
+					<div className="rs-item">
+						<DataTableIcon/>
+					</div>
 				</div>
 			</div>
 		</>}
