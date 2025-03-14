@@ -43,4 +43,13 @@ export default class WorkspaceService {
 			throw new Error(error.message || 'Save access list failed');
 		}
 	}
+
+
+	static async delete(workspace) {
+		try {
+			return await axios.delete(`/workspaces/${workspace._id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Delete workspace failed');
+		}
+	}
 }

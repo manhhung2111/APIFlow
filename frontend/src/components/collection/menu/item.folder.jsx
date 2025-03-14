@@ -2,14 +2,16 @@ import {NavLink, useLocation, useMatch, useNavigate, useParams} from "react-rout
 import ActionManager from "@utils/action.manager.jsx";
 import RequestMenuItem from "@components/collection/menu/item.request.jsx";
 import {FolderOutlined} from "@ant-design/icons";
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import DropdownIcon from "@assets/icons/drop.down.jsx";
 import FolderService from "@services/folder.js";
 import {toast} from "react-toastify";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
 
 export default function FolderMenuItem({folder, requests, examples}){
 	const {workspace, setRequests, setFolders, setExamples} = useContext(WorkspaceContext);
+	const [deleteFolderVisible, setDeleteFolderVisible] = useState(false);
 
 	const location = useLocation();
 	const {folder_id} = useParams();
@@ -95,7 +97,7 @@ export default function FolderMenuItem({folder, requests, examples}){
 		},
 		{key: `add_request_${folder?._id}`, label: "Add request", onClick: handleAddRequest},
 		{key: `duplicate_${folder?._id}`, label: "Duplicate", onClick: handleDuplicate},
-		{key: `delete_${folder?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+		{key: `delete_${folder?._id}`, label: "Delete", onClick: () => setDeleteFolderVisible(true), danger: 1},
 	];
 
 	return (
@@ -129,6 +131,13 @@ export default function FolderMenuItem({folder, requests, examples}){
 					})}
 				</div>
 			</div>
+			<AppDeleteModal
+				title={`Delete folder "${folder.name}"?`}
+				content={"Deleting this folder is permanent. All its contents, including requests and examples, will be lost forever."}
+				visible={deleteFolderVisible}
+				setVisible={setDeleteFolderVisible}
+				callback={handleDelete}
+			/>
 		</div>
 	);
 }

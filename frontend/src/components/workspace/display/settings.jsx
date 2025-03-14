@@ -5,15 +5,20 @@ import AppInputUser from "@components/app/input/user/user.jsx";
 import {AppContext} from "@contexts/app.jsx";
 import WorkspaceService from "@services/workspace.js";
 import {toast} from "react-toastify";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
+import {useNavigate} from "react-router";
 
 export default function WorkspaceDisplaySettings(){
+	const {workspaces} = useContext(AppContext);
 	const {workspace, setWorkspace} = useContext(WorkspaceContext);
 	const {users} = useContext(AppContext);
 	const [editors, setEditors] = useState(workspace.editors || []);
 	const [commenters, setCommenters] = useState(workspace.commenters || []);
 	const [viewers, setViewers] = useState(workspace.viewers || []);
-
+	const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 	const [hasChanges, setHasChanges] = useState(false);
+
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if(
@@ -35,13 +40,13 @@ export default function WorkspaceDisplaySettings(){
 	};
 
 	// Cancel function
-	const handleSave = async () => {
+	const handleSave = async() => {
 		const editorsList = editors.join(",");
 		const commentersList = commenters.join(",");
 		const viewersList = viewers.join(",");
 
 		const result = await WorkspaceService.saveAccessList(workspace, editorsList, commentersList, viewersList);
-		if (result.code === 0) {
+		if(result.code === 0){
 			setWorkspace(result.data.workspace);
 			setHasChanges(false);
 			toast.success(result.message);
@@ -49,6 +54,18 @@ export default function WorkspaceDisplaySettings(){
 			toast.error(result.message);
 		}
 	};
+
+	const handleDelete = async() => {
+		const result = await WorkspaceService.delete(workspace);
+
+		if(result.code === 0){
+			setDeleteModalVisible(false);
+			toast.success(result.message);
+			navigate("/");
+		} else {
+			toast.error(result.message);
+		}
+	}
 
 	return (
 		<div className="workspace-display-settings">
@@ -103,10 +120,18 @@ export default function WorkspaceDisplaySettings(){
 			<div className="section">
 				<h3>Delete workspace</h3>
 				<p>Once deleted, a workspace is gone forever along with its data.</p>
-				<Button color="danger" variant="filled" className="delete-btn">
+				<Button color="danger" variant="filled" className="delete-btn"
+						onClick={() => setDeleteModalVisible(true)}>
 					Delete Workspace
 				</Button>
 			</div>
+			<AppDeleteModal
+				title={`Delete workspace "${workspace.name}"?`}
+				content={"Deleting this workspace is permanent. All its contents, including collections, folders, requests, examples, and environments, will be lost forever."}
+				visible={deleteModalVisible}
+				setVisible={setDeleteModalVisible}
+				callback={handleDelete}
+			/>
 		</div>
 	)
 }

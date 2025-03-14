@@ -3,11 +3,13 @@ import {NavLink, useNavigate, useParams} from "react-router";
 import BookmarkIcon from "@assets/icons/bookmark.jsx";
 import {toast} from "react-toastify";
 import ExampleService from "@services/example.js";
-import {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
 
 export default function ExampleMenuItem({example}){
 	const {workspace, setExamples} = useContext(WorkspaceContext);
+	const [deleteExampleVisible, setDeleteExampleVisible] = useState(false);
 
 	const {example_id} = useParams();
 	const navigate = useNavigate();
@@ -46,7 +48,7 @@ export default function ExampleMenuItem({example}){
 
 	const actionManagers = [
 		{key: `duplicate_${example?._id}`, label: "Duplicate", onClick: handleDuplicate},
-		{key: `delete_${example?._id}`, label: "Delete", danger: 1, onClick: handleDelete},
+		{key: `delete_${example?._id}`, label: "Delete", danger: 1, onClick: () => setDeleteExampleVisible(true)},
 	]
 
 	return (<div className="menu-item example-menu-item">
@@ -61,5 +63,12 @@ export default function ExampleMenuItem({example}){
 				{workspace?.can?.editable && <ActionManager am={actionManagers}/>}
 			</div>
 		</div>
+		<AppDeleteModal
+			title={`Delete example "${example.name}"?`}
+			content={"Deleting this example is permanent. All associated test data and configurations will be lost forever."}
+			visible={deleteExampleVisible}
+			setVisible={setDeleteExampleVisible}
+			callback={handleDelete}
+		/>
 	</div>)
 }

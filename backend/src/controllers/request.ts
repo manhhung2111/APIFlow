@@ -35,13 +35,13 @@ export const deleteRequest = async (request: Request, response: Response) => {
     try {
         const request_id = HTMLInput.param("request_id");
         if (request_id.length != 24) {
-            response.status(404).json(Code.error(Code.INVALID_DATA));
+            404
             return;
         }
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            404
         }
 
         await request.delete(session);
@@ -75,7 +75,8 @@ export const duplicateRequest = async (request: Request, response: Response) => 
 
         const old_request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!old_request.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
         }
 
         const new_request = await DBRequest.initialize() as DBRequest;
@@ -110,7 +111,8 @@ export const getRequestsByWorkspace = async (request: Request, response: Respons
     try {
         const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
         if (!workspace.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
         }
 
         const requests = await DBRequestLoader.byWorkspace(workspace.object!);
@@ -135,7 +137,7 @@ export const getRequestById = async (request: Request, response: Response) => {
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
             return;
         }
 
@@ -203,7 +205,7 @@ export const sendRequest = async (request: Request, response: Response) => {
     } catch (error) {
         if (axios.isAxiosError(error)) {
             const axios_error = error as AxiosError;
-            response.status(400).json(Code.success(axios_error.message, {
+            response.status(404).json(Code.success(axios_error.message, {
                 "response": {
                     "status": axios_error.response?.status,
                     "body": axios_error.response?.data || {},
@@ -263,7 +265,8 @@ export const updateRequestName = async (request: Request, response: Response) =>
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
         }
 
         await request.reader().readName();
@@ -289,7 +292,8 @@ export const updateRequestContent = async (request: Request, response: Response)
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
         }
 
         await request.reader().readContent();

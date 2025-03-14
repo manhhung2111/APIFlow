@@ -34,7 +34,8 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
 
 		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
 		if (!workspace.good()){
-			response.status(400).json(Code.error(Code.INVALID_DATA));
+			response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
 		}
 
 		const collections = await DBCollectionLoader.byWorkspace(workspace.object!);
@@ -106,7 +107,8 @@ export const updateWorkspace = async (request: Request, response: Response) => {
 
 		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
 		if (!workspace.good()){
-			response.status(400).json(Code.error(Code.INVALID_DATA));
+			response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
 		}
 
 		await workspace.reader().readName();
@@ -146,7 +148,7 @@ export const deleteWorkspace = async (request: Request, response: Response) => {
 
 		await session.commitTransaction();
 
-		response.status(200).json(Code.success(`Delete workspace \"${workspace.getField("name")}\" successfully.`));
+		response.status(200).json(Code.success(`Delete workspace successfully`));
 	} catch (error){
 		await session.abortTransaction();
 
@@ -169,7 +171,8 @@ export const updateWorkspaceAccessList = async (request: Request, response: Resp
 
 		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
 		if (!workspace.good()){
-			response.status(400).json(Code.error(Code.INVALID_DATA));
+			response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
 		}
 
 		await workspace.reader().readUsers();

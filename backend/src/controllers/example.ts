@@ -114,7 +114,8 @@ export const getExampleById = async (request: Request, response: Response) => {
 
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
         if (!example.good()) {
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
         }
 
         let request = await DBRequest.initialize(example.object!.request_id) as DBRequest;

@@ -3,17 +3,20 @@ import {NavLink, useLocation, useMatch, useNavigate, useParams} from "react-rout
 import ExampleMenuItem from "@components/collection/menu/item.example.jsx";
 import Request from "@components/request/request.jsx";
 import DropdownIcon from "@assets/icons/drop.down.jsx";
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import RequestService from "@services/request.jsx";
 import {toast} from "react-toastify";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import _ from "lodash";
 import ExampleService from "@services/example.js";
 import FolderService from "@services/folder.js";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
 
 export default function RequestMenuItem({request, examples: requestExamples}){
 	const {workspace, setExamples, requests, setRequests} = useContext(WorkspaceContext);
 	const [collapsed, setCollapsed] = useState(true);
+	const [deleteRequestVisible, setDeleteRequestVisible] = useState(false);
+
 	// Toggle function
 	const handleToggleMenu = () => {
 		setCollapsed((prev) => !prev);
@@ -98,7 +101,7 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 		{key: `add_example_${request?._id}`, label: "Add example", onClick: handleAddExample},
 		{key: `documentation_${request?._id}`, label: "View documentation"},
 		{key: `duplicate_${request?._id}`, label: "Duplicate", onClick: handleDuplicate},
-		{key: `delete_${request?._id}`, label: "Delete", danger: 1, onClick: handleDelete},
+		{key: `delete_${request?._id}`, label: "Delete", danger: 1, onClick: () => setDeleteRequestVisible(true)},
 	]
 
 
@@ -126,5 +129,12 @@ export default function RequestMenuItem({request, examples: requestExamples}){
 				})}
 			</div>
 		</div>
+		<AppDeleteModal
+			title={`Delete request "${request.name}"?`}
+			content={"Deleting this request is permanent. All associated data, including examples and test runs, will be lost forever."}
+			visible={deleteRequestVisible}
+			setVisible={setDeleteRequestVisible}
+			callback={handleDelete}
+		/>
 	</div>)
 }

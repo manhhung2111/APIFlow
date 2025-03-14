@@ -1,6 +1,6 @@
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
-import {NavLink, useParams} from "react-router";
+import {NavLink, useNavigate, useParams} from "react-router";
 import FolderService from "@services/folder.js";
 import FolderDisplayOverview from "@components/folder/display/overview.jsx";
 import FolderDisplayAuthorization from "@components/folder/display/authorization.jsx";
@@ -11,6 +11,7 @@ import {FolderOutlined, SaveOutlined} from "@ant-design/icons";
 import ActionManager from "@utils/action.manager.jsx";
 import _ from "lodash";
 import Request from "@components/request/request.jsx";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
 
 export default function FolderPage(){
 	const {
@@ -19,7 +20,8 @@ export default function FolderPage(){
 		setRequests,
 		setFolders,
 		activeCollection,
-		setActiveCollection
+		setActiveCollection,
+		setExamples,
 	} = useContext(WorkspaceContext);
 	const [folder, setFolder] = useState(null);
 	const [name, setName] = useState("");
@@ -29,8 +31,11 @@ export default function FolderPage(){
 		pre_request: "",
 		post_response: ""
 	});
+	const [deleteFolderVisible, setDeleteFolderVisible] = useState(false);
 
 	const {folder_id} = useParams();
+	const navigate = useNavigate();
+
 	useEffect(() => {
 		async function fetchFolder(){
 			const result = await FolderService.getById(folder_id, workspace._id);
@@ -119,6 +124,7 @@ export default function FolderPage(){
 	}
 
 	const handleDelete = async() => {
+		setDeleteFolderVisible(false);
 		const result = await FolderService.delete(folder);
 
 		if(result.code === 0){
@@ -131,10 +137,29 @@ export default function FolderPage(){
 		}
 	}
 
+	const handleDuplicate = async() => {
+		const result = await FolderService.duplicate(folder);
+
+		if(result.code === 0){
+			const newFolder = result.data.folder;
+			const newRequests = result.data.requests;
+			const newExamples = result.data.examples;
+
+			setFolders(prev => [...prev, newFolder]);
+			setRequests(prev => [...prev, ...newRequests]);
+			setExamples(prev => [...prev, ...newExamples]);
+
+			navigate(`/workspace/${newFolder.workspace_id}/folder/${newFolder._id}`);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
 		{key: `add_request_${folder?._id}`, label: "Add request", onClick: handleAddRequest},
-		{key: `duplicate_${folder?._id}`, label: "Duplicate",},
-		{key: `delete_${folder?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+		{key: `duplicate_${folder?._id}`, label: "Duplicate", onClick: handleDuplicate},
+		{key: `delete_${folder?._id}`, label: "Delete", onClick: () => setDeleteFolderVisible(true), danger: 1},
 	];
 
 	return (
@@ -180,6 +205,13 @@ export default function FolderPage(){
 					items={generateItems()}
 				/>}
 			</div>
+			<AppDeleteModal
+				title={`Delete folder "${folder?.name}"?`}
+				content={"Deleting this folder is permanent. All its contents, including requests and examples, will be lost forever."}
+				visible={deleteFolderVisible}
+				setVisible={setDeleteFolderVisible}
+				callback={handleDelete}
+			/>
 		</div>
 	);
 }

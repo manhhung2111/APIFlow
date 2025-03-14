@@ -15,7 +15,7 @@ const createWorkspaceMiddleware = (checkPermission: (workspace: DBWorkspace) => 
 
 			const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
 			if (!workspace.good()){
-				response.status(400).json(Code.error("Invalid workspace"));
+				response.status(404).json(Code.error("Invalid workspace"));
 				return;
 			}
 

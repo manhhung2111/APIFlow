@@ -1,5 +1,5 @@
 import {Button, Skeleton, Tabs} from "antd";
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {useNavigate, useParams} from "react-router";
 import CollectionService from "@services/collection.js";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
@@ -15,6 +15,7 @@ import {toast} from "react-toastify";
 import FolderService from "@services/folder.js";
 import _ from "lodash";
 import Request from "@components/request/request.jsx";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
 
 export default function CollectionPage(){
 	const {
@@ -24,7 +25,8 @@ export default function CollectionPage(){
 		setFolders,
 		setRequests,
 		activeCollection,
-		setActiveCollection
+		setActiveCollection,
+		setExamples
 	} = useContext(WorkspaceContext);
 
 	const [name, setName] = useState("");
@@ -35,6 +37,7 @@ export default function CollectionPage(){
 		post_response: ""
 	});
 	const [variables, setVariables] = useState([]);
+	const [deleteCollectionVisible, setDeleteCollectionVisible] = useState(false);
 
 	const {collection_id} = useParams();
 	const navigate = useNavigate();
@@ -152,6 +155,7 @@ export default function CollectionPage(){
 	}
 
 	const handleDelete = async() => {
+		setDeleteCollectionVisible(false);
 		const result = await CollectionService.delete(activeCollection);
 
 		if(result.code === 0){
@@ -165,12 +169,38 @@ export default function CollectionPage(){
 		}
 	}
 
+	const handleDuplicate = async() => {
+		const result = await CollectionService.duplicate(activeCollection);
+
+		if(result.code === 0){
+			const newCollection = result.data.collection;
+			const newFolders = result.data.folders;
+			const newRequests = result.data.requests;
+			const newExamples = result.data.examples;
+
+			setFolders(prev => [...prev, ...newFolders]);
+			setRequests(prev => [...prev, ...newRequests]);
+			setExamples(prev => [...prev, ...newExamples]);
+			setCollections(prev => [...prev, newCollection]);
+
+			navigate(`/workspace/${newCollection.workspace_id}/collection/${newCollection._id}`);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
 		{key: `add_request_${activeCollection?._id}`, label: "Add request", onClick: handleAddRequest},
 		{key: `add_folder_${activeCollection?._id}`, label: "Add folder", onClick: handleAddFolder},
-		{key: `duplicate_${activeCollection?._id}`, label: "Duplicate",},
+		{key: `duplicate_${activeCollection?._id}`, label: "Duplicate", onClick: handleDuplicate},
 		{key: `export_${activeCollection?._id}`, label: "Export",},
-		{key: `delete_${activeCollection?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+		{
+			key: `delete_${activeCollection?._id}`,
+			label: "Delete",
+			onClick: () => setDeleteCollectionVisible(true),
+			danger: 1
+		},
 	];
 
 	return (
@@ -202,6 +232,13 @@ export default function CollectionPage(){
 					items={generateItems()}
 				/>}
 			</div>
+			<AppDeleteModal
+				title={`Delete collection "${activeCollection?.name}"?`}
+				content={"Deleting this collection is permanent. All its contents, including folders, requests, examples, and all associated runners, will be lost forever."}
+				visible={deleteCollectionVisible}
+				setVisible={setDeleteCollectionVisible}
+				callback={handleDelete}
+			/>
 		</div>
 	);
 }

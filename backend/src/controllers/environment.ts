@@ -36,7 +36,8 @@ export const deleteEnvironment = async (request: Request, response: Response) =>
 
         const environment = await DBEnvironment.initialize(HTMLInput.param("environment_id")) as DBEnvironment;
         if (!environment.good()){
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
         }
 
         await environment.delete();
@@ -54,7 +55,8 @@ export const duplicateEnvironment = async (request: Request, response: Response)
     try{
         const environment = await DBEnvironment.initialize(HTMLInput.inputInline("environment_id")) as DBEnvironment;
         if (!environment.good()){
-            response.status(400).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const new_env = await DBEnvironment.initialize() as DBEnvironment;

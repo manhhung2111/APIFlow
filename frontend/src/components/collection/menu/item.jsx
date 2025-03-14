@@ -1,4 +1,4 @@
-import {useContext, useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import ActionManager from "@utils/action.manager.jsx";
 import {NavLink, useNavigate, useMatch, useLocation} from "react-router";
 import CollectionIcon from "@assets/icons/collection.jsx";
@@ -9,9 +9,11 @@ import CollectionService from "@services/collection.js";
 import {toast} from "react-toastify";
 import FolderService from "@services/folder.js";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
+import AppDeleteModal from "@components/app/modal/delete.jsx";
 
 export default function CollectionMenuItem({collection, folders, requests, examples}){
 	const {workspace, setRequests, setFolders, setCollections, setExamples} = useContext(WorkspaceContext);
+	const [deleteCollectionVisible, setDeleteCollectionVisible] = useState(false);
 
 	const location = useLocation();
 
@@ -110,7 +112,7 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 		{key: `documentation_${collection._id}`, label: "View documentation",},
 		{key: `duplicate_${collection._id}`, label: "Duplicate", onClick: handleDuplicate},
 		{key: `export_${collection._id}`, label: "Export",},
-		{key: `delete_${collection._id}`, label: "Delete", onClick: handleDelete, danger: 1},
+		{key: `delete_${collection._id}`, label: "Delete", onClick: () => setDeleteCollectionVisible(true), danger: 1},
 	];
 
 
@@ -162,6 +164,13 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 					</div>
 				</div>
 			)}
+			<AppDeleteModal
+				title={`Delete collection "${collection.name}"?`}
+				content={"Deleting this collection is permanent. All its contents, including folders, requests, examples, and all associated runners, will be lost forever."}
+				visible={deleteCollectionVisible}
+				setVisible={setDeleteCollectionVisible}
+				callback={handleDelete}
+			/>
 		</div>
 	);
 }
