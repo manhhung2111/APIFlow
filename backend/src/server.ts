@@ -14,7 +14,7 @@ import {
     UserRoute,
     WorkspaceRoute,
 } from "@routes";
-import {HTMLInput} from "@ap/core";
+import {Code, HTMLInput} from "@ap/core";
 import logger from "@utils/logger";
 
 dotenv.config();
@@ -40,13 +40,24 @@ app.use(cookieParser(process.env.COOKIES_SECRET));
 
 // Read files
 const upload = multer({
-    storage: multer.memoryStorage()
+    storage: multer.memoryStorage(),
+    limits: {fileSize: 2 * 1024 * 1024}
 });
 
 app.use(upload.any(), (request, response, next) => {
     HTMLInput.readRequest(request);
     next();
 });
+
+app.use((error: any, request: any, response: any, next: any) => {
+    if (error instanceof multer.MulterError) {
+        if (error.code === "LIMIT_FILE_SIZE") {
+            return response.status(400).json({message: "File size should not exceed 2MB."});
+        }
+    }
+    return next(error);
+});
+
 
 // Logger HTTP request
 app.use(morgan("dev", {stream: {write: (message) => logger.info(message.trim())}}));

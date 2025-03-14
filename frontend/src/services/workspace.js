@@ -9,6 +9,14 @@ export default class WorkspaceService {
 		}
 	}
 
+	static async recent() {
+		try {
+			return await axios.get('/workspaces/recent');
+		} catch (error) {
+			throw new Error(error.message || 'Get workspaces failed');
+		}
+	}
+
 	static async create(name, content = "") {
 		try {
 			return await axios.post('/workspaces', {name: name, content});

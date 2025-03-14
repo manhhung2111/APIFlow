@@ -23,7 +23,7 @@ export default function HomePage(){
 	useEffect(() => {
 		const fetchData = async () => {
 			if (user) {
-				const workspaceResponse = await WorkspaceService.mine();
+				const workspaceResponse = await WorkspaceService.recent();
 
 				if(workspaceResponse.code === 0){
 					setWorkspaces([...workspaceResponse.data.workspaces]);
