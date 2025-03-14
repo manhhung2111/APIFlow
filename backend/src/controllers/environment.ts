@@ -28,14 +28,19 @@ export const deleteEnvironment = async (request: Request, response: Response) =>
     logger.info("[Controller] Delete environment");
 
     try{
+        const environment_id = HTMLInput.param("environment_id");
+        if (environment_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const environment = await DBEnvironment.initialize(HTMLInput.param("environment_id")) as DBEnvironment;
         if (!environment.good()){
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         await environment.delete();
 
-        response.status(204).json(Code.success(`Delete environment \"${environment.getField("name")}\" successfully.`));
+        response.status(200).json(Code.success(`Delete environment \"${environment.getField("name")}\" successfully.`));
     } catch (error){
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
@@ -48,7 +53,7 @@ export const duplicateEnvironment = async (request: Request, response: Response)
     try{
         const environment = await DBEnvironment.initialize(HTMLInput.inputInline("environment_id")) as DBEnvironment;
         if (!environment.good()){
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         const new_env = await DBEnvironment.initialize() as DBEnvironment;
@@ -57,7 +62,7 @@ export const duplicateEnvironment = async (request: Request, response: Response)
 
         await new_env.save();
 
-        response.status(204).json(Code.success(`Duplicate environment \"${environment.getField("name")}\" successfully.`));
+        response.status(201).json(Code.success(`Duplicate environment \"${environment.getField("name")}\" successfully.`));
     } catch (error){
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
@@ -70,7 +75,7 @@ export const getEnvironmentsByWorkspace = async (request: Request, response: Res
     try{
         const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
         if (!workspace.good()){
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(300).json(Code.error(Code.INVALID_DATA));
         }
 
         const environments = await DBEnvironmentLoader.byWorkspace(workspace.object!);
@@ -87,6 +92,11 @@ export const getEnvironmentById = async (request: Request, response: Response) =
     logger.info("[Controller] Get environment by id");
 
     try{
+        const environment_id = HTMLInput.param("environment_id");
+        if (environment_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const environment = await DBEnvironment.initialize(HTMLInput.param("environment_id")) as DBEnvironment;
 
         if (!environment.good()){
@@ -105,6 +115,11 @@ export const updateEnvironment = async (request: Request, response: Response) =>
     logger.info("[Controller] Update environment");
 
     try{
+        const environment_id = HTMLInput.param("environment_id");
+        if (environment_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const environment = await DBEnvironment.initialize(HTMLInput.param("environment_id")) as DBEnvironment;
 
         environment.reader().readVariables();

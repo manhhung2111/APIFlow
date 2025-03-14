@@ -32,6 +32,11 @@ export const deleteFolder = async (request: Request, response: Response) => {
     session.startTransaction();
 
     try {
+        const folder_id = HTMLInput.param("folder_id");
+        if (folder_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
         if (!folder.good()) {
             response.status(400).json(Code.error(Code.INVALID_DATA));
@@ -60,6 +65,11 @@ export const duplicateFolder = async (request: Request, response: Response) => {
     session.startTransaction();
 
     try {
+        const folder_id = HTMLInput.param("folder_id");
+        if (folder_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const old_folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
         if (!old_folder.good()) {
             response.status(400).json(Code.error(Code.INVALID_DATA));
@@ -99,7 +109,7 @@ export const getFoldersByWorkspace = async (request: Request, response: Response
     try {
         const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
         if (!workspace.good()) {
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         const folders = await DBFolderLoader.byWorkspace(workspace.object!);
@@ -116,9 +126,14 @@ export const getFolderById = async (request: Request, response: Response) => {
     logger.info("[Controller] Get folder by id");
 
     try {
+        const folder_id = HTMLInput.param("folder_id");
+        if (folder_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
         if (!folder.good()) {
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         let collection = await DBCollection.initialize(folder.object!.collection_id) as DBCollection;
@@ -141,9 +156,14 @@ export const updateFolder = async (request: Request, response: Response) => {
     logger.info("[Controller] Update folder by id");
 
     try {
+        const folder_id = HTMLInput.param("folder_id");
+        if (folder_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
         if (!folder.good()) {
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         await folder.reader().read();

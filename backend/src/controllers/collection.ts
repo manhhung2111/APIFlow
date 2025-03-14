@@ -32,7 +32,12 @@ export const deleteCollection = async (request: Request, response: Response) => 
     session.startTransaction();
 
     try {
-        const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
+        const collection = await DBCollection.initialize(collection_id) as DBCollection;
         if (!collection.good()) {
             response.status(400).json(Code.error(Code.INVALID_DATA));
         }
@@ -60,6 +65,11 @@ export const duplicateCollection = async (request: Request, response: Response) 
     session.startTransaction();
 
     try {
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const old_collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
         if (!old_collection.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
@@ -100,7 +110,7 @@ export const getCollectionsByWorkspace = async (request: Request, response: Resp
     try {
         const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
         if (!workspace.good()) {
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         const collections = await DBCollectionLoader.byWorkspace(workspace.object!);
@@ -117,6 +127,11 @@ export const getCollectionById = async (request: Request, response: Response) =>
     logger.info("[Controller] Get collection by id");
 
     try {
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
 
         if (!collection.good()) {
@@ -135,9 +150,14 @@ export const updateCollection = async (request: Request, response: Response) => 
     logger.info("[Controller] Update collection");
 
     try {
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
         if (!collection.good()) {
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         collection.reader().read();
@@ -155,9 +175,14 @@ export const updateCollectionContent = async (request: Request, response: Respon
     logger.info("[Controller] Update collection content");
 
     try {
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
         if (!collection.good()) {
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         await collection.reader().readContent();
@@ -175,9 +200,14 @@ export const updateCollectionName = async (request: Request, response: Response)
     logger.info("[Controller] Update collection name");
 
     try {
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
         if (!collection.good()) {
-            response.status(204).json(Code.error(Code.INVALID_DATA));
+            response.status(400).json(Code.error(Code.INVALID_DATA));
         }
 
         await collection.reader().readName();

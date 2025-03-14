@@ -46,6 +46,11 @@ export const createNewExampleFromResponse = async (request: Request, response: R
 export const deleteExample = async (request: Request, response: Response) => {
     logger.info("[Controller] Delete an example");
     try {
+        const example_id = HTMLInput.param("example_id");
+        if (example_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
         if (!example.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
@@ -63,6 +68,11 @@ export const deleteExample = async (request: Request, response: Response) => {
 export const duplicateExample = async (request: Request, response: Response) => {
     logger.info("[Controller] Duplicate an example");
     try {
+        const example_id = HTMLInput.param("example_id");
+        if (example_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
         if (!example.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
@@ -92,6 +102,11 @@ export const getExampleById = async (request: Request, response: Response) => {
     logger.info("[Controller] Get example by id");
 
     try {
+        const example_id = HTMLInput.param("example_id");
+        if (example_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
         if (!example.good()) {
             response.status(400).json(Code.error(Code.INVALID_DATA));
@@ -121,6 +136,11 @@ export const getExampleById = async (request: Request, response: Response) => {
 export const updateExampleName = async (request: Request, response: Response) => {
     logger.info("[Controller] Update example from response");
     try {
+        const example_id = HTMLInput.param("example_id");
+        if (example_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
 
         await example.reader().readName();
@@ -141,6 +161,11 @@ export const moveExample = async (request: Request, response: Response) => {
 export const updateExample = async (request: Request, response: Response) => {
     logger.info("[Controller] Update example from response");
     try {
+        const example_id = HTMLInput.param("example_id");
+        if (example_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+        }
+
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
 
         await example.reader().read();
