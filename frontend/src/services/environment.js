@@ -42,4 +42,18 @@ export default class EnvironmentService{
 			throw new Error(error.message || 'Save environment failed');
 		}
 	}
+
+
+	static async updateName(environment, name) {
+		try {
+			const data = {
+				"name": name,
+				workspace_id: environment.workspace_id,
+			}
+
+			return await axios.put(`/environments/${environment._id}/name`, data);
+		} catch (error) {
+			throw new Error(error.message || 'Save example failed');
+		}
+	}
 }

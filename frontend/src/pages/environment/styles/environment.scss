@@ -11,14 +11,32 @@
       justify-content: space-between;
       .text {
         font-size: $text-size-m;
-        color: $content-color-primary;
         width: fit-content;
-        font-weight: $text-weight-thick;
+        display: flex;
+        align-items: center;
 
-        .anticon {
+        & >.anticon {
           font-size: $text-size-xl;
           color: $content-color-secondary;
           margin-right: 6px;
+        }
+
+        .ant-typography {
+          margin: 0;
+          font-size: $text-size-m;
+          color: $content-color-primary;
+          font-weight: $text-weight-thick;
+        }
+
+        .ant-typography-edit-content {
+          padding: 0;
+          margin-left: 4px;
+          width: fit-content;
+          min-width: 200px;
+
+          .ant-input {
+            font-size: 12px;
+          }
         }
       }
 

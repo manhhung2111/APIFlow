@@ -4,11 +4,22 @@ import {useMatch, useNavigate, useParams} from "react-router";
 import EnvironmentService from "@services/environment.js";
 import _ from "lodash";
 import {Button, Checkbox, Input, Select, Skeleton} from "antd";
-import {DeleteOutlined, EyeInvisibleOutlined, EyeOutlined, SaveOutlined, SearchOutlined} from "@ant-design/icons";
+import {
+	DeleteOutlined,
+	EditOutlined, EnterOutlined,
+	EyeInvisibleOutlined,
+	EyeOutlined,
+	SaveOutlined,
+	SearchOutlined
+} from "@ant-design/icons";
 import "./styles/environment.scss";
 import ActionManager from "@utils/action.manager.jsx";
 import EnvironmentIcon from "@assets/icons/environment.jsx";
 import {toast} from "react-toastify";
+import {Typography } from 'antd';
+import RequestService from "@services/request.jsx";
+
+const { Paragraph } = Typography;
 
 export default function EnvironmentPage(){
 	const {workspace, environments, setEnvironments, setActiveMenuKey} = useContext(WorkspaceContext);
@@ -127,13 +138,43 @@ export default function EnvironmentPage(){
 		{key: `delete_${environment?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
 	];
 
+	const handleChangeName = async (value) => {
+		if (value == name) return;
+		const response = await EnvironmentService.updateName(environment, value);
+
+		if (response.code === 0) {
+			await setName(response.data.environment.name);
+			await setEnvironment(response.data.environment);
+
+			const clone = _.cloneDeep(environments);
+			for (const e of clone) {
+				if(e._id === environment._id){
+					e.name = value;
+				}
+			}
+			await setEnvironments(clone);
+		} else {
+			toast.error(response.message);
+		}
+	}
+
 	return (
 		<div className="environment-page">
 			<div className="header">
 				{environment && <div className="inner-header">
 					<div className="text">
 						<EnvironmentIcon/>
-						{environment.name}
+						<Paragraph
+							editable={workspace?.can?.editable && environment.scope === 1 ? {
+								icon: <EditOutlined />,
+								tooltip: 'Click to edit request',
+								onChange: handleChangeName,
+								enterIcon: <EnterOutlined />,
+								autoSize: {minRows: 1, maxRows: 2},
+							} : null}
+						>
+							{name}
+						</Paragraph>
 					</div>
 					<div className="side">
 						{workspace?.can?.editable &&

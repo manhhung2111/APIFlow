@@ -137,5 +137,24 @@ export const updateEnvironment = async (request: Request, response: Response) =>
 };
 
 export const updateEnvironmentName = async (request: Request, response: Response) => {
+    logger.info("[Controller] Update environment name");
 
+    try{
+        const environment_id = HTMLInput.param("environment_id");
+        if (environment_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
+        }
+
+        const environment = await DBEnvironment.initialize(HTMLInput.param("environment_id")) as DBEnvironment;
+
+        environment.reader().readName();
+
+        await environment.save();
+
+        response.status(200).json(Code.success("Update environment name successfully!", {environment: environment.release()}));
+    } catch (error){
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
 };

@@ -41,11 +41,11 @@ export default class Reader extends DBReader<DEnvironment>{
 		this._obj.name = HTMLInput.inputInline("name");
 
 		if (Validation.isEmpty(this._obj.name)){
-			throw new Code("Request this._obj.name must not be empty");
+			throw new Code("Environment name must not be empty");
 		}
 
 		if (this._obj.name.length > 255){
-			throw new Code("Request name must not exceed 255 characters");
+			throw new Code("Environment name must not exceed 255 characters");
 		}
 	}
 
