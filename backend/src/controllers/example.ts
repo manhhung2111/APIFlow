@@ -49,11 +49,13 @@ export const deleteExample = async (request: Request, response: Response) => {
         const example_id = HTMLInput.param("example_id");
         if (example_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
         if (!example.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         await example.delete();
@@ -71,11 +73,13 @@ export const duplicateExample = async (request: Request, response: Response) => 
         const example_id = HTMLInput.param("example_id");
         if (example_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
         if (!example.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const new_example = await DBExample.initialize() as DBExample;
@@ -105,6 +109,7 @@ export const getExampleById = async (request: Request, response: Response) => {
         const example_id = HTMLInput.param("example_id");
         if (example_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
@@ -139,6 +144,7 @@ export const updateExampleName = async (request: Request, response: Response) =>
         const example_id = HTMLInput.param("example_id");
         if (example_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;
@@ -164,6 +170,7 @@ export const updateExample = async (request: Request, response: Response) => {
         const example_id = HTMLInput.param("example_id");
         if (example_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const example = await DBExample.initialize(HTMLInput.param("example_id")) as DBExample;

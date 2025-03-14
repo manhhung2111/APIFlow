@@ -35,6 +35,7 @@ export const deleteCollection = async (request: Request, response: Response) => 
         const collection_id = HTMLInput.param("collection_id");
         if (collection_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const collection = await DBCollection.initialize(collection_id) as DBCollection;
@@ -68,11 +69,13 @@ export const duplicateCollection = async (request: Request, response: Response) 
         const collection_id = HTMLInput.param("collection_id");
         if (collection_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const old_collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
         if (!old_collection.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const new_collection = await DBCollection.initialize() as DBCollection;
@@ -130,6 +133,7 @@ export const getCollectionById = async (request: Request, response: Response) =>
         const collection_id = HTMLInput.param("collection_id");
         if (collection_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
@@ -153,6 +157,7 @@ export const updateCollection = async (request: Request, response: Response) => 
         const collection_id = HTMLInput.param("collection_id");
         if (collection_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
@@ -178,6 +183,7 @@ export const updateCollectionContent = async (request: Request, response: Respon
         const collection_id = HTMLInput.param("collection_id");
         if (collection_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
@@ -203,6 +209,7 @@ export const updateCollectionName = async (request: Request, response: Response)
         const collection_id = HTMLInput.param("collection_id");
         if (collection_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;

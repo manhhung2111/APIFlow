@@ -29,6 +29,7 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
 		const workspace_id = HTMLInput.param("workspace_id");
 		if (workspace_id.length != 24) {
 			response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
 		}
 
 		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
@@ -100,6 +101,7 @@ export const updateWorkspace = async (request: Request, response: Response) => {
 		const workspace_id = HTMLInput.param("workspace_id");
 		if (workspace_id.length != 24) {
 			response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
 		}
 
 		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;
@@ -130,6 +132,7 @@ export const deleteWorkspace = async (request: Request, response: Response) => {
 		const workspace_id = HTMLInput.param("workspace_id");
 		if (workspace_id.length != 24) {
 			response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
 		}
 
 		const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
@@ -161,6 +164,7 @@ export const updateWorkspaceAccessList = async (request: Request, response: Resp
 		const workspace_id = HTMLInput.param("workspace_id");
 		if (workspace_id.length != 24) {
 			response.status(404).json(Code.error(Code.INVALID_DATA));
+			return;
 		}
 
 		const workspace = await DBWorkspace.initialize(HTMLInput.param("workspace_id")) as DBWorkspace;

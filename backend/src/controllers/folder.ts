@@ -35,6 +35,7 @@ export const deleteFolder = async (request: Request, response: Response) => {
         const folder_id = HTMLInput.param("folder_id");
         if (folder_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
@@ -68,6 +69,7 @@ export const duplicateFolder = async (request: Request, response: Response) => {
         const folder_id = HTMLInput.param("folder_id");
         if (folder_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const old_folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
@@ -129,6 +131,7 @@ export const getFolderById = async (request: Request, response: Response) => {
         const folder_id = HTMLInput.param("folder_id");
         if (folder_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;
@@ -159,6 +162,7 @@ export const updateFolder = async (request: Request, response: Response) => {
         const folder_id = HTMLInput.param("folder_id");
         if (folder_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const folder = await DBFolder.initialize(HTMLInput.param("folder_id")) as DBFolder;

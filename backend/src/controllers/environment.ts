@@ -31,6 +31,7 @@ export const deleteEnvironment = async (request: Request, response: Response) =>
         const environment_id = HTMLInput.param("environment_id");
         if (environment_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const environment = await DBEnvironment.initialize(HTMLInput.param("environment_id")) as DBEnvironment;
@@ -95,6 +96,7 @@ export const getEnvironmentById = async (request: Request, response: Response) =
         const environment_id = HTMLInput.param("environment_id");
         if (environment_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const environment = await DBEnvironment.initialize(HTMLInput.param("environment_id")) as DBEnvironment;
@@ -118,6 +120,7 @@ export const updateEnvironment = async (request: Request, response: Response) =>
         const environment_id = HTMLInput.param("environment_id");
         if (environment_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const environment = await DBEnvironment.initialize(HTMLInput.param("environment_id")) as DBEnvironment;

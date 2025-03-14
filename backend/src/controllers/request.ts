@@ -36,6 +36,7 @@ export const deleteRequest = async (request: Request, response: Response) => {
         const request_id = HTMLInput.param("request_id");
         if (request_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
@@ -69,6 +70,7 @@ export const duplicateRequest = async (request: Request, response: Response) => 
         const request_id = HTMLInput.param("request_id");
         if (request_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const old_request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
@@ -128,11 +130,13 @@ export const getRequestById = async (request: Request, response: Response) => {
         const request_id = HTMLInput.param("request_id");
         if (request_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
             response.status(400).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         let folder = null;
@@ -227,11 +231,13 @@ export const updateRequest = async (request: Request, response: Response) => {
         const request_id = HTMLInput.param("request_id");
         if (request_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         await request.reader().read();
@@ -252,6 +258,7 @@ export const updateRequestName = async (request: Request, response: Response) =>
         const request_id = HTMLInput.param("request_id");
         if (request_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
@@ -277,6 +284,7 @@ export const updateRequestContent = async (request: Request, response: Response)
         const request_id = HTMLInput.param("request_id");
         if (request_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
         }
 
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
