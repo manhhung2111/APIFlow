@@ -147,14 +147,10 @@
 
         p {
           font-size: 12px;
-          display: -webkit-box; /* Required for older WebKit browsers */
-          -webkit-box-orient: vertical;
-          -webkit-line-clamp: 2; /* Number of lines to show */
           overflow: hidden; /* Hide overflow text */
           text-overflow: ellipsis; /* Show ellipsis (...) */
-          line-height: 1.5; /* Adjust line height as needed */
-          max-height: 3em; /* Maximum height for two lines; line-height * 2 */
           box-sizing: border-box; /* Include padding/border in element's total width/height */
+          white-space: nowrap;
 
           &:first-child {
             color: #6B6B6B;

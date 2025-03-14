@@ -4,6 +4,7 @@ import CodeEditor from "@components/app/editor/code.editor.jsx";
 import Collection from "@components/collection/collection.jsx";
 import {useContext} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
+import AppInputVariable from "@components/app/input/variable/input.jsx";
 
 export default function CollectionDisplayAuthorization({collection, authorization, setAuthorization}){
 	const {workspace} = useContext(WorkspaceContext);
@@ -49,17 +50,17 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Username</div>
-							<Input name="username" value={authorization.data.username ?? ""}
-								   onChange={(e) => handleChangeData("username", e.target.value)}
-								   disabled={!workspace.can?.editable}
-							/>
+							<AppInputVariable placeholder="Username"
+											  setText={(value) => handleChangeData("username", value)}
+											  text={authorization.data.username ?? ""}
+											  disabled={!workspace.can?.editable}/>
 						</div>
 						<div className="form-row">
 							<div className="title">Password</div>
-							<Input name="password" value={authorization.data.password ?? ""}
-								   onChange={(e) => handleChangeData("password", e.target.value)}
-								   disabled={!workspace.can?.editable}
-							/>
+							<AppInputVariable placeholder="Password"
+											  setText={(value) => handleChangeData("password", value)}
+											  text={authorization.data.password ?? ""}
+											  disabled={!workspace.can?.editable}/>
 						</div>
 					</div>
 				}
@@ -67,10 +68,10 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 					<div className="form-rows">
 						<div className="form-row">
 							<div className="title">Token</div>
-							<Input name="token" value={authorization.data.bearer_token ?? ""}
-								   onChange={(e) => handleChangeData("bearer_token", e.target.value)}
-								   disabled={!workspace.can?.editable}
-							/>
+							<AppInputVariable placeholder="Token"
+											  setText={(value) => handleChangeData("bearer_token", value)}
+											  text={authorization.data.bearer_token ?? ""}
+											  disabled={!workspace.can?.editable}/>
 						</div>
 					</div>
 				}

@@ -7,12 +7,20 @@ import {ExampleContext} from "@contexts/example.jsx";
 import ExampleResponseSide from "@components/example/response/display/side.jsx";
 
 export default function ExampleResponse(){
-	let {example} = useContext(ExampleContext);
+	let {example, responseHeaders} = useContext(ExampleContext);
 
-	const items = [
-		{label: "Body", key: 1, children: <ExampleResponseBody/>},
-		{label: "Headers", key: 3, children: <ExampleResponseHeaders/>},
-	];
+	const generateItems = () => {
+		let headersLabel = <div className="response-tab-label">Headers</div>;
+		if(responseHeaders.length > 1){
+			headersLabel = <div className="response-tab-label">Headers <span
+				className="passed">{`(${responseHeaders.length - 1})`}</span></div>
+		}
+
+		return [
+			{label: <div className="response-tab-label">Body</div>, key: 1, children: <ExampleResponseBody/>},
+			{label: headersLabel, key: 3, children: <ExampleResponseHeaders/>},
+		]
+	}
 
 	if(!example){
 		return "";
@@ -24,7 +32,7 @@ export default function ExampleResponse(){
 				<h3>Response</h3>
 				{example && <ExampleResponseSide/>}
 			</div>
-			{example && <Tabs items={items} size={"small"} tabBarGutter={8}/>}
+			{example && <Tabs items={generateItems()} size={"small"} tabBarGutter={8}/>}
 		</div>
 	);
 }
