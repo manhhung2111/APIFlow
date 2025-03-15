@@ -39,4 +39,31 @@ export default class Loader {
 
         return await DBWorkspace.find(sc) as DBWorkspace[];
     }
+
+    public static async paginate(offset: number, limit: number) {
+        const sc = new DBCondition().setFilter({
+            $or: [
+                {user_id: {$eq: Client?.viewer?._id?.toString()}},
+                {editors: {$in: [Client?.viewer?._id?.toString()]}},
+                {commenters: {$in: [Client?.viewer?._id?.toString()]}},
+                {viewers: {$in: [Client?.viewer?._id?.toString()]}}
+            ]
+        }).setLimit(limit).setSkip(offset);
+
+        const workspaces = await DBWorkspace.find(sc) as DBWorkspace[];
+
+        const count_sc = new DBCondition().setFilter({
+            $or: [
+                {user_id: {$eq: Client?.viewer?._id?.toString()}},
+                {editors: {$in: [Client?.viewer?._id?.toString()]}},
+                {commenters: {$in: [Client?.viewer?._id?.toString()]}},
+                {viewers: {$in: [Client?.viewer?._id?.toString()]}}
+            ]
+        });
+        const documents = await DBWorkspace.count(count_sc);
+        return {
+            workspaces: workspaces,
+            count: documents
+        }
+    }
 }

@@ -1,3 +1,5 @@
+import {formatDistanceToNow} from "date-fns";
+
 export default class TimeUtils {
 	static formatDate(isoTimestamp) {
 		const date = new Date(isoTimestamp);
@@ -14,5 +16,10 @@ export default class TimeUtils {
 		hours = hours % 12 || 12; // Ensures 12-hour format
 
 		return `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
+	}
+
+
+	static formatDateAgo(isoTimestamp) {
+		return formatDistanceToNow(new Date(isoTimestamp), {addSuffix: true});
 	}
 }

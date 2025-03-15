@@ -328,7 +328,6 @@ export default class RequestService {
         }
 
         this._environment = environments;
-        console.log(environments)
     }
 
     private replaceEnvVariables(input: any): any {

@@ -1,0 +1,63 @@
+.react-paginate {
+  display: flex;
+  justify-content: flex-end; // Center align pagination
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+
+  .page-item {
+    margin: 0 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba(0,0,0,0.06);
+      border-radius: 5px;
+    }
+
+
+    &.active {
+      .page-link {
+        background-color: white;
+        color: #007bff;
+        border: 1px solid #007bff;
+      }
+    }
+  }
+
+  .page-item-navigate {
+    .page-link {
+      display: flex;
+      width: 30px;
+      height: 30px;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+
+  .page-link {
+    display: flex;
+    width: 30px;
+    height: 30px;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.3s ease-in-out;
+
+    &:hover {
+      background-color: #e3e3e3;
+    }
+  }
+
+  .active {
+
+  }
+
+  .page-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

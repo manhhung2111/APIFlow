@@ -5,11 +5,13 @@ import WorkspaceService from "@services/workspace.js";
 import {toast} from "react-toastify";
 import {useContext, useState} from "react";
 import {AppContext} from "@contexts/app.jsx";
+import {useNavigate} from "react-router";
 
 export default function WorkspaceFormCreate({visible, setVisible}){
 	const [form] = Form.useForm();
 	const {setWorkspaces} = useContext(AppContext);
 	const [content, setContent] = useState("");
+	const navigate = useNavigate();
 
 	const handleSubmit = async (values) => {
 		const response = await WorkspaceService.create(values['name'], content);
@@ -18,6 +20,7 @@ export default function WorkspaceFormCreate({visible, setVisible}){
 			toast.success(response.message);
 			handleCancel();
 			setWorkspaces(prev => ([...prev, response.data.workspace]));
+			navigate(`/workspace/${response.data.workspace._id}`);
 		} else {
 			toast.error(response.message);
 		}

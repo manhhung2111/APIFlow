@@ -74,6 +74,27 @@ abstract class DBModel<T>{
 	}
 
 
+	public static async count<T>(
+		this: { new(): DBModel<T> },
+		condition: DBCondition | null = null
+	): Promise<number> {
+		try {
+			const instance = new this();
+
+			// If condition is null, load all documents with no restrictions
+			const filter: FilterQuery<T> = condition?.filter as FilterQuery<T> || {};
+			const limit = condition?.limit ?? 0; // 0 means no limit (load all)
+			const skip = condition?.skip ?? 0; // Default: 0 (no skipping)
+			const sort = condition?.sort || {}; // No sorting if not specified
+
+			const query = instance._db.countDocuments(filter);
+			return await query.exec();
+		} catch (error) {
+			throw new Code((error as Error).message);
+		}
+	}
+
+
 	public static async deleteOne<T>(this: {
 		new(): DBModel<T>
 	}, condition: DBCondition, session: ClientSession | null = null){

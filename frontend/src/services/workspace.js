@@ -60,4 +60,13 @@ export default class WorkspaceService {
 			throw new Error(error.message || 'Delete workspace failed');
 		}
 	}
+
+
+	static async paginate(offset, limit) {
+		try {
+			return await axios.get(`/workspaces?offset=${offset}&limit=${limit}`);
+		} catch (error) {
+			throw new Error(error.message || 'Save example failed');
+		}
+	}
 }

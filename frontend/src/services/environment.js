@@ -43,7 +43,6 @@ export default class EnvironmentService{
 		}
 	}
 
-
 	static async updateName(environment, name) {
 		try {
 			const data = {

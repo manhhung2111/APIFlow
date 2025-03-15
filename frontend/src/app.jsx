@@ -18,6 +18,7 @@ import CollectionPage from "@pages/collection/collection.jsx";
 import FolderPage from "@pages/folder/folder.jsx";
 import EnvironmentPage from "@pages/environment/environment.jsx";
 import ExamplePage from "@pages/example/example.jsx";
+import WorkspacesPage from "@pages/workspaces/workspaces.jsx";
 
 function App(){
 	return (
@@ -33,6 +34,7 @@ function App(){
 						<Route path="folder/:folder_id" element={<FolderPage/>}/>
 						<Route path="environment/:environment_id" element={<EnvironmentPage/>}/>
 					</Route>
+					<Route path="workspaces" element={<WorkspacesPage />}/>
 				</Route>
 
 				<Route path="login" element={<PublicRoute redirectPath={"/"}><LoginPage/></PublicRoute>}/>
