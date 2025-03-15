@@ -38,7 +38,6 @@ export default function CollectionDisplayVariables({collection, variables, setVa
 		<div className="collection-display-variables">
 			<p className="subtitle">These variables are specific to this collection and its requests. Learn more
 				about <span>collection variables</span></p>
-			<Input className="search-btn" placeholder="Filter variables" prefix={<SearchOutlined/>}/>
 			<div className="variables-table">
 				<div className="table-header">
 					<div></div>

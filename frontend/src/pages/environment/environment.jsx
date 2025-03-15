@@ -205,8 +205,6 @@ export default function EnvironmentPage(){
 						<span>Learn more about workspace globals</span>
 					</p>}
 
-				{environment &&
-					<Input className="search-btn" placeholder="Filter variables" prefix={<SearchOutlined/>}/>}
 				{environment && <div className="variables-table">
 					<div className="table-header">
 						<div></div>

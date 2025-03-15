@@ -6,10 +6,8 @@ import {useContext, useState} from "react";
 import {AppContext} from "@contexts/app.jsx";
 
 export default function WorkspaceSelectionModal(props){
-	const {setSearchTerm, setDropdownVisible} = props;
+	const {setSearchTerm, setDropdownVisible, workspaces} = props;
 	const [createFormVisibility, setCreateFormVisibility] = useState(false);
-
-	const {workspaces} = useContext(AppContext);
 
 	const handleCreateWorkspaceClick = () => {
 		setDropdownVisible(false); // Close the dropdown when "Create Workspace" is clicked
