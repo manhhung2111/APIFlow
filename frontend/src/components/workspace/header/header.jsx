@@ -1,13 +1,16 @@
 import {useContext, useEffect, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
-import {Select, Skeleton} from "antd";
+import {Drawer, Select, Skeleton} from "antd";
 import DataTableIcon from "@assets/icons/data.table.jsx";
 import "../styles/header.scss";
+import WorkspaceVariablesDrawer from "@components/workspace/header/variable.drawer.jsx";
 
 export default function WorkspaceSuperHeader(){
 	const {workspace, environments, setActiveEnvironment, activeEnvironment} = useContext(WorkspaceContext);
+	const [openVariablesDrawer, setOpenVariablesDrawer] = useState(false);
 
 	const [envOptions, setEnvOptions] = useState([]);
+
 	useEffect(() => {
 		const options = [{value: -1, label: "No environment"}];
 
@@ -46,12 +49,16 @@ export default function WorkspaceSuperHeader(){
 				</div>
 			</div>
 			<div className="side_wrapper">
-				<div className="side">
+				<div className="side" onClick={() => setOpenVariablesDrawer(true)}>
 					<div className="rs-item">
 						<DataTableIcon/>
 					</div>
 				</div>
 			</div>
+			<Drawer classNames={{body: "workspace-variable-drawer__wrapper", header: "workspace-variable-drawer-header"}} title="All variables"
+					onClose={() => setOpenVariablesDrawer(false)} open={openVariablesDrawer}>
+				<WorkspaceVariablesDrawer/>
+			</Drawer>
 		</>}
 	</div>)
 

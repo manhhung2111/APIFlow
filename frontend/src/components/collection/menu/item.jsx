@@ -109,7 +109,7 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 		{key: `edit_${collection._id}`, label: "Edit", onClick: () => {navigate(`collection/${collection._id}`)}},
 		{key: `add_request_${collection._id}`, label: "Add request",	onClick: handleAddRequest},
 		{key: `add_folder_${collection._id}`, label: "Add folder", onClick: handleAddFolder},
-		{key: `documentation_${collection._id}`, label: "View documentation",},
+		{key: `documentation_${collection._id}`, label: "View documentation", onClick: () => {navigate(`collection/${collection._id}/documentation`)}},
 		{key: `duplicate_${collection._id}`, label: "Duplicate", onClick: handleDuplicate},
 		{key: `export_${collection._id}`, label: "Export",},
 		{key: `delete_${collection._id}`, label: "Delete", onClick: () => setDeleteCollectionVisible(true), danger: 1},

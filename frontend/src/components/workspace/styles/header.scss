@@ -4,6 +4,7 @@
   position: relative;
   align-items: center;
   box-sizing: border-box;
+
   .main {
     position: absolute;
     right: 48px;
@@ -14,6 +15,7 @@
     height: 40px;
     gap: 16px;
     width: calc(100vw - 350px - 48px);
+
     .info {
       display: flex;
       align-items: center;
@@ -21,6 +23,7 @@
       padding: 4px;
       padding-left: 16px;
       height: 100%;
+
       & > h3 {
         font-size: $text-size-l;
         font-weight: $text-weight-bold;
@@ -42,6 +45,7 @@
         white-space: nowrap;
         font-size: $text-size-m;
         color: $content-color-secondary;
+
         &::before {
           content: '';
           display: inline-block;
@@ -64,11 +68,13 @@
       justify-content: center;
       align-items: center;
       border-left: 1px solid $border-color-default;
+
       .ant-select-selector {
         font-size: $text-size-m;
         border-radius: $border-radius-default;
       }
     }
+
     //border-right: 1px solid $border-color-default;
   }
 
@@ -77,12 +83,14 @@
     right: 0;
     top: 0;
     width: 48px;
+
     .side {
       padding: 4px;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
+
       &::before {
         content: "";
         position: absolute;
@@ -114,6 +122,136 @@
         .anticon {
           font-size: 16px;
           color: $content-color-secondary;
+        }
+      }
+    }
+  }
+
+  .workspace-variable-drawer {
+    background-color: black;
+  }
+}
+
+.workspace-variable-drawer-header {
+  padding: 16px !important;
+  position: relative;
+
+  button {
+    position: absolute;
+    right: 0;
+  }
+
+  .ant-drawer-title {
+    font-size: 15px;
+  }
+}
+
+.workspace-variable-drawer__wrapper {
+  padding: 16px !important;
+
+  .workspace-variable-drawer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .section {
+      & > .header {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+
+        .variable-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 20px;
+          height: 20px;
+          background-color: #2a91d6;
+          color: whitesmoke;
+          font-weight: 500;
+          padding: 2px;
+          font-size: 14px;
+          line-height: 1;
+          border-radius: $border-radius-default;
+
+          &.collection {
+            background-color: #ffb400;
+          }
+
+          &.environment {
+            background-color: #0CBB52;
+          }
+        }
+
+        p {
+          color: $content-color-primary;
+          font-size: $text-size-l;
+          font-weight: $text-weight-thick;
+        }
+      }
+
+      & > .main {
+        margin-top: 8px;
+
+        & > p {
+          color: $content-color-secondary;
+          font-size: 13px;
+        }
+
+        .variables-table {
+          display: flex;
+          flex-direction: column;
+
+          .row {
+            border-bottom: 1px solid $border-color-default;
+
+            &:first-child {
+              border-top: 1px solid $border-color-default;
+            }
+
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            //height: 32px;
+            align-items: center;
+            font-size: 13px;
+
+            & > div {
+              padding: 8px;
+
+              & > p {
+                line-height: 1.2;
+                max-width: 150px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+            }
+
+            .key {
+              color: $content-color-primary;
+              font-weight: $text-weight-thick;
+              border-right: 1px solid $border-color-default;
+            }
+
+            .value {
+              position: relative;
+              &.password {
+                -webkit-text-security: disc;
+              }
+
+              .action {
+                position: absolute;
+                right: -3px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: $content-color-secondary;
+
+                &:hover {
+                  color: $content-color-primary;
+                }
+              }
+            }
+          }
         }
       }
     }

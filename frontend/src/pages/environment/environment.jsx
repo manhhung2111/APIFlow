@@ -10,8 +10,7 @@ import {
 	EnterOutlined,
 	EyeInvisibleOutlined,
 	EyeOutlined,
-	SaveOutlined,
-	SearchOutlined
+	SaveOutlined
 } from "@ant-design/icons";
 import "./styles/environment.scss";
 import ActionManager from "@utils/action.manager.jsx";
@@ -22,7 +21,13 @@ import AppDeleteModal from "@components/app/modal/delete.jsx";
 const {Paragraph} = Typography;
 
 export default function EnvironmentPage(){
-	const {workspace, environments, setEnvironments, setActiveMenuKey} = useContext(WorkspaceContext);
+	const {
+		workspace,
+		environments,
+		setActiveCollection,
+		setEnvironments,
+		setActiveMenuKey
+	} = useContext(WorkspaceContext);
 	const [deleteEnvironmentVisible, setDeleteEnvironmentVisible] = useState(false);
 
 	const {environment_id} = useParams();
@@ -66,6 +71,10 @@ export default function EnvironmentPage(){
 	useEffect(() => {
 		setActiveMenuKey(2);
 	}, [isPageActive])
+
+	useEffect(() => {
+		setActiveCollection(null);
+	}, []);
 
 	const containerRef = useRef(null);
 
