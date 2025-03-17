@@ -166,17 +166,16 @@
           }
 
 
-          &.ant-anchor-link-active {
-            & > .ant-anchor-link-title .item {
-              color: $content-color-primary;
-              font-weight: 500;
-
-              .name {
-                color: $content-color-primary;
-
-              }
-            }
-          }
+          //&.ant-anchor-link-active {
+          //  & > .ant-anchor-link-title .item {
+          //    color: $content-color-primary;
+          //    font-weight: 500;
+          //
+          //    .name {
+          //      color: $content-color-primary;
+          //    }
+          //  }
+          //}
         }
       }
     }
@@ -233,10 +232,16 @@
       margin-right: 5px;
       color: $content-color-secondary;
     }
+
     //display: flex;
     //gap: 5px;
     //align-items: center;
     //line-height: 1;
+  }
+
+  & > .documentation-table {
+    margin: 0 16px;
+    margin-top: 16px;
   }
 
   .text-editor {
@@ -260,9 +265,6 @@
 }
 
 .documentation-page .documentation-table {
-  margin: 0 16px;
-  margin-top: 16px;
-
   & > .header {
     display: flex;
     gap: 8px;
@@ -296,7 +298,7 @@
       grid-template-columns: 1fr 1fr;
 
       p {
-        max-width: 150px;
+        max-width: 15vw;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -312,5 +314,66 @@
       }
     }
   }
+}
 
+.documentation-page .documentation-request {
+  margin: 0 16px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+
+  & > h3 {
+    display: flex;
+    align-items: flex-end;
+    color: $content-color-primary;
+    font-weight: $text-weight-thick;
+    font-size: $text-size-xxl;
+    gap: 5px;
+    line-height: 1.2;
+  }
+
+  & > .empty-desc {
+    color: $content-color-secondary;
+    padding-top: 4px;
+  }
+
+  & > .url {
+    margin-top: 4px;
+
+    padding: 6px 8px;
+    gap: 8px;
+    border-radius: 4px;
+    background-color: rgb(249, 249, 249);
+
+    .ant-typography {
+      margin: 0;
+      color: rgb(33, 33, 33);
+      font-size: $text-size-m;
+      display: flex;
+      flex-direction: row;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: justify;
+      justify-content: space-between;
+    }
+  }
+
+  .documentation-table {
+    margin-top: 16px;
+
+    .app-code-editor {
+      margin-top: 8px;
+      border: 1px solid $border-color-default;
+    }
+  }
+
+  .text-editor {
+    .ql-container.ql-snow {
+      border: none;
+
+      .ql-editor {
+        padding: 8px 16px;
+      }
+    }
+  }
 }
