@@ -23,6 +23,7 @@ export default function DocumentationTable({title, subtitle, data, type = "table
 					"height": "15vh"
 				}}
 			/>}
+			{type === "message" && <div className="message">{data}</div>}
 		</div>
 	</div>)
 }

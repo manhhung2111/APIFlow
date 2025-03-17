@@ -10,6 +10,7 @@ import CollectionService from "@services/collection.js";
 import DocumentationCollection from "@pages/documentation/display/collection.jsx";
 import {toast} from "react-toastify";
 import DocumentationNavigation from "@pages/documentation/display/navigation.jsx";
+import DocumentationFolder from "@pages/documentation/display/folder.jsx";
 
 export default function DocumentationPage(){
 	const {workspace, activeCollection, setActiveCollection} = useContext(WorkspaceContext);
@@ -65,7 +66,10 @@ export default function DocumentationPage(){
 		{folders && requests && activeCollection && <div className="main">
 			<div className="content-wrapper">
 				<div className="content">
-					{activeCollection && <DocumentationCollection collection={activeCollection}/>}
+					<DocumentationCollection collection={activeCollection}/>
+					{folders.map((folder, index) => {
+						return <DocumentationFolder collection={activeCollection} folder={folder} key={index}/>
+					})}
 				</div>
 			</div>
 			<div className="navigation">

@@ -56,6 +56,8 @@
       overflow: hidden;
       overflow-y: auto;
       scrollbar-gutter: stable;
+      scroll-behavior: smooth;
+
 
       &::-webkit-scrollbar-thumb {
         background-color: darkgrey;
@@ -185,6 +187,8 @@
       overflow: hidden;
       overflow-y: auto;
       scrollbar-gutter: stable;
+      scroll-behavior: smooth;
+
 
       &::-webkit-scrollbar-thumb {
         background-color: darkgrey;
@@ -206,12 +210,33 @@
   }
 }
 
-.documentation-page .documentation-collection {
+.documentation-page .documentation-collection, .documentation-page .documentation-folder {
   & > h2 {
     padding-left: 16px;
     font-size: $text-size-xxxl;
     color: $content-color-primary;
     font-weight: $text-weight-thick;
+  }
+
+  & > .empty-desc {
+    color: $content-color-secondary;
+    padding: 4px 16px;
+  }
+
+  & > h3 {
+    padding-left: 16px;
+    font-size: $text-size-xxl;
+    color: $content-color-primary;
+    font-weight: $text-weight-thick;
+
+    .anticon {
+      margin-right: 5px;
+      color: $content-color-secondary;
+    }
+    //display: flex;
+    //gap: 5px;
+    //align-items: center;
+    //line-height: 1;
   }
 
   .text-editor {
@@ -225,16 +250,26 @@
   }
 }
 
+.documentation-page .documentation-folder {
+  margin-top: 16px;
+
+  .message {
+    padding-top: 8px;
+    color: $content-color-primary;
+  }
+}
+
 .documentation-page .documentation-table {
   margin: 0 16px;
   margin-top: 16px;
+
   & > .header {
     display: flex;
     gap: 8px;
     align-items: flex-end;
     padding-bottom: 5px;
 
-    border-bottom: 1px solid lightgrey;
+    border-bottom: 1px solid $border-color-default;
 
     h4 {
       font-weight: 500;
@@ -266,6 +301,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+
       .key {
         color: $content-color-primary;
         font-weight: $text-weight-thick;
