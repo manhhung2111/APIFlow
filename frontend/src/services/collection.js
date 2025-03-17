@@ -70,4 +70,13 @@ export default class CollectionService{
 			throw new Error(error.message || 'Create new collection failed');
 		}
 	}
+
+
+	static async getCollectionAssociatedWithData(collection_id, workspace_id) {
+		try {
+			return await axios.get(`/collections/data/${collection_id}?workspace_id=${workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Create new collection failed');
+		}
+	}
 }

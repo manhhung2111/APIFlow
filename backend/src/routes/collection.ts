@@ -11,7 +11,7 @@ import {
 	updateCollection,
 	updateCollectionContent,
 	updateCollectionName,
-	createNewRequestFromCollection
+	createNewRequestFromCollection, getCollectionAssociatedWithData
 } from "@controllers/collection";
 
 const router = express.Router();
@@ -21,6 +21,7 @@ router.use(authentication);
 // Get routes
 router.get("/", workspaceViewable, getCollectionsByWorkspace);
 router.get("/:collection_id", workspaceViewable, getCollectionById);
+router.get("/data/:collection_id", workspaceViewable, getCollectionAssociatedWithData);
 
 // Edit routes
 router.put("/:collection_id", workspaceEditable, updateCollection);

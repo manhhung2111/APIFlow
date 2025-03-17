@@ -4,9 +4,9 @@ import {Code, HTMLInput} from "@ap/core";
 import {DBCollection, DBCollectionLoader} from "@dev/collection";
 import mongoose from "mongoose";
 import {DBWorkspace} from "@dev/workspace";
-import {DBRequest} from "@dev/request";
-import {DBFolder} from "@dev/folder";
-import {DBExample} from "@dev/example";
+import {DBRequest, DBRequestLoader} from "@dev/request";
+import {DBFolder, DBFolderLoader} from "@dev/folder";
+import {DBExample, DBExampleLoader} from "@dev/example";
 
 export const createNewCollection = async (request: Request, response: Response) => {
     logger.info("[Controller] Create new collection");
@@ -41,7 +41,7 @@ export const deleteCollection = async (request: Request, response: Response) => 
         const collection = await DBCollection.initialize(collection_id) as DBCollection;
         if (!collection.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         await collection.delete(session);
@@ -115,7 +115,7 @@ export const getCollectionsByWorkspace = async (request: Request, response: Resp
         const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
         if (!workspace.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         const collections = await DBCollectionLoader.byWorkspace(workspace.object!);
@@ -165,7 +165,7 @@ export const updateCollection = async (request: Request, response: Response) => 
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
         if (!collection.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         collection.reader().read();
@@ -192,7 +192,7 @@ export const updateCollectionContent = async (request: Request, response: Respon
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
         if (!collection.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         await collection.reader().readContent();
@@ -219,7 +219,7 @@ export const updateCollectionName = async (request: Request, response: Response)
         const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
         if (!collection.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         await collection.reader().readName();
@@ -244,6 +244,43 @@ export const createNewRequestFromCollection = async (request: Request, response:
         await request.save();
 
         response.status(200).json(Code.success("Create new request successfully", {request: request.release()}));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
+};
+
+
+export const getCollectionAssociatedWithData = async (request: Request, response: Response) => {
+    logger.info("[Controller] Get collection associated with data");
+
+    try {
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
+        }
+
+        const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
+        if (!collection.good()) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
+        }
+
+        const folders = await DBFolderLoader.byCollection(collection.object!);
+        const requests = await DBRequestLoader.byCollection(collection.object!);
+        const examples = await DBExampleLoader.byCollection(collection.object!);
+
+        const folders_release = folders.map(folder => folder.release());
+        const requests_release = requests.map(request => request.release());
+        const examples_release = examples.map(example => example.release());
+
+        response.status(200).json(Code.success("Get collection successfully.", {
+            collection: collection.release(),
+            folders: folders_release,
+            requests: requests_release,
+            examples: examples_release,
+        }));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));

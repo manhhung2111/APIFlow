@@ -18,7 +18,7 @@ export default function TextEditor({handleChange, value, readOnly = false}) {
 		],
 	};
 
-	const { quill, quillRef } = useQuill({ placeholder: "Write something...", theme, modules, formats });
+	const { quill, quillRef } = useQuill({ placeholder: "", theme, modules, formats });
 
 	useEffect(() => {
 		if (quill) {

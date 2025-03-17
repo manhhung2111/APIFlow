@@ -200,12 +200,21 @@ export default class HTMLInput{
 			throw new Code("Please read the request to use request data");
 		}
 
-		const raw = htmlDecode(this.inputRaw(field));
+		const raw = this.inputNoSafe(field);
 
 		let text: string;
-		text = Word.addSmartQuote(raw);
+		// text = Word.addSmartQuote(raw);
 
-		text = sanitizeHtml(text);
+		text = sanitizeHtml(raw, {
+			allowedTags: sanitizeHtml.defaults.allowedTags.concat([
+				"img", "video", "span", "div", "iframe", "h1", "h2", "h3", "h4", "h5", "h6"
+			]),
+			allowedAttributes: {
+				"*": ["style", "class", "id", "data-*", "src", "href", "alt", "title", "width", "height", "frameborder", "allow", "allowfullscreen"]
+			},
+			allowedSchemes: ["http", "https", "mailto", "data"],
+			allowVulnerableTags: true, // Allows potentially risky but needed tags like `<style>` (use carefully)
+		});
 
 		return text;
 	}

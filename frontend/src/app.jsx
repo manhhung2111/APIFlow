@@ -19,7 +19,7 @@ import FolderPage from "@pages/folder/folder.jsx";
 import EnvironmentPage from "@pages/environment/environment.jsx";
 import ExamplePage from "@pages/example/example.jsx";
 import WorkspacesPage from "@pages/workspaces/workspaces.jsx";
-import CollectionDocumentationPage from "@pages/documentation/documentation.jsx";
+import DocumentationPage from "@pages/documentation/documentation.jsx";
 
 function App(){
 	return (
@@ -33,7 +33,7 @@ function App(){
 						<Route path="example/:example_id/" element={<ExamplePage/>}/>
 						<Route path="collection/:collection_id/">
 							<Route index element={<CollectionPage/>}/>
-							<Route path="documentation" element={<CollectionDocumentationPage/>}/>
+							<Route path="documentation" element={<DocumentationPage/>}/>
 						</Route>
 						<Route path="folder/:folder_id/" element={<FolderPage/>}/>
 						<Route path="environment/:environment_id/" element={<EnvironmentPage/>}/>

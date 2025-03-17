@@ -1,7 +1,7 @@
 import DbCondition from "@ap/db/db.condition";
 import {DBExample} from "@dev/example";
 import {HydratedDocument} from "mongoose";
-import {DRequest, DWorkspace} from "@db-schemas";
+import {DCollection, DRequest, DWorkspace} from "@db-schemas";
 import {DBCondition} from "@ap/db";
 import {DBRequest} from "@dev/request";
 
@@ -23,6 +23,14 @@ export default class Loader{
             "workspace_id": workspace_id,
         }).setLimit(DBRequest.PAGE_SIZE);
 
+        return await DBExample.find(sc) as DBExample[];
+    }
+
+    public static async byCollection(collection: HydratedDocument<DCollection>){
+        const collection_id = collection._id.toString();
+        const workspace_id = collection.workspace_id.toString();
+
+        const sc = new DbCondition().setFilter({"collection_id": collection_id, "workspace_id": workspace_id});
         return await DBExample.find(sc) as DBExample[];
     }
 }
