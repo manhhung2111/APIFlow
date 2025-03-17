@@ -12,7 +12,7 @@ export default function DocumentationTable({title, subtitle, data, type = "table
 				return <div className="row" key={index}>
 					<p className="key">{row.key}</p>
 					{row.type && row.type === "file" && <p className="value">{row.value.name}</p>}
-					{!row.type || row.type !== "file" && <p className="value">{row.value}</p>}
+					{row.type != null || row.type !== "file" && <p className="value">{row.value}</p>}
 				</div>;
 			})}
 			{type === "raw" && <CodeEditor

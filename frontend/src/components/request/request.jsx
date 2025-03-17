@@ -35,6 +35,11 @@ export default class Request{
 		return null;
 	}
 
+	static getAuthorization(type) {
+		const entry = Object.values(this.AUTHORIZATION).find(auth => auth.value === type);
+		return entry ? entry.label : null;
+	}
+
 	static STATUS_CODES = function(){
 		const http_status_codes = {
 			100: "Continue",

@@ -361,3 +361,10 @@
 .ant-input-outlined.ant-input-disabled, .ant-input-outlined[disabled] {
   background-color: transparent;
 }
+
+.text-editor {
+  .ql-container {
+    font-family: Inter, serif !important;
+    color: $content-color-primary;
+  }
+}
