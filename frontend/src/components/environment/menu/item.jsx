@@ -1,6 +1,5 @@
 import {NavLink, useNavigate} from "react-router";
 import ActionManager from "@utils/action.manager.jsx";
-import EnvironmentIcon from "@assets/icons/environment.jsx";
 import {toast} from "react-toastify";
 import React, {useContext, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
@@ -28,15 +27,32 @@ export default function EnvironmentMenuItem({environment, globalEnv}){
 		}
 	}
 
+	const handleDuplicate = async() => {
+		const result = await EnvironmentService.duplicate(environment);
+
+		if(result.code === 0){
+			setEnvironments(prev => [...prev, result.data.environment]);
+			toast.success(result.message);
+			navigate(`environment/${result.data.environment._id}`);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
-		{key: `duplicate_${environment?._id}`, label: "Duplicate"},
-		{key: `delete_${environment._id}`, label: "Delete", onClick: () => setDeleteEnvironmentVisible(true), danger: 1},
+		{key: `duplicate_${environment?._id}`, label: "Duplicate", onClick: handleDuplicate},
+		{
+			key: `delete_${environment._id}`,
+			label: "Delete",
+			onClick: () => setDeleteEnvironmentVisible(true),
+			danger: 1
+		},
 	]
 
 	return (
 		<div className="environment-menu-item">
 			<NavLink className="item" title={environment.name} to={`environment/${environment._id}`}>
-				<div className="icon"><CodeSandboxOutlined /></div>
+				<div className="icon"><CodeSandboxOutlined/></div>
 				<div className="label">{environment.name}</div>
 			</NavLink>
 

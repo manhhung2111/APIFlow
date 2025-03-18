@@ -49,6 +49,7 @@ app.use(upload.any(), (request, response, next) => {
     next();
 });
 
+// File size validation
 app.use((error: any, request: any, response: any, next: any) => {
     if (error instanceof multer.MulterError) {
         if (error.code === "LIMIT_FILE_SIZE") {
@@ -62,6 +63,7 @@ app.use((error: any, request: any, response: any, next: any) => {
 // Logger HTTP request
 app.use(morgan("dev", {stream: {write: (message) => logger.info(message.trim())}}));
 
+// Routes
 app.use("/users", UserRoute);
 app.use("/workspaces", WorkspaceRoute);
 app.use("/collections", CollectionRoute);
@@ -74,7 +76,6 @@ app.use("/examples", ExampleRoute);
 (async function () {
     try {
         // Connect to database
-
         await mongoose.connect(
             `mongodb+srv://${db_username}:${db_password}@hongkong-1.x4eds.mongodb.net/${db_name}`,
         ).then(() => {

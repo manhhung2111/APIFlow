@@ -14,7 +14,7 @@ export default class EnvironmentService{
 		}
 	}
 
-	static async delete(environment) {
+	static async delete(environment){
 		try {
 			return await axios.delete(`/environments/${environment._id}?workspace_id=${environment.workspace_id}`);
 		} catch (error) {
@@ -22,7 +22,7 @@ export default class EnvironmentService{
 		}
 	}
 
-	static async getById(environment_id, workspace_id) {
+	static async getById(environment_id, workspace_id){
 		try {
 			return await axios.get(`/environments/${environment_id}?workspace_id=${workspace_id}`);
 		} catch (error) {
@@ -30,7 +30,7 @@ export default class EnvironmentService{
 		}
 	}
 
-	static async save(environment, variables) {
+	static async save(environment, variables){
 		try {
 			const data = {
 				"variables": btoa(JSON.stringify(variables)),
@@ -43,7 +43,7 @@ export default class EnvironmentService{
 		}
 	}
 
-	static async updateName(environment, name) {
+	static async updateName(environment, name){
 		try {
 			const data = {
 				"name": name,
@@ -53,6 +53,18 @@ export default class EnvironmentService{
 			return await axios.put(`/environments/${environment._id}/name`, data);
 		} catch (error) {
 			throw new Error(error.message || 'Save example failed');
+		}
+	}
+
+	static async duplicate(environment){
+		try {
+			return await axios.post(`/environments/${environment._id}/duplicate`, {workspace_id: environment.workspace_id});
+		} catch (error) {
+			return {
+				code: -1,
+				data: {},
+				message: error.message || 'Duplicate environment failed',
+			}
 		}
 	}
 }

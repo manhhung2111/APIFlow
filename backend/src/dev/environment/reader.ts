@@ -72,6 +72,11 @@ export default class Reader extends DBReader<DEnvironment>{
 
 
 	public duplicate(old_environment: DBEnvironment) {
-
+		this._obj.user_id = Client.viewer._id.toString();
+		this._obj.token = UUID.randomTokenSize32();
+		this._obj.workspace_id = old_environment.object!.workspace_id.toString();
+		this._obj.name =  old_environment.object!.name + " (Copy)";
+		this._obj.variables = old_environment.object!.variables;
+		this._obj.scope = old_environment.object!.scope;
 	}
 }
