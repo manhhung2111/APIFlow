@@ -1,8 +1,8 @@
 import Request from "@components/request/request.jsx";
-import TextEditor from "@components/app/editor/text.editor.jsx";
 import DocumentationTable from "@pages/documentation/display/table.jsx";
 import {FolderOutlined} from "@ant-design/icons";
 import DocumentationRequest from "@pages/documentation/display/request.jsx";
+import AppMarkdownEditor from "@components/app/editor/markdown.edtior.jsx";
 
 export default function DocumentationFolder({folder, collection}){
 
@@ -38,8 +38,10 @@ export default function DocumentationFolder({folder, collection}){
 
 	return (<div className="documentation-folder" id={`folder-${folder._id}`}>
 		<h3><FolderOutlined/>{folder.name}</h3>
-		{folder.content.length > 0 && <TextEditor value={folder.content} readOnly={true}/>}
+		{/*{folder.content.length > 0 && <TextEditor value={folder.content} readOnly={true}/>}*/}
 		{folder.content.length === 0 && <p className="empty-desc">This collection does not have any description...</p>}
+		{folder.content.length > 0 && <AppMarkdownEditor value={folder.content} readOnly={true}/>}
+
 		{(folder.authorization.type === Request.AUTHORIZATION.BasicAuth.value || folder.authorization.type === Request.AUTHORIZATION.BearerToken.value) &&
 			<DocumentationTable
 				title={"Authorization"}

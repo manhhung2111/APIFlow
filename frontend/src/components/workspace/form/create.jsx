@@ -1,11 +1,11 @@
 import {Button, Form, Input, Modal} from 'antd';
-import TextEditor from "@components/app/editor/text.editor.jsx";
 import '../styles/form.scss'
 import WorkspaceService from "@services/workspace.js";
 import {toast} from "react-toastify";
 import {useContext, useState} from "react";
 import {AppContext} from "@contexts/app.jsx";
 import {useNavigate} from "react-router";
+import AppMarkdownEditor from "@components/app/editor/markdown.edtior.jsx";
 
 export default function WorkspaceFormCreate({visible, setVisible}){
 	const [form] = Form.useForm();
@@ -13,10 +13,10 @@ export default function WorkspaceFormCreate({visible, setVisible}){
 	const [content, setContent] = useState("");
 	const navigate = useNavigate();
 
-	const handleSubmit = async (values) => {
+	const handleSubmit = async(values) => {
 		const response = await WorkspaceService.create(values['name'], content);
 
-		if (response.code === 0) {
+		if(response.code === 0){
 			toast.success(response.message);
 			handleCancel();
 			setWorkspaces(prev => ([...prev, response.data.workspace]));
@@ -60,7 +60,7 @@ export default function WorkspaceFormCreate({visible, setVisible}){
 					<Input placeholder={"Workspace name"}/>
 				</Form.Item>
 				<Form.Item label="Description" name="content">
-					<TextEditor handleChange={handleChangeContent} value={content}/>
+					<AppMarkdownEditor value={content} onChange={setContent} height={200}/>
 				</Form.Item>
 				<div className="footer">
 					<Button color="default" variant="filled" onClick={handleCancel}>

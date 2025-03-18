@@ -1,11 +1,11 @@
 import {useContext, useEffect, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {Button, Input} from "antd";
-import TextEditor from "@components/app/editor/text.editor.jsx";
 import {useParams} from "react-router";
 import WorkspaceService from "@services/workspace.js";
 import {toast} from "react-toastify";
 import TimeUtils from "@utils/time.js";
+import AppMarkdownEditor from "@components/app/editor/markdown.edtior.jsx";
 
 export default function WorkspaceDisplayOverview(){
 	const {workspace, setWorkspace} = useContext(WorkspaceContext);
@@ -21,24 +21,21 @@ export default function WorkspaceDisplayOverview(){
 		setChanged(false);
 	}, [workspace]);
 
-	const handleChangeContent = (quill, quillRef) => {
-		if(quill){
-			quill.on('text-change', (delta, oldDelta, source) => {
-				setContent(quill.root.innerHTML);
-				setChanged(true);
-			});
+	useEffect(() => {
+		if(content != workspace.content){
+			setChanged(true);
 		}
-	}
+	}, [content])
 
 	const handleCancel = () => {
 		setContent(workspace.content);
 		setName(workspace.name);
 	}
 
-	const handleSave = async () => {
+	const handleSave = async() => {
 		const result = await WorkspaceService.save(workspace, name, content);
 
-		if (result.code === 0) {
+		if(result.code === 0){
 			toast.success(result.message);
 			setWorkspace(result.data.workspace);
 			setChanged(false);
@@ -56,12 +53,13 @@ export default function WorkspaceDisplayOverview(){
 							   setName(e.target.value);
 							   setChanged(true);
 						   }}
-						disabled={!workspace.can?.editable}
+						   disabled={!workspace.can?.editable}
 					/>
 
 				</div>
 				<div className="row">
-					<TextEditor handleChange={handleChangeContent} value={content} readOnly={!workspace.can?.editable}/>
+					<AppMarkdownEditor value={content} onChange={setContent} readOnly={!workspace.can?.editable}
+									   height={340}/>
 				</div>
 				{changed && <div className="footer">
 					<Button className="submit-btn" color="geekblue" variant="solid" onClick={handleSave}>

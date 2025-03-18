@@ -1,19 +1,11 @@
 import {Input} from "antd";
-import TextEditor from "@components/app/editor/text.editor.jsx";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {useContext} from "react";
 import TimeUtils from "@utils/time.js";
+import AppMarkdownEditor from "@components/app/editor/markdown.edtior.jsx";
 
 export default function FolderDisplayOverview({folder, name, setName, content, setContent}){
 	const {workspace} = useContext(WorkspaceContext);
-
-	const handleChangeContent = (quill, quillRef) => {
-		if(quill){
-			quill.on('text-change', (delta, oldDelta, source) => {
-				setContent(quill.root.innerHTML);
-			});
-		}
-	}
 
 	return (
 		<div className="collection-display-overview">
@@ -23,7 +15,8 @@ export default function FolderDisplayOverview({folder, name, setName, content, s
 						   onChange={(e) => setName(e.target.value)} disabled={!workspace.can?.editable}/>
 				</div>
 				<div className="row">
-					<TextEditor handleChange={handleChangeContent} value={content} readOnly={!workspace.can?.editable}/>
+					<AppMarkdownEditor value={content} onChange={setContent} readOnly={!workspace.can?.editable}
+									   height={340}/>
 				</div>
 			</div>
 			<div className="sidebar">

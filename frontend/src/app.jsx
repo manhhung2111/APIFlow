@@ -2,6 +2,8 @@ import '@components/request/styles/index.scss'
 import "./index.scss";
 import "quill/dist/quill.snow.css";
 import 'quill/dist/quill.bubble.css'
+import "@uiw/react-md-editor/markdown-editor.css";
+import "@uiw/react-markdown-preview/markdown.css";
 import {Route, Routes} from "react-router";
 import ProtectedRoute from "@layout/routes/protected.jsx";
 import LoginPage from "@pages/authentication/login.jsx";

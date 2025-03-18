@@ -1,9 +1,9 @@
 import Request from "@components/request/request.jsx";
 import React from "react";
-import TextEditor from "@components/app/editor/text.editor.jsx";
 import DocumentationTable from "@pages/documentation/display/table.jsx";
 import {Typography} from "antd";
 import DocumentationExample from "@pages/documentation/display/example.jsx";
+import AppMarkdownEditor from "@components/app/editor/markdown.edtior.jsx";
 
 const {Paragraph} = Typography;
 
@@ -86,7 +86,7 @@ export default function DocumentationRequest({request, folder = null, collection
 				<div className="icon">{getRequestIcon()}</div>
 				{request.name}
 			</h3>
-			{request.content.length > 0 && <TextEditor value={request.content} readOnly={true}/>}
+			{request.content.length > 0 && <AppMarkdownEditor value={request.content} readOnly={true}/>}
 			{request.content.length === 0 &&
 				<p className="empty-desc">This request does not have any description...</p>}
 			{request.url.length > 0 && <div className="url">

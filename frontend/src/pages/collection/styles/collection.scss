@@ -134,8 +134,27 @@
         }
       }
 
-      .text-editor {
+      .app-markdown-editor {
         height: 300px;
+
+        .markdown-preview {
+          height: 340px;
+          overflow: hidden;
+          overflow-y: auto;
+          scrollbar-gutter: stable;
+          scroll-behavior: auto;
+          align-items: stretch;
+
+          &::-webkit-scrollbar-thumb {
+            background-color: darkgrey;
+          }
+
+          &::-webkit-scrollbar {
+            width: 8px;
+            height: 4px;
+            border-radius: $border-radius-l;
+          }
+        }
       }
     }
 
