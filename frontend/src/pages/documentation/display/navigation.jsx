@@ -7,7 +7,7 @@ import DropdownIcon from "@assets/icons/drop.down.jsx";
 export default function DocumentationNavigation({collection, folders, requests}){
 	const [openFolders, setOpenFolders] = useState({});
 
-	function toggleFolder(folderId, event) {
+	function toggleFolder(folderId, event){
 		event.preventDefault();
 		event.stopPropagation();
 		setOpenFolders(prev => ({
@@ -42,17 +42,15 @@ export default function DocumentationNavigation({collection, folders, requests})
 					}
 				});
 
-
 			}
 
 			items.push({
 				key: `folder-${folder._id}`,
 				href: `#folder-${folder._id}`,
 				title: <div className={`navigation-item ${(!openFolders[folder._id]) ? "-collapsed" : ""}`}>
-					{folder?.children?.length > 0 && <span className="dd-icon dropdown-icon" onClick={(event) => toggleFolder(folder._id, event)}>
+					<span className="dd-icon dropdown-icon" onClick={(event) => toggleFolder(folder._id, event)}>
 						<DropdownIcon/>
-					</span>}
-					{folder?.children?.length === 0 && <span style={{height: 16, width: 16}}>&nbsp;</span>}
+					</span>
 
 					<div className="item">
 						<div className="icon"><FolderOutlined/></div>
@@ -74,7 +72,7 @@ export default function DocumentationNavigation({collection, folders, requests})
 			}
 		});
 
-		items.push(requestsAnchor);
+		items.push(...requestsAnchor);
 
 		return items;
 	}

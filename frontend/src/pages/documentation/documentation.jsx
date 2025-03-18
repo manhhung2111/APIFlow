@@ -109,7 +109,7 @@ function constructTree(folders, requests, examples){
 		if(request.folder_id && foldersMap.has(request.folder_id)){
 			foldersMap.get(request.folder_id).children.push(requestsMap.get(request._id));
 		} else {
-			rootRequests.push(request);
+			rootRequests.push(requestsMap.get(request._id));
 		}
 	});
 

@@ -5,6 +5,7 @@ import EnvironmentService from "@services/environment.js";
 import _ from "lodash";
 import {Button, Checkbox, Input, Select, Skeleton, Typography} from "antd";
 import {
+	CodeSandboxOutlined,
 	DeleteOutlined,
 	EditOutlined,
 	EnterOutlined,
@@ -14,7 +15,6 @@ import {
 } from "@ant-design/icons";
 import "./styles/environment.scss";
 import ActionManager from "@utils/action.manager.jsx";
-import EnvironmentIcon from "@assets/icons/environment.jsx";
 import {toast} from "react-toastify";
 import AppDeleteModal from "@components/app/modal/delete.jsx";
 
@@ -180,7 +180,7 @@ export default function EnvironmentPage(){
 			<div className="header">
 				{environment && <div className="inner-header">
 					<div className="text">
-						<EnvironmentIcon/>
+						<CodeSandboxOutlined/>
 						<Paragraph
 							editable={workspace?.can?.editable && environment.scope === 1 ? {
 								icon: <EditOutlined/>,

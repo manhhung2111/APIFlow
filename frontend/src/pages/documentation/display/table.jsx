@@ -1,5 +1,6 @@
 import CodeEditor from "@components/app/editor/code.editor.jsx";
 import JsonView from '@uiw/react-json-view';
+import AppCodeBlock from "@components/app/editor/code.block.jsx";
 
 export default function DocumentationTable({title, subtitle, data, type = "table", isFile = false}){
 
@@ -19,15 +20,9 @@ export default function DocumentationTable({title, subtitle, data, type = "table
 					{!isFile && <p className="value">{row.value}</p>}
 				</div>;
 			})}
-			{/*{type === "raw" && <JsonView value={JSON.parse(data)} displayDataTypes={false} displayObjectSize={false} collapsed={1}/>}*/}
-			{type === "raw" && <CodeEditor
-				value={data}
-				options={{
-					"readOnly": true,
-					"language": "json",
-					"height": "15vh",
-					"lineNumbers": "off"
-				}}
+			{type === "raw" && <AppCodeBlock
+				code={data}
+				language={"json"}
 			/>}
 			{type === "message" && <div className="message">{data}</div>}
 		</div>
