@@ -127,10 +127,13 @@
         font-size: $text-size-xxxl;
         border-color: transparent;
         border-radius: $border-radius-default;
+        padding-left: 0;
+
 
         &:focus {
           border-color: $content-color-link;
           box-shadow: none;
+          padding-left: 11px;
         }
       }
 
@@ -270,6 +273,10 @@
           }
           .ant-select-selector {
             font-size: $text-size-m !important;
+          }
+
+          &.disabled {
+            height: 28px;
           }
         }
 

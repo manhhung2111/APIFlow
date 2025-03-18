@@ -50,6 +50,10 @@
             top: 6px;
           }
         }
+
+        &.disabled {
+          //height: 28px;
+        }
       }
     }
   }
@@ -346,6 +350,10 @@
 
           .ant-select-selector {
             font-size: $text-size-m !important;
+          }
+
+          &.disabled {
+            height: 28px;
           }
         }
 
