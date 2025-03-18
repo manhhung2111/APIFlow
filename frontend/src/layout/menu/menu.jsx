@@ -1,6 +1,6 @@
 import {Button, Skeleton, Tabs} from "antd";
 import "./styles/menu.scss";
-import {UserOutlined} from "@ant-design/icons";
+import {CodeSandboxOutlined, UserOutlined} from "@ant-design/icons";
 import CollectionIcon from "@assets/icons/collection.jsx";
 import {BaseLabel} from "@utils/text.jsx";
 import {useContext, useState} from "react";
@@ -23,7 +23,7 @@ export default function MasterMenu(){
 			children: workspace ? <CollectionMenu/> : <Skeleton active/>
 		},
 		{
-			label: <BaseLabel icon={<FolderEnvironmentIcon style={{fontSize: "16px"}}/>} title={"Environments"}/>,
+			label: <BaseLabel icon={<CodeSandboxOutlined style={{fontSize: "16px"}}/>} title={"Environments"}/>,
 			key: 2,
 			children: workspace ? <EnvironmentMenu/> : <Skeleton active/>
 		},

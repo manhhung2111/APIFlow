@@ -214,4 +214,63 @@ export default class Request{
 			},
 		];
 	};
+
+
+	static generateCurlFromRequest(request) {
+		console.log(request)
+		const { method, url, headers, body } = request;
+
+		// Convert headers to curl format
+		const headersString = headers
+			.filter(header => header.selected)
+			.map(header => `--header '${header.key}: ${header.value}'`)
+			.join(" \\\n  ");
+
+		let bodyString = "";
+
+		if (body) {
+			switch (body.type) {
+				case this.BODY_TYPES.None.value:
+					bodyString = "";
+					break;
+
+				case this.BODY_TYPES.FormRaw.value: // Raw JSON
+					if (body.data.form_raw) {
+						bodyString = `--data '${body.data.form_raw.replace(/\r\n/g, "")}'`;
+					}
+					break;
+
+				case this.BODY_TYPES.FormEncoded.value: // Form-encoded
+					if (body.data.form_encoded) {
+						const formEncodedString = body.data.form_encoded
+							.filter(item => item.selected)
+							.map(item => `${encodeURIComponent(item.key)}=${encodeURIComponent(item.value)}`)
+							.join("&");
+						bodyString = `--data-urlencode '${formEncodedString}' --header 'Content-Type: application/x-www-form-urlencoded'`;
+					}
+					break;
+
+				case this.BODY_TYPES.FormData.value: // Form-data
+					if (body.data.form_data) {
+						const formDataString = body.data.form_data
+							.filter(item => item.selected)
+							.map(item => {
+								if (item.type == "text") {
+									return `--form '${item.key}=${item.value}'`
+								} else {
+									return `--form '${item.key}=${item.value?.name || ""}'`
+								}
+							})
+							.join(" \\\n  ");
+						bodyString = formDataString;
+					}
+					break;
+			}
+		}
+
+		// Construct the final cURL command
+		const curlCommand = `curl --location --request ${method.toUpperCase()} '${url}' \\\n  ${headersString} \\\n  ${bodyString}`;
+
+		return curlCommand.trim();
+	}
 }

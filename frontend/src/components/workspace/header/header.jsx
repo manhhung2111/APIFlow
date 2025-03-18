@@ -4,6 +4,8 @@ import {Drawer, Select, Skeleton} from "antd";
 import DataTableIcon from "@assets/icons/data.table.jsx";
 import "../styles/header.scss";
 import WorkspaceVariablesDrawer from "@components/workspace/header/variable.drawer.jsx";
+import EnvironmentIcon from "@assets/icons/environment.jsx";
+import {CodepenOutlined, CodeSandboxOutlined} from "@ant-design/icons";
 
 export default function WorkspaceSuperHeader(){
 	const {workspace, environments, setActiveEnvironment, activeEnvironment} = useContext(WorkspaceContext);
@@ -41,6 +43,7 @@ export default function WorkspaceSuperHeader(){
 				</div>
 				<div className="environment-select">
 					<Select
+						prefix={<CodeSandboxOutlined />}
 						defaultValue={activeEnvironment || -1}
 						style={{width: "170px"}}
 						onChange={(value) => setActiveEnvironment(value)}

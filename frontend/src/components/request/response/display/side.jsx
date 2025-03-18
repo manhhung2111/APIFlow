@@ -21,9 +21,9 @@ export default function RequestResponseSide() {
 		let tagStyles = {"color": "#004080", "backgroundColor": "#d9edf7"};
 		if (status >= 200 && status <= 299) {
 			tagStyles = {"color": "rgb(0, 127, 49)", "backgroundColor": "#E5FFF1"};
-		} else if (statusText >= 300 && status <= 399) {
+		} else if (status >= 300 && status <= 399) {
 			tagStyles = {"color": "#8a6d3b", "backgroundColor": "#fcf8e3"};
-		} else if (statusText >= 400) {
+		} else if (status >= 400) {
 			tagStyles = {"color": "rgb(142, 26, 16)", "backgroundColor": "#FFEBE7"};
 		}
 

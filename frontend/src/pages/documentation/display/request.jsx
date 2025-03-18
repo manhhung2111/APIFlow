@@ -3,10 +3,11 @@ import React from "react";
 import TextEditor from "@components/app/editor/text.editor.jsx";
 import DocumentationTable from "@pages/documentation/display/table.jsx";
 import {Typography} from "antd";
+import DocumentationExample from "@pages/documentation/display/example.jsx";
 
 const {Paragraph} = Typography;
 
-export default function DocumentationRequest({request, folder, collection}){
+export default function DocumentationRequest({request, folder = null, collection}){
 
 	function getRequestIcon(){
 		const method = Request.getMethod(request.method);
@@ -50,6 +51,23 @@ export default function DocumentationRequest({request, folder, collection}){
 				type: Request.AUTHORIZATION.JWTBearer.label,
 				message: <div>This request is using JWT Token from folder <b>{folder.name}</b></div>
 			}
+		} else if(folder == null){
+			if(collection?.authorization.type === Request.AUTHORIZATION.BasicAuth.value){
+				return {
+					type: Request.AUTHORIZATION.BasicAuth.label,
+					message: <div>This request is using Basic Auth from collection <b>{collection.name}</b></div>
+				}
+			} else if(collection?.authorization.type === Request.AUTHORIZATION.BearerToken.value){
+				return {
+					type: Request.AUTHORIZATION.BearerToken.label,
+					message: <div>This request is using Bearer Token from collection <b>{collection.name}</b></div>
+				}
+			} else if(collection?.authorization.type === Request.AUTHORIZATION.JWTBearer.value){
+				return {
+					type: Request.AUTHORIZATION.JWTBearer.label,
+					message: <div>This request is using JWT Token from collection <b>{collection.name}</b></div>
+				}
+			}
 		}
 
 		return null;
@@ -61,8 +79,6 @@ export default function DocumentationRequest({request, folder, collection}){
 	}));
 
 	const authorizationInherit = getInheritAuthMessage();
-
-	console.log(request.body);
 
 	return (
 		<div className="documentation-request" id={`request-${request._id}`}>
@@ -114,6 +130,7 @@ export default function DocumentationRequest({request, folder, collection}){
 				data={request.body.data.form_raw}
 				type={"raw"}
 			/>}
+			{request.children && request.children.length > 0 && <DocumentationExample examples={request.children}/>}
 		</div>
 	)
 }

@@ -6,6 +6,7 @@ import React, {useContext, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import EnvironmentService from "@services/environment.js";
 import AppDeleteModal from "@components/app/modal/delete.jsx";
+import {CodeSandboxOutlined} from "@ant-design/icons";
 
 export default function EnvironmentMenuItem({environment, globalEnv}){
 	const {workspace, setEnvironments} = useContext(WorkspaceContext);
@@ -35,7 +36,7 @@ export default function EnvironmentMenuItem({environment, globalEnv}){
 	return (
 		<div className="environment-menu-item">
 			<NavLink className="item" title={environment.name} to={`environment/${environment._id}`}>
-				<div className="icon"><EnvironmentIcon/></div>
+				<div className="icon"><CodeSandboxOutlined /></div>
 				<div className="label">{environment.name}</div>
 			</NavLink>
 

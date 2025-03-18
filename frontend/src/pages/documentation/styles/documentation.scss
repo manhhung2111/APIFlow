@@ -38,6 +38,23 @@
     display: grid;
     grid-template-columns: 4fr 1fr;
     gap: 20px;
+    height: calc(100vh - 48px - 40px - 49px);
+    min-height: 100px;
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    scroll-behavior: auto;
+    align-items: stretch;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgrey;
+    }
+
+    &::-webkit-scrollbar {
+      width: 8px;
+      height: 4px;
+      border-radius: $border-radius-l;
+    }
 
 
     @media (max-width: 1200px) {
@@ -51,25 +68,13 @@
 
 
     & > .navigation {
-      height: calc(100vh - 48px - 40px - 49px - 40px);
-      min-height: 100px;
-      overflow: hidden;
-      overflow-y: auto;
-      scrollbar-gutter: stable;
-      scroll-behavior: smooth;
 
-
-      &::-webkit-scrollbar-thumb {
-        background-color: darkgrey;
-      }
-
-      &::-webkit-scrollbar {
-        width: 8px;
-        height: 4px;
-        border-radius: $border-radius-l;
-      }
-
+      //height: 100vh;
       .documentation-navigation {
+        position: sticky !important;
+        top: 0;
+        z-index: 1000;
+        background: white;
 
         .ant-anchor-ink.ant-anchor-ink-visible {
           display: none;
@@ -164,41 +169,11 @@
               }
             }
           }
-
-
-          //&.ant-anchor-link-active {
-          //  & > .ant-anchor-link-title .item {
-          //    color: $content-color-primary;
-          //    font-weight: 500;
-          //
-          //    .name {
-          //      color: $content-color-primary;
-          //    }
-          //  }
-          //}
         }
       }
     }
 
     & > .content-wrapper {
-      height: calc(100vh - 48px - 40px - 49px - 32px);
-      min-height: 100px;
-      overflow: hidden;
-      overflow-y: auto;
-      scrollbar-gutter: stable;
-      scroll-behavior: smooth;
-
-
-      &::-webkit-scrollbar-thumb {
-        background-color: darkgrey;
-      }
-
-      &::-webkit-scrollbar {
-        width: 8px;
-        height: 4px;
-        border-radius: $border-radius-l;
-      }
-
       & > .content {
         width: 40vw;
         margin: 0 auto;
@@ -374,6 +349,84 @@
       .ql-editor {
         padding: 8px 16px;
       }
+    }
+  }
+}
+
+.documentation-page .documentation-example {
+  margin-top: 16px;
+
+  .example-header {
+    display: flex;
+    height: 32px;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+
+    border-bottom: 1px solid $border-color-default;
+
+    h4 {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1;
+      color: $content-color-primary;
+    }
+
+    .ant-select {
+      .ant-select-selector {
+        font-size: $text-size-m;
+
+      }
+    }
+  }
+
+  .example-main {
+    margin-top: 8px;
+
+    .code-block {
+      .header {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 12px;
+        background-color: $background-color-secondary;
+        border-top-left-radius: $border-radius-default;
+        border-top-right-radius: $border-radius-default;
+        border: 1px solid rgba(9, 30, 66, 0.14);
+
+        h5 {
+          font-weight: $text-weight-thick;
+          font-size: $text-size-l;
+          color: $content-color-primary;
+        }
+
+        .anticon {
+          color: $content-color-secondary;
+          cursor: pointer;
+        }
+      }
+
+      .main {
+        .app-code-block {
+          pre {
+            margin: 0 !important;
+            border-radius: 0 0 $border-radius-default $border-radius-default !important;
+            border-left: 1px solid rgba(9, 30, 66, 0.14);
+            border-right: 1px solid rgba(9, 30, 66, 0.14);
+            border-bottom: 1px solid rgba(9, 30, 66, 0.14);
+
+            background-color: transparent !important;
+
+            code {
+              background-color: transparent !important;
+
+            }
+          }
+        }
+      }
+    }
+
+    .response {
+      margin-top: 16px;
     }
   }
 }

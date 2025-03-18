@@ -11,6 +11,7 @@ import DocumentationCollection from "@pages/documentation/display/collection.jsx
 import {toast} from "react-toastify";
 import DocumentationNavigation from "@pages/documentation/display/navigation.jsx";
 import DocumentationFolder from "@pages/documentation/display/folder.jsx";
+import DocumentationRequest from "@pages/documentation/display/request.jsx";
 
 export default function DocumentationPage(){
 	const {workspace, activeCollection, setActiveCollection} = useContext(WorkspaceContext);
@@ -47,7 +48,7 @@ export default function DocumentationPage(){
 		if (location.hash) {
 			const element = document.querySelector(location.hash);
 			if (element) {
-				element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+				element.scrollIntoView({ behavior: "auto", block: "start" });
 			}
 		}
 	}, [location, folders, requests]);
@@ -80,6 +81,9 @@ export default function DocumentationPage(){
 					<DocumentationCollection collection={activeCollection}/>
 					{folders.map((folder, index) => {
 						return <DocumentationFolder collection={activeCollection} folder={folder} key={index}/>
+					})}
+					{requests && requests.length > 0 && requests.map((request, index) => {
+						return <DocumentationRequest request={request} key={index} collection={activeCollection}/>
 					})}
 				</div>
 			</div>
