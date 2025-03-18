@@ -19,8 +19,8 @@ export default function DocumentationNavigation({collection, folders, requests})
 	function generateAnchors(){
 		let items = [];
 		items.push({
-			key: `collection.${collection._id}`,
-			href: `#collection.${collection._id}`,
+			key: `collection-${collection._id}`,
+			href: `#collection-${collection._id}`,
 			title: <div className="item">
 				<div className="name">Overview</div>
 			</div>,
@@ -32,8 +32,8 @@ export default function DocumentationNavigation({collection, folders, requests})
 			if(folder.children && folder.children.length > 0){
 				children = folder.children.map(request => {
 					return {
-						key: `request.${request._id}`,
-						href: `#request.${request._id}`,
+						key: `request-${request._id}`,
+						href: `#request-${request._id}`,
 						title: <div className={`item ${!openFolders[folder._id] ? "-hidden" : ""}`}>
 							<div className="icon">{getRequestIcon(request)}</div>
 							<div className="name">{request.name}</div>
@@ -46,8 +46,8 @@ export default function DocumentationNavigation({collection, folders, requests})
 			}
 
 			items.push({
-				key: `folder.${folder._id}`,
-				href: `#folder.${folder._id}`,
+				key: `folder-${folder._id}`,
+				href: `#folder-${folder._id}`,
 				title: <div className={`navigation-item ${(!openFolders[folder._id]) ? "-collapsed" : ""}`}>
 					{folder?.children?.length > 0 && <span className="dd-icon dropdown-icon" onClick={(event) => toggleFolder(folder._id, event)}>
 						<DropdownIcon/>
@@ -65,8 +65,8 @@ export default function DocumentationNavigation({collection, folders, requests})
 
 		let requestsAnchor = requests.map(request => {
 			return {
-				key: `request.${request._id}`,
-				href: `#request.${request._id}`,
+				key: `request-${request._id}`,
+				href: `#request-${request._id}`,
 				title: <div className="item">
 					<div className="icon">{getRequestIcon(request)}</div>
 					<div className="name">{request.name}</div>

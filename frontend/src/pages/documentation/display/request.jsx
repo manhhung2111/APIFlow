@@ -65,7 +65,7 @@ export default function DocumentationRequest({request, folder, collection}){
 	console.log(request.body);
 
 	return (
-		<div className="documentation-request" id={`request.${request._id}`}>
+		<div className="documentation-request" id={`request-${request._id}`}>
 			<h3>
 				<div className="icon">{getRequestIcon()}</div>
 				{request.name}

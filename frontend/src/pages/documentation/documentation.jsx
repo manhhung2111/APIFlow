@@ -2,7 +2,7 @@ import {Button, Skeleton} from "antd";
 import React, {useContext, useEffect, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import DocumentIcon from "@assets/icons/document.jsx";
-import {useNavigate, useParams} from "react-router";
+import {useLocation, useNavigate, useParams} from "react-router";
 import "./styles/documentation.scss";
 import {CloudDownloadOutlined} from "@ant-design/icons";
 import NorthEastIcon from "@assets/icons/north.east.jsx";
@@ -40,6 +40,17 @@ export default function DocumentationPage(){
 			fetchCollection();
 		}
 	}, [collection_id, workspace]);
+
+	const location = useLocation(); // Get current URL
+
+	useEffect(() => {
+		if (location.hash) {
+			const element = document.querySelector(location.hash);
+			if (element) {
+				element.scrollIntoView({ behavior: "smooth", block: "nearest" });
+			}
+		}
+	}, [location, folders, requests]);
 
 	return (<div className="documentation-page">
 		<div className="header">

@@ -9,7 +9,7 @@ export default function DocumentationCollection({collection}){
 		value: `<${key}>`
 	}));
 
-	return (<div className="documentation-collection" id={`collection.${collection._id}`}>
+	return (<div className="documentation-collection" id={`collection-${collection._id}`}>
 		<h2>{collection.name}</h2>
 		{collection.content.length > 0 && <TextEditor value={collection.content} readOnly={true}/>}
 		{collection.content.length == 0 && <p className="empty-desc">This collection does not have any description...</p>}
