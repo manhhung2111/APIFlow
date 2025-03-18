@@ -1,7 +1,7 @@
 import {createContext, useEffect, useState} from "react";
 import {ConfigProvider} from "antd";
 import UserService from "@services/user.js";
-import PageLoader from "@components/app/utils/loader.jsx";
+import PageLoader from "@components/app/utils/page.loader.jsx";
 import {useNavigate} from "react-router";
 
 export const AppContext = createContext({});

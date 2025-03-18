@@ -1,4 +1,6 @@
-export default function PageLoader() {
+import "../styles/utils.scss";
+
+export default function PageLoader(){
 
 	return (
 		<div className="page-loader" id="page-loader">
