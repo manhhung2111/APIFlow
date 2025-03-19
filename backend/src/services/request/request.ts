@@ -28,7 +28,7 @@ export default class RequestService {
     private active_env: DBEnvironment | null = null;
     private global_env: DBEnvironment | null = null;
 
-    private AP = new Scripts();
+    private pm = new Scripts();
 
     public setMethod(method: string) {
         this._method = method;
@@ -80,7 +80,7 @@ export default class RequestService {
     public async send() {
         try {
             await this.readAssociatedData();
-            this.AP.setEnvironment(this.active_env)
+            this.pm.setEnvironment(this.active_env)
                 .setGlobals(this.global_env!)
                 .setCollectionVariables(this.collection!);
 
@@ -116,7 +116,7 @@ export default class RequestService {
                 body: this.calculateSize(response.data)
             };
 
-            this.AP.setResponse(response);
+            this.pm.setResponse(response);
             let test_results: any;
 
             // Run Post response request
@@ -129,7 +129,7 @@ export default class RequestService {
             }
 
             if (!test_results) {
-                test_results = this.AP.getTestResults();
+                test_results = this.pm.getTestResults();
                 await this.saveEnvironments();
             }
 
@@ -342,8 +342,8 @@ export default class RequestService {
 
     private async runPreRequestScripts(scriptCode: string) {
         try {
-            // Create a context where AP can be modified
-            const context = vm.createContext({AP: this.AP});
+            // Create a context where pm can be modified
+            const context = vm.createContext({pm: this.pm});
             const script = new vm.Script(scriptCode);
 
             // Execute the script in the provided context
@@ -356,8 +356,8 @@ export default class RequestService {
 
     private async runPostResponseScripts(scriptCode: string) {
         try {
-            // Create a context where AP can be modified
-            const context = vm.createContext({AP: this.AP});
+            // Create a context where pm can be modified
+            const context = vm.createContext({pm: this.pm});
             const script = new vm.Script(scriptCode);
 
             // Execute the script in the provided context
@@ -370,10 +370,10 @@ export default class RequestService {
 
     private async saveEnvironments() {
         try {
-            this.collection!.object!.variables = this.AP.getCollectionVariables();
-            this.global_env!.object!.variables = this.AP.getGlobals();
+            this.collection!.object!.variables = this.pm.getCollectionVariables();
+            this.global_env!.object!.variables = this.pm.getGlobals();
             if (this.active_env) {
-                this.active_env.object!.variables = this.AP.getEnvironment();
+                this.active_env.object!.variables = this.pm.getEnvironment();
             }
 
             await this.global_env?.save();
