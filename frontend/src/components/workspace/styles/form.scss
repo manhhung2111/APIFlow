@@ -55,7 +55,6 @@
 
 }
 
-
 .workspace-new-select-form-modal {
   .ant-modal-content .ant-modal-body {
     margin-top: 24px;
@@ -76,6 +75,7 @@
         border: 1px solid transparent;
         flex: 1;
         padding: 8px;
+
         &:hover {
           //background-color: $background-color-button-primary-hover;
           border-color: $content-color-link;
@@ -110,6 +110,201 @@
           text-align: center;
         }
       }
+    }
+  }
+}
+
+.workspace-import-form {
+  .container {
+    //min-width: 300px;
+    min-height: 280px;
+  }
+
+  .zone {
+    border-radius: 4px;
+    width: 100%;
+    min-height: 280px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed #e6e6e6;
+  }
+
+  .drop-zone {
+    width: 100%;
+    //height: 100%;
+    min-height: 280px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: $background-color-secondary;
+    }
+  }
+
+  .drag-files,
+  .drop-files {
+    border-radius: inherit;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 300ms;
+    min-height: 280px;
+  }
+
+  .drag-files {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    .left {
+      background-color: $background-color-tertiary;
+      border-radius: 50%;
+      padding: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .anticon {
+        font-size: 24px;
+        color: $content-color-secondary;
+      }
+    }
+
+    .right {
+      h3 {
+        font-weight: 600;
+        word-break: normal;
+        font-size: 18px;
+        line-height: 1.2;
+        letter-spacing: -0.56px;
+        color: rgb(107, 107, 107);
+        margin: 0;
+      }
+
+      p {
+        margin: 0px;
+        color: rgb(107, 107, 107);
+        max-width: 80ch;
+        font-size: 12px;
+        overflow-wrap: break-word;
+        word-break: break-word;
+        line-height: 1.6;
+
+        span {
+          color: rgb(2, 101, 210);
+        }
+      }
+    }
+  }
+
+  .drop-files {
+    min-height: 280px;
+    background-color: $background-color-secondary;
+    color: $content-color-secondary;
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .anticon {
+      font-size: 30px;
+      color: $content-color-secondary;
+    }
+
+    p {
+      font-size: 16px;
+      font-weight: $text-weight-bold;
+    }
+  }
+
+  .file-display {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    //border: 1px solid $border-color-default;
+    border-radius: $border-radius-default;
+    margin-top: 8px;
+    background-color: $background-color-tertiary;
+
+    p {
+      .anticon {
+        margin-right: 4px;
+        color: $content-color-secondary;
+      }
+      line-height: 1.2;
+      color: $content-color-primary;
+      width: 70%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+    }
+
+    .action {
+      height: fit-content;
+      .anticon {
+        font-size: 12px;
+        aspect-ratio: 1/1;
+        cursor: pointer;
+        &:hover {
+          color: $content-color-error-2;
+        }
+      }
+    }
+  }
+
+  .cancel-btn, .submit-btn {
+    font-size: $text-size-m;
+    position: relative;
+    box-sizing: border-box;
+    display: inline-flex;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    line-height: 1.334;
+    height: 32px;
+    padding: 0px 12px;
+    background-color: rgb(242, 242, 242);
+    box-shadow: transparent 0px 0px 0px 1px inset;
+    color: rgb(33, 33, 33);
+
+    &:hover {
+      background-color: rgb(237, 237, 237);
+    }
+  }
+
+  .submit-btn {
+    background-color: $base-color-brand;
+    color: white;
+
+    &:hover {
+      background-color: $base-color-brand !important;
+      filter: brightness(90%);
+    }
+
+    &[disabled] {
+      background-color: $base-color-brand;
+      color: white;
+      &:hover {
+        background-color: $base-color-brand !important;
+        filter: brightness(90%);
+      }
+
     }
   }
 }

@@ -5,16 +5,17 @@ import CollectionIcon from "@assets/icons/collection.jsx";
 import {BaseLabel} from "@utils/text.jsx";
 import {useContext, useState} from "react";
 import EnvironmentMenu from "@components/environment/menu/menu.jsx";
-import FolderEnvironmentIcon from "@assets/icons/folder.environment.jsx";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import {NavLink} from "react-router";
 import WorkspaceNewSelectForm from "@components/workspace/form/select.jsx";
 import CollectionMenu from "@components/collection/menu/menu.jsx";
+import WorkspaceImportForm from "@components/workspace/form/import.jsx";
 
 export default function MasterMenu(){
 	const {workspace, activeMenuKey, setActiveMenuKey} = useContext(WorkspaceContext);
 
 	const [newModalVisibility, setNewModalVisibility] = useState(false);
+	const [importModalVisibility, setImportModalVisibility] = useState(false);
 
 	const items = [
 		{
@@ -42,7 +43,8 @@ export default function MasterMenu(){
 					{workspace && workspace.can?.editable && <>
 						<Button size={"small"} color="default" variant="filled"
 								onClick={() => setNewModalVisibility(true)}>New</Button>
-						<Button size={"small"} color="default" variant="filled">Import</Button>
+						<Button size={"small"} color="default" variant="filled"
+								onClick={() => setImportModalVisibility(true)}>Import</Button>
 					</>}
 					{!workspace && <Skeleton.Button active={true} style={{width: "110px"}}/>}
 				</div>
@@ -58,6 +60,10 @@ export default function MasterMenu(){
 			<WorkspaceNewSelectForm
 				visible={newModalVisibility}
 				setVisible={setNewModalVisibility}
+			/>
+			<WorkspaceImportForm
+				open={importModalVisibility}
+				setOpen={setImportModalVisibility}
 			/>
 		</div>
 	);
