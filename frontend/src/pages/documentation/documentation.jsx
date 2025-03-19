@@ -45,13 +45,32 @@ export default function DocumentationPage(){
 	const location = useLocation(); // Get current URL
 
 	useEffect(() => {
-		if (location.hash) {
+		if(location.hash){
 			const element = document.querySelector(location.hash);
-			if (element) {
-				element.scrollIntoView({ behavior: "auto", block: "start" });
+			if(element){
+				element.scrollIntoView({behavior: "auto", block: "start"});
 			}
 		}
 	}, [location, folders, requests]);
+
+	const handleExport = async() => {
+		const result = await CollectionService.export(activeCollection);
+
+		if(result.code === 0){
+			toast.success(result.message);
+
+			const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+				JSON.stringify(result.data.collection_export, null, 4)
+			)}`;
+			const link = document.createElement("a");
+			link.href = jsonString;
+			link.download = `${activeCollection.name}.collection.json`;
+
+			link.click();
+		} else {
+			toast.error(result.message);
+		}
+	}
 
 	return (<div className="documentation-page">
 		<div className="header">
@@ -66,7 +85,7 @@ export default function DocumentationPage(){
 						View Collection
 					</Button>
 
-					<Button color="default" variant="text" icon={<CloudDownloadOutlined/>}>
+					<Button color="default" variant="text" icon={<CloudDownloadOutlined/>} onClick={handleExport}>
 						Export Collection
 					</Button>
 				</div>

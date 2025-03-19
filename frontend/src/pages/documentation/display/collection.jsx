@@ -21,5 +21,11 @@ export default function DocumentationCollection({collection}){
 				subtitle={Request.getAuthorization(collection.authorization.type)}
 				data={authorizationData}
 			/>}
+		{(collection.authorization.type === Request.AUTHORIZATION.JWTBearer.value) &&
+			<DocumentationTable
+				title={"Authorization"}
+				subtitle={Request.getAuthorization(collection.authorization.type)}
+				data={null}
+			/>}
 	</div>)
 }

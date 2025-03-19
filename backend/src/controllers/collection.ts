@@ -286,3 +286,30 @@ export const getCollectionAssociatedWithData = async (request: Request, response
         response.status(500).json(Code.error((error as Error).message));
     }
 };
+
+export const getCollectionExport = async (request: Request, response: Response) => {
+    logger.info("[Controller] Get collection associated with data");
+
+    try {
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
+        }
+
+        const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
+        if (!collection.good()) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
+        }
+
+        const collectionExport = await collection.exporter().exportPostman();
+
+        response.status(200).json(Code.success("Export collection successfully.", {
+            collection_export: collectionExport
+        }));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
+};

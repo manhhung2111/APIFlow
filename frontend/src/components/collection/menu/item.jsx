@@ -105,13 +105,32 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 		}
 	}
 
+	const handleExport = async () => {
+		const result = await CollectionService.export(collection);
+
+		if (result.code === 0) {
+			toast.success(result.message);
+
+			const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+				JSON.stringify(result.data.collection_export, null, 4)
+			)}`;
+			const link = document.createElement("a");
+			link.href = jsonString;
+			link.download = `${collection.name}.collection.json`;
+
+			link.click();
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
 		{key: `edit_${collection._id}`, label: "Edit", onClick: () => {navigate(`collection/${collection._id}`)}},
 		{key: `add_request_${collection._id}`, label: "Add request",	onClick: handleAddRequest},
 		{key: `add_folder_${collection._id}`, label: "Add folder", onClick: handleAddFolder},
 		{key: `documentation_${collection._id}`, label: "View documentation", onClick: () => {navigate(`collection/${collection._id}/documentation`)}},
 		{key: `duplicate_${collection._id}`, label: "Duplicate", onClick: handleDuplicate},
-		{key: `export_${collection._id}`, label: "Export",},
+		{key: `export_${collection._id}`, label: "Export", onClick: handleExport},
 		{key: `delete_${collection._id}`, label: "Delete", onClick: () => setDeleteCollectionVisible(true), danger: 1},
 	];
 

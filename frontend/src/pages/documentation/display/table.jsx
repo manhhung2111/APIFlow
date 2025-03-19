@@ -12,7 +12,7 @@ export default function DocumentationTable({title, subtitle, data, type = "table
 			{subtitle && <p>{subtitle}</p>}
 		</div>
 		<div className="main">
-			{type === "table" && data.map((row, index) => {
+			{type === "table" && data?.map((row, index) => {
 				return <div className="row" key={index}>
 					<p className="key">{row.key}</p>
 					{isFile && row.type === "file" && <p className="value">{row.value.name}</p>}

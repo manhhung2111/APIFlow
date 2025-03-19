@@ -200,7 +200,11 @@ abstract class DBModel<T>{
 
 		for (const field of fields){
 			if (field in this.object!.toObject()){
-				data[field] = this.object!.get(field);
+				if (field == "_id") {
+					data[field] = this.object!.get(field).toString();
+				} else {
+					data[field] = this.object!.get(field);
+				}
 			}
 		}
 

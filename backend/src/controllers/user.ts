@@ -4,7 +4,7 @@ import {DBUser, DBUserLoader} from "@dev/user";
 import UserService from "@services/user";
 import logger from "@utils/logger";
 import Client from "@dev/client";
-import {DBWorkspaceLoader} from "@dev/workspace";
+import {DBWorkspace, DBWorkspaceLoader} from "@dev/workspace";
 
 export const loginUser = async (request: Request, response: Response) => {
     try {
@@ -13,8 +13,24 @@ export const loginUser = async (request: Request, response: Response) => {
         const users = await DBUserLoader.all();
         const usersRelease = users.map(user => user.releaseCompact());
 
-        const workspaces = await DBWorkspaceLoader.mine(user.object!._id.toString());
-        const workspaces_compact = workspaces.map(workspace => workspace.releaseCompact());
+        const cookies_key = `recent.workspaces.${user.object!._id.toString()}`;
+        let workspaces: object[] = [];
+        if (!HTMLInput.cookies(cookies_key)) {
+            const workspaces_loader = await DBWorkspaceLoader.mine();
+            for (let i = 0; i < Math.min(5, workspaces_loader.length); i++) {
+                workspaces.push(workspaces_loader[i].releaseCompact());
+            }
+        } else {
+            const recent_workspace_ids = HTMLInput.cookies(cookies_key) ? JSON.parse(HTMLInput.cookies(cookies_key)) : [];
+            for (const workspace_id of recent_workspace_ids) {
+                const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+                if (!workspace.good()) {
+                    continue;
+                }
+
+                workspaces.push(workspace.releaseCompact());
+            }
+        }
 
         const access_token = await JWT.signToken({user_id: user.getField("_id")});
 
@@ -22,7 +38,7 @@ export const loginUser = async (request: Request, response: Response) => {
         response.status(200).json(Code.success("Login successful", {
             user: user.release(),
             users: usersRelease,
-            workspaces: workspaces_compact
+            workspaces: workspaces
         }));
     } catch (error) {
         logger.error((error as Error).stack);
@@ -78,12 +94,28 @@ export const verifyUser = async (request: Request, response: Response) => {
         const users = await DBUserLoader.all();
         const usersRelease = users.map(user => user.releaseCompact());
 
-        const workspaces = await DBWorkspaceLoader.mine(user.object!._id.toString());
-        const workspaces_compact = workspaces.map(workspace => workspace.releaseCompact());
+        const cookies_key = `recent.workspaces.${user.object!._id.toString()}`;
+        let workspaces: object[] = [];
+        if (!HTMLInput.cookies(cookies_key)) {
+            const workspaces_loader = await DBWorkspaceLoader.mine();
+            for (let i = 0; i < Math.min(5, workspaces_loader.length); i++) {
+                workspaces.push(workspaces_loader[i].releaseCompact());
+            }
+        } else {
+            const recent_workspace_ids = HTMLInput.cookies(cookies_key) ? JSON.parse(HTMLInput.cookies(cookies_key)) : [];
+            for (const workspace_id of recent_workspace_ids) {
+                const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+                if (!workspace.good()) {
+                    continue;
+                }
+
+                workspaces.push(workspace.releaseCompact());
+            }
+        }
 
         response.status(200).json(Code.success("User verified successful", {
             user: user.release(), users: usersRelease,
-            workspaces: workspaces_compact
+            workspaces: workspaces
         }));
     } catch (error) {
         logger.error((error as Error).stack);

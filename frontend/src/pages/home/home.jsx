@@ -2,7 +2,7 @@ import SuperHeader from "@layout/header/header.jsx";
 import TeamWork from "@assets/images/team.work.svg";
 import {Button} from "antd";
 import './styles/home.scss'
-import {NavLink, useNavigate} from "react-router";
+import {NavLink} from "react-router";
 import NorthEastIcon from "@assets/icons/north.east.jsx";
 import {BarChartOutlined, TeamOutlined, UserOutlined} from "@ant-design/icons";
 import {useContext, useEffect} from "react";
@@ -21,8 +21,8 @@ export default function HomePage(){
 	let {workspaces, setWorkspaces, user} = useContext(AppContext);
 
 	useEffect(() => {
-		const fetchData = async () => {
-			if (user) {
+		const fetchData = async() => {
+			if(user){
 				const workspaceResponse = await WorkspaceService.recent();
 
 				if(workspaceResponse.code === 0){
@@ -33,9 +33,10 @@ export default function HomePage(){
 			}
 		}
 
-		fetchData();
+		if(!workspaces || workspaces.length === 0){
+			fetchData();
+		}
 	}, [])
-
 
 	return (
 		<div className="home-page master-page">
@@ -68,7 +69,8 @@ export default function HomePage(){
 							<div className="workspace-list">
 								{workspaces.map(workspace => {
 									return (
-										<NavLink className="list-item" to={`/workspace/${workspace._id}`} key={workspace._id}>
+										<NavLink className="list-item" to={`/workspace/${workspace._id}`}
+												 key={workspace._id}>
 											<div className="icon">
 												<UserOutlined/>
 											</div>

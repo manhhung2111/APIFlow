@@ -3,15 +3,17 @@ import authentication from "@middleware/authentication";
 import {workspaceEditable, workspaceViewable} from "@middleware/workspace";
 
 import {
-	createNewCollection,
-	deleteCollection,
-	duplicateCollection,
-	getCollectionById,
-	getCollectionsByWorkspace,
-	updateCollection,
-	updateCollectionContent,
-	updateCollectionName,
-	createNewRequestFromCollection, getCollectionAssociatedWithData
+    createNewCollection,
+    createNewRequestFromCollection,
+    deleteCollection,
+    duplicateCollection,
+    getCollectionAssociatedWithData,
+    getCollectionById,
+    getCollectionExport,
+    getCollectionsByWorkspace,
+    updateCollection,
+    updateCollectionContent,
+    updateCollectionName
 } from "@controllers/collection";
 
 const router = express.Router();
@@ -22,6 +24,7 @@ router.use(authentication);
 router.get("/", workspaceViewable, getCollectionsByWorkspace);
 router.get("/:collection_id", workspaceViewable, getCollectionById);
 router.get("/data/:collection_id", workspaceViewable, getCollectionAssociatedWithData);
+router.get("/export/:collection_id", workspaceViewable, getCollectionExport);
 
 // Edit routes
 router.put("/:collection_id", workspaceEditable, updateCollection);

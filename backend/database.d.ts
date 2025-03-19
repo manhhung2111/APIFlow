@@ -175,7 +175,7 @@ export interface DCollection {
 
     authorization: {
         type: number;
-        data: object;
+        data: any;
     };
 
     scripts: {
