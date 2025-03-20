@@ -10,7 +10,7 @@ import {
     getCollectionAssociatedWithData,
     getCollectionById,
     getCollectionExport,
-    getCollectionsByWorkspace,
+    getCollectionsByWorkspace, importCollection,
     updateCollection,
     updateCollectionContent,
     updateCollectionName
@@ -35,6 +35,7 @@ router.put("/:collection_id/content", workspaceEditable, updateCollectionContent
 router.post("/", workspaceEditable, createNewCollection);
 router.post("/:collection_id/duplicate", workspaceEditable, duplicateCollection);
 router.post("/request", workspaceEditable, createNewRequestFromCollection);
+router.post("/import", workspaceEditable, importCollection);
 
 // Delete routes
 router.delete("/:collection_id", workspaceEditable, deleteCollection);

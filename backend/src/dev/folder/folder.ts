@@ -13,8 +13,7 @@ export default class DBFolder extends DBModel<DFolder> {
     }
 
     releaseCompact(): object {
-        return this.export(["_id", "user_id", "workspace_id", "collection_id", "name",
-            "content", "created_at", "updated_at"]);
+        return this.export(["_id", "user_id", "workspace_id", "collection_id", "name", "created_at", "updated_at"]);
     }
 
     reader() {

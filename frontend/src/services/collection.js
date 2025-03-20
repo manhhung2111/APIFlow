@@ -86,4 +86,16 @@ export default class CollectionService{
 			throw new Error(error.message || 'Export collection failed');
 		}
 	}
+
+	static async import(file, workspace_id) {
+		try {
+			const formData = new FormData();
+			formData.append("file", file);
+			formData.append("workspace_id", workspace_id);
+
+			return await axios.post(`/collections/import`, formData);
+		} catch (error) {
+			throw new Error(error.message || 'Export collection failed');
+		}
+	}
 }

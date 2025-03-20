@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import logger from "@utils/logger";
 import {Code, HTMLInput} from "@ap/core";
-import {DBCollection, DBCollectionLoader} from "@dev/collection";
+import {DBCollection, DBCollectionImporter, DBCollectionLoader} from "@dev/collection";
 import mongoose from "mongoose";
 import {DBWorkspace} from "@dev/workspace";
 import {DBRequest, DBRequestLoader} from "@dev/request";
@@ -250,7 +250,6 @@ export const createNewRequestFromCollection = async (request: Request, response:
     }
 };
 
-
 export const getCollectionAssociatedWithData = async (request: Request, response: Response) => {
     logger.info("[Controller] Get collection associated with data");
 
@@ -313,3 +312,41 @@ export const getCollectionExport = async (request: Request, response: Response) 
         response.status(500).json(Code.error((error as Error).message));
     }
 };
+
+export const importCollection = async (request: Request, response: Response) => {
+    logger.info("[Controller] Import collection associated with data");
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try {
+        const file = HTMLInput.inputFile("file")[0];
+
+        try {
+            const data = JSON.parse(file.buffer.toString("utf8"));
+
+            const {
+                collection,
+                folders,
+                requests,
+                examples
+            } = await DBCollectionImporter.importCollection(data, session);
+
+            await session.commitTransaction();
+            response.status(201).json(Code.success("Import collection successfully", {
+                collection,
+                folders,
+                requests,
+                examples
+            }));
+        } catch (error) {
+            throw new Error("We don’t recognize/support this format.");
+        }
+    } catch (error) {
+        await session.abortTransaction();
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    } finally {
+        await session.endSession();
+    }
+}

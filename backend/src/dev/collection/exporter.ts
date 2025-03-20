@@ -194,7 +194,7 @@ class RequestUtils {
                 "formdata": body.data.form_data.map((row: any) => {
                     let result: any = {};
                     result["key"] = row.key;
-                    result["description"] = row.description;
+                    result["description"] = row.content;
                     result["type"] = row.type;
                     result["disabled"] = row.selected ? false : true;
 

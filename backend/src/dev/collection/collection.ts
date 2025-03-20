@@ -12,7 +12,7 @@ export default class DBCollection extends DBModel<DCollection> {
     }
 
     releaseCompact(): object {
-        return this.export(["_id", "name", "workspace_id", "content"]);
+        return this.export(["_id", "name", "workspace_id", "created_at", "updated_at"]);
     }
 
     reader() {

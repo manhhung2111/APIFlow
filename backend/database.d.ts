@@ -60,11 +60,11 @@ export interface DRequest {
     }>;
     authorization: {
         type: number;
-        data: object;
+        data: any;
     };
     body: {
         type: number;
-        data: object;
+        data: any;
     };
     scripts: {
         pre_request: string;
@@ -110,7 +110,7 @@ export interface DFolder {
 
     authorization: {
         type: number;
-        data: object;
+        data: any;
     };
 
     scripts: {
@@ -220,8 +220,8 @@ export interface DExample {
 
     name: string,
 
-    request: object;
-    response: object;
+    request: any;
+    response: any;
 
     request_id: string;
     folder_id?: string | null;

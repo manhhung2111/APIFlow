@@ -1,11 +1,17 @@
 import "../styles/form.scss"
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import {useDropzone} from 'react-dropzone';
 import {Button, Modal} from "antd";
 import {DeleteOutlined, FileTextOutlined, ImportOutlined} from "@ant-design/icons";
+import CollectionService from "@services/collection.js";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
+import {toast} from "react-toastify";
+import {useNavigate} from "react-router";
 
 export default function WorkspaceImportForm({open, setOpen}){
 	const [file, setFile] = useState(null);
+	const {workspace, setCollections, setFolders, setRequests, setExamples} = useContext(WorkspaceContext)
+	const navigate = useNavigate();
 
 	const onDrop = useCallback(acceptedFiles => {
 		acceptedFiles.forEach(file => {
@@ -19,8 +25,21 @@ export default function WorkspaceImportForm({open, setOpen}){
 		accept: {"application/json": [".json"]} // This helps, but we still validate manually
 	});
 
-	const handleSubmit = () => {
+	const handleSubmit = async() => {
+		const result = await CollectionService.import(file, workspace._id);
 
+		if(result.code == 0){
+			setCollections(prev => [...prev, result.data.collection]);
+			setFolders(prev => [...prev, ...result.data.folders]);
+			setRequests(prev => [...prev, ...result.data.requests]);
+			setExamples(prev => [...prev, ...result.data.examples]);
+
+			setOpen(false);
+			navigate(`/workspace/${result.data.collection.workspace_id}/collection/${result.data.collection._id}`);
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
 	}
 
 	const handleCancel = () => {
@@ -30,7 +49,7 @@ export default function WorkspaceImportForm({open, setOpen}){
 
 	return <Modal className="workspace-import-form" title={"Import collection"} open={open} onOk={handleSubmit}
 				  onCancel={handleCancel} footer={[
-		<Button key="cancel"  color="default" className="cancel-btn" variant={"filled"} onClick={handleCancel}>
+		<Button key="cancel" color="default" className="cancel-btn" variant={"filled"} onClick={handleCancel}>
 			Cancel
 		</Button>,
 		<Button
