@@ -3,43 +3,57 @@ import {ClientSession, HydratedDocument} from "mongoose";
 import {DFolder} from "@db-schemas";
 import {DBRequest, DBRequestLoader} from "@dev/request";
 import {DBFolder} from "@dev/folder";
-import express from "express";
+import DbCondition from "@ap/db/db.condition";
+import {DBExample} from "@dev/example";
 
-export default class Listener extends DBListener<DFolder>{
+export default class Listener extends DBListener<DFolder> {
 
-	constructor(obj: HydratedDocument<DFolder> | null | undefined){
-		super(obj);
-	}
+    constructor(obj: HydratedDocument<DFolder> | null | undefined) {
+        super(obj);
+    }
 
-	public async deleted(session: ClientSession | null){
-		const requests = await DBRequestLoader.byFolder(this._obj!);
+    public async deleted(session: ClientSession | null) {
+        const folder_id = this._obj!._id.toString();
+        const workspace_id = this._obj!.workspace_id.toString();
+        const collection_id = this._obj!.collection_id.toString();
 
-		for (let request of requests){
-			await request.delete(session);
+        const condition = new DbCondition().setFilter({
+            "workspace_id": workspace_id,
+            "collection_id": collection_id,
+            "folder_id": folder_id
+        });
 
-			await request.on().deleted(session);
-		}
-	}
+        await DBRequest.deleteMany(condition, session);
+        await DBExample.deleteMany(condition, session);
 
-	async duplicated(old_folder: DBFolder, session: ClientSession | null){
-		const old_requests = await DBRequestLoader.byFolder(old_folder.object!);
+        // const requests = await DBRequestLoader.byFolder(this._obj!);
+        //
+        // for (let request of requests){
+        // 	await request.delete(session);
+        //
+        // 	await request.on().deleted(session);
+        // }
+    }
 
-		const new_requests = [];
-		let new_examples: any = [];
-		for (const old_request of old_requests){
-			const new_request = await DBRequest.initialize() as DBRequest;
+    async duplicated(old_folder: DBFolder, session: ClientSession | null) {
+        const old_requests = await DBRequestLoader.byFolder(old_folder.object!);
 
-			await new_request.reader().duplicate(old_request);
-			new_request.object!.collection_id = this._obj!.collection_id;
-			new_request.object!.folder_id = this._obj!._id.toString();
+        const new_requests = [];
+        let new_examples: any = [];
+        for (const old_request of old_requests) {
+            const new_request = await DBRequest.initialize() as DBRequest;
 
-			await new_request.save(session);
+            await new_request.reader().duplicate(old_request);
+            new_request.object!.collection_id = this._obj!.collection_id;
+            new_request.object!.folder_id = this._obj!._id.toString();
 
-			new_requests.push(new_request);
-			const examples = await new_request.on().duplicated(old_request, session);
-			new_examples = [...new_examples, ...examples];
-		}
+            await new_request.save(session);
 
-		return [new_requests, new_examples];
-	}
+            new_requests.push(new_request);
+            const examples = await new_request.on().duplicated(old_request, session);
+            new_examples = [...new_examples, ...examples];
+        }
+
+        return [new_requests, new_examples];
+    }
 }
