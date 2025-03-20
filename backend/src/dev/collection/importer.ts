@@ -367,7 +367,16 @@ export default class DBCollectionImporter {
             let hostString = Array.isArray(host) ? host.join(".") : host || "";
 
             // Reconstruct path (ensure leading slash if no host)
-            let pathString = path && path.length > 0 ? "/" + path.join("/") : "";
+            let pathString = "";
+            if (Array.isArray(path)) {
+                pathString = path.map((segment) => segment.includes("{{") || segment.startsWith(":") ? segment : (segment)).join("/");
+            } else {
+                pathString = path || "";
+            }
+
+            if (!pathString.startsWith("/")) {
+                pathString = "/" + pathString; // Ensure leading slash
+            }
 
             // Reconstruct query parameters
             let queryString = query?.filter((param: any) => !param.disabled) // Exclude disabled params
@@ -378,7 +387,7 @@ export default class DBCollectionImporter {
             let fullUrl = `${protocolString}${hostString}${pathString}`;
 
             // If both protocol & host are missing, remove leading slash to make it relative
-            if (!protocol && !host) {
+            if (!protocol && !host && !pathString.includes("{{")) {
                 fullUrl = pathString.substring(1); // Remove starting "/"
             }
 
