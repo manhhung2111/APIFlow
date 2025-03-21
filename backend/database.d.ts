@@ -80,26 +80,6 @@ export interface DRequest {
     updated_at: number;
 }
 
-export interface DRequestHistory {
-    user_id: string;
-    workspace_id: string;
-
-    request: object;
-    response: {
-        headers: object;
-        body: object;
-        status_code?: number;
-        response_time?: number;
-        size?: number;
-    };
-
-    data?: object | {};
-    token: string;
-
-    created_at: number;
-    updated_at: number;
-}
-
 export interface DFolder {
     user_id: string;
     workspace_id: string;
@@ -147,25 +127,6 @@ export interface DEnvironment {
     updated_at: number;
 }
 
-export interface DComment {
-    user_id: string;
-    meta_type?: string;
-
-    obj_key: string;
-    obj_export: object;
-
-    title?: string;
-    content?: string;
-    followers?: string[];
-    status?: number;
-
-    data?: object | {};
-    token: string;
-
-    created_at?: number;
-    updated_at?: number;
-}
-
 export interface DCollection {
     user_id: string;
     workspace_id: string;
@@ -195,24 +156,6 @@ export interface DCollection {
 
     created_at: number;
     updated_at: number;
-}
-
-export interface DActivityLog {
-    user_id:string;
-    meta_type?: string;
-
-    name?: string;
-    action?: string;
-    tag?: string;
-
-    obj_key: string;
-    obj_type: string;
-    obj_export: object;
-
-    data?: object | {};
-
-    created_at?: number;
-    updated_at?: number;
 }
 
 export interface DExample {
