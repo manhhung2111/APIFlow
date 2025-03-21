@@ -21,10 +21,10 @@ export default class Listener extends DBListener<DRequest> {
         await DBExample.deleteMany(condition, session);
     }
 
-    public async duplicated(old_request: DBRequest, session: ClientSession | null = null) {
+    public async duplicated(old_request: DBRequest) {
         const old_examples = await DBExampleLoader.byRequest(old_request.object!);
 
-        let new_examples: any = [];
+        let new_examples: DBExample[] = [];
         for (const old_example of old_examples) {
             const new_example = await DBExample.initialize() as DBExample;
 
@@ -32,8 +32,6 @@ export default class Listener extends DBListener<DRequest> {
             new_example.object!.collection_id = this._obj!.collection_id;
             new_example.object!.folder_id = this._obj!.folder_id?.toString() ?? null;
             new_example.object!.request_id = this._obj!._id.toString();
-
-            await new_example.save(session);
 
             new_examples.push(new_example);
         }

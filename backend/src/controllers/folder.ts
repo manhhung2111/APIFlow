@@ -86,7 +86,9 @@ export const duplicateFolder = async (request: Request, response: Response) => {
 
         await new_folder.save(session);
 
-        const [requests, examples] = await new_folder.on().duplicated(old_folder, session);
+        const {requests, examples} = await new_folder.on().duplicated(old_folder);
+        await DBRequest.insertMany(requests.map(request => request.object!), session);
+        await DBExample.insertMany(examples.map(example => example.object!), session);
 
         const requestsRelease = requests.map((request: DBRequest) => request.release());
         const examplesRelease = examples.map((example: DBExample) => example.release());

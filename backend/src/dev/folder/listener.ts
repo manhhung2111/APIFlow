@@ -35,11 +35,11 @@ export default class Listener extends DBListener<DFolder> {
         // }
     }
 
-    async duplicated(old_folder: DBFolder, session: ClientSession | null) {
+    async duplicated(old_folder: DBFolder) {
         const old_requests = await DBRequestLoader.byFolder(old_folder.object!);
 
-        const new_requests = [];
-        let new_examples: any = [];
+        const new_requests: DBRequest[] = [];
+        let new_examples: DBExample[] = [];
         for (const old_request of old_requests) {
             const new_request = await DBRequest.initialize() as DBRequest;
 
@@ -47,13 +47,14 @@ export default class Listener extends DBListener<DFolder> {
             new_request.object!.collection_id = this._obj!.collection_id;
             new_request.object!.folder_id = this._obj!._id.toString();
 
-            await new_request.save(session);
-
             new_requests.push(new_request);
-            const examples = await new_request.on().duplicated(old_request, session);
-            new_examples = [...new_examples, ...examples];
+            const examples = await new_request.on().duplicated(old_request);
+            new_examples.push(...examples);
         }
 
-        return [new_requests, new_examples];
+        return {
+            requests: new_requests,
+            examples: new_examples,
+        };
     }
 }

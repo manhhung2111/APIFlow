@@ -85,7 +85,11 @@ export const duplicateCollection = async (request: Request, response: Response) 
 
         await new_collection.save(session);
 
-        const [folders, requests, examples] = await new_collection.on().duplicated(old_collection, session);
+        const {folders, requests, examples} = await new_collection.on().duplicated(old_collection);
+
+        await DBFolder.insertMany(folders.map(folder => folder.object!), session);
+        await DBRequest.insertMany(requests.map(request => request.object!), session);
+        await DBExample.insertMany(examples.map(example => example.object!), session);
 
         const foldersRelease = folders.map((folder: DBFolder) => folder.release());
         const requestsRelease = requests.map((request: DBRequest) => request.release());

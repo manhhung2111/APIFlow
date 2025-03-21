@@ -87,7 +87,8 @@ export const duplicateRequest = async (request: Request, response: Response) => 
 
         await new_request.save(session);
 
-        const examples = await new_request.on().duplicated(old_request, session);
+        const examples = await new_request.on().duplicated(old_request);
+        await DBExample.insertMany(examples.map(example => example.object!), session);
 
         const examplesRelease = examples.map((example: DBExample) => example.release());
         await session.commitTransaction();
