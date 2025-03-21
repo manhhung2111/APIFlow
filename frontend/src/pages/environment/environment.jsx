@@ -145,8 +145,20 @@ export default function EnvironmentPage(){
 		}
 	}
 
+	const handleDuplicate = async() => {
+		const result = await EnvironmentService.duplicate(environment);
+
+		if(result.code === 0){
+			setEnvironments(prev => [...prev, result.data.environment]);
+			toast.success(result.message);
+			navigate(`/workspace/${workspace._id}/environment/${result.data.environment._id}`);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
-		{key: `duplicate_${environment?._id}`, label: "Duplicate",},
+		{key: `duplicate_${environment?._id}`, label: "Duplicate", onClick: handleDuplicate},
 		{
 			key: `delete_${environment?._id}`,
 			label: "Delete",

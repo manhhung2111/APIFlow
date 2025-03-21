@@ -17,7 +17,6 @@ export default function CollectionDisplayAuthorization({collection, authorizatio
 	const handleChangeData = (field, value) => {
 		const clone = _.cloneDeep(authorization);
 		clone.data[field] = value;
-		console.log(clone)
 		setAuthorization(clone);
 	}
 

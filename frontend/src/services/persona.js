@@ -33,7 +33,7 @@ export default class PersonaService{
 			Object.entries(authorization.data).forEach(([key, value]) => {
 				formData.append(key, value);
 			});
-			formData.append("workspace_id", workspace_id);
+			formData.append("workspace_id", persona.workspace_id);
 
 			return await axios.put(`/personas/${persona._id}`, formData);
 		} catch (error) {
