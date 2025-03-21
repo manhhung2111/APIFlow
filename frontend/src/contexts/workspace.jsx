@@ -17,6 +17,7 @@ export default function WorkspaceContextProvider(props){
 	const [requests, setRequests] = useState([]);
 	const [environments, setEnvironments] = useState([]);
 	const [examples, setExamples] = useState([]);
+	const [personas, setPersonas] = useState([]);
 
 	const [variables, setVariables] = useState([]);
 	const [activeMenuKey, setActiveMenuKey] = useState(1);
@@ -33,6 +34,7 @@ export default function WorkspaceContextProvider(props){
 				setRequests(response.data.requests);
 				setEnvironments(response.data.environments);
 				setExamples(response.data.examples);
+				setPersonas(response.data.personas);
 			} else {
 				console.error(response.message);
 			}
@@ -131,7 +133,8 @@ export default function WorkspaceContextProvider(props){
 			activeEnvironment, setActiveEnvironment,
 			activeCollection, setActiveCollection,
 			variables, setVariables,
-			examples, setExamples
+			examples, setExamples,
+			personas, setPersonas
 		}}>
 			{children}
 		</WorkspaceContext.Provider>

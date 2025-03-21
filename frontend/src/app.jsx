@@ -22,6 +22,7 @@ import EnvironmentPage from "@pages/environment/environment.jsx";
 import ExamplePage from "@pages/example/example.jsx";
 import WorkspacesPage from "@pages/workspaces/workspaces.jsx";
 import DocumentationPage from "@pages/documentation/documentation.jsx";
+import PersonaPage from "@pages/persona/persona.jsx";
 
 function App(){
 	return (
@@ -39,8 +40,9 @@ function App(){
 						</Route>
 						<Route path="folder/:folder_id/" element={<FolderPage/>}/>
 						<Route path="environment/:environment_id/" element={<EnvironmentPage/>}/>
+						<Route path="persona/:persona_id/" element={<PersonaPage/>}/>
 					</Route>
-					<Route path="workspaces" element={<WorkspacesPage />}/>
+					<Route path="workspaces" element={<WorkspacesPage/>}/>
 				</Route>
 
 				<Route path="login" element={<PublicRoute redirectPath={"/"}><LoginPage/></PublicRoute>}/>

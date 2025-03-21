@@ -1,6 +1,6 @@
 import {Button, Skeleton, Tabs} from "antd";
 import "./styles/menu.scss";
-import {CodeSandboxOutlined, UserOutlined} from "@ant-design/icons";
+import {CodeSandboxOutlined, UserOutlined, UserSwitchOutlined} from "@ant-design/icons";
 import CollectionIcon from "@assets/icons/collection.jsx";
 import {BaseLabel} from "@utils/text.jsx";
 import {useContext, useState} from "react";
@@ -10,6 +10,7 @@ import {NavLink} from "react-router";
 import WorkspaceNewSelectForm from "@components/workspace/form/select.jsx";
 import CollectionMenu from "@components/collection/menu/menu.jsx";
 import WorkspaceImportForm from "@components/workspace/form/import.jsx";
+import PersonaMenu from "@components/persona/menu/menu.jsx";
 
 export default function MasterMenu(){
 	const {workspace, activeMenuKey, setActiveMenuKey} = useContext(WorkspaceContext);
@@ -27,6 +28,11 @@ export default function MasterMenu(){
 			label: <BaseLabel icon={<CodeSandboxOutlined style={{fontSize: "16px"}}/>} title={"Environments"}/>,
 			key: 2,
 			children: workspace ? <EnvironmentMenu/> : <Skeleton active/>
+		},
+		{
+			label: <BaseLabel icon={<UserSwitchOutlined style={{fontSize: "16px"}}/>} title={"Personas"}/>,
+			key: 3,
+			children: workspace ? <PersonaMenu/> : <Skeleton active/>
 		},
 	];
 

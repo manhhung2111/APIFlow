@@ -9,6 +9,7 @@ import {DBRequestLoader} from "@dev/request";
 import {DBEnvironmentLoader} from "@dev/environment";
 import {DBExampleLoader} from "@dev/example";
 import Client from "@dev/client";
+import {DBPersonaLoader} from "@dev/persona";
 
 export const getAllWorkspaces = async (request: Request, response: Response) => {
     logger.info("[Controller] Get all workspaces");
@@ -86,6 +87,9 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
         const examples = await DBExampleLoader.byWorkspace(workspace.object!);
         const examples_compact = examples.map(example => example.releaseCompact());
 
+        const personas = await DBPersonaLoader.byWorkspace(workspace.object!);
+        const personas_compact = personas.map(persona => persona.releaseCompact());
+
         response.cookie(cookies_key, JSON.stringify(recent_workspaces), {
             httpOnly: true,
             maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days
@@ -99,6 +103,7 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
             requests: requests_compact,
             environments: environments_compact,
             examples: examples_compact,
+            personas: personas_compact
         }));
     } catch (error) {
         logger.error((error as Error).stack);

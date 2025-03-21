@@ -75,7 +75,7 @@ export const getEnvironmentsByWorkspace = async (request: Request, response: Res
     try {
         const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
         if (!workspace.good()) {
-            response.status(300).json(Code.error(Code.INVALID_DATA));
+            response.status(404).json(Code.error(Code.INVALID_DATA));
         }
 
         const environments = await DBEnvironmentLoader.byWorkspace(workspace.object!);

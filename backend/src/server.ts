@@ -9,7 +9,7 @@ import {
     CollectionRoute,
     EnvironmentRoute,
     ExampleRoute,
-    FolderRoute,
+    FolderRoute, PersonaRoute,
     RequestRoute,
     UserRoute,
     WorkspaceRoute,
@@ -71,6 +71,7 @@ app.use("/folders", FolderRoute);
 app.use("/requests", RequestRoute);
 app.use("/environments", EnvironmentRoute);
 app.use("/examples", ExampleRoute);
+app.use("/personas", PersonaRoute);
 
 
 (async function () {

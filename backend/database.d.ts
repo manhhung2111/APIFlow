@@ -187,8 +187,8 @@ export interface DPersona {
     }
 
     data: object | {};
-
     token: string;
+
     created_at: number;
     updated_at: number;
 }
