@@ -99,6 +99,7 @@ export default class RequestService {
             await this.saveEnvironments();
 
             const startTime = performance.now();
+            console.log(url);
             const response = await axios({
                 method: this._method,
                 url: url,
@@ -228,6 +229,10 @@ export default class RequestService {
 
             const token = await JWT.signToken(payload_decode, secret, algorithm);
             headers["Authorization"] = "Bearer " + token;
+        } else if (this._authorization.type == Authorization.APIKeyAuth) {
+            if (this._authorization.data.add_to == "Header") {
+                headers[this._authorization.data.key] = this._authorization.data.value;
+            }
         }
 
 
@@ -244,6 +249,16 @@ export default class RequestService {
 
         const [base_url, queries] = url.split("?");
         const params = new URLSearchParams(queries || "");
+
+        if (this._authorization.type == Authorization.APIKeyAuth) {
+            if (this._authorization.data.add_to == "Params") {
+                this._params.push({
+                    key: this._authorization.data.key,
+                    value: this._authorization.data.value,
+                    selected: true
+                });
+            }
+        }
 
         this._params.forEach((param) => {
             if (!param.selected) return;

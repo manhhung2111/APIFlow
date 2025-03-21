@@ -16,7 +16,7 @@ const schema = new Schema<DRequest>({
 	params: [{selected: Boolean, key: String, value: String, content: String}],
 	headers: [{selected: Boolean, key: String, value: String, content: String}],
 	authorization: {
-		type: {type: Number, enum: [0, 1, 2, 3, 4], default: 0},
+		type: {type: Number, enum: [0, 1, 2, 3, 4, 5], default: 0},
 		data: {type: Schema.Types.Mixed, default: {}},
 	},
 	body: {

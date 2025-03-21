@@ -7,6 +7,7 @@ import {
 	NoAuthorization,
 } from "@services/authorization";
 import {Code} from "@ap/core";
+import APIKeyAuthorization from "@services/authorization/api.key";
 
 export default class AuthorizationFactory{
 	private _authorization: Authorization | null = null;
@@ -22,6 +23,8 @@ export default class AuthorizationFactory{
 			this._authorization = new BearerTokenAuthorization();
 		} else if (authorization_type === Authorization.JWTBearerAuth){
 			this._authorization = new JWTAuthorization();
+		} else if (authorization_type === Authorization.APIKeyAuth){
+			this._authorization = new APIKeyAuthorization();
 		} else{
 			throw new Code("Invalid Authorization type");
 		}

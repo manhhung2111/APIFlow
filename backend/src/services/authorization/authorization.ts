@@ -4,6 +4,7 @@ export default abstract class Authorization{
 	public static BasicAuth: number = 2;
 	public static BearerTokenAuth: number = 3;
 	public static JWTBearerAuth: number = 4;
+	public static APIKeyAuth: number = 5;
 
 	protected type: number = 0;
 	protected data: any = {};

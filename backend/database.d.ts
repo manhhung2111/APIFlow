@@ -1,5 +1,3 @@
-import {Types} from 'mongoose';
-
 export interface DUser {
     email: string,
     username: string,
@@ -161,7 +159,7 @@ export interface DCollection {
 export interface DExample {
     user_id: string;
 
-    name: string,
+    name: string;
 
     request: any;
     response: any;
@@ -170,6 +168,23 @@ export interface DExample {
     folder_id?: string | null;
     collection_id: string;
     workspace_id: string;
+
+    data: object | {};
+
+    token: string;
+    created_at: number;
+    updated_at: number;
+}
+
+export interface DPersona {
+    user_id: string,
+    workspace_id: string,
+
+    name: string,
+    authorization: {
+        type: number;
+        data: any;
+    }
 
     data: object | {};
 

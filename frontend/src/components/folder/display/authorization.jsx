@@ -27,6 +27,8 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 				return <div>This request is using No Auth from collection <b>{folderCollection.name}</b></div>;
 			} else if(folderCollection?.authorization.type === Request.AUTHORIZATION.BearerToken.value){
 				return <div>This request is using Bearer Token from collection <b>{folderCollection.name}</b></div>;
+			} else if(folderCollection?.authorization.type === Request.AUTHORIZATION.APIKey.value){
+				return <div>This request is using API Key from collection <b>{folderCollection.name}</b></div>;
 			} else {
 				return <div>This request is using JWT Token from collection <b>{folderCollection.name}</b></div>;
 			}
@@ -137,6 +139,39 @@ export default function FolderDisplayAuthorization({folder, authorization, setAu
 									}}
 								/>
 							</div>
+						</div>
+					</div>
+				}
+				{authorization.type === Request.AUTHORIZATION.APIKey.value &&
+					<div className="form-rows">
+						<div className="form-row">
+							<div className="title">Key</div>
+							<AppInputVariable placeholder="Key"
+											  setText={(value) => handleChangeData("key", value)}
+											  text={authorization.data.key ?? ""}
+											  disabled={!workspace?.can?.editable}/>
+						</div>
+						<div className="form-row">
+							<div className="title">Value</div>
+							<AppInputVariable placeholder="Value"
+											  setText={(value) => handleChangeData("value", value)}
+											  text={authorization.data.value ?? ""}
+											  disabled={!workspace?.can?.editable}/>
+						</div>
+						<div className="form-row">
+							<div className="title">Add to</div>
+							<Select
+								className="select"
+								style={{width: 280}}
+								value={authorization.data.add_to ?? "Params"}
+								name="add_to"
+								onChange={(value) => handleChangeData("add_to", value)}
+								options={[
+									{value: 'Header', label: 'Header'},
+									{value: 'Params', label: 'Query Params'},
+								]}
+								disabled={!workspace?.can?.editable}
+							/>
 						</div>
 					</div>
 				}
