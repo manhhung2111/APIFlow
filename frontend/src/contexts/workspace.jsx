@@ -11,6 +11,7 @@ export default function WorkspaceContextProvider(props){
 	const [workspace, setWorkspace] = useState(null);
 	const [activeEnvironment, setActiveEnvironment] = useState(-1);
 	const [activeCollection, setActiveCollection] = useState(null);
+	const [activePersona, setActivePersona] = useState(-1);
 
 	const [collections, setCollections] = useState([]);
 	const [folders, setFolders] = useState([]);
@@ -134,7 +135,8 @@ export default function WorkspaceContextProvider(props){
 			activeCollection, setActiveCollection,
 			variables, setVariables,
 			examples, setExamples,
-			personas, setPersonas
+			personas, setPersonas,
+			activePersona, setActivePersona
 		}}>
 			{children}
 		</WorkspaceContext.Provider>

@@ -10,7 +10,15 @@ export const RequestContext = createContext({});
 
 export default function RequestContextProvider(props){
 	const {children} = props;
-	const {workspace, requests, setRequests, activeCollection, setActiveCollection, activeEnvironment} = useContext(WorkspaceContext);
+	const {
+		workspace,
+		requests,
+		setRequests,
+		activeCollection,
+		setActiveCollection,
+		activeEnvironment,
+		activePersona
+	} = useContext(WorkspaceContext);
 
 	let [request, setRequest] = useState(null);
 	let [requestFolder, setRequestFolder] = useState(null);
@@ -34,7 +42,7 @@ export default function RequestContextProvider(props){
 
 	const {request_id} = useParams();
 
-	const updateRequest = async (request) => {
+	const updateRequest = async(request) => {
 		setRequest(request);
 		setName(request.name);
 		setContent(request.content);
@@ -87,10 +95,10 @@ export default function RequestContextProvider(props){
 		}
 	}, [request_id, workspace]);
 
-	const handleSave = async () => {
+	const handleSave = async() => {
 		const response = await RequestService.save(request, method, url, params, authorization, headers, body, scripts);
 
-		if (response.code === 0) {
+		if(response.code === 0){
 			toast.success(response.message);
 			let request = response.data.request;
 			await updateRequest(request);
@@ -115,11 +123,11 @@ export default function RequestContextProvider(props){
 
 	}
 
-	const handleSend = async () => {
+	const handleSend = async() => {
 		// Construct authorization type and data if the authorization type is inherit
 		let refactor_auth = _.cloneDeep(authorization);
-		if (authorization.type === Request.AUTHORIZATION.InheritAuth.value) {
-			if (requestFolder && requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value) {
+		if(authorization.type === Request.AUTHORIZATION.InheritAuth.value){
+			if(requestFolder && requestFolder?.authorization.type !== Request.AUTHORIZATION.InheritAuth.value){
 				refactor_auth.type = requestFolder.authorization.type;
 				refactor_auth.data = requestFolder.authorization.data;
 			} else {
@@ -128,11 +136,11 @@ export default function RequestContextProvider(props){
 			}
 		}
 
-		const response = await RequestService.send(request, method, url, params, refactor_auth, headers, body, scripts, activeEnvironment);
+		const response = await RequestService.send(request, method, url, params, refactor_auth, headers, body, scripts, activeEnvironment, activePersona);
 
-		if (response.code === 0) {
+		if(response.code === 0){
 			setResponse(response.data.response);
-			if (response.data.collection) {
+			if(response.data.collection){
 				setActiveCollection(response.data.collection);
 			}
 		} else {
@@ -141,12 +149,11 @@ export default function RequestContextProvider(props){
 		}
 	}
 
-
-	const handleChangeName = async (value) => {
-		if (value == name) return;
+	const handleChangeName = async(value) => {
+		if(value == name) return;
 		const response = await RequestService.updateName(request, value);
 
-		if (response.code === 0) {
+		if(response.code === 0){
 			setName(response.data.request.name);
 			setRequest(response.data.request);
 
@@ -162,11 +169,11 @@ export default function RequestContextProvider(props){
 		}
 	}
 
-	const handleChangeContent = async () => {
-		if (content == request.content) return;
+	const handleChangeContent = async() => {
+		if(content == request.content) return;
 		const response = await RequestService.updateContent(request, content);
 
-		if (response.code === 0) {
+		if(response.code === 0){
 			setContent(response.data.request.content);
 			setRequest(response.data.request);
 		} else {
@@ -180,10 +187,10 @@ export default function RequestContextProvider(props){
 		{key: `delete_${request?._id}`, label: "Delete", onClick: handleDelete, danger: 1},
 	]
 
-
 	return (
 		<RequestContext.Provider value={{
-			name, setName,
+			name,
+			setName,
 			url,
 			setUrl,
 			params,
@@ -200,8 +207,17 @@ export default function RequestContextProvider(props){
 			setResponse,
 			request,
 			setRequest,
-			requestFolder, setRequestFolder,
-			handleSave, actionManagers, handleSend, method, setMethod, handleChangeName, content, setContent, handleChangeContent
+			requestFolder,
+			setRequestFolder,
+			handleSave,
+			actionManagers,
+			handleSend,
+			method,
+			setMethod,
+			handleChangeName,
+			content,
+			setContent,
+			handleChangeContent
 		}}>
 			{children}
 		</RequestContext.Provider>

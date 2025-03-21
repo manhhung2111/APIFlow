@@ -9,6 +9,7 @@ import {DBCollection} from "@dev/collection";
 import {DBEnvironment, DBEnvironmentLoader} from "@dev/environment";
 import {DBFolder} from "@dev/folder";
 import vm from 'vm';
+import {DBPersona} from "@dev/persona";
 
 export default class RequestService {
     private _method: string = "";
@@ -22,6 +23,7 @@ export default class RequestService {
     private _environment: Record<string, string> = {};
     private _scripts: any;
 
+    private persona: DBPersona | null = null;
     private request: DBRequest | null = null;
     private folder: DBFolder | null = null;
     private collection: DBCollection | null = null;
@@ -316,6 +318,18 @@ export default class RequestService {
         }
 
         this.active_env = activeEnv;
+
+        // Read persona
+        if (HTMLInput.inputInline("active_persona") == "-1" || HTMLInput.inputInt("active_persona") == -1) {
+            return;
+        }
+
+        let persona = await DBPersona.initialize(HTMLInput.inputInline("active_persona")) as DBPersona;
+        if (!persona || !persona.good()) {
+            return;
+        }
+        this.persona = persona;
+        this._authorization = persona.object!.authorization;
     }
 
     private async readEnvironments() {
