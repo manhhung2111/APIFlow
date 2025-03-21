@@ -35,7 +35,7 @@ export default class Request{
 		return null;
 	}
 
-	static getAuthorization(type) {
+	static getAuthorization(type){
 		const entry = Object.values(this.AUTHORIZATION).find(auth => auth.value === type);
 		return entry ? entry.label : null;
 	}
@@ -215,10 +215,8 @@ export default class Request{
 		];
 	};
 
-
-	static generateCurlFromRequest(request) {
-		console.log(request)
-		const { method, url, headers, body } = request;
+	static generateCurlFromRequest(request){
+		const {method, url, headers, body} = request;
 
 		// Convert headers to curl format
 		const headersString = headers
@@ -228,20 +226,20 @@ export default class Request{
 
 		let bodyString = "";
 
-		if (body) {
+		if(body){
 			switch (body.type) {
 				case this.BODY_TYPES.None.value:
 					bodyString = "";
 					break;
 
 				case this.BODY_TYPES.FormRaw.value: // Raw JSON
-					if (body.data.form_raw) {
+					if(body.data.form_raw){
 						bodyString = `--data '${body.data.form_raw.replace(/\r\n/g, "")}'`;
 					}
 					break;
 
 				case this.BODY_TYPES.FormEncoded.value: // Form-encoded
-					if (body.data.form_encoded) {
+					if(body.data.form_encoded){
 						const formEncodedString = body.data.form_encoded
 							.filter(item => item.selected)
 							.map(item => `${encodeURIComponent(item.key)}=${encodeURIComponent(item.value)}`)
@@ -251,11 +249,11 @@ export default class Request{
 					break;
 
 				case this.BODY_TYPES.FormData.value: // Form-data
-					if (body.data.form_data) {
+					if(body.data.form_data){
 						const formDataString = body.data.form_data
 							.filter(item => item.selected)
 							.map(item => {
-								if (item.type == "text") {
+								if(item.type == "text"){
 									return `--form '${item.key}=${item.value}'`
 								} else {
 									return `--form '${item.key}=${item.value?.name || ""}'`
@@ -269,7 +267,11 @@ export default class Request{
 		}
 
 		// Construct the final cURL command
-		const curlCommand = `curl --location --request ${method.toUpperCase()} '${url}' \\\n  ${headersString} \\\n  ${bodyString}`;
+		const curlCommand = [
+			`curl --location --request ${method.toUpperCase()} '${url}'`,
+			headersString ? headersString : null,
+			bodyString ? bodyString : null
+		].filter(Boolean).join(" \\\n  ");
 
 		return curlCommand.trim();
 	}

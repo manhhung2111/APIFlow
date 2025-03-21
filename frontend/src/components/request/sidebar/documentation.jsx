@@ -20,7 +20,7 @@ export default function RequestSidebarDocumentation(){
 		setContent,
 		handleChangeContent
 	} = useContext(RequestContext);
-	const {activeCollection: collection} = useContext(WorkspaceContext);
+	const {activeCollection: collection, workspace} = useContext(WorkspaceContext);
 
 	const getInheritAuthMessage = () => {
 		if(folder != null && folder.authorization.type === Request.AUTHORIZATION.InheritAuth.value){
@@ -89,7 +89,7 @@ export default function RequestSidebarDocumentation(){
 			{url.length > 0 && <div className="url">
 				<Paragraph copyable={{tooltips: false}}>{url}</Paragraph>
 			</div>}
-			<AppMarkdownEditor value={content} onChange={setContent} onBlur={handleChangeContent}/>
+			<AppMarkdownEditor value={content} onChange={setContent} onBlur={handleChangeContent} readOnly={!workspace.can?.editable}/>
 			{(authorization.type === Request.AUTHORIZATION.BasicAuth.value || authorization.type === Request.AUTHORIZATION.BearerToken.value) &&
 				<DocumentationTable
 					title={"Authorization"}

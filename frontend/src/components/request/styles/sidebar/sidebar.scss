@@ -130,4 +130,32 @@
       }
     }
   }
+
+  .request-sidebar-info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+
+    .section {
+      font-size: $text-size-m;
+      .label {
+        margin-bottom: 4px;
+        font-weight: $text-weight-bold;
+        color: $content-color-secondary;
+      }
+
+      .value {
+        color: $content-color-primary;
+        &.id {
+          width: 100%;
+          background-color: $background-color-secondary;
+          border-radius: $border-radius-default;
+          padding: 6px 8px 6px 8px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
 }

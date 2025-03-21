@@ -76,7 +76,7 @@ export const duplicateRequest = async (request: Request, response: Response) => 
         const old_request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!old_request.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         const new_request = await DBRequest.initialize() as DBRequest;
@@ -113,7 +113,7 @@ export const getRequestsByWorkspace = async (request: Request, response: Respons
         const workspace = await DBWorkspace.initialize(HTMLInput.query("workspace_id")) as DBWorkspace;
         if (!workspace.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         const requests = await DBRequestLoader.byWorkspace(workspace.object!);
@@ -267,7 +267,7 @@ export const updateRequestName = async (request: Request, response: Response) =>
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         await request.reader().readName();
@@ -294,14 +294,14 @@ export const updateRequestContent = async (request: Request, response: Response)
         const request = await DBRequest.initialize(HTMLInput.param("request_id")) as DBRequest;
         if (!request.good()) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
-			return;
+            return;
         }
 
         await request.reader().readContent();
 
         await request.save();
 
-        response.status(201).json(Code.success("Update request content successfully!"));
+        response.status(201).json(Code.success("Update request content successfully!", {request: request.release()}));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
