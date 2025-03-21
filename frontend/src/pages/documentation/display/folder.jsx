@@ -29,7 +29,7 @@ export default function DocumentationFolder({folder, collection}){
 		}
 	}
 
-	const authorizationData = Object.keys(collection.authorization.data).map((key) => ({
+	const authorizationData = Object.keys(folder.authorization.data).map((key) => ({
 		key,
 		value: `<${key}>`
 	}));

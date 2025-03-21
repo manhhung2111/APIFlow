@@ -238,6 +238,10 @@
 .documentation-page .documentation-folder {
   margin-top: 16px;
 
+  .app-markdown-editor {
+    padding: 8px 0
+  }
+
   .message {
     padding-top: 8px;
     color: $content-color-primary;

@@ -16,6 +16,7 @@ export default function RequestContextProvider(props){
 	let [requestFolder, setRequestFolder] = useState(null);
 
 	let [name, setName] = useState("");
+	let [content, setContent] = useState("");
 	let [method, setMethod] = useState("");
 	let [url, setUrl] = useState("");
 	let [params, setParams] = useState(null);
@@ -36,6 +37,7 @@ export default function RequestContextProvider(props){
 	const updateRequest = async (request) => {
 		setRequest(request);
 		setName(request.name);
+		setContent(request.content);
 		setUrl(request.url);
 		setMethod(request.method);
 		setParams([...request.params, {selected: 1, key: '', value: '', content: ''}]);
@@ -160,6 +162,18 @@ export default function RequestContextProvider(props){
 		}
 	}
 
+	const handleChangeContent = async () => {
+		if (content == request.content) return;
+		const response = await RequestService.updateContent(request, content);
+
+		if (response.code === 0) {
+			setContent(response.data.request.content);
+			setRequest(response.data.request);
+		} else {
+			toast.error(response.message);
+		}
+	}
+
 	const actionManagers = [
 		{key: `add_example_${request?._id}`, label: "Add example", onClick: handleAddExample},
 		{key: `duplicate_${request?._id}`, label: "Duplicate",},
@@ -187,7 +201,7 @@ export default function RequestContextProvider(props){
 			request,
 			setRequest,
 			requestFolder, setRequestFolder,
-			handleSave, actionManagers, handleSend, method, setMethod, handleChangeName
+			handleSave, actionManagers, handleSend, method, setMethod, handleChangeName, content, setContent, handleChangeContent
 		}}>
 			{children}
 		</RequestContext.Provider>

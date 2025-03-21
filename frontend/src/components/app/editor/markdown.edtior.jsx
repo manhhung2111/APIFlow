@@ -2,7 +2,7 @@ import MDEditor, {commands} from "@uiw/react-md-editor";
 import rehypeSanitize from "rehype-sanitize";
 import MarkdownPreview from '@uiw/react-markdown-preview';
 
-export default function AppMarkdownEditor({theme, value, onChange, readOnly = false, height}){
+export default function AppMarkdownEditor({theme, value, onChange, readOnly = false, height, onBlur = () => {}}){
 
 	return (<div className="app-markdown-editor" data-color-mode={theme || "light"}>
 		{!readOnly &&
@@ -19,6 +19,7 @@ export default function AppMarkdownEditor({theme, value, onChange, readOnly = fa
 				extraCommands={[commands.codeEdit, commands.codePreview]}
 				height={height || 200}
 				visibleDragbar={false}
+				onBlur={onBlur}
 			/>
 		}
 		{readOnly && <MarkdownPreview className="markdown-preview" source={value} rehypePlugins={[rehypeSanitize]} height={height || 200}/>}

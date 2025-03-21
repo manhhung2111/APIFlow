@@ -76,6 +76,19 @@ export default class RequestService {
 		}
 	}
 
+	static async updateContent(request, content) {
+		try {
+			const data = {
+				"content": content,
+				workspace_id: request.workspace_id,
+			}
+
+			return await axios.put(`/requests/${request._id}/content`, data);
+		} catch (error) {
+			throw new Error(error.message || 'Save request failed');
+		}
+	}
+
 	static async send(request, method, url, params, authorization, headers, body, scripts, active_environment) {
 		try {
 			const formData = new FormData();
