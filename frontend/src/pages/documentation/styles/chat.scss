@@ -3,7 +3,7 @@
 .documentation-page .documentation-chat {
   position: fixed;
   bottom: 100px;
-  height: 40vh;
+  height: 50vh;
   min-height: 200px;
   right: 30px;
   border-radius: 8px;
@@ -36,7 +36,7 @@
 
     .right {
       display: flex;
-      gap: 4px;
+      gap: 6px;
 
       .anticon {
         font-size: $text-size-l;
@@ -56,7 +56,6 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 5px;
 
     &::-webkit-scrollbar {
       width: 4px;
@@ -66,6 +65,72 @@
 
     &::-webkit-scrollbar-thumb {
       background-color: darkgrey;
+    }
+
+    .chat-message {
+      max-width: 90%;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: $border-radius-default;
+      display: flex;
+      flex-direction: column;
+      font-size: $text-size-m;
+      color: $content-color-primary;
+
+      overflow-wrap: break-word;  /* Allows breaking words to prevent overflow */
+      word-wrap: break-word;       /* Ensures long words break inside the container */
+      white-space: pre-wrap;
+
+      pre {
+        code {
+          overflow-wrap: break-word;  /* Allows breaking words to prevent overflow */
+          word-wrap: break-word;       /* Ensures long words break inside the container */
+          white-space: pre-wrap;
+        }
+      }
+    }
+
+    .chat-message.user {
+      align-self: flex-end;
+      background-color: #f9f9f9;
+      color: $content-color-primary;
+      border-top-right-radius: 0;
+    }
+
+    /* Model (AI) messages (align left) */
+    .chat-message.model {
+      align-self: flex-start;
+      background-color: #f9f9f9;
+      color: $base-color-brand;
+      border-top-left-radius: 0;
+      position: relative;
+
+      &.loader {
+        width: 110px;
+        @keyframes dots {
+          0% { content: "."; }
+          33% { content: ".."; }
+          66% { content: "..."; }
+        }
+
+        .dots::after {
+          content: "...";
+          display: inline-block;
+          animation: dots 1.5s steps(3) infinite;
+        }
+      }
+
+      ul, ol {
+        padding-left: 16px;
+      }
+
+
+    }
+
+    .chat-message.user,
+    .chat-message.model {
+      //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
     }
   }
 

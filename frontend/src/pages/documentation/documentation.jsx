@@ -74,6 +74,7 @@ export default function DocumentationPage(){
 		}
 	}
 
+
 	return (<div className="documentation-page">
 		<div className="header">
 			{activeCollection && <div className="inner-header">
@@ -117,6 +118,11 @@ export default function DocumentationPage(){
 			<DocumentationChat
 				open={showChat}
 				setOpen={setShowChat}
+				documentJSON={{
+					collection: activeCollection,
+					folders: folders,
+					requests: requests
+				}}
 			/>
 		</div>}
 	</div>)
