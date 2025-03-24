@@ -92,7 +92,7 @@ export default function DocumentationRequest({request, folder = null, collection
 			{request.url.length > 0 && <div className="url">
 				<Paragraph copyable={{tooltips: false}}>{request.url}</Paragraph>
 			</div>}
-			{(request.authorization.type === Request.AUTHORIZATION.BasicAuth.value || request.authorization.type === Request.AUTHORIZATION.BearerToken.value) &&
+			{(request.authorization.type !== Request.AUTHORIZATION.NoAuth.value || request.authorization.type === Request.AUTHORIZATION.InheritAuth.value) &&
 				<DocumentationTable
 					title={"Authorization"}
 					subtitle={Request.getAuthorization(request.authorization.type)}

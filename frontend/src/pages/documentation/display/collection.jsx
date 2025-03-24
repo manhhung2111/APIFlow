@@ -15,17 +15,11 @@ export default function DocumentationCollection({collection}){
 		{collection.content.length === 0 && <p className="empty-desc">This collection does not have any description...</p>}
 		{collection.content.length > 0 && <AppMarkdownEditor value={collection.content} readOnly={true}/>}
 
-		{(collection.authorization.type === Request.AUTHORIZATION.BasicAuth.value || collection.authorization.type === Request.AUTHORIZATION.BearerToken.value) &&
+		{(collection.authorization.type !== Request.AUTHORIZATION.NoAuth.value) &&
 			<DocumentationTable
 				title={"Authorization"}
 				subtitle={Request.getAuthorization(collection.authorization.type)}
 				data={authorizationData}
-			/>}
-		{(collection.authorization.type === Request.AUTHORIZATION.JWTBearer.value) &&
-			<DocumentationTable
-				title={"Authorization"}
-				subtitle={Request.getAuthorization(collection.authorization.type)}
-				data={null}
 			/>}
 	</div>)
 }
