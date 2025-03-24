@@ -74,20 +74,29 @@ export default function DocumentationChat({open, setOpen, documentJSON}){
 			</div>
 		</div>
 		<div className="chat-main">
-			{history.map((msg, index) => {
+			{!history || history.length === 0 && <div className='empty-message'>
+				<div className="icon">
+					<DocumentIcon/>
+				</div>
+				<div className="messages">
+					<p>Hi! I'm your API assistant.</p>
+					<p>Just type your question, and I’ll do my best to assist you</p>
+				</div>
+			</div>}
+			{history && history.length > 0 && history.map((msg, index) => {
 				return (
 					<div key={index} className={`chat-message ${msg.role}`}>
 						{msg.role === "model" ? <Markdown>{msg.parts[0].text}</Markdown> : <p>{msg.parts[0].text}</p>}
 					</div>
 				)
 			})}
-			{loading && (
+			{history && history.length > 0 && loading && (
 				<div className="chat-message model loader">
 					<p>Working on it <span className="dots"></span></p>
 
 				</div>
 			)}
-			{!loading && answer && <div className="chat-message model">
+			{history && history.length > 0 && !loading && answer && <div className="chat-message model">
 				<Markdown>{answer}</Markdown>
 			</div>}
 			<div ref={chatEndRef}/>

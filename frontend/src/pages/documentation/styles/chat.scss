@@ -42,6 +42,7 @@
         font-size: $text-size-l;
         color: $content-color-secondary;
         cursor: pointer;
+
         &:hover {
           color: $content-color-primary;
         }
@@ -77,14 +78,14 @@
       font-size: $text-size-m;
       color: $content-color-primary;
 
-      overflow-wrap: break-word;  /* Allows breaking words to prevent overflow */
-      word-wrap: break-word;       /* Ensures long words break inside the container */
+      overflow-wrap: break-word; /* Allows breaking words to prevent overflow */
+      word-wrap: break-word; /* Ensures long words break inside the container */
       white-space: pre-wrap;
 
       pre {
         code {
-          overflow-wrap: break-word;  /* Allows breaking words to prevent overflow */
-          word-wrap: break-word;       /* Ensures long words break inside the container */
+          overflow-wrap: break-word; /* Allows breaking words to prevent overflow */
+          word-wrap: break-word; /* Ensures long words break inside the container */
           white-space: pre-wrap;
         }
       }
@@ -108,9 +109,15 @@
       &.loader {
         width: 110px;
         @keyframes dots {
-          0% { content: "."; }
-          33% { content: ".."; }
-          66% { content: "..."; }
+          0% {
+            content: ".";
+          }
+          33% {
+            content: "..";
+          }
+          66% {
+            content: "...";
+          }
         }
 
         .dots::after {
@@ -131,6 +138,34 @@
     .chat-message.model {
       //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+    }
+
+    .empty-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10%;
+      .icon {
+        width: 60px;
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(31, 80, 154, 0.1);
+        border-radius: 50%;
+
+        .anticon {
+          font-size: 40px;
+          color: $base-color-brand;
+        }
+      }
+
+      .messages {
+        color: $content-color-primary;
+        text-align: center;
+      }
     }
   }
 
@@ -190,7 +225,7 @@
       justify-content: center;
       border: none;
       outline: none;
-      background-color: $base-color-brand;
+      background-color: $base-color-brand !important;
       border-radius: $border-radius-default;
       cursor: pointer;
 
