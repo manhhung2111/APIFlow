@@ -33,7 +33,7 @@ export const loginUser = async (request: Request, response: Response) => {
         }
 
         const access_token = await JWT.signToken({user_id: user.getField("_id")});
-
+        response.clearCookie("access_token");
         response.cookie("access_token", access_token, {signed: true, maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true});
         response.status(200).json(Code.success("Login successful", {
             user: user.release(),

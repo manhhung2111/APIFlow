@@ -1,10 +1,10 @@
-import {Button, Skeleton} from "antd";
+import {Button, FloatButton, Skeleton} from "antd";
 import React, {useContext, useEffect, useState} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import DocumentIcon from "@assets/icons/document.jsx";
 import {useLocation, useNavigate, useParams} from "react-router";
 import "./styles/documentation.scss";
-import {CloudDownloadOutlined} from "@ant-design/icons";
+import {CloudDownloadOutlined, WechatWorkOutlined} from "@ant-design/icons";
 import NorthEastIcon from "@assets/icons/north.east.jsx";
 import CollectionService from "@services/collection.js";
 import DocumentationCollection from "@pages/documentation/display/collection.jsx";
@@ -12,6 +12,7 @@ import {toast} from "react-toastify";
 import DocumentationNavigation from "@pages/documentation/display/navigation.jsx";
 import DocumentationFolder from "@pages/documentation/display/folder.jsx";
 import DocumentationRequest from "@pages/documentation/display/request.jsx";
+import DocumentationChat from "@pages/documentation/chat/display.jsx";
 
 export default function DocumentationPage(){
 	const {workspace, activeCollection, setActiveCollection} = useContext(WorkspaceContext);
@@ -19,6 +20,7 @@ export default function DocumentationPage(){
 	const {collection_id} = useParams();
 	const [folders, setFolders] = useState(null);
 	const [requests, setRequests] = useState(null);
+	const [showChat, setShowChat] = useState(false);
 
 	useEffect(() => {
 		async function fetchCollection(){
@@ -109,6 +111,13 @@ export default function DocumentationPage(){
 			<div className="navigation">
 				<DocumentationNavigation collection={activeCollection} folders={folders} requests={requests}/>
 			</div>
+			<FloatButton onClick={() => setShowChat(prev => !prev)}
+						 icon={<WechatWorkOutlined/>}
+			/>
+			<DocumentationChat
+				open={showChat}
+				setOpen={setShowChat}
+			/>
 		</div>}
 	</div>)
 }

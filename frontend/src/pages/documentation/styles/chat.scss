@@ -1,0 +1,139 @@
+@use "@styles/variables" as *;
+
+.documentation-page .documentation-chat {
+  position: fixed;
+  bottom: 100px;
+  height: 40vh;
+  min-height: 200px;
+  right: 30px;
+  border-radius: 8px;
+  box-shadow: 0 16px 24px -8px rgba(107, 107, 107, 0.24);
+  background-color: $background-color-primary;
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $border-color-strong;
+  z-index: 1001 !important;
+
+  .chat-header {
+    color: $content-color-secondary;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 8px 4px 8px;
+    height: 36px;
+    border-bottom: 1px solid $border-color-default;
+    border-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    .left {
+      display: flex;
+      align-items: center;
+      font-weight: $text-weight-thick;
+      gap: 4px;
+    }
+
+    .right {
+      display: flex;
+      gap: 4px;
+
+      .anticon {
+        font-size: $text-size-l;
+        color: $content-color-secondary;
+        cursor: pointer;
+        &:hover {
+          color: $content-color-primary;
+        }
+
+      }
+    }
+  }
+
+  .chat-main {
+    flex: 1;
+    padding: 8px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+      border-radius: $border-radius-l;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgrey;
+    }
+  }
+
+  .chat-input {
+    z-index: 3;
+    background-color: $background-color-primary;
+    padding: $spacing-s;
+    padding-left: 4px;
+    align-items: flex-end;
+    border-top: 1px solid $border-color-default;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-radius: 8px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    input {
+      resize: none !important;
+      border: none !important;
+      outline: none !important;
+      overflow-y: auto; /* Enables scrolling when max height is reached */
+      max-height: 48px; /* 3 lines height (adjust based on line height) */
+      line-height: 16px;
+      min-height: 16px;
+      height: auto !important;
+      font-size: $text-size-m;
+      font-family: Inter, serif;
+      flex: 1;
+      padding: 4px;
+
+      /* Optional: Custom scrollbar */
+      &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+        border-radius: $border-radius-l;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+      }
+
+      &::placeholder {
+        color: $content-color-tertiary;
+      }
+
+      &:focus {
+        box-shadow: none !important;
+      }
+    }
+
+    button {
+      height: 24px;
+      width: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      outline: none;
+      background-color: $base-color-brand;
+      border-radius: $border-radius-default;
+      cursor: pointer;
+
+      .anticon {
+        font-size: 12px;
+        color: white;
+      }
+    }
+
+  }
+}
