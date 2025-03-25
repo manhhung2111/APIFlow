@@ -24,6 +24,7 @@ import WorkspacesPage from "@pages/workspaces/workspaces.jsx";
 import DocumentationPage from "@pages/documentation/documentation.jsx";
 import PersonaPage from "@pages/persona/persona.jsx";
 import ForgotPasswordPage from "@pages/authentication/forgot.password.jsx";
+import ResetPasswordPage from "@pages/authentication/reset.password.jsx";
 
 function App(){
 	return (
@@ -46,11 +47,14 @@ function App(){
 					<Route path="workspaces" element={<WorkspacesPage/>}/>
 				</Route>
 
-				<Route path="login" element={<PublicRoute redirectPath={"/"}><LoginPage/></PublicRoute>}/>
-				<Route path="register" element={<PublicRoute redirectPath={"/"}><RegisterPage/></PublicRoute>}/>
-				<Route path="forgot-password" element={<PublicRoute redirectPath={"/"}><ForgotPasswordPage/></PublicRoute>}/>
+				<Route path="/reset-password"
+					   element={<PublicRoute redirectPath={"/"}><ResetPasswordPage/></PublicRoute>}/>
+				<Route path="/login" element={<PublicRoute redirectPath={"/"}><LoginPage/></PublicRoute>}/>
+				<Route path="/register" element={<PublicRoute redirectPath={"/"}><RegisterPage/></PublicRoute>}/>
+				<Route path="/forgot-password"
+					   element={<PublicRoute redirectPath={"/"}><ForgotPasswordPage/></PublicRoute>}/>
 
-				<Route path="forbidden" element={<ForbiddenPage/>}/>
+				<Route path="/forbidden" element={<ForbiddenPage/>}/>
 				<Route path="*" element={<NotFoundPage/>}/>
 			</Routes>
 		</AppContextProvider>

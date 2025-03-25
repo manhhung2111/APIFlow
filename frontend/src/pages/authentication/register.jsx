@@ -100,7 +100,7 @@ export default function RegisterPage() {
                         message: "Please enter valid email address"
                     },]}
                 >
-                    <Input/>
+                    <Input placeholder={"Email address"}/>
                 </Form.Item>
 
                 <Form.Item
@@ -116,7 +116,7 @@ export default function RegisterPage() {
                         },
                     ]}
                 >
-                    <Input.Password/>
+                    <Input.Password placeholder={"Password"}/>
                 </Form.Item>
 
                 <Form.Item
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                         }),
                     ]}
                 >
-                    <Input.Password/>
+                    <Input.Password placeholder={"Confirm Password"}/>
                 </Form.Item>
                 <button className="submit-btn" type="submit">Sign Up</button>
                 <Divider style={{color: "#6b6b6b", fontSize: "12px"}} plain>Or</Divider>

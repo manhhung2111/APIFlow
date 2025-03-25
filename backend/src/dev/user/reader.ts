@@ -44,7 +44,7 @@ export default class Reader extends DBReader<DUser>{
 	}
 
 
-	private async hashPassword(password: string){
+	public async hashPassword(password: string){
 		let salt = await bcrypt.genSalt(10);
 		return await bcrypt.hash(password, salt);
 	}

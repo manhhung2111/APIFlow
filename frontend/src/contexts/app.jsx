@@ -18,6 +18,7 @@ export default function AppContextProvider(props){
 	useEffect(() => {
 		async function verifyUser(){
 			try {
+				setFetching(true);
 				const response = await UserService.verify(); // Replace with your API URL
 
 				if(response.code === 0){
@@ -28,33 +29,30 @@ export default function AppContextProvider(props){
 				} else {
 					setUser(null);
 					localStorage.removeItem("user");
-					navigate('/login');
 				}
 			} catch (err) {
 				console.error("Error verifying user", err);
 				setUser(null); // Prevent undefined state
-				localStorage.removeItem("user");
-				navigate('/login');
 			} finally {
 				setFetching(false);
 			}
 		}
 
-		if(localStorage.getItem("user")){
-			if(!user){
-				verifyUser();
+		setTimeout(async () => {
+			if(localStorage.getItem("user")){
+				if(!user){
+					await verifyUser();
+				}
 			}
-		} else {
-			setFetching(false);
-			navigate('/login', {replace: true});
-		}
 
+			setFetching(false);
+		}, 0)
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
-	if(fetching){
-		return <PageLoader/>;
-	}
+	// if(fetching){
+	// 	return <PageLoader/>;
+	// }
 
 	return (
 		<ConfigProvider
@@ -64,7 +62,7 @@ export default function AppContextProvider(props){
 				}
 			}}
 		>
-			<AppContext.Provider value={{user, setUser, workspaces, setWorkspaces, users, setUsers}}>
+			<AppContext.Provider value={{user, setUser, workspaces, setWorkspaces, users, setUsers, fetching}}>
 				{children}
 			</AppContext.Provider>
 		</ConfigProvider>

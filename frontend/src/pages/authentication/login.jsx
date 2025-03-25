@@ -83,7 +83,7 @@ export default function LoginPage(){
 						message: "Please enter valid email address"
 					},]}
 				>
-					<Input/>
+					<Input placeholder={"Email address"}/>
 				</Form.Item>
 
 				<Form.Item
@@ -99,7 +99,7 @@ export default function LoginPage(){
 						},
 					]}
 				>
-					<Input.Password/>
+					<Input.Password placeholder={"Password"}/>
 				</Form.Item>
 				<Form.Item className="form-input-footer">
 					<Form.Item name="remember" valuePropName="checked" noStyle>

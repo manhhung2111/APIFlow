@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
-import {Code, HTMLInput, JWT} from "@ap/core";
-import {DBUser, DBUserLoader} from "@dev/user";
+import {Code, HTMLInput, JWT, Validation} from "@ap/core";
+import {DBUser, DBUserLoader, DBUserReader} from "@dev/user";
 import UserService from "@services/user";
 import logger from "@utils/logger";
 import Client from "@dev/client";
@@ -8,6 +8,8 @@ import {DBWorkspace, DBWorkspaceLoader} from "@dev/workspace";
 import TokenGenerator from "@utils/token.generator";
 import DBPasswordResetToken from "@dev/password/password";
 import EmailService from "@services/email";
+import DBPasswordResetTokenLoader from "@dev/password/loader";
+import { sha256 } from 'js-sha256';
 
 export const loginUser = async (request: Request, response: Response) => {
     try {
@@ -70,16 +72,18 @@ export const registerUser = async (request: Request, response: Response) => {
 export const forgotPassword = async (request: Request, response: Response) => {
     logger.info("[Controller] Forgot Password");
     try {
-        const email = HTMLInput.inputInline("email");
+        const email = HTMLInput.inputNoSafe("email");
 
         const user = await DBUserLoader.byEmail(email);
         if (user && user.object) {
             const reset_password = await DBPasswordResetToken.initialize() as DBPasswordResetToken;
             if (reset_password && reset_password.object) {
                 const token = TokenGenerator.generate();
+                const hashed_token = sha256(token);
                 const tokenExpiry = Math.floor(Date.now() / 1000) + 60 * 60;
 
-                reset_password.object.token = token;
+
+                reset_password.object.token = hashed_token;
                 reset_password.object.token_expiry = tokenExpiry;
                 reset_password.object.user_id = user.object._id.toString();
 
@@ -98,7 +102,42 @@ export const forgotPassword = async (request: Request, response: Response) => {
 };
 
 export const resetPassword = async (request: Request, response: Response) => {
+    logger.info("[Controller] Forgot Password");
+    try {
+        const token = HTMLInput.inputNoSafe("token");
+        const hashed_token = sha256(token);
 
+        const instance = await DBPasswordResetTokenLoader.byToken(hashed_token) as DBPasswordResetToken;
+
+        if (instance && instance.object) {
+            console.log(instance.object.token_expiry, Date.now())
+            if (instance.object.token_expiry * 1000 < Date.now()) {
+                throw new Error("Invalid reset password token. Please try reset password again.");
+            }
+
+            const user = await DBUser.initialize(instance.object.user_id.toString()) as DBUser;
+            let password = HTMLInput.inputInline("password");
+
+            if (Validation.isEmpty(password)){
+                throw new Code("Password must not be empty.");
+            }
+
+            if (user && user.object) {
+                user.object.password = await user.reader().hashPassword(password)
+            }
+
+            await user.save();
+
+            await instance.delete();
+
+            response.status(201).json(Code.success("Password reset successfully!"));
+        } else {
+            throw new Error("Invalid reset password token. Please try reset password again.")
+        }
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
 };
 
 export const verifyUser = async (request: Request, response: Response) => {

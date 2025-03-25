@@ -45,9 +45,9 @@ export default function ForgotPasswordPage(){
 					message: "Please enter valid email address"
 				},]}
 			>
-				<Input/>
+				<Input placeholder={"Email address"}/>
 			</Form.Item>
-			<button className="submit-btn" type="submit">Reset</button>
+			<button className="submit-btn" type="submit">Send Reset Password</button>
 			<NavLink to={'/login'} className="link">Back to login</NavLink>
 		</Form>
 	</div>)

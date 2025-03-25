@@ -67,4 +67,12 @@ export default class UserService{
 			throw new Error(error?.message || 'Forgot password failed');
 		}
 	}
+
+	static async resetPassword(password, token){
+		try {
+			return await axios.post('/users/password/reset', {password: password, token: token});
+		} catch (error) {
+			throw new Error(error?.message || 'Reset password failed');
+		}
+	}
 }
