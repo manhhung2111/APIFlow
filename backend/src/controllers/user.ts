@@ -5,6 +5,9 @@ import UserService from "@services/user";
 import logger from "@utils/logger";
 import Client from "@dev/client";
 import {DBWorkspace, DBWorkspaceLoader} from "@dev/workspace";
+import TokenGenerator from "@utils/token.generator";
+import DBPasswordResetToken from "@dev/password/password";
+import EmailService from "@services/email";
 
 export const loginUser = async (request: Request, response: Response) => {
     try {
@@ -65,7 +68,33 @@ export const registerUser = async (request: Request, response: Response) => {
 };
 
 export const forgotPassword = async (request: Request, response: Response) => {
+    logger.info("[Controller] Forgot Password");
+    try {
+        const email = HTMLInput.inputInline("email");
 
+        const user = await DBUserLoader.byEmail(email);
+        if (user && user.object) {
+            const reset_password = await DBPasswordResetToken.initialize() as DBPasswordResetToken;
+            if (reset_password && reset_password.object) {
+                const token = TokenGenerator.generate();
+                const tokenExpiry = Math.floor(Date.now() / 1000) + 60 * 60;
+
+                reset_password.object.token = token;
+                reset_password.object.token_expiry = tokenExpiry;
+                reset_password.object.user_id = user.object._id.toString();
+
+                await reset_password.save();
+
+                await EmailService.sendForgetEmail(user.object.email, token);
+            }
+        }
+
+        response.status(200).json(Code.success("We've sent a password reset link to your email if an account is" +
+            " registered with us. Please check your inbox and follow the instructions."));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
 };
 
 export const resetPassword = async (request: Request, response: Response) => {

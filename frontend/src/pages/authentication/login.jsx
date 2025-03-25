@@ -4,7 +4,7 @@ import './styles/login.scss';
 import LogoBrandImg from "@assets/images/logo.brand.svg";
 import {Button, Checkbox, Divider, Form, Input} from 'antd';
 import {NavLink, useNavigate} from "react-router";
-import {GithubOutlined} from "@ant-design/icons";
+import {GithubOutlined, LockOutlined, MailOutlined} from "@ant-design/icons";
 import useDocumentTitle from "@hooks/use.document.title";
 import {toast} from "react-toastify";
 import UserService from "@services/user.js";
@@ -105,7 +105,7 @@ export default function LoginPage(){
 					<Form.Item name="remember" valuePropName="checked" noStyle>
 						<Checkbox>Stay signed in</Checkbox>
 					</Form.Item>
-					<NavLink to="/reset-password" className='link'>Forgot password?</NavLink>
+					<NavLink to="/forgot-password" className='link'>Forgot password?</NavLink>
 				</Form.Item>
 				<button className="submit-btn" type="submit">Sign In</button>
 				<Divider style={{color: "#6b6b6b", fontSize: "12px"}} plain>Or</Divider>

@@ -191,3 +191,12 @@ export interface DPersona {
     created_at: number;
     updated_at: number;
 }
+
+export interface DPasswordResetToken {
+    user_id: string;
+    token: string;
+    token_expiry: number;
+
+    created_at: number;
+    updated_at: number;
+}

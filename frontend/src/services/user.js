@@ -1,8 +1,8 @@
 import axios from "@configs/axios.js";
 
-export default class UserService {
+export default class UserService{
 	// Method to handle user login
-	static async login(form) {
+	static async login(form){
 		try {
 			return await axios.post('/users/login', {...form});
 		} catch (error) {
@@ -11,7 +11,7 @@ export default class UserService {
 	}
 
 	// Method to handle user registration
-	static async register(email, password) {
+	static async register(email, password){
 		try {
 			return await axios.post('/users/register', {email, password});
 		} catch (error) {
@@ -20,7 +20,7 @@ export default class UserService {
 	}
 
 	// Method to log out the user
-	static async logout() {
+	static async logout(){
 		try {
 			return await axios.delete('/users/logout');
 		} catch (error) {
@@ -28,7 +28,7 @@ export default class UserService {
 		}
 	}
 
-	static async verify() {
+	static async verify(){
 		try {
 			return await axios.get('/users/verify');
 		} catch (error) {
@@ -36,7 +36,7 @@ export default class UserService {
 		}
 	}
 
-	static async search(query) {
+	static async search(query){
 		try {
 			return await axios.get('/users?query=' + query);
 		} catch (error) {
@@ -44,7 +44,7 @@ export default class UserService {
 		}
 	}
 
-	static async getAll() {
+	static async getAll(){
 		try {
 			return await axios.get('/users/all');
 		} catch (error) {
@@ -52,11 +52,19 @@ export default class UserService {
 		}
 	}
 
-	static async googleAuth(credential) {
+	static async googleAuth(credential){
 		try {
 			return await axios.post('/users/google-auth', {token: credential});
 		} catch (error) {
 			throw new Error(error?.message || 'Post google credential failed');
+		}
+	}
+
+	static async forgotPassword(email){
+		try {
+			return await axios.post('/users/password/forgot', {email: email});
+		} catch (error) {
+			throw new Error(error?.message || 'Forgot password failed');
 		}
 	}
 }

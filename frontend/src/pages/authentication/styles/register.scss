@@ -65,7 +65,9 @@
 
     h1 {
       font-weight: 600;
-      font-size: $text-size-xxxl;
+      font-size: $text-size-xxl;
+      margin-bottom: 8px;
+      color: $content-color-primary;
     }
 
     .form-input {
