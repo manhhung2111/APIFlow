@@ -19,7 +19,7 @@ export default function LoginPage(){
 	const {user, setUser, setUsers, setWorkspaces} = useContext(AppContext);
 
 	async function onSubmit(values){
-		const response = await UserService.login(values["email"], values["password"]);
+		const response = await UserService.login(values);
 
 		if(response.code === 0){
 			toast.success(response.message);

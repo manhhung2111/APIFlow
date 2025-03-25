@@ -223,6 +223,26 @@ export default class HTMLInput{
 		return this._files[field];
 	}
 
+	public static inputFlag(field: string): boolean {
+		let value = this._cur_request?.body[field];
+
+		if (typeof value === "boolean") {
+			return value;
+		}
+
+		if (typeof value === "string") {
+			const lowerValue = value.trim().toLowerCase();
+			if (lowerValue === "true" || lowerValue === "1") return true;
+			if (lowerValue === "false" || lowerValue === "0") return false;
+		}
+
+		if (typeof value === "number") {
+			return value === 1;
+		}
+
+		return false;
+	}
+
 	private static sanitize(text: string, style: string = ""): string{
 		if (!text) return "";
 

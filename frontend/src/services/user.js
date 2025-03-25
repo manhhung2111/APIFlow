@@ -2,9 +2,9 @@ import axios from "@configs/axios.js";
 
 export default class UserService {
 	// Method to handle user login
-	static async login(email, password) {
+	static async login(form) {
 		try {
-			return await axios.post('/users/login', {email, password})
+			return await axios.post('/users/login', {...form});
 		} catch (error) {
 			throw new Error(error.message || 'Login failed');
 		}

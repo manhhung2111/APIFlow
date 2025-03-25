@@ -34,7 +34,10 @@ export const loginUser = async (request: Request, response: Response) => {
 
         const access_token = await JWT.signToken({user_id: user.getField("_id")});
         response.clearCookie("access_token");
-        response.cookie("access_token", access_token, {signed: true, maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true});
+
+        const ttl = HTMLInput.inputFlag("remember") ? 1000 * 60 * 60 * 24 * 7 : null;
+        console.log(HTMLInput.inputFlag("remember"), ttl);
+        response.cookie("access_token", access_token, {signed: true, ...(ttl ? {maxAge: ttl} : {}), httpOnly: true});
         response.status(200).json(Code.success("Login successful", {
             user: user.release(),
             users: usersRelease,
@@ -196,7 +199,7 @@ export const loginGoogleUser = async (request: Request, response: Response) => {
 
             userRelease = newUser.release();
             cookies_key = `recent.workspaces.${newUser.object!._id.toString()}`
-        } else{
+        } else {
             user.object.google_id = sub;
             user.object.name = name;
             user.object.email = email!;
