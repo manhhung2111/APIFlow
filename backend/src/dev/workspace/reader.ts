@@ -45,16 +45,4 @@ export default class Reader extends DBReader<DWorkspace> {
         this._obj.commenters = HTMLInput.inputList("commenters");
         this._obj.editors = HTMLInput.inputList("editors");
     }
-
-
-    private async usernamesToIds(field: string) {
-        const usernames = HTMLInput.inputInline(field).match(/@(\w+)/g)?.map(user => user.slice(1)) || [];
-
-        if (usernames.length === 0) {
-            return [];
-        }
-
-        const users = await DBUserLoader.byUsernames(usernames);
-        return users.map(user => user.getField("_id"));
-    }
 }

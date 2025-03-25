@@ -10,6 +10,10 @@ const schema = new Schema<DUser>({
 	google_id: {type: String, default: ""},
 	remember_token: {type: String, default: ""},
 
+	is_verified: {type: Boolean, default: false},
+	verification_token: {type: String, default: ""},
+	verification_token_expiry: {type: Number, default: 0},
+
 	data: {type: Schema.Types.Mixed, default: {}},
 }, {
 	timestamps: {

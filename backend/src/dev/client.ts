@@ -11,7 +11,7 @@ export default class Client{
 		if (!user_id) return false;
 
 		const user = await DBUser.initialize(user_id);
-		if (!user.good()) return false;
+		if (!user.good() && user?.object?.is_verified == true) return false;
 
 		this.authenticated = true;
 		this.viewer = user.object!;

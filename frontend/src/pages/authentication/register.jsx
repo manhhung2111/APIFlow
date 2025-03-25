@@ -11,7 +11,7 @@ import {toast} from "react-toastify";
 import {useGoogleLogin} from "@react-oauth/google";
 import GoogleSVG from "@assets/images/google.icon.svg";
 import {AppContext} from "@contexts/app.jsx";
-import {useContext} from "react";
+import {useContext, useState} from "react";
 
 const {Paragraph, Text} = Typography;
 
@@ -20,12 +20,25 @@ export default function RegisterPage() {
     const navigate = useNavigate();
     const {user, setUser, setUsers, setWorkspaces} = useContext(AppContext);
 
+    const [verifyingEmail, setVerifyingEmail] = useState(false);
+
     async function onSubmit(values) {
         const response = await UserService.register(values["email"], values["password"]);
 
         if (response.code === 0){
+            // toast.success(response.message);
+            setVerifyingEmail(true);
+        } else {
+            toast.error(response.message);
+        }
+    }
+
+    async function onVerify(values) {
+        const response = await UserService.verifyEmail(values["code"]);
+
+        if (response.code === 0){
             toast.success(response.message);
-            navigate("/login");
+            navigate("/login")
         } else {
             toast.error(response.message);
         }
@@ -79,7 +92,7 @@ export default function RegisterPage() {
                 <img src={SignUpImg} alt={"Sign up image"} className={"signup-img"}/>
             </div>
 
-            <Form
+            {verifyingEmail === false && <Form
                 name="trigger"
                 layout="vertical"
                 autoComplete="off"
@@ -149,7 +162,26 @@ export default function RegisterPage() {
                     <img src={GoogleSVG} alt={"Google icon"}/>Continue with Google
                 </Button>
                 <p className="signup-message">Already have an account? <NavLink to="/login" className='link'>Sign in</NavLink></p>
-            </Form>
+            </Form>}
+            {verifyingEmail === true && <Form
+                name="trigger"
+                layout="vertical"
+                autoComplete="off"
+                onFinish={onVerify}
+                className="register-form right-section"
+                requiredMark={false}
+            >
+                <h1>Verify your email</h1>
+                <p className="verify">Enter the 6-digit code sent to your email</p>
+                <Form.Item
+                    hasFeedback
+                    name="code"
+                    className="form-input"
+                >
+                    <Input.OTP length={6}/>
+                </Form.Item>
+                <button className="submit-btn" type="submit">Verify</button>
+            </Form>}
         </div>
     );
 }

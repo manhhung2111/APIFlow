@@ -62,6 +62,8 @@ export const registerUser = async (request: Request, response: Response) => {
 
         await user.save();
 
+        await EmailService.sendVerificationEmail(user.object!.email, user.object!.verification_token);
+
         response.status(201).json(Code.success("Register new account successfully!"));
     } catch (error) {
         logger.error((error as Error).stack);
@@ -262,6 +264,7 @@ export const loginGoogleUser = async (request: Request, response: Response) => {
             newUser.object.google_id = sub;
             newUser.object.name = name;
             newUser.object.email = email!;
+            newUser.object.is_verified = true;
 
             await newUser.save();
 
@@ -308,6 +311,28 @@ export const loginGoogleUser = async (request: Request, response: Response) => {
             users: usersRelease,
             workspaces: workspaces
         }));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
+}
+
+export const verifyEmail = async (request: Request, response: Response) => {
+    logger.info("[Controller] Verify email");
+    try {
+        const code = HTMLInput.inputInline("code");
+        const user = await DBUserLoader.byVerifiedToken(code);
+        if (user && user.object) {
+            if (user.object.verification_token_expiry * 1000 < Date.now()) {
+                response.status(400).json(Code.error("Verification token expired"));
+                return;
+            }
+
+            user.object.is_verified = true;
+            await user.save();
+
+            response.status(201).json(Code.success("User verified successfully"));
+        }
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));

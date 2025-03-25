@@ -75,4 +75,12 @@ export default class UserService{
 			throw new Error(error?.message || 'Reset password failed');
 		}
 	}
+
+	static async verifyEmail(code) {
+		try {
+			return await axios.post('/users/verify-email', {code: code});
+		} catch (error) {
+			throw new Error(error?.message || 'Verify email failed');
+		}
+	}
 }

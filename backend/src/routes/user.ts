@@ -7,7 +7,7 @@ import {
     logoutUser,
     registerUser,
     resetPassword,
-    searchUsers,
+    searchUsers, verifyEmail,
     verifyUser
 } from "@controllers/user";
 
@@ -26,6 +26,7 @@ router.delete("/logout", logoutUser);
 router.post("/password/forgot", forgotPassword);
 router.post("/password/reset", resetPassword);
 router.post("/google-auth", loginGoogleUser);
+router.post("/verify-email", verifyEmail);
 
 
 export default router;

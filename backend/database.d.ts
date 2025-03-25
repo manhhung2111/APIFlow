@@ -7,6 +7,10 @@ export interface DUser {
     github_id?: string,
     remember_token?: string,
 
+    is_verified: boolean,
+    verification_token: string,
+    verification_token_expiry: number,
+
     data: object | {},
 
     created_at: number,
