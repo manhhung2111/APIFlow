@@ -2,7 +2,7 @@ import express from "express";
 
 import {
     forgotPassword,
-    getAllUsers,
+    getAllUsers, loginGoogleUser,
     loginUser,
     logoutUser,
     registerUser,
@@ -25,6 +25,7 @@ router.delete("/logout", logoutUser);
 // Forgot password routes
 router.post("/password/forgot", forgotPassword);
 router.post("/password/reset", resetPassword);
+router.post("/google-auth", loginGoogleUser);
 
 
 export default router;

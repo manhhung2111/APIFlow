@@ -1,11 +1,10 @@
 export interface DUser {
     email: string,
-    username: string,
     password: string,
     name?: string,
 
-    oauth_provider?: string,
-    oauth_id?: string,
+    google_id?: string,
+    github_id?: string,
     remember_token?: string,
 
     data: object | {},

@@ -11,9 +11,9 @@ export default class UserService {
 	}
 
 	// Method to handle user registration
-	static async register(username, email, password) {
+	static async register(email, password) {
 		try {
-			return await axios.post('/users/register', {username, email, password});
+			return await axios.post('/users/register', {email, password});
 		} catch (error) {
 			throw new Error(error.message || 'Register failed');
 		}
@@ -49,6 +49,14 @@ export default class UserService {
 			return await axios.get('/users/all');
 		} catch (error) {
 			throw new Error(error?.message || 'Get all users failed');
+		}
+	}
+
+	static async googleAuth(credential) {
+		try {
+			return await axios.post('/users/google-auth', {token: credential});
+		} catch (error) {
+			throw new Error(error?.message || 'Post google credential failed');
 		}
 	}
 }

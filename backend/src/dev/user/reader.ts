@@ -30,7 +30,6 @@ export default class Reader extends DBReader<DUser>{
 		}
 
 		this._obj.email = email;
-		this._obj.username = username;
 		this._obj.password = await this.hashPassword(password);
 		this._obj.name = name;
 	}

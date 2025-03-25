@@ -8,15 +8,20 @@ import {NavLink, useNavigate} from "react-router";
 import * as React from "react";
 import UserService from "@services/user.js";
 import {toast} from "react-toastify";
+import {useGoogleLogin} from "@react-oauth/google";
+import GoogleSVG from "@assets/images/google.icon.svg";
+import {AppContext} from "@contexts/app.jsx";
+import {useContext} from "react";
 
 const {Paragraph, Text} = Typography;
 
 export default function RegisterPage() {
     useDocumentTitle("APIFlow - Sign Up");
     const navigate = useNavigate();
+    const {user, setUser, setUsers, setWorkspaces} = useContext(AppContext);
 
     async function onSubmit(values) {
-        const response = await UserService.register(values["username"], values["email"], values["password"]);
+        const response = await UserService.register(values["email"], values["password"]);
 
         if (response.code === 0){
             toast.success(response.message);
@@ -25,6 +30,33 @@ export default function RegisterPage() {
             toast.error(response.message);
         }
     }
+
+    const login = useGoogleLogin({
+        onSuccess: async(credentialResponse) => {
+            try {
+                console.log(credentialResponse);
+
+                const response = await UserService.googleAuth(credentialResponse.access_token);
+
+                if(response.code === 0){
+                    toast.success(response.message);
+                    localStorage.setItem("user", JSON.stringify(response.data.user));
+                    setUser(response.data.user);
+                    setUsers(response.data.users);
+                    setWorkspaces(response.data.workspaces);
+                    navigate("/");
+                } else {
+                    toast.error(response.message);
+                }
+            } catch (error) {
+                toast.error(error.message);
+            }
+        },
+        onError: async(error) => {
+            toast.error(error?.message ?? "Something went wrong");
+        },
+        flow: "implicit"
+    });
 
     return (
         <div className="register-page">
@@ -73,20 +105,6 @@ export default function RegisterPage() {
 
                 <Form.Item
                     hasFeedback
-                    label="Username"
-                    name="username"
-                    validateTrigger="onBlur"
-                    className="form-input"
-                    rules={[{
-                        required: true,
-                        message: "Please enter username"
-                    },]}
-                >
-                    <Input/>
-                </Form.Item>
-
-                <Form.Item
-                    hasFeedback
                     label="Password"
                     name="password"
                     validateTrigger="onBlur"
@@ -127,8 +145,8 @@ export default function RegisterPage() {
                 </Form.Item>
                 <button className="submit-btn" type="submit">Sign Up</button>
                 <Divider style={{color: "#6b6b6b", fontSize: "12px"}} plain>Or</Divider>
-                <Button className={"btn"} icon={<GoogleOutlined/>} iconPosition={"start"}>
-                    Sign Up with Google
+                <Button className={"btn"} onClick={() => login()}>
+                    <img src={GoogleSVG} alt={"Google icon"}/>Continue with Google
                 </Button>
                 <Button className={"btn"} icon={<GithubOutlined/>} iconPosition={"start"}>
                     Sign Up with Github

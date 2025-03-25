@@ -168,3 +168,77 @@ export const getAllUsers = async (request: Request, response: Response) => {
         response.status(500).json(Code.error((error as Error).message));
     }
 };
+
+export const loginGoogleUser = async (request: Request, response: Response) => {
+    try {
+        const payload = await UserService.loginGoogle();
+        if (!payload) {
+            response.status(401).json(Code.error("Invalid or missing user"));
+            return;
+        }
+        const {email, name, sub} = payload;
+
+        const user = await DBUserLoader.byEmail(email!);
+        let userRelease: any;
+        let cookies_key = "";
+
+        if (!user || !user.object) {
+            const newUser = await DBUser.initialize() as DBUser;
+            if (!newUser || !newUser.object) {
+                throw new Code("Something went wrong");
+            }
+
+            newUser.object.google_id = sub;
+            newUser.object.name = name;
+            newUser.object.email = email!;
+
+            await newUser.save();
+
+            userRelease = newUser.release();
+            cookies_key = `recent.workspaces.${newUser.object!._id.toString()}`
+        } else{
+            user.object.google_id = sub;
+            user.object.name = name;
+            user.object.email = email!;
+
+            await user.save();
+
+            userRelease = user.release();
+            cookies_key = `recent.workspaces.${user.object!._id.toString()}`
+        }
+
+        const users = await DBUserLoader.all();
+        const usersRelease = users.map(user => user.releaseCompact());
+
+
+        let workspaces: object[] = [];
+        if (!HTMLInput.cookies(cookies_key)) {
+            const workspaces_loader = await DBWorkspaceLoader.mine();
+            for (let i = 0; i < Math.min(5, workspaces_loader.length); i++) {
+                workspaces.push(workspaces_loader[i].releaseCompact());
+            }
+        } else {
+            const recent_workspace_ids = HTMLInput.cookies(cookies_key) ? JSON.parse(HTMLInput.cookies(cookies_key)) : [];
+            for (const workspace_id of recent_workspace_ids) {
+                const workspace = await DBWorkspace.initialize(workspace_id) as DBWorkspace;
+                if (!workspace.good()) {
+                    continue;
+                }
+
+                workspaces.push(workspace.releaseCompact());
+            }
+        }
+
+        const access_token = await JWT.signToken({user_id: userRelease._id});
+        response.clearCookie("access_token");
+        response.cookie("access_token", access_token, {signed: true, maxAge: 1000 * 60 * 60 * 24 * 7, httpOnly: true});
+        response.status(200).json(Code.success("Login successful", {
+            user: userRelease,
+            users: usersRelease,
+            workspaces: workspaces
+        }));
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
+}

@@ -12,7 +12,7 @@ const AppInputUser = ({value, setValue}) => {
 			const usernames = value
 				.map(id => {
 					const user = users.find(user => user._id == id);
-					return user ? `@${user.username}` : null;
+					return user ? `@${user.email}` : null;
 				})
 				.filter(Boolean) // Remove null/undefined values
 				.join(" "); // Join usernames with a space
@@ -26,7 +26,7 @@ const AppInputUser = ({value, setValue}) => {
 
 		// Map usernames to their corresponding _id values
 		const selectedUserIds = extractedUsernames
-			.map(username => users.find(user => user.username === username)?._id)
+			.map(username => users.find(user => user.email === username)?._id)
 			.filter(Boolean); // Remove null/undefined values
 
 		// Update state with the list of user IDs
@@ -38,7 +38,7 @@ const AppInputUser = ({value, setValue}) => {
 		const searchLower = search.toLowerCase();
 		const availableUsers = users
 			.filter(user => !value.includes(user._id)) // Exclude selected users
-			.filter(user => user.username.toLowerCase().includes(searchLower)); // Match search input
+			.filter(user => user.email.toLowerCase().includes(searchLower)); // Match search input
 
 		setFilteredUsers(availableUsers);
 	};

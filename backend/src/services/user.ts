@@ -1,6 +1,9 @@
 import {Code, HTMLInput, Validation} from "@ap/core";
 import {DBUserLoader} from "@dev/user";
 import bcrypt from "bcrypt";
+import {OAuth2Client} from "google-auth-library";
+import * as process from "node:process";
+import axios from "axios";
 
 export default class UserService{
 
@@ -23,5 +26,23 @@ export default class UserService{
 		}
 
 		return user;
+	}
+
+	public static async loginGoogle() {
+		try {
+			const token = HTMLInput.inputNoSafe("token");
+
+			const { data: userData } = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
+				headers: { Authorization: `Bearer ${token}` }
+			});
+
+			return {
+				email: userData.email,
+				name: userData.name,
+				sub: userData.sub,
+			}
+		} catch (error) {
+			throw new Error((error as Error).message);
+		}
 	}
 }

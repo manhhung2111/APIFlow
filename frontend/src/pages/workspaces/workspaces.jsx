@@ -56,7 +56,7 @@ export default function WorkspacesPage(){
 						onClick={() => setCreateFormVisible(true)}>Create Workspace</Button>
 			</div>
 			<div className="description">
-				A directory of all workspaces of {user?.username} - {user?.email}
+				A directory of all workspaces of {user?.name} - {user?.email}
 			</div>
 			{!workspaces && <Skeleton active style={{marginTop: 16}}/>}
 			{workspaces && workspaces.length > 0 && <div className="actions">
@@ -138,7 +138,7 @@ const Item = ({name, content, id, creator, collaborators, lastUpdated}) => {
 const getUser = (user_id, users) => {
 	for (let i = 0 ; i < users.length ; i++) {
 		if(users[i]._id == user_id){
-			return users[i].username;
+			return users[i].email;
 		}
 	}
 
@@ -149,7 +149,7 @@ const getCollaborators = (user_id, editors, commenters, viewers, users) => {
 	const mergedList = [...new Set([user_id, ...editors, ...commenters, ...viewers])];
 	const result = users
 		.filter(user => mergedList.includes(user._id))
-		.map(user => user.username);
+		.map(user => user.email);
 
 	return result;
 }

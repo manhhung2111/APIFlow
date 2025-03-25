@@ -4,11 +4,13 @@ import './styles/login.scss';
 import LogoBrandImg from "@assets/images/logo.brand.svg";
 import {Button, Checkbox, Divider, Form, Input} from 'antd';
 import {NavLink, useNavigate} from "react-router";
-import {GithubOutlined, GoogleOutlined} from "@ant-design/icons";
+import {GithubOutlined} from "@ant-design/icons";
 import useDocumentTitle from "@hooks/use.document.title";
 import {toast} from "react-toastify";
 import UserService from "@services/user.js";
 import {AppContext} from "@contexts/app.jsx";
+import {useGoogleLogin} from "@react-oauth/google";
+import GoogleSVG from "@assets/images/google.icon.svg";
 
 export default function LoginPage(){
 	useDocumentTitle("APIFlow - Sign In");
@@ -29,6 +31,33 @@ export default function LoginPage(){
 			toast.error(response.message);
 		}
 	}
+
+	const login = useGoogleLogin({
+		onSuccess: async(credentialResponse) => {
+			try {
+				console.log(credentialResponse);
+
+				const response = await UserService.googleAuth(credentialResponse.access_token);
+
+				if(response.code === 0){
+					toast.success(response.message);
+					localStorage.setItem("user", JSON.stringify(response.data.user));
+					setUser(response.data.user);
+					setUsers(response.data.users);
+					setWorkspaces(response.data.workspaces);
+					navigate("/");
+				} else {
+					toast.error(response.message);
+				}
+			} catch (error) {
+				toast.error(error.message);
+			}
+		},
+		onError: async(error) => {
+			toast.error(error?.message ?? "Something went wrong");
+		},
+		flow: "implicit"
+	});
 
 	return (
 		<div className="login-page">
@@ -79,9 +108,10 @@ export default function LoginPage(){
 				</Form.Item>
 				<button className="submit-btn" type="submit">Sign In</button>
 				<Divider style={{color: "#6b6b6b", fontSize: "12px"}} plain>Or</Divider>
-				<Button className={"btn"} icon={<GoogleOutlined/>} iconPosition={"start"}>
-					Sign In with Google
+				<Button className={"btn"} onClick={() => login()}>
+					<img src={GoogleSVG} alt={"Google icon"}/>Continue with Google
 				</Button>
+
 				<Button className={"btn"} icon={<GithubOutlined/>} iconPosition={"start"}>
 					Sign In with Github
 				</Button>

@@ -130,6 +130,11 @@
         position: absolute;
         left: 10px;
       }
+
+      img {
+        width: 16px;
+        aspect-ratio: 1 / 1;
+      }
     }
 
     .ant-divider-with-text {
