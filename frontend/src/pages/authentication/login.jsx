@@ -11,6 +11,7 @@ import UserService from "@services/user.js";
 import {AppContext} from "@contexts/app.jsx";
 import {useGoogleLogin} from "@react-oauth/google";
 import GoogleSVG from "@assets/images/google.icon.svg";
+import GithubSVG from "@assets/images/github.icon.svg";
 
 export default function LoginPage(){
 	useDocumentTitle("APIFlow - Sign In");
@@ -110,10 +111,6 @@ export default function LoginPage(){
 				<Divider style={{color: "#6b6b6b", fontSize: "12px"}} plain>Or</Divider>
 				<Button className={"btn"} onClick={() => login()}>
 					<img src={GoogleSVG} alt={"Google icon"}/>Continue with Google
-				</Button>
-
-				<Button className={"btn"} icon={<GithubOutlined/>} iconPosition={"start"}>
-					Sign In with Github
 				</Button>
 				<p className="signup-message">Don’t have an account? <NavLink to="/register" className='link'>Get
 					started now!</NavLink></p>

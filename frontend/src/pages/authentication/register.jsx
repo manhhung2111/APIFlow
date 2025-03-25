@@ -148,9 +148,6 @@ export default function RegisterPage() {
                 <Button className={"btn"} onClick={() => login()}>
                     <img src={GoogleSVG} alt={"Google icon"}/>Continue with Google
                 </Button>
-                <Button className={"btn"} icon={<GithubOutlined/>} iconPosition={"start"}>
-                    Sign Up with Github
-                </Button>
                 <p className="signup-message">Already have an account? <NavLink to="/login" className='link'>Sign in</NavLink></p>
             </Form>
         </div>
