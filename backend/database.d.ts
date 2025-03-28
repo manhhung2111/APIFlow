@@ -77,6 +77,8 @@ export interface DRequest {
     data: object | {};
     token: string;
 
+    embedding: Array<number> | [];
+
     created_at: number;
     updated_at: number;
 }

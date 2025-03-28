@@ -10,6 +10,7 @@ import {DBEnvironmentLoader} from "@dev/environment";
 import {DBExampleLoader} from "@dev/example";
 import Client from "@dev/client";
 import {DBPersonaLoader} from "@dev/persona";
+import HuggingFaceEmbeddingService from "@services/embedding/hugging.face";
 
 export const getAllWorkspaces = async (request: Request, response: Response) => {
     logger.info("[Controller] Get all workspaces");

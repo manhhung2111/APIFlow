@@ -9,7 +9,7 @@ import CollectionDisplayOverview from "@components/collection/display/overview.j
 import CollectionDisplayAuthorization from "@components/collection/display/authorization.jsx";
 import CollectionDisplayScripts from "@components/collection/display/scripts.jsx";
 import CollectionDisplayVariables from "@components/collection/display/variables.jsx";
-import {SaveOutlined} from "@ant-design/icons";
+import {NodeIndexOutlined, SaveOutlined} from "@ant-design/icons";
 import ActionManager from "@utils/action.manager.jsx";
 import {toast} from "react-toastify";
 import FolderService from "@services/folder.js";
@@ -209,6 +209,16 @@ export default function CollectionPage(){
 		}
 	}
 
+	const handleEmbed = async () => {
+		const result = await CollectionService.embedRequests(activeCollection);
+
+		if(result.code === 0){
+			toast.success(result.message);
+		} else {
+			toast.error(result.message);
+		}
+	}
+
 	const actionManagers = [
 		{key: `add_request_${activeCollection?._id}`, label: "Add request", onClick: handleAddRequest},
 		{key: `add_folder_${activeCollection?._id}`, label: "Add folder", onClick: handleAddFolder},
@@ -231,6 +241,9 @@ export default function CollectionPage(){
 						{activeCollection.name}
 					</div>
 					<div className="side">
+						{workspace?.can?.full_access && <Button color="default" variant="text" icon={<NodeIndexOutlined />} onClick={handleEmbed}>
+							Embed Requests
+						</Button>}
 						{workspace?.can?.editable && <>
 							<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
 								Save

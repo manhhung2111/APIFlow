@@ -1,6 +1,6 @@
 import express from "express";
 import authentication from "@middleware/authentication";
-import {workspaceEditable, workspaceViewable} from "@middleware/workspace";
+import {workspaceAdmin, workspaceEditable, workspaceViewable} from "@middleware/workspace";
 
 import {
     createNewCollection,
@@ -14,7 +14,7 @@ import {
     importCollection,
     updateCollection,
     updateCollectionContent,
-    updateCollectionName
+    updateCollectionName, embedRequests
 } from "@controllers/collection";
 
 const router = express.Router();
@@ -40,5 +40,6 @@ router.post("/import", workspaceEditable, importCollection);
 
 // Delete routes
 router.delete("/:collection_id", workspaceEditable, deleteCollection);
+router.post("/:collection_id/embed-requests", workspaceAdmin, embedRequests);
 
 export default router;

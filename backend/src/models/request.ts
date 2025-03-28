@@ -35,6 +35,7 @@ const schema = new Schema<DRequest>({
 	tag: {type: Number, enum: [0, 1, 2], default: 0},
 
 	data: {type: Schema.Types.Mixed, default: {}},
+	embedding: {type: [Number], default: []},
 	token: {type: String, required: true, unique: true},
 }, {
 	timestamps: {

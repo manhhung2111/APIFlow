@@ -3,11 +3,13 @@ import {workspaceAdmin, workspaceEditable, workspaceViewable} from "@middleware/
 import authentication from "@middleware/authentication";
 
 import {
-	createNewWorkspace,
-	deleteWorkspace,
-	getAllWorkspaces, getRecentWorkspaces,
-	getWorkspaceById,
-	updateWorkspace, updateWorkspaceAccessList,
+    createNewWorkspace,
+    deleteWorkspace,
+    getAllWorkspaces,
+    getRecentWorkspaces,
+    getWorkspaceById,
+    updateWorkspace,
+    updateWorkspaceAccessList,
 } from "@controllers/workspace";
 
 const router = express.Router();

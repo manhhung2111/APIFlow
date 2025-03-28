@@ -416,6 +416,7 @@
 
       .main {
         .app-code-block {
+
           pre {
             margin: 0 !important;
             border-radius: 0 0 $border-radius-default $border-radius-default !important;
@@ -424,7 +425,8 @@
             border-bottom: 1px solid rgba(9, 30, 66, 0.14);
 
             background-color: transparent !important;
-
+            max-height: 20vh;
+            overflow: auto;
             code {
               background-color: transparent !important;
 

@@ -98,4 +98,12 @@ export default class CollectionService{
 			throw new Error(error.message || 'Export collection failed');
 		}
 	}
+
+	static async embedRequests(collection) {
+		try {
+			return await axios.post(`/collections/${collection._id}/embed-requests`, {workspace_id: collection.workspace_id});
+		} catch (error) {
+			throw new Error(error.message || 'Embed collection failed');
+		}
+	}
 }
