@@ -38,20 +38,20 @@ export default function ExampleContextProvider(props){
 		setBody({
 			type: request.body.type,
 			data: {
-				form_data: [...request.body.data.form_data, {
+				form_data: [...request.body.data.form_data ?? [], {
 					selected: 1,
 					key: '',
 					type: 'text',
 					value: '',
 					content: ''
 				}],
-				form_encoded: [...request.body.data.form_encoded, {
+				form_encoded: [...request.body.data.form_encoded ?? [], {
 					selected: 1,
 					key: '',
 					value: '',
 					content: ''
 				}],
-				form_raw: request.body.data.form_raw
+				form_raw: request.body.data.form_raw ?? ""
 			}
 		});
 		setResponseBody(example.response.body);

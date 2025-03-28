@@ -11,7 +11,7 @@ export default function ExampleResponse(){
 
 	const generateItems = () => {
 		let headersLabel = <div className="response-tab-label">Headers</div>;
-		if(responseHeaders.length > 1){
+		if(responseHeaders && responseHeaders.length > 1){
 			headersLabel = <div className="response-tab-label">Headers <span
 				className="passed">{`(${responseHeaders.length - 1})`}</span></div>
 		}

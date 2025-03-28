@@ -5,6 +5,7 @@ import ExampleContextProvider from "@contexts/example.jsx";
 import ExampleEditorUrl from "@components/example/display/editor/url.jsx";
 import ExampleEditorUrlMain from "@components/example/display/editor/main.jsx";
 import ExampleResponse from "@components/example/response/display/display.jsx";
+import ExampleSidebar from "@components/example/display/sidebar.jsx";
 
 export default function ExamplePage(){
 
@@ -26,7 +27,7 @@ export default function ExamplePage(){
 					</div>
 				</div>
 				<div className="request-sidebar">
-					<RequestSidebar/>
+					<ExampleSidebar />
 				</div>
 			</div>
 		</ExampleContextProvider>

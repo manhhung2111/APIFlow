@@ -229,7 +229,7 @@
     }
   }
 
-  .app-markdown-editor {
+  & > .app-markdown-editor {
     padding: 8px 16px;
 
   }
@@ -238,9 +238,9 @@
 .documentation-page .documentation-folder {
   margin-top: 16px;
 
-  .app-markdown-editor {
-    padding: 8px 0
-  }
+  //& > .app-markdown-editor {
+  //  padding: 8px 16px;
+  //}
 
   .message {
     padding-top: 8px;

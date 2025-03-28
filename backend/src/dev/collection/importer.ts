@@ -98,7 +98,7 @@ export default class DBCollectionImporter {
 
     private static async importRequests(dataRequests: any[], collection: DBCollection, session: ClientSession, folder: DBFolder | null = null) {
         let requests: DBRequest[] = [];
-        let exampleReleases = [];
+        let exampleReleases: any[] = [];
 
         for (const data of dataRequests) {
             const request = await DBRequest.initialize() as DBRequest;
@@ -118,7 +118,6 @@ export default class DBCollectionImporter {
             }
 
             request.object.name = data.name;
-            request.object.content = data.description;
 
             if (data.event && data.event.length > 0) {
                 request.object.scripts.pre_request = data.event[0]?.script?.exec?.join("\n") || "";
@@ -127,6 +126,7 @@ export default class DBCollectionImporter {
 
             if (data.request) {
                 request.object.method = data.request.method;
+                request.object.content = data.request.description;
 
                 if (data?.request?.auth) {
                     if (data.request.auth.type == "jwt") {
@@ -215,98 +215,107 @@ export default class DBCollectionImporter {
     }
 
     private static async importExamples(dataExamples: any, request: DBRequest, session: ClientSession) {
-        let examples: DBExample[] = [];
-        for (const data of dataExamples) {
-            const example = await DBExample.initialize() as DBExample;
-            if (!example || !example.object || !request.object) {
-                throw new Error("Something went wrong");
-            }
+        try {
+            let examples: DBExample[] = [];
+            for (const data of dataExamples) {
+                const example = await DBExample.initialize() as DBExample;
+                if (!example || !example.object || !request.object) {
+                    throw new Error("Something went wrong");
+                }
 
-            example.object.token = UUID.randomTokenSize32();
-            example.object.user_id = Client.viewer._id.toString();
-            example.object.workspace_id = request.object.workspace_id.toString();
-            example.object.collection_id = request.object.collection_id;
-            example.object.folder_id = request.object.folder_id ?? null;
-            example.object.request_id = request.object._id.toString();
-            example.object.name = data.name;
-            if (data.originalRequest) {
-                example.object.request.method = data.originalRequest.method;
+                example.object.token = UUID.randomTokenSize32();
+                example.object.user_id = Client.viewer._id.toString();
+                example.object.workspace_id = request.object.workspace_id.toString();
+                example.object.collection_id = request.object.collection_id;
+                example.object.folder_id = request.object.folder_id ?? null;
+                example.object.request_id = request.object._id.toString();
+                example.object.name = data.name;
+                if (data.originalRequest) {
+                    example.object.request = {};
+                    example.object.request.method = data.originalRequest.method;
 
-                example.object.request.headers = data.originalRequest.header.map((header: any) => {
-                    return {
-                        selected: header.disabled == true ? false : true,
-                        content: header.description || "",
-                        key: header.key,
-                        value: header.value,
+                    example.object.request.headers = data.originalRequest.header.map((header: any) => {
+                        return {
+                            selected: header.disabled == true ? false : true,
+                            content: header.description || "",
+                            key: header.key,
+                            value: header.value,
+                        }
+                    })
+
+                    if (data.originalRequest.body) {
+                        example.object.request.body = {};
+                        example.object.request.body.data = {};
+
+                        if (data.originalRequest.body.mode == "formdata") {
+                            example.object.request.body.type = RequestBody.FormData;
+                            example.object.request.body.data.form_data = data.originalRequest.body.formdata.map((row: any) => {
+                                return {
+                                    selected: row.disabled == true ? false : true,
+                                    content: row.description || "",
+                                    key: row.key,
+                                    value: row.value || row.src || "",
+                                    type: row.type || "text",
+                                }
+                            })
+                        } else if (data.originalRequest.body.mode == "urlencoded") {
+                            example.object.request.body.type = RequestBody.FormEncoded;
+                            example.object.request.body.data.form_encoded = data.originalRequest.body.urlencoded.map((row: any) => {
+                                return {
+                                    selected: row.disabled == true ? false : true,
+                                    content: row.description || "",
+                                    key: row.key,
+                                    value: row.value || row.src || "",
+                                }
+                            })
+                        } else if (data.originalRequest.body.mode == "raw") {
+                            example.object.request.body.type = RequestBody.FormRaw;
+                            example.object.request.body.data.form_raw = data.originalRequest.body.raw;
+                        }
                     }
-                })
 
-                if (data.originalRequest.body) {
-                    if (data.originalRequest.body.mode == "formdata") {
-                        example.object.request.body.type = RequestBody.FormData;
-                        example.object.request.body.data.form_data = data.originalRequest.body.formdata.map((row: any) => {
-                            return {
-                                selected: row.disabled == true ? false : true,
-                                content: row.description || "",
-                                key: row.key,
-                                value: row.value || row.src || "",
-                                type: row.type || "text",
-                            }
-                        })
-                    } else if (data.originalRequest.body.mode == "urlencoded") {
-                        example.object.request.body.type = RequestBody.FormEncoded;
-                        example.object.request.body.data.form_encoded = data.originalRequest.body.urlencoded.map((row: any) => {
-                            return {
-                                selected: row.disabled == true ? false : true,
-                                content: row.description || "",
-                                key: row.key,
-                                value: row.value || row.src || "",
-                            }
-                        })
-                    } else if (data.originalRequest.body.mode == "raw") {
-                        example.object.request.body.type = RequestBody.FormRaw;
-                        example.object.request.body.data.form_raw = data.originalRequest.body.raw;
+                    if (data.originalRequest.url) {
+                        if (typeof data.originalRequest.url === "string") {
+                            example.object.request.url = data.originalRequest.url;
+                            example.object.request.params = [];
+                        } else {
+                            const urlObject = this.rebuildUrl(data.originalRequest.url);
+                            example.object.request.url = urlObject?.url || "";
+                            example.object.request.params = urlObject?.params || [];
+                        }
                     }
                 }
 
-                if (data.originalRequest.url) {
-                    if (typeof data.originalRequest.url === "string") {
-                        example.object.request.url = data.originalRequest.url;
-                        example.object.request.params = [];
-                    } else {
-                        const urlObject = this.rebuildUrl(data.originalRequest.url);
-                        example.object.request.url = urlObject?.url || "";
-                        example.object.request.params = urlObject?.params || [];
-                    }
+                let status = "";
+                if (data.status && data.code) {
+                    status = data.code + " " + data.status;
                 }
+
+                example.object.response = {
+                    headers: data.header.reduce((acc: any, item: any) => {
+                        acc[item.key] = item.value;
+                        return acc;
+                    }, {}),
+                    body: data.body || "",
+                    status: status
+                }
+
+                examples.push(example);
             }
 
-            let status = "";
-            if (data.status && data.code) {
-                status = data.code + data.status;
+            if (examples && examples.length > 0) {
+                const documents = examples.map(example => example.object!);
+                await DBExample.insertMany(documents, session);
+                console.log(`✅ Inserted ${examples.length} examples in bulk.`);
+
+                return examples.map(example => example.releaseCompact());
             }
 
-            example.object.response = {
-                headers: data.header.reduce((acc: any, item: any) => {
-                    acc[item.key] = item.value;
-                    return acc;
-                }, {}),
-                body: data.body || "",
-                status: status
-            }
-
-            examples.push(example);
+            return [];
+        } catch (error) {
+            console.error(error);
+            return [];
         }
-
-        if (examples && examples.length > 0) {
-            const documents = examples.map(example => example.object!);
-            await DBExample.insertMany(documents, session);
-            console.log(`✅ Inserted ${examples.length} examples in bulk.`);
-
-            return examples.map(example => example.releaseCompact());
-        }
-
-        return [];
     }
 
     private static async readCollection(collection: DBCollection, data: any, session: ClientSession) {

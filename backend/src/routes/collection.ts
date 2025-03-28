@@ -10,7 +10,8 @@ import {
     getCollectionAssociatedWithData,
     getCollectionById,
     getCollectionExport,
-    getCollectionsByWorkspace, importCollection,
+    getCollectionsByWorkspace,
+    importCollection,
     updateCollection,
     updateCollectionContent,
     updateCollectionName

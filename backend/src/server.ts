@@ -1,4 +1,4 @@
-import express from "express";
+import express, {NextFunction, Request, Response} from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -9,13 +9,15 @@ import {
     CollectionRoute,
     EnvironmentRoute,
     ExampleRoute,
-    FolderRoute, PersonaRoute,
+    FolderRoute,
+    PersonaRoute,
     RequestRoute,
     UserRoute,
     WorkspaceRoute,
 } from "@routes";
-import {Code, HTMLInput} from "@ap/core";
+import {HTMLInput} from "@ap/core";
 import logger from "@utils/logger";
+
 
 dotenv.config();
 const app = express();
