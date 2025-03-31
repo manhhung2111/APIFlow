@@ -97,7 +97,7 @@ export default function DocumentationPage(){
 		</div>
 		{(folders == null || requests == null || activeCollection == null) &&
 			<Skeleton active={true} style={{padding: 16}}/>}
-		{folders && requests && activeCollection && <div className="main">
+		{folders != null && requests != null && activeCollection != null && <div className="main">
 			<div className="content-wrapper">
 				<div className="content">
 					<DocumentationCollection collection={activeCollection}/>

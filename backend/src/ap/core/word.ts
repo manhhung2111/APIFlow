@@ -81,4 +81,8 @@ export default class Word{
 	public static clean(text: string){
 		return text.trim();
 	}
+
+	public static removeNewLines(text: string) {
+		return text.replace(/\n/g, '');
+	}
 }

@@ -15,7 +15,11 @@ export default class GoogleGeminiService {
                 threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
             },
         ],
-        systemInstruction: ""
+        systemInstruction: `You are an API query classifier. Your task is to analyze user queries and classify them into one of the following three categories:  
+            1. **Summarize** → If the user requests an overview or summary of an API collection, including its folders and requests, return "Summarize".  
+            2. **Retrieve a request** → If the user asks for details about a specific API request, such as its endpoint, parameters, or response structure, return "Retrieve a request".  
+            3. **Non-relevant** → If the user's query is unrelated to API navigation, summaries, or request retrieval, return "Non-relevant".  
+        Respond with only one of these three classifications as a single word or phrase, with no additional explanation.`
     });
 
 
@@ -50,7 +54,13 @@ export default class GoogleGeminiService {
     })
 
     public static async classifyQuery(query: string) {
-
+        try {
+            const response = await this.classifyModel.generateContent(query);
+            return response.response.text();
+        } catch (error) {
+            console.error(error);
+            throw new Error((error as Error).message);
+        }
     }
 
     public static async summarize(context: string, query: string) {

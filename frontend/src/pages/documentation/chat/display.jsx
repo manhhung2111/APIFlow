@@ -10,6 +10,7 @@ import {toast} from "react-toastify";
 import GeminiModel from "@configs/gemini.js";
 import CollectionService from "@services/collection.js";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
+import _ from "lodash";
 
 export default function DocumentationChat({open, setOpen, documentJSON}){
 	const [question, setQuestion] = useState("");
@@ -28,9 +29,11 @@ export default function DocumentationChat({open, setOpen, documentJSON}){
 			if(!question.trim()) return;
 
 			// Add user message to history
-			const newHistory = [...history, {role: "user", parts: [{text: question}]}];
+			let tempQuestion = _.cloneDeep(question);
+			const newHistory = [...history, {role: "user", parts: [{text: tempQuestion}]}];
 			setHistory(newHistory);
 			setLoading(true);
+			setQuestion("");
 
 			// const gemini = new GeminiModel(documentJSON);
 			// const chat = gemini.model.startChat({
@@ -46,14 +49,13 @@ export default function DocumentationChat({open, setOpen, documentJSON}){
 			//
 			// 	setAnswer(accumulatedText);
 			// }
-			const result = await CollectionService.searchRequests(activeCollection, question);
+			const result = await CollectionService.searchRequests(activeCollection, tempQuestion);
 			if (result.code == 0) {
 				setHistory((prev) => [...prev, {role: "model", parts: [{text: JSON.stringify(result.data)}]}]);
 			} else {
 				setHistory((prev) => [...prev, {role: "model", parts: [{text: result.message}]}]);
 			}
 
-			setQuestion("");
 			// setAnswer("")
 		} catch (error) {
 			toast.error(error.message);
