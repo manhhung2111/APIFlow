@@ -44,7 +44,7 @@ export default class DBRequest extends DBModel<DRequest> {
                 "$project": {
                     "name": 1,  // Include the 'object.name' field
                     "content": 1, // Include the 'object.content' field
-                    "_id": 0  // Exclude _id (optional)
+                    "_id": 1  // Include _id (optional)
                 }
             }
         ])

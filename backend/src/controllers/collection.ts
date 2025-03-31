@@ -8,7 +8,6 @@ import {DBRequest, DBRequestLoader} from "@dev/request";
 import {DBFolder, DBFolderLoader} from "@dev/folder";
 import {DBExample, DBExampleLoader} from "@dev/example";
 import HuggingFaceEmbeddingService from "@services/ai/hugging.face";
-import RequestModel from "@models/request";
 import GoogleGeminiService from "@services/ai/google.gemini";
 
 export const createNewCollection = async (request: Request, response: Response) => {
@@ -409,10 +408,32 @@ export const searchRequests = async (request: Request, response: Response) => {
         const query = HTMLInput.query("query");
         let result = await GoogleGeminiService.classifyQuery(query);
         result = Word.removeNewLines(result);
-        // const result = await DBRequest.searchVector(query);
 
-        response.status(200).json(Code.success(`Search request successfully.`, {request: result ?? "No document" +
-                " found"}));
+        let answer = "Your query isn't related to API navigation or summaries. Try asking:  \n" +
+            "\n" +
+            "- *\"Summarize the API collection.\"*  \n" +
+            "- *\"Get details for the login request.\"*    \n" +
+            "Let me know how I can help! 😊"
+
+        if (result == "Summarize") {
+
+        } else if (result == "Retrieve a request") {
+            let request = await DBRequest.searchVector(query);
+
+            let context = "{}";
+            if (request != null) {
+                request["link"] = `#request-${request._id}`;
+                context = JSON.stringify(request);
+            }
+
+            answer = await GoogleGeminiService.retrieve(context, query);
+        }
+
+
+        response.status(200).json(Code.success(`Search request successfully.`, {
+            request: answer ?? "No document" +
+                " found"
+        }));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));

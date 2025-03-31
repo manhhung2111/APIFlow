@@ -19,7 +19,7 @@ export default class GoogleGeminiService {
             1. **Summarize** → If the user requests an overview or summary of an API collection, including its folders and requests, return "Summarize".  
             2. **Retrieve a request** → If the user asks for details about a specific API request, such as its endpoint, parameters, or response structure, return "Retrieve a request".  
             3. **Non-relevant** → If the user's query is unrelated to API navigation, summaries, or request retrieval, return "Non-relevant".  
-        Respond with only one of these three classifications as a single word or phrase, with no additional explanation.`
+        Respond with only one of these three classifications as a single word or phrase, with no additional explanation.`,
     });
 
 
@@ -50,8 +50,14 @@ export default class GoogleGeminiService {
                 threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
             },
         ],
-        systemInstruction: ""
-    })
+        systemInstruction: `You are an API request retriever. When given a query, use the provided request object to return the following structured response:
+            **Request Name:** {name}  
+            **Description:** {description}  
+            🔗**Link:** [{name}]({link})  
+
+            If no relevant request is found, respond with:  
+            *"No matching request found."*`
+    });
 
     public static async classifyQuery(query: string) {
         try {
@@ -68,6 +74,13 @@ export default class GoogleGeminiService {
     }
 
     public static async retrieve(context: string, query: string) {
-
+        try {
+            const q = `Here is the user query: ${query}, and here is the request found by system: ${context}`;
+            const response = await this.retrievalModel.generateContent(q);
+            return response.response.text();
+        } catch (error) {
+            console.error(error);
+            throw new Error((error as Error).message);
+        }
     }
 }

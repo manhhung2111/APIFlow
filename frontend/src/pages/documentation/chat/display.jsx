@@ -51,7 +51,7 @@ export default function DocumentationChat({open, setOpen, documentJSON}){
 			// }
 			const result = await CollectionService.searchRequests(activeCollection, tempQuestion);
 			if (result.code == 0) {
-				setHistory((prev) => [...prev, {role: "model", parts: [{text: JSON.stringify(result.data)}]}]);
+				setHistory((prev) => [...prev, {role: "model", parts: [{text: result.data.request}]}]);
 			} else {
 				setHistory((prev) => [...prev, {role: "model", parts: [{text: result.message}]}]);
 			}
