@@ -35,7 +35,16 @@ export default class GoogleGeminiService {
                 threshold: HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
             },
         ],
-        systemInstruction: ""
+        systemInstruction: "You have access to the structure of an API collection, including its folders and requests. Your task is to generate a concise, high-level summary of the collection.\n" +
+            "\n" +
+            "Summarize the Collection’s Purpose: Provide a brief description of what the API collection is designed for.\n" +
+            "\n" +
+            "Describe Its Scope: Explain the general types of operations it supports (e.g., user management, payments, data retrieval).\n" +
+            "\n" +
+            "Do Not List Individual Folders or Requests: Instead of enumerating folders or requests, summarize their overall function.\n" +
+            "\n" +
+            "Ensure Clarity and Brevity: The summary should be easy to understand and provide just enough context" +
+            " for further exploration.\""
     });
 
     private static retrievalModel = this.genAI.getGenerativeModel({
@@ -59,9 +68,13 @@ export default class GoogleGeminiService {
             *"No matching request found."*`
     });
 
-    public static async classifyQuery(query: string) {
+    public static async classifyQuery(query: string, history: any[]) {
         try {
-            const response = await this.classifyModel.generateContent(query);
+            const chat = this.classifyModel.startChat({
+                history: history
+            });
+
+            const response = await chat.sendMessage(query);
             return response.response.text();
         } catch (error) {
             console.error(error);
@@ -69,14 +82,31 @@ export default class GoogleGeminiService {
         }
     }
 
-    public static async summarize(context: string, query: string) {
+    public static async summarize(context: string, query: string, history: any[]) {
+        try {
+            const chat = this.summarizeModel.startChat({
+                history: history
+            });
+
+            const q = `Here is the user query: ${query}, and here is the document: ${context}`;
+            const response = await chat.sendMessage(q);
+            return response.response.text();
+        } catch (error) {
+            console.error(error);
+            throw new Error((error as Error).message);
+        }
+
 
     }
 
-    public static async retrieve(context: string, query: string) {
+    public static async retrieve(context: string, query: string, history: any[]) {
         try {
+            const chat = this.retrievalModel.startChat({
+                history: history
+            });
+
             const q = `Here is the user query: ${query}, and here is the request found by system: ${context}`;
-            const response = await this.retrievalModel.generateContent(q);
+            const response = await chat.sendMessage(q);
             return response.response.text();
         } catch (error) {
             console.error(error);

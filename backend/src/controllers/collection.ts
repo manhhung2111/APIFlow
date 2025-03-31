@@ -394,6 +394,11 @@ export const searchRequests = async (request: Request, response: Response) => {
     logger.info("[Controller] Vector Search requests");
     try {
         const collection_id = HTMLInput.param("collection_id");
+        let history = HTMLInput.inputNoSafe("history");
+        if (typeof history == "string") {
+            history = [];
+        }
+
         if (collection_id.length != 24) {
             response.status(404).json(Code.error(Code.INVALID_DATA));
             return;
@@ -406,7 +411,7 @@ export const searchRequests = async (request: Request, response: Response) => {
         }
 
         const query = HTMLInput.query("query");
-        let result = await GoogleGeminiService.classifyQuery(query);
+        let result = await GoogleGeminiService.classifyQuery(query, history);
         result = Word.removeNewLines(result);
 
         let answer = "Your query isn't related to API navigation or summaries. Try asking:  \n" +
@@ -416,7 +421,15 @@ export const searchRequests = async (request: Request, response: Response) => {
             "Let me know how I can help! 😊"
 
         if (result == "Summarize") {
+            const {requests, folders} = await buildDocument(collection);
+            const document = {
+                "collection_name": collection.object!.name,
+                "collection_description": collection.object!.content,
+                "folders": folders,
+                "requests": requests,
+            }
 
+            answer = await GoogleGeminiService.summarize(JSON.stringify(document), query, history);
         } else if (result == "Retrieve a request") {
             let request = await DBRequest.searchVector(query);
 
@@ -426,9 +439,8 @@ export const searchRequests = async (request: Request, response: Response) => {
                 context = JSON.stringify(request);
             }
 
-            answer = await GoogleGeminiService.retrieve(context, query);
+            answer = await GoogleGeminiService.retrieve(context, query, history);
         }
-
 
         response.status(200).json(Code.success(`Search request successfully.`, {
             request: answer ?? "No document" +
@@ -437,5 +449,45 @@ export const searchRequests = async (request: Request, response: Response) => {
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
+    }
+}
+
+async function buildDocument(collection: DBCollection) {
+    let folders = (await DBFolderLoader.byCollection(collection.object!)).map(folder => folder.release());
+    let requests = (await DBRequestLoader.byCollection(collection.object!)).map(request => request.release());
+    let examples = (await DBExampleLoader.byCollection(collection.object!)).map(example => example.release());
+
+    const foldersMap = new Map(folders.map((folder: any) => [folder._id.toString(), {
+        name: folder.name,
+        description: folder.content,
+        requests: []
+    }]));
+    const requestsMap = new Map(requests.map((request: any) => [request._id.toString(), {
+        name: request.name,
+        description: request.content,
+        method: request.method,
+        examples: []
+    }]));
+
+    examples.forEach((example: any) => {
+        if (requestsMap.has(example.request_id)) {
+            // @ts-ignore
+            requestsMap.get(example.request_id).examples.push(example);
+        }
+    });
+
+    const rootRequests: any[] = [];
+    requests.forEach((request: any) => {
+        if (request.folder_id && foldersMap.has(request.folder_id)) {
+            // @ts-ignore
+            foldersMap.get(request.folder_id).requests.push(requestsMap.get(request._id.toString()));
+        } else {
+            rootRequests.push(requestsMap.get(request._id.toString()));
+        }
+    });
+
+    return {
+        requests: rootRequests,
+        folders: Array.from(foldersMap.values())
     }
 }

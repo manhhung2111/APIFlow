@@ -308,7 +308,7 @@ export default class HTMLInput{
 	}
 
 
-	public static inputNoSafe(field: string): string {
+	public static inputNoSafe(field: string) {
 		return this._cur_request?.body[field] ?? "";
 	}
 

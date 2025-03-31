@@ -41,6 +41,6 @@ router.post("/import", workspaceEditable, importCollection);
 // Delete routes
 router.delete("/:collection_id", workspaceEditable, deleteCollection);
 router.post("/:collection_id/embed-requests", workspaceAdmin, embedRequests);
-router.get("/:collection_id/search-requests", workspaceViewable, searchRequests);
+router.post("/:collection_id/search-requests", workspaceViewable, searchRequests);
 
 export default router;

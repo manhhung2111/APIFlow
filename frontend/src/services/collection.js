@@ -87,7 +87,7 @@ export default class CollectionService{
 		}
 	}
 
-	static async import(file, workspace_id) {
+	static async import(file, workspace_id){
 		try {
 			const formData = new FormData();
 			formData.append("file", file);
@@ -99,7 +99,7 @@ export default class CollectionService{
 		}
 	}
 
-	static async embedRequests(collection) {
+	static async embedRequests(collection){
 		try {
 			return await axios.post(`/collections/${collection._id}/embed-requests`, {workspace_id: collection.workspace_id});
 		} catch (error) {
@@ -107,9 +107,12 @@ export default class CollectionService{
 		}
 	}
 
-	static async searchRequests(collection, query) {
+	static async searchRequests(collection, query, history){
 		try {
-			return await axios.get(`/collections/${collection._id}/search-requests?query=${query}&workspace_id=${collection.workspace_id}`);
+			return await axios.post(`/collections/${collection._id}/search-requests?query=${query}`, {
+				workspace_id: collection.workspace_id,
+				history
+			});
 		} catch (error) {
 			throw new Error(error.message || 'Search request failed');
 		}

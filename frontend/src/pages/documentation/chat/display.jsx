@@ -49,7 +49,7 @@ export default function DocumentationChat({open, setOpen, documentJSON}){
 			//
 			// 	setAnswer(accumulatedText);
 			// }
-			const result = await CollectionService.searchRequests(activeCollection, tempQuestion);
+			const result = await CollectionService.searchRequests(activeCollection, tempQuestion, history);
 			if (result.code == 0) {
 				setHistory((prev) => [...prev, {role: "model", parts: [{text: result.data.request}]}]);
 			} else {
