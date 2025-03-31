@@ -166,8 +166,8 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 
 					<div className="group-items">
 						{folders?.length > 0 && folders.map(folder => {
-							const associatedRequests = requests.filter(request => request.folder_id === folder._id);
-							const associatedExamples = examples.filter(example => example.folder_id === folder._id);
+							const associatedRequests = requests.filter(request => request.folder_id == folder._id);
+							const associatedExamples = examples.filter(example => example.folder_id == folder._id);
 
 							return <FolderMenuItem key={`folder-${folder._id}`} folder={folder}
 												   requests={associatedRequests} examples={associatedExamples}/>;
@@ -176,7 +176,7 @@ export default function CollectionMenuItem({collection, folders, requests, examp
 					<div className="group-items">
 						{requests?.length > 0 && requests.map(request => {
 							if(request.folder_id) return null;
-							const associatedExamples = examples.filter(example => example.request_id === request._id);
+							const associatedExamples = examples.filter(example => example.request_id == request._id);
 
 							return <RequestMenuItem key={`request-${request._id}`} request={request} examples={associatedExamples}/>;
 						})}

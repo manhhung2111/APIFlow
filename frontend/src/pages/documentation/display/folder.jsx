@@ -35,7 +35,7 @@ export default function DocumentationFolder({folder, collection}){
 	}));
 
 	const authorizationInherit = getInheritAuthMessage();
-	console.log(collection.authorization.type)
+
 	return (<div className="documentation-folder" id={`folder-${folder._id}`}>
 		<h3><FolderOutlined/>{folder.name}</h3>
 		{/*{folder.content.length > 0 && <TextEditor value={folder.content} readOnly={true}/>}*/}

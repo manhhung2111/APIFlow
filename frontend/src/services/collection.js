@@ -106,4 +106,12 @@ export default class CollectionService{
 			throw new Error(error.message || 'Embed collection failed');
 		}
 	}
+
+	static async searchRequests(collection, query) {
+		try {
+			return await axios.get(`/collections/${collection._id}/search-requests?query=${query}&workspace_id=${collection.workspace_id}`);
+		} catch (error) {
+			throw new Error(error.message || 'Search request failed');
+		}
+	}
 }

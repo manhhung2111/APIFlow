@@ -3,7 +3,7 @@ import {DBCondition} from "@ap/db";
 import {Code, Validation} from "@ap/core";
 
 abstract class DBModel<T>{
-	public static PAGE_SIZE = 200;
+	public static PAGE_SIZE = 500;
 	public object: HydratedDocument<T> | null | undefined;
 	protected abstract _db: Model<T>;
 

@@ -4,7 +4,6 @@ export default class GeminiModel {
 	constructor(documentJSON) {
 		this.genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_PUBLIC_KEY);
 
-		console.log(documentJSON);
 		this.model = this.genAI.getGenerativeModel({
 			model: "gemini-2.0-flash",
 			// safetySettings: [

@@ -3,11 +3,13 @@ import {CloseOutlined, SendOutlined} from "@ant-design/icons";
 import RestartAltIcon from "@assets/icons/restart.alt.jsx";
 import {Input} from "antd";
 import '../styles/chat.scss';
-import {useEffect, useRef, useState} from "react";
+import {useContext, useEffect, useRef, useState} from "react";
 import Markdown from "react-markdown";
 
 import {toast} from "react-toastify";
 import GeminiModel from "@configs/gemini.js";
+import CollectionService from "@services/collection.js";
+import {WorkspaceContext} from "@contexts/workspace.jsx";
 
 export default function DocumentationChat({open, setOpen, documentJSON}){
 	const [question, setQuestion] = useState("");
@@ -15,6 +17,7 @@ export default function DocumentationChat({open, setOpen, documentJSON}){
 	const [history, setHistory] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const chatEndRef = useRef(null);
+	const {activeCollection} = useContext(WorkspaceContext);
 
 	useEffect(() => {
 		chatEndRef.current?.scrollIntoView({behavior: "smooth"});
@@ -27,26 +30,31 @@ export default function DocumentationChat({open, setOpen, documentJSON}){
 			// Add user message to history
 			const newHistory = [...history, {role: "user", parts: [{text: question}]}];
 			setHistory(newHistory);
-			setQuestion("");
 			setLoading(true);
 
-			const gemini = new GeminiModel(documentJSON);
-			const chat = gemini.model.startChat({
-				history: [...history]
-			});
-
-			const result = await chat.sendMessageStream(question);
-
-			let accumulatedText = "";
-			for await (const chunk of result.stream) {
-				const chunkText = chunk.text();
-				accumulatedText += chunkText;
-
-				setAnswer(accumulatedText);
+			// const gemini = new GeminiModel(documentJSON);
+			// const chat = gemini.model.startChat({
+			// 	history: [...history]
+			// });
+			//
+			// const result = await chat.sendMessageStream(question);
+			//
+			// let accumulatedText = "";
+			// for await (const chunk of result.stream) {
+			// 	const chunkText = chunk.text();
+			// 	accumulatedText += chunkText;
+			//
+			// 	setAnswer(accumulatedText);
+			// }
+			const result = await CollectionService.searchRequests(activeCollection, question);
+			if (result.code == 0) {
+				setHistory((prev) => [...prev, {role: "model", parts: [{text: JSON.stringify(result.data)}]}]);
+			} else {
+				setHistory((prev) => [...prev, {role: "model", parts: [{text: result.message}]}]);
 			}
 
-			setHistory((prev) => [...prev, {role: "model", parts: [{text: accumulatedText}]}]);
-			setAnswer("")
+			setQuestion("");
+			// setAnswer("")
 		} catch (error) {
 			toast.error(error.message);
 		} finally {

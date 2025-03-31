@@ -2,8 +2,6 @@ import axios from "axios";
 import * as process from "node:process";
 
 export default class HuggingFaceEmbeddingService {
-
-
     public static async embedText(text: string) {
         try {
             const options = {
@@ -22,7 +20,5 @@ export default class HuggingFaceEmbeddingService {
         } catch (error) {
             throw new Error((error as Error).message);
         }
-
-
     }
 }

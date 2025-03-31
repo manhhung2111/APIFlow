@@ -8,8 +8,7 @@ export default class Loader{
 	public static async byWorkspace(workspace: HydratedDocument<DWorkspace>){
 		const workspace_id = workspace._id.toString();
 
-		const condition = new DBCondition().setFilter({"workspace_id": workspace_id})
-			.setLimit(DBEnvironment.PAGE_SIZE);
+		const condition = new DBCondition().setFilter({"workspace_id": workspace_id});
 
 		return await DBEnvironment.find(condition) as DBEnvironment[];
 	}

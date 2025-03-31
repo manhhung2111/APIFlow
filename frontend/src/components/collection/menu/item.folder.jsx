@@ -100,6 +100,8 @@ export default function FolderMenuItem({folder, requests, examples}){
 		{key: `delete_${folder?._id}`, label: "Delete", onClick: () => setDeleteFolderVisible(true), danger: 1},
 	];
 
+	console.log(`Folder ${folder.name} - ${requests.length} requests`);
+
 	return (
 		<div className={`menu-item folder-menu-item ${collapsed ? "-collapsed" : ""}`}>
 			<div className="main-item">
@@ -124,7 +126,7 @@ export default function FolderMenuItem({folder, requests, examples}){
 					</p>}
 
 					{requests.length > 0 && requests.map(request => {
-						const associatedExamples = examples.filter(example => example.request_id === request._id);
+						const associatedExamples = examples.filter(example => example.request_id == request._id);
 
 						return <RequestMenuItem key={`request-${request._id}`} request={request}
 												examples={associatedExamples}/>

@@ -7,7 +7,8 @@ import {DBWorkspace} from "@dev/workspace";
 import {DBRequest, DBRequestLoader} from "@dev/request";
 import {DBFolder, DBFolderLoader} from "@dev/folder";
 import {DBExample, DBExampleLoader} from "@dev/example";
-import HuggingFaceEmbeddingService from "@services/embedding/hugging.face";
+import HuggingFaceEmbeddingService from "@services/ai/hugging.face";
+import RequestModel from "@models/request";
 
 export const createNewCollection = async (request: Request, response: Response) => {
     logger.info("[Controller] Create new collection");
@@ -380,6 +381,32 @@ export const embedRequests = async (request: Request, response: Response) => {
         }
 
         response.status(200).json(Code.success(`Embed ${requests.length} requests successfully.`))
+    } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
+}
+
+export const searchRequests = async (request: Request, response: Response) => {
+    logger.info("[Controller] Vector Search requests");
+    try {
+        const collection_id = HTMLInput.param("collection_id");
+        if (collection_id.length != 24) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
+        }
+
+        const collection = await DBCollection.initialize(HTMLInput.param("collection_id")) as DBCollection;
+        if (!collection.good()) {
+            response.status(404).json(Code.error(Code.INVALID_DATA));
+            return;
+        }
+
+        const query = HTMLInput.query("query");
+        const result = await DBRequest.searchVector(query);
+
+        response.status(200).json(Code.success(`Search request successfully.`, {request: result ?? "No document" +
+                " found"}));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));

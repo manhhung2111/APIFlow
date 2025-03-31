@@ -43,7 +43,7 @@ app.use(cookieParser(process.env.COOKIES_SECRET));
 // Read files
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: {fileSize: 2 * 1024 * 1024}
+    limits: {fileSize: 3 * 1024 * 1024}
 });
 
 app.use(upload.any(), (request, response, next) => {

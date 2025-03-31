@@ -10,7 +10,7 @@ import {DBEnvironmentLoader} from "@dev/environment";
 import {DBExampleLoader} from "@dev/example";
 import Client from "@dev/client";
 import {DBPersonaLoader} from "@dev/persona";
-import HuggingFaceEmbeddingService from "@services/embedding/hugging.face";
+import HuggingFaceEmbeddingService from "@services/ai/hugging.face";
 
 export const getAllWorkspaces = async (request: Request, response: Response) => {
     logger.info("[Controller] Get all workspaces");
@@ -96,6 +96,8 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
             maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expires in 7 days
             sameSite: "strict",
         });
+
+        console.log(`Requests: ${requests_compact.length}`);
 
         response.status(200).json(Code.success(`Get workspace-${workspace_id} successfully.`, {
             workspace: workspace.release(),

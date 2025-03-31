@@ -19,7 +19,7 @@ export default function ExampleMenuItem({example}){
 
 		if(result.code === 0){
 			setExamples(prev => {
-				return prev.filter(e => e._id !== example._id);
+				return prev.filter(e => e._id != example._id);
 			});
 
 			if(example_id == example._id){

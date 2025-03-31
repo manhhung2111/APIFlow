@@ -8,7 +8,7 @@ import {toast} from "react-toastify";
 import {useNavigate} from "react-router";
 
 export default function CollectionMenu(){
-	const {workspace, collections, folders, requests, examples, setCollections} = useContext(WorkspaceContext);
+	const {workspace, collections, folders, requests, examples, setCollections, activeCollection} = useContext(WorkspaceContext);
 	const navigate = useNavigate();
 
 	const handleAddCollection = async () => {
@@ -23,6 +23,8 @@ export default function CollectionMenu(){
 		}
 	}
 
+	console.log(`Collection ${activeCollection?.name} - ${requests?.length} requests`);
+
 	return (
 		<div className="collections-master-menu">
 			{workspace && collections?.length === 0 && <div className="empty-collections">
@@ -36,9 +38,9 @@ export default function CollectionMenu(){
 			</div>}
 			{workspace && collections?.length > 0 && <div className="group-items">
 				{collections.map(collection => {
-					const associatedFolders = folders?.filter(folder => folder.collection_id === collection._id) || [];
-					const associatedRequests = requests?.filter(request => request.collection_id === collection._id) || [];
-					const associatedExamples = examples?.filter(example => example.collection_id === collection._id) || [];
+					const associatedFolders = folders?.filter(folder => folder.collection_id == collection._id) || [];
+					const associatedRequests = requests?.filter(request => request.collection_id == collection._id) || [];
+					const associatedExamples = examples?.filter(example => example.collection_id == collection._id) || [];
 
 					return <CollectionMenuItem key={`collection-${collection._id}`} collection={collection}
 											   folders={associatedFolders} requests={associatedRequests} examples={associatedExamples}/>;
