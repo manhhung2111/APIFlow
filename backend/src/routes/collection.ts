@@ -14,12 +14,12 @@ import {
     importCollection,
     updateCollection,
     updateCollectionContent,
-    updateCollectionName, embedRequests, searchRequests
+    updateCollectionName, embedRequests, searchRequests, testCollection
 } from "@controllers/collection";
 
 const router = express.Router();
 
-router.use(authentication);
+// router.use(authentication);
 
 // Get routes
 router.get("/", workspaceViewable, getCollectionsByWorkspace);
@@ -42,5 +42,7 @@ router.post("/import", workspaceEditable, importCollection);
 router.delete("/:collection_id", workspaceEditable, deleteCollection);
 router.post("/:collection_id/embed-requests", workspaceAdmin, embedRequests);
 router.post("/:collection_id/search-requests", workspaceViewable, searchRequests);
+
+router.post("/:collection_id/test", testCollection);
 
 export default router;

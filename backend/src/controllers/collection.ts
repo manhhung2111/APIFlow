@@ -9,6 +9,8 @@ import {DBFolder, DBFolderLoader} from "@dev/folder";
 import {DBExample, DBExampleLoader} from "@dev/example";
 import HuggingFaceEmbeddingService from "@services/ai/hugging.face";
 import GoogleGeminiService from "@services/ai/google.gemini";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 export const createNewCollection = async (request: Request, response: Response) => {
     logger.info("[Controller] Create new collection");
@@ -377,7 +379,7 @@ export const embedRequests = async (request: Request, response: Response) => {
             if (request.object!.embedding && request.object!.embedding.length > 0) {
                 continue;
             }
-            const text = `Name: ${request.object!.name}. Description: ${request.object!.content}.`
+            const text = `${request.object!.content}`
             request.object!.embedding = await HuggingFaceEmbeddingService.embedText(text);
 
             await request.save();
@@ -447,6 +449,54 @@ export const searchRequests = async (request: Request, response: Response) => {
                 " found"
         }));
     } catch (error) {
+        logger.error((error as Error).stack);
+        response.status(500).json(Code.error((error as Error).message));
+    }
+}
+
+export const testCollection = async (request: Request, response: Response) => {
+    logger.info("[Controller] Test requests requests");
+    try {
+        // Resolve the relative path
+        // const filePath = path.join(__dirname, '../test/result.json');
+        // const testCases = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        //
+        // const res: any = [];
+        // for (let i = 50; i < 100; i++) {
+        //     const testCase = testCases[i];
+        //     const query = testCase.query;
+        //     const request_id = testCase.request_id;
+        //
+        //     // Delay for 5 seconds (5000ms)
+        //     // await new Promise(resolve => setTimeout(resolve, 5000));
+        //
+        //     let request = await DBRequest.searchVector(query);
+        //
+        //     let result = false;
+        //     if (request != null) {
+        //         if (request_id == request._id) {
+        //             result = true;
+        //         }
+        //
+        //         res.push({
+        //             ...testCase,
+        //             result: result,
+        //             actual: request._id,
+        //         });
+        //     } else {
+        //         res.push({
+        //             ...testCase,
+        //             result: result,
+        //             actual: null,
+        //         })
+        //     }
+        // }
+
+        const query = HTMLInput.inputNoSafe("query");
+        let request = await DBRequest.searchVector(query);
+
+        response.status(200).json(request);
+    } catch(error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
     }

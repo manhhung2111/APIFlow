@@ -36,7 +36,7 @@ export default class DBRequest extends DBModel<DRequest> {
                     "index": "NameDescSemanticSearch",
                     "path": "embedding",
                     "queryVector": vector,
-                    "numCandidates": 10,
+                    "numCandidates": 100,
                     "limit": 1
                 }
             },
