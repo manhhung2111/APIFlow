@@ -19,7 +19,7 @@ import {
 
 const router = express.Router();
 
-// router.use(authentication);
+router.use(authentication);
 
 // Get routes
 router.get("/", workspaceViewable, getCollectionsByWorkspace);

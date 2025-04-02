@@ -413,39 +413,25 @@ export const searchRequests = async (request: Request, response: Response) => {
         }
 
         const query = HTMLInput.query("query");
-        let result = await GoogleGeminiService.classifyQuery(query, history);
-        result = Word.removeNewLines(result);
 
-        let answer = "Your query isn't related to API navigation or summaries. Try asking:  \n" +
-            "\n" +
-            "- *\"Summarize the API collection.\"*  \n" +
-            "- *\"Get details for the login request.\"*    \n" +
-            "Let me know how I can help! 😊"
-
-        if (result == "Summarize") {
-            const {requests, folders} = await buildDocument(collection);
-            const document = {
-                "collection_name": collection.object!.name,
-                "collection_description": collection.object!.content,
-                "folders": folders,
-                "requests": requests,
-            }
-
-            answer = await GoogleGeminiService.summarize(JSON.stringify(document), query, history);
-        } else if (result == "Retrieve a request") {
-            let request = await DBRequest.searchVector(query);
-
-            let context = "{}";
-            if (request != null) {
-                request["link"] = `#request-${request._id}`;
-                context = JSON.stringify(request);
-            }
-
-            answer = await GoogleGeminiService.retrieve(context, query, history);
+        const {requests, folders} = await buildDocument(collection);
+        const document = {
+            "collection_name": collection.object!.name,
+            "collection_description": collection.object!.content,
+            "folders": folders,
+            "requests": requests,
+        }
+        let request = await DBRequest.searchVector(query);
+        let context = "{}";
+        if (request != null) {
+            request["link"] = `#request-${request._id}`;
+            context = JSON.stringify(request);
         }
 
+        let result = await GoogleGeminiService.classifyQuery(JSON.stringify(document), context, query, history);
+
         response.status(200).json(Code.success(`Search request successfully.`, {
-            request: answer ?? "No document" +
+            request: result ?? "No document" +
                 " found"
         }));
     } catch (error) {
