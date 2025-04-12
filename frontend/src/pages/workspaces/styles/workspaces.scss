@@ -1,0 +1,105 @@
+@use "@styles/variables" as *;
+
+.workspaces-page {
+  .main {
+    width: 60vw;
+    margin: 24px auto;
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 32px;
+
+      h2 {
+        font-size: $text-size-xxl;
+        color: $content-color-primary;
+      }
+
+      button {
+        font-size: $text-size-m;
+        color: white;
+        background-color: $base-color-brand;
+        font-weight: $text-weight-bold;
+
+        &:hover {
+          background-color: rgba(31, 80, 154, 0.8) !important;
+        }
+      }
+    }
+
+    .description {
+      font-size: $text-size-l;
+      color: rgb(107, 107, 107);
+      font-weight: $text-weight-regular;
+      line-height: 24px;
+    }
+
+    .actions {
+      .search-btn {
+        margin-top: 8px;
+        width: fit-content;
+        font-size: $text-size-m;
+      }
+    }
+
+    .workspace-table-items {
+      margin-top: 16px;
+      .table-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        border-bottom: 1px solid $border-color-default;
+        div {
+          padding: 8px;
+          font-size: $text-size-m;
+          color: $content-color-secondary;
+          font-weight: $text-weight-bold;
+        }
+      }
+
+      .workspace-item {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        & > div {
+          padding: 0 8px;
+          height: 72px;
+          display: flex;
+          align-items: center;
+          border-bottom: 1px solid $border-color-default;
+        }
+
+        .name {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+          p {
+            width: clamp(120px, 220px, 300px);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.5;
+            &.desc {
+              padding-left: 17px;
+              color: $content-color-secondary;
+            }
+          }
+
+          a {
+            text-decoration: none;
+            padding-left: 3px;
+            color: $content-color-primary;
+
+            &:hover {
+              color: $content-color-link;
+            }
+          }
+        }
+
+        .creator {
+          gap: 10px;
+        }
+      }
+    }
+  }
+}

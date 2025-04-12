@@ -1,0 +1,108 @@
+@use "@styles/variables" as *;
+@import 'codemirror/lib/codemirror.css';
+@import 'codemirror/theme/material.css';
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif !important;
+  line-height: 1.5;
+  font-weight: 400;
+
+  font-size: 12px;
+  color: black;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.ant-dropdown-menu-title-content {
+  font-size: 12px;
+}
+
+
+.rs-tooltip {
+  font-size: 12px;
+
+  .ant-tooltip-inner {
+    color: #212121;
+  }
+}
+
+#body {
+  display: grid;
+  grid-template-columns: 350px 4fr;
+
+  .master-menu-wrapper {
+    width: 350px;
+
+    .master-menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+  }
+
+  .master-main-wrapper {
+
+  }
+}
+
+body {
+  .ant-input-disabled {
+    color: $content-color-primary !important;
+  }
+
+  .ant-tabs-ink-bar {
+    background-color: transparent !important;
+  }
+
+  .app-markdown-editor {
+    .wmde-markdown {
+      font-size: 14px !important;
+      font-family: Inter, serif !important;
+
+      p {
+        margin: 0 !important;
+        margin-top: 8px !important;
+      }
+
+      h4 {
+        margin: 0 !important;
+        margin-top: 16px !important;
+      }
+
+      h3 {
+        margin: 0 !important;
+        margin-top: 20px !important;
+      }
+
+      ul {
+        margin-bottom: 0 !important;
+      }
+    }
+  }
+
+  .ant-select-outlined.ant-select-disabled:not(.ant-select-customize-input) .ant-select-selector {
+    background-color: transparent !important;
+  }
+
+  .ant-input-outlined.ant-input-disabled, .ant-input-outlined[disabled] {
+    background-color: transparent !important;
+  }
+
+  .ant-btn, .ant-input, .ant-select {
+    border-radius: $border-radius-default !important;
+  }
+
+  .ant-select-dropdown .ant-select-item {
+    font-size: 12px !important;
+  }
+}

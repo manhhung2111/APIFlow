@@ -1,0 +1,46 @@
+.request-display-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 32px;
+  .rdh-breadcrumb {
+    flex: 1;
+    ol {
+      height: fit-content;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      li {
+        height: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+
+    .ant-breadcrumb-link {
+      a {
+        font-size: 12px;
+      }
+      .ant-typography {
+        margin: 0;
+        font-size: 12px;
+      }
+      .ant-typography-edit-content {
+        padding: 0;
+        margin-left: 4px;
+        width: fit-content;
+        min-width: 200px;
+
+        .ant-input {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+
+  .rdh-actions {
+    width: fit-content;
+  }
+}

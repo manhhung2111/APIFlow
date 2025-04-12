@@ -1,0 +1,202 @@
+@use "@styles/variables" as *;
+
+.master-menu {
+  border-right: 1px solid $border-color-default;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 48px);
+  background-color: $background-color-secondary;
+
+  .menu-header {
+    border-bottom: 1px solid $border-color-default;
+    height: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .left-section {
+      width: 200px;
+      margin-left: 12px;
+      a {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        color: rgb(46, 46, 46);
+        text-decoration: none;
+        font-weight: $text-weight-bold;
+        .anticon {
+          font-size: 14px;
+        }
+
+        &:hover {
+          color: $content-color-link;
+        }
+      }
+    }
+
+    .right-section {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 8px;
+
+      button {
+        font-size: $text-size-m;
+        font-weight: $text-weight-bold;
+      }
+    }
+  }
+
+  .menu-main {
+    .ant-tabs-nav-list {
+      display: flex;
+      align-items: center;
+      width: 80px;
+      padding: 4px;
+      gap: 8px;
+      border-right: 1px solid $border-color-default;
+      height: calc(100vh - 48px - 41px);
+    }
+
+    .ant-tabs-tab {
+      justify-content: center;
+      height: 52px;
+      padding: 0 4px !important;
+      border-radius: 4px;
+      line-height: 16px;
+      width: 100%;
+      color: $content-color-secondary;
+
+      &:hover {
+        background-color: #EDEDED;
+        color: $content-color-primary;
+      }
+
+      & + .ant-tabs-tab {
+        margin-top: 0 !important;
+      }
+
+      &.ant-tabs-tab-active {
+        background-color: #E6E6E6;
+
+        .ant-tabs-tab-btn {
+          color: $content-color-primary;
+          text-shadow: none;
+        }
+      }
+
+      .base-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+
+        .anticon {
+          margin: 0;
+        }
+
+        .title {
+          font-size: $text-size-xs;
+          font-weight: $text-weight-thick;
+        }
+      }
+    }
+
+    .ant-tabs-tabpane {
+      padding-left: 0 !important;
+      max-height: 100%;
+      overflow: hidden;
+      overflow-y: auto;
+      height: calc(100vh - 48px - 41px);
+
+      scrollbar-gutter: stable both-edges;
+      &:active::-webkit-scrollbar-thumb,
+      &:focus::-webkit-scrollbar-thumb,
+      &:hover::-webkit-scrollbar-thumb {
+        visibility: visible;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+        visibility: hidden;
+        transition: all 3s ease-in-out;
+      }
+
+      &::-webkit-scrollbar {
+        width: 3px;
+        height: 4px;
+        border-radius: $border-radius-l;
+      }
+    }
+
+    .ant-menu-inline {
+      margin-top: 4px;
+      background-color: transparent;
+      border-inline-end: none;
+      font-size: $text-size-m;
+      .ant-menu-item {
+        margin-block: 0;
+
+      }
+      .ant-menu-submenu-title {
+        margin-block: 0;
+        border-radius: $border-radius-default;
+        font-weight: $text-weight-regular;
+        .ant-menu-title-content {
+          a {
+            display: inline-block;
+            width: 100%;
+            color: $content-color-primary;
+
+            &:hover {
+              color: $content-color-link;
+            }
+          }
+        }
+      }
+
+      .ant-menu-item {
+        .ant-menu-title-content {
+          a {
+            display: inline-block;
+            width: 100%;
+            color: $content-color-primary;
+
+            &:hover {
+              color: $content-color-link;
+            }
+          }
+        }
+      }
+
+      .ant-menu-submenu-title[aria-expanded="true"] .menu-item-icon {
+        transform: rotateX(180deg);
+        transition: transform 0.3s;
+      }
+
+      .menu-item-icon {
+        top: 40%;
+        transform: rotateX(0deg);
+        transition: transform 0.3s;
+      }
+
+      .ant-menu-submenu-selected >.ant-menu-submenu-title {
+        color: $base-color-brand;
+        font-weight: $text-weight-bold;
+      }
+
+      .ant-menu-sub.ant-menu-inline {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
+.environment-menu {
+  .ant-divider {
+    margin: 4px 0 0;
+  }
+}

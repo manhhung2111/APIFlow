@@ -1,0 +1,239 @@
+@use "@styles/variables" as *;
+
+.documentation-page .documentation-chat {
+  position: fixed;
+  bottom: 100px;
+  height: 50vh;
+  min-height: 200px;
+  right: 30px;
+  border-radius: 8px;
+  box-shadow: 0 16px 24px -8px rgba(107, 107, 107, 0.24);
+  background-color: $background-color-primary;
+  width: 20vw;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $border-color-strong;
+  z-index: 1001 !important;
+
+  .chat-header {
+    color: $content-color-secondary;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 8px 4px 8px;
+    height: 36px;
+    border-bottom: 1px solid $border-color-default;
+    border-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    .left {
+      display: flex;
+      align-items: center;
+      font-weight: $text-weight-thick;
+      gap: 4px;
+    }
+
+    .right {
+      display: flex;
+      gap: 6px;
+
+      .anticon {
+        font-size: $text-size-l;
+        color: $content-color-secondary;
+        cursor: pointer;
+
+        &:hover {
+          color: $content-color-primary;
+        }
+
+      }
+    }
+  }
+
+  .chat-main {
+    flex: 1;
+    padding: 8px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+      border-radius: $border-radius-l;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: darkgrey;
+    }
+
+    .chat-message {
+      max-width: 90%;
+      padding: 8px;
+      margin: 6px 0;
+      border-radius: $border-radius-default;
+      display: flex;
+      flex-direction: column;
+      font-size: $text-size-m;
+      color: $content-color-primary;
+
+      overflow-wrap: break-word; /* Allows breaking words to prevent overflow */
+      word-wrap: break-word; /* Ensures long words break inside the container */
+      white-space: pre-wrap;
+
+      pre {
+        code {
+          overflow-wrap: break-word; /* Allows breaking words to prevent overflow */
+          word-wrap: break-word; /* Ensures long words break inside the container */
+          white-space: pre-wrap;
+        }
+      }
+    }
+
+    .chat-message.user {
+      align-self: flex-end;
+      background-color: #f9f9f9;
+      color: $content-color-primary;
+      border-top-right-radius: 0;
+    }
+
+    /* Model (AI) messages (align left) */
+    .chat-message.model {
+      align-self: flex-start;
+      background-color: #f9f9f9;
+      color: $base-color-brand;
+      border-top-left-radius: 0;
+      position: relative;
+
+      &.loader {
+        width: 110px;
+        @keyframes dots {
+          0% {
+            content: ".";
+          }
+          33% {
+            content: "..";
+          }
+          66% {
+            content: "...";
+          }
+        }
+
+        .dots::after {
+          content: "...";
+          display: inline-block;
+          animation: dots 1.5s steps(3) infinite;
+        }
+      }
+
+      ul, ol {
+        padding-left: 16px;
+      }
+
+
+    }
+
+    .chat-message.user,
+    .chat-message.model {
+      //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+    }
+
+    .empty-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10%;
+      .icon {
+        width: 60px;
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(31, 80, 154, 0.1);
+        border-radius: 50%;
+
+        .anticon {
+          font-size: 40px;
+          color: $base-color-brand;
+        }
+      }
+
+      .messages {
+        color: $content-color-primary;
+        text-align: center;
+      }
+    }
+  }
+
+  .chat-input {
+    z-index: 3;
+    background-color: $background-color-primary;
+    padding: $spacing-s;
+    padding-left: 4px;
+    align-items: flex-end;
+    border-top: 1px solid $border-color-default;
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    border-radius: 8px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+    input {
+      resize: none !important;
+      border: none !important;
+      outline: none !important;
+      overflow-y: auto; /* Enables scrolling when max height is reached */
+      max-height: 48px; /* 3 lines height (adjust based on line height) */
+      line-height: 16px;
+      min-height: 16px;
+      height: auto !important;
+      font-size: $text-size-m;
+      font-family: Inter, serif;
+      flex: 1;
+      padding: 4px;
+
+      /* Optional: Custom scrollbar */
+      &::-webkit-scrollbar {
+        width: 4px;
+        height: 4px;
+        border-radius: $border-radius-l;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: darkgrey;
+      }
+
+      &::placeholder {
+        color: $content-color-tertiary;
+      }
+
+      &:focus {
+        box-shadow: none !important;
+      }
+    }
+
+    button {
+      height: 24px;
+      width: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      outline: none;
+      background-color: $base-color-brand !important;
+      border-radius: $border-radius-default;
+      cursor: pointer;
+
+      .anticon {
+        font-size: 12px;
+        color: white;
+      }
+    }
+
+  }
+}

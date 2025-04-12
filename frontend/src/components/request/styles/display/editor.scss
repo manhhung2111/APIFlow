@@ -1,0 +1,803 @@
+@use "@styles/variables" as *;
+
+.request-editor-url {
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  height: 48px;
+
+  .editor-url {
+    width: 70vw;
+    height: 32px;
+
+    .ant-select {
+      width: 90px;
+      height: 32px;
+      font-size: $text-size-m;
+
+      .ant-select-selection-item {
+        font-size: $text-size-m;
+      }
+    }
+
+    .ant-select-selector {
+      border-bottom-left-radius: $border-radius-default !important;
+      border-top-left-radius: $border-radius-default !important;
+      border-color: #ededed;
+    }
+
+    .url {
+      width: 90%;
+      font-size: $text-size-m;
+      height: 32px;
+
+      .app-input-highlight__wrapper {
+        .editable {
+          border-bottom-left-radius: 0;
+          border-top-left-radius: 0;
+          border: 1px solid #EDEDED;
+          padding: 6px 8px;
+
+          &:focus {
+            border-color: #1677ff;
+            box-shadow: 0 0 0 2px rgba(5, 145, 255, 0.1);
+            outline: 0;
+          }
+
+          &::before {
+            top: 6px;
+          }
+        }
+
+        &.disabled {
+          //height: 28px;
+        }
+      }
+    }
+  }
+
+  .editor-action {
+    height: 32px;
+
+    .ant-btn {
+      background-color: $base-color-brand;
+      font-weight: $text-weight-bold;
+      font-size: $text-size-l !important;
+    }
+  }
+}
+
+.request-editor-url-main {
+  font-size: $text-size-m;
+  flex: 1;
+
+  .ant-tabs-top > .ant-tabs-nav {
+    margin-bottom: 8px;
+
+    &::before {
+      border: none;
+    }
+
+    .ant-tabs-tab {
+      padding: 0;
+    }
+  }
+
+  .ant-tabs-top, .ant-input {
+    font-size: $text-size-m;
+  }
+
+  & > .ant-tabs {
+    display: flex;
+    flex-direction: column;
+
+    .request-editor-tab-label {
+      display: flex;
+      align-items: center;
+      span {
+        &.valid {
+            display: inline-flex;
+            width: 6px;
+            height: 6px;
+            margin-left: 4px;
+            border-radius: 6px;
+            background-color: #0CBB52;
+        }
+
+        &.error {
+          display: inline-flex;
+          width: 6px;
+          height: 6px;
+          margin-left: 4px;
+          background-color: #EB2013;
+          border-radius: 6px;
+        }
+      }
+    }
+
+    & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
+      .ant-tabs-tab {
+        color: $content-color-secondary;
+        border-bottom: 1px solid transparent;
+        font-size: $text-size-m;
+
+        &.ant-tabs-tab-active {
+          border-bottom-color: $base-color-brand;
+
+          .ant-tabs-tab-btn {
+            color: $content-color-primary;
+            text-shadow: none;
+          }
+        }
+      }
+    }
+
+    & > .ant-tabs-nav {
+      padding: 0 16px;
+    }
+  }
+}
+
+.request-editor-url-main .request-editor {
+  height: 35vh;
+  min-height: 100px;
+  margin: 0 4px 0 16px;
+  overflow: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+  }
+
+  &::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    border-radius: $border-radius-l;
+  }
+}
+
+.request-editor-url-main .request-editor-params, .request-editor-url-main .request-editor-headers {
+  padding-right: 12px;
+
+  & > .title {
+    font-weight: 600;
+    color: #6B6B6B;
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+}
+
+.request-editor-url-main .request-table {
+  border: 1px solid $border-color-default;
+  border-bottom: none;
+  color: $content-color-secondary;
+
+  margin-bottom: 12px;
+
+  & > .table-header {
+    display: grid;
+    grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
+    border-bottom: 1px solid $border-color-default;
+    font-weight: $text-weight-thick;
+
+    div {
+      padding: 10px;
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        border-left: 1px solid $border-color-default;
+      }
+
+      &:nth-child(3) {
+        border-right: 1px solid $border-color-default;
+      }
+    }
+  }
+
+  & > .table-body {
+    & > .row {
+      display: grid;
+      grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
+      border-bottom: 1px solid $border-color-default;
+
+      &.disabled {
+        cursor: not-allowed;
+        background-color: rgba(239, 239, 239, 0.3);
+
+        input {
+          cursor: not-allowed;
+          background-color: transparent;
+        }
+      }
+
+      input[type='text'] {
+        flex: 1;
+        padding: 4px 8px;
+        border-radius: 3px;
+        outline: none;
+        border: 1px solid transparent;
+        color: #212121;
+
+        &:focus {
+          border-color: $border-color-default;
+        }
+      }
+
+      .selected-col {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px;
+
+        input[type='checkbox'] {
+          width: 16px;
+          aspect-ratio: 1/1;
+          cursor: pointer;
+          border-radius: 4px;
+        }
+      }
+
+      .key-col,
+      .value-col,
+      .content-col {
+        display: flex;
+        padding: 4px;
+      }
+
+      .key-col {
+        border-left: 1px solid $border-color-default;
+      }
+
+      .value-col {
+        border-left: 1px solid $border-color-default;
+        border-right: 1px solid $border-color-default;
+      }
+
+      .action-col {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .remove-icon {
+          cursor: pointer;
+          color: grey;
+          position: relative;
+
+          &:hover {
+            color: #9c3328;
+          }
+        }
+      }
+    }
+  }
+}
+
+.request-editor-url-main .request-editor-authorization {
+  display: grid;
+  grid-template-columns: 1fr 2.5fr;
+
+  .left-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 12px;
+    padding-bottom: 12px;
+
+    h3 {
+      font-weight: 600;
+      color: #6B6B6B;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .auth-selector {
+      width: 100%;
+      margin-bottom: 8px;
+      font-size: $text-size-m !important;
+
+      .ant-select-selector {
+        font-size: $text-size-m;
+      }
+    }
+  }
+
+  .right-container {
+    height: 100%;
+    padding-left: 12px;
+    padding-bottom: 12px;
+    border-left: 1px solid $border-color-default;
+
+    .empty-message {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      font-size: $text-size-m;
+    }
+
+    .form-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+
+      .form-row {
+        display: flex;
+        align-items: center;
+
+        .title {
+          display: flex;
+          flex: 1;
+          min-width: 196px;
+          max-width: 280px;
+          align-self: flex-start;
+          padding-top: $spacing-m;
+          margin-right: $spacing-l;
+        }
+
+        input, .select, .app-input-highlight__wrapper {
+          margin-top: $spacing-m;
+          min-width: 196px;
+          max-width: 280px;
+
+          .editable {
+            border: 1px solid #EDEDED;
+            border-radius: $border-radius-default;
+          }
+
+          .ant-select-selector {
+            font-size: $text-size-m !important;
+          }
+
+          &.disabled {
+            height: 28px;
+          }
+        }
+
+        .input-group {
+          display: flex;
+          flex: 1;
+          flex-direction: column;
+          gap: 8px;
+
+          .ant-checkbox-wrapper {
+            font-size: $text-size-m;
+          }
+
+          .app-code-editor {
+            border: 1px solid $border-color-default;
+            width: 280px !important;
+          }
+        }
+      }
+    }
+  }
+}
+
+.request-editor-url-main .request-editor-body {
+  padding-right: 12px;
+
+  & > .ant-tabs {
+    & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
+      .ant-tabs-tab {
+        padding: 0;
+        color: $content-color-secondary;
+        border-bottom: 1px solid transparent;
+        font-size: $text-size-m;
+        height: fit-content;
+
+        &.ant-tabs-tab-active {
+          .ant-tabs-tab-btn {
+            color: $content-color-primary;
+          }
+        }
+      }
+    }
+
+    .body-type-selector {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+
+      input {
+        transform: scale(0.9);
+      }
+    }
+  }
+
+  .request-editor-body-form-raw {
+    .app-code-editor {
+      border: 1px solid $border-color-default;
+      height: 32vh;
+    }
+  }
+}
+
+.request-editor-url-main .request-editor-body .request-editor-body-form-data {
+  .request-form-data-table {
+    border: 1px solid $border-color-default;
+    border-bottom: none;
+    color: $content-color-secondary;
+
+    & > .table-header {
+      display: grid;
+      grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
+      border-bottom: 1px solid $border-color-default;
+      font-weight: $text-weight-thick;
+
+      div {
+        padding: 10px;
+
+        &:nth-child(2),
+        &:nth-child(3) {
+          border-left: 1px solid $border-color-default;
+        }
+
+        &:nth-child(3) {
+          border-right: 1px solid $border-color-default;
+        }
+      }
+    }
+
+    & > .table-body {
+      & > .row {
+        display: grid;
+        grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr 1fr minmax(20px, 0.1fr);
+        border-bottom: 1px solid $border-color-default;
+
+        &.disabled {
+          cursor: not-allowed;
+          background-color: rgba(239, 239, 239, 0.3);
+
+          input {
+            cursor: not-allowed;
+            background-color: transparent;
+          }
+        }
+
+        input[type='text'] {
+          flex: 1;
+          padding: 4px 8px;
+          border-radius: 3px;
+          outline: none;
+          border: 1px solid transparent;
+          color: #212121;
+
+          &:focus {
+            border-color: $border-color-default;
+          }
+        }
+
+        .selected-col {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 4px;
+
+          input[type='checkbox'] {
+            width: 16px;
+            aspect-ratio: 1/1;
+            cursor: pointer;
+            border-radius: 4px;
+          }
+        }
+
+        .key-col,
+        .value-col,
+        .content-col {
+          display: flex;
+          padding: 4px;
+        }
+
+        .key-type-col {
+          border-left: 1px solid $border-color-default;
+          display: flex;
+          align-items: center;
+        }
+
+        .key-col {
+          flex: 1;
+        }
+
+        .type-col {
+          border-left: 1px solid $border-color-default;
+          height: 100%;
+          padding-left: 4px;
+
+          .ant-select {
+            .ant-select-selector {
+              border: none;
+              box-shadow: none;
+
+              .ant-select-selection-item {
+                font-size: $text-size-m;
+              }
+            }
+
+            .ant-select-arrow {
+              font-size: $text-size-xs;
+            }
+          }
+        }
+
+        .value-col {
+          border-left: 1px solid $border-color-default;
+          border-right: 1px solid $border-color-default;
+
+          .file-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+
+            label {
+              cursor: pointer;
+              padding: 4px;
+              border-radius: $border-radius-default;
+
+              &:hover {
+                background-color: $background-color-secondary;
+              }
+            }
+
+            .file-info {
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              flex: 1;
+
+              p {
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                width: 80%;
+              }
+
+              .anticon {
+                &:hover {
+                  color: $content-color-error-2;
+                }
+              }
+            }
+          }
+        }
+
+        .action-col {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .remove-icon {
+            cursor: pointer;
+            color: grey;
+            position: relative;
+
+            &:hover {
+              color: #9c3328;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.request-editor-url-main .request-editor-scripts {
+  & > .ant-tabs {
+    & > .ant-tabs-nav .ant-tabs-nav-wrap .ant-tabs-nav-list {
+      border-right: 1px solid $border-color-default;
+
+      .ant-tabs-tab {
+        color: $content-color-secondary;
+        font-size: $text-size-m;
+        padding: 8px 8px 8px 16px;
+
+        &.ant-tabs-tab-active {
+          background-color: $background-color-tertiary;
+
+          .ant-tabs-tab-btn {
+            color: $content-color-primary;
+          }
+        }
+      }
+
+    }
+
+    .ant-tabs-ink-bar {
+      background-color: transparent;
+      display: none;
+    }
+
+    .ant-tabs-tabpane {
+      padding-left: 0;
+    }
+  }
+
+
+}
+
+.request-code-editor {
+  section {
+    height: 35vh !important;
+  }
+
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  height: 100%;
+
+  .snippet-list {
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    height: 35vh;
+
+    & > h3 {
+      color: $content-color-primary;
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 12px;
+      line-height: 1;
+
+    }
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #888; /* Customize the scrollbar color */
+      border-radius: 10px; /* Optional: Round the scrollbar corners */
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background-color: #555; /* Change color on hover */
+    }
+
+    & .base-label {
+      cursor: pointer;
+      color: #6B6B6B;
+      line-height: 20px;
+      font-size: 90%;
+
+      &:hover {
+        color: #212121;
+        text-decoration: none;
+      }
+    }
+
+    & button {
+      border: none;
+      outline: none;
+      background-color: transparent;
+      font-size: $text-size-m;
+      cursor: pointer;
+      color: $content-color-secondary;
+      padding: 2px 0;
+
+      &:hover {
+        color: $content-color-primary;
+      }
+    }
+  }
+}
+
+
+.example-response-headers {
+  .request-table {
+    border: 1px solid $border-color-default;
+    border-bottom: none;
+    color: $content-color-secondary;
+    font-size: $text-size-m;
+
+    margin-bottom: 12px;
+
+    & > .table-header {
+      display: grid;
+      grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr minmax(20px, 0.1fr);
+      border-bottom: 1px solid $border-color-default;
+      font-weight: $text-weight-thick;
+
+      div {
+        padding: 10px;
+
+        &:nth-child(2),
+        &:nth-child(3) {
+          border-left: 1px solid $border-color-default;
+        }
+
+        //&:nth-child(3) {
+        //  border-right: 1px solid $border-color-default;
+        //}
+      }
+    }
+
+    & > .table-body {
+      & > .row {
+        display: grid;
+        grid-template-columns: minmax(30px, 0.1fr) 1fr 1fr minmax(20px, 0.1fr);
+        border-bottom: 1px solid $border-color-default;
+
+        &.disabled {
+          cursor: not-allowed;
+          background-color: rgba(239, 239, 239, 0.3);
+
+          input {
+            cursor: not-allowed;
+            background-color: transparent;
+          }
+        }
+
+        input[type='text'] {
+          flex: 1;
+          padding: 4px 8px;
+          border-radius: 3px;
+          outline: none;
+          border: 1px solid transparent;
+          color: #212121;
+
+          &:focus {
+            border-color: $border-color-default;
+          }
+        }
+
+        .selected-col {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 4px;
+
+          input[type='checkbox'] {
+            width: 16px;
+            aspect-ratio: 1/1;
+            cursor: pointer;
+            border-radius: 4px;
+          }
+        }
+
+        .app-input-highlight__wrapper {
+          height: 28.31px;
+        }
+
+        .key-col,
+        .value-col,
+        .content-col {
+          display: flex;
+          padding: 4px;
+        }
+
+        .key-col {
+          border-left: 1px solid $border-color-default;
+        }
+
+        .value-col {
+          border-left: 1px solid $border-color-default;
+          //border-right: 1px solid $border-color-default;
+        }
+
+        .action-col {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .remove-icon {
+            cursor: pointer;
+            color: grey;
+            position: relative;
+
+            &:hover {
+              color: #9c3328;
+            }
+          }
+        }
+      }
+    }
+  }
+}
