@@ -10,9 +10,10 @@ import Client from "@dev/client";
 import {HTMLInput} from "@ap/core";
 
 export default class DBCollectionImporter {
-
-    public static async importCollection(data: any, session: ClientSession) {
+    private static user_id: string = "";
+    public static async importCollection(user_id: string, data: any, session: ClientSession) {
         try {
+            this.user_id = user_id;
             const collection = await DBCollection.initialize() as DBCollection;
             const collectionRelease = await this.readCollection(collection, data, session);
 
@@ -51,7 +52,7 @@ export default class DBCollectionImporter {
                     throw new Error("Something went wrong");
                 }
 
-                folder.object.user_id = Client.viewer._id.toString();
+                folder.object.user_id = this.user_id;
                 folder.object.token = UUID.randomTokenSize32();
                 folder.object.workspace_id = collection.object.workspace_id.toString();
                 folder.object.collection_id = collection.object._id.toString();
@@ -101,8 +102,7 @@ export default class DBCollectionImporter {
 
             return [[], [], []];
         } catch (error) {
-            console.error(error);
-            return [[], [], []];
+            throw new Error((error as Error).message);
         }
     }
 
@@ -117,7 +117,7 @@ export default class DBCollectionImporter {
                     throw new Error("Something went wrong");
                 }
 
-                request.object.user_id = Client.viewer._id.toString();
+                request.object.user_id = this.user_id;
                 request.object.token = UUID.randomTokenSize32();
                 request.object.workspace_id = collection.object.workspace_id.toString();
                 request.object.collection_id = collection.object._id.toString();
@@ -224,8 +224,7 @@ export default class DBCollectionImporter {
 
             return [[], []];
         } catch(error) {
-            console.error(error);
-            return [[], []];
+            throw new Error((error as Error).message);
         }
     }
 
@@ -239,7 +238,7 @@ export default class DBCollectionImporter {
                 }
 
                 example.object.token = UUID.randomTokenSize32();
-                example.object.user_id = Client.viewer._id.toString();
+                example.object.user_id = this.user_id;
                 example.object.workspace_id = request.object.workspace_id.toString();
                 example.object.collection_id = request.object.collection_id;
                 example.object.folder_id = request.object.folder_id ?? null;
@@ -328,8 +327,7 @@ export default class DBCollectionImporter {
 
             return [];
         } catch (error) {
-            console.error(error);
-            return [];
+            throw new Error((error as Error).message);
         }
     }
 
@@ -338,7 +336,7 @@ export default class DBCollectionImporter {
             throw new Error("Something went wrong");
         }
 
-        collection.object.user_id = Client.viewer._id.toString();
+        collection.object.user_id = this.user_id;
         collection.object.token = UUID.randomTokenSize32();
         collection.object.workspace_id = HTMLInput.inputInline("workspace_id");
 
@@ -433,7 +431,8 @@ export default class DBCollectionImporter {
                 params: params
             };
         } catch (error) {
-            console.error((error as Error).message)
+            console.error((error as Error).message);
+            throw new Error((error as Error).message);
         }
     }
 

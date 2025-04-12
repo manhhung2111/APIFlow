@@ -1,22 +1,26 @@
-import express, {NextFunction, Request, Response} from "express";
+import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import multer from "multer";
 import morgan from "morgan";
+
+
 import {
-    CollectionRoute,
-    EnvironmentRoute,
-    ExampleRoute,
-    FolderRoute,
-    PersonaRoute,
-    RequestRoute,
-    UserRoute,
-    WorkspaceRoute,
+	CollectionRoute,
+	EnvironmentRoute,
+	ExampleRoute,
+	FolderRoute,
+	PersonaRoute,
+	RequestRoute,
+	UserRoute,
+	WorkspaceRoute,
 } from "@routes";
 import {HTMLInput} from "@ap/core";
 import logger from "@utils/logger";
+import ImporterService from "@services/importer/producer";
+import SocketIO from "@ap/core/socket";
 
 
 dotenv.config();
@@ -28,9 +32,9 @@ const db_name = process.env.DB_NAME;
 
 // Config CORS
 app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
-    origin: "http://localhost:3000",
-    optionsSuccessStatus: 200,
-    credentials: true,
+	origin: "http://localhost:3000",
+	optionsSuccessStatus: 200,
+	credentials: true,
 }));
 
 // Body form data
@@ -42,23 +46,23 @@ app.use(cookieParser(process.env.COOKIES_SECRET));
 
 // Read files
 const upload = multer({
-    storage: multer.memoryStorage(),
-    limits: {fileSize: 3 * 1024 * 1024}
+	storage: multer.memoryStorage(),
+	limits: {fileSize: 3 * 1024 * 1024}
 });
 
 app.use(upload.any(), (request, response, next) => {
-    HTMLInput.readRequest(request);
-    next();
+	HTMLInput.readRequest(request);
+	next();
 });
 
 // File size validation
 app.use((error: any, request: any, response: any, next: any) => {
-    if (error instanceof multer.MulterError) {
-        if (error.code === "LIMIT_FILE_SIZE") {
-            return response.status(400).json({message: "File size should not exceed 2MB."});
-        }
-    }
-    return next(error);
+	if (error instanceof multer.MulterError) {
+		if (error.code === "LIMIT_FILE_SIZE") {
+			return response.status(400).json({message: "File size should not exceed 2MB."});
+		}
+	}
+	return next(error);
 });
 
 
@@ -75,20 +79,23 @@ app.use("/environments", EnvironmentRoute);
 app.use("/examples", ExampleRoute);
 app.use("/personas", PersonaRoute);
 
-
 (async function () {
-    try {
-        // Connect to database
-        await mongoose.connect(
-            `mongodb+srv://${db_username}:${db_password}@hongkong-1.x4eds.mongodb.net/${db_name}`,
-        ).then(() => {
-            logger.info(`Connect to database successfully.`);
-        });
+	try {
+		// Connect to database
+		await mongoose.connect(
+			`mongodb+srv://${db_username}:${db_password}@hongkong-1.x4eds.mongodb.net/${db_name}`,
+		).then(() => {
+			logger.info(`Connect to database successfully.`);
+		});
 
-        app.listen(port, () => {
-            logger.info(`Server is running on port ${port}`);
-        });
-    } catch (error) {
-        logger.error((error as Error).stack);
-    }
+		SocketIO.connect(app).listen(port, () => {
+			logger.info(`Server is running on port ${port}`);
+		});
+
+		await ImporterService.consumeMessage().catch(err => {
+			logger.error(err)
+		});
+	} catch (error) {
+		logger.error((error as Error).stack);
+	}
 })();

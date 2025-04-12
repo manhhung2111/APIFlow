@@ -11,6 +11,8 @@ import HuggingFaceEmbeddingService from "@services/ai/hugging.face";
 import GoogleGeminiService from "@services/ai/google.gemini";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import ImporterService from "@services/importer/producer";
+import Client from "@dev/client";
 
 export const createNewCollection = async (request: Request, response: Response) => {
     logger.info("[Controller] Create new collection");
@@ -331,23 +333,18 @@ export const importCollection = async (request: Request, response: Response) => 
         const file = HTMLInput.inputFile("file")[0];
 
         try {
-            const data = JSON.parse(file.buffer.toString("utf8"));
+            const data = file.buffer.toString("utf8");
+            const message = {
+                user_id: Client.viewer._id.toString(),
+                data: JSON.parse(data)
+            }
 
-            const {
-                collection,
-                folders,
-                requests,
-                examples
-            } = await DBCollectionImporter.importCollection(data, session);
+            await ImporterService.pushMessage(message);
 
             await session.commitTransaction();
-            response.status(201).json(Code.success("Import collection successfully", {
-                collection,
-                folders,
-                requests,
-                examples
-            }));
+            response.status(201).json(Code.success("Collections are being queued to be imported"));
         } catch (error) {
+            console.error(error);
             throw new Error("We don’t recognize/support this format.");
         }
     } catch (error) {

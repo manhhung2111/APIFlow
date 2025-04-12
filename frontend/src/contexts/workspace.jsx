@@ -1,12 +1,16 @@
-import {createContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useState} from 'react';
 import {useParams} from "react-router";
 import WorkspaceService from "@services/workspace.js";
+import io from "socket.io-client";
+import {toast} from 'react-toastify';
+import {AppContext} from '@contexts/app.jsx';
 
 export const WorkspaceContext = createContext({});
 
 export default function WorkspaceContextProvider(props){
 	const {children} = props;
 	const {workspace_id, collection_id} = useParams();
+	const {user} = useContext(AppContext);
 
 	const [workspace, setWorkspace] = useState(null);
 	const [activeEnvironment, setActiveEnvironment] = useState(-1);
@@ -22,6 +26,22 @@ export default function WorkspaceContextProvider(props){
 
 	const [variables, setVariables] = useState([]);
 	const [activeMenuKey, setActiveMenuKey] = useState(1);
+
+	useEffect(() => {
+		const socket = io("http://localhost:8080");
+
+		socket.on("collection.import", (data) => {
+			setCollections(prev => [...prev, data?.data?.collection || []]);
+			setFolders(prev => [...prev, ...data?.data?.folders || []]);
+			setRequests(prev => [...prev, ...data?.data?.requests || []]);
+			setExamples(prev => [...prev, ...data?.data?.examples || []]);
+			toast.success(data?.message);
+		})
+
+		return () => {
+			socket.off("collection.import");
+		}
+	}, [])
 
 	useEffect(() => {
 		const getWorkspace = async() => {
@@ -52,6 +72,8 @@ export default function WorkspaceContextProvider(props){
 		console.log("Update variable list");
 		setVariables(_variables);
 	}, [activeEnvironment, activeCollection, environments]);
+
+
 
 	function processVariables(variables_list, scope, seen_variables){
 		let result = [];

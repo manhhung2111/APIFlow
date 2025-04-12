@@ -29,13 +29,13 @@ export default function WorkspaceImportForm({open, setOpen}){
 		const result = await CollectionService.import(file, workspace._id);
 
 		if(result.code == 0){
-			setCollections(prev => [...prev, result.data.collection]);
-			setFolders(prev => [...prev, ...result.data.folders]);
-			setRequests(prev => [...prev, ...result.data.requests]);
-			setExamples(prev => [...prev, ...result.data.examples]);
+			// setCollections(prev => [...prev, result.data.collection]);
+			// setFolders(prev => [...prev, ...result.data.folders]);
+			// setRequests(prev => [...prev, ...result.data.requests]);
+			// setExamples(prev => [...prev, ...result.data.examples]);
 
 			setOpen(false);
-			navigate(`/workspace/${result.data.collection.workspace_id}/collection/${result.data.collection._id}`);
+			// navigate(`/workspace/${result.data.collection.workspace_id}/collection/${result.data.collection._id}`);
 			toast.success(result.message);
 		} else {
 			toast.error(result.message);
