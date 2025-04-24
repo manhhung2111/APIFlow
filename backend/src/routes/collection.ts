@@ -29,8 +29,8 @@ router.get("/export/:collection_id", workspaceViewable, getCollectionExport);
 
 // Edit routes
 router.put("/:collection_id", workspaceEditable, updateCollection);
-router.put("/:collection_id/name", workspaceEditable, updateCollectionName);
-router.put("/:collection_id/content", workspaceEditable, updateCollectionContent);
+router.patch("/:collection_id/name", workspaceEditable, updateCollectionName);
+router.patch("/:collection_id/content", workspaceEditable, updateCollectionContent);
 
 // Create routes
 router.post("/", workspaceEditable, createNewCollection);

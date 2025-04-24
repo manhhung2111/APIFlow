@@ -25,8 +25,8 @@ router.get("/:request_id", workspaceViewable, getRequestById);
 
 // Edit routes
 router.put("/:request_id", workspaceEditable, updateRequest);
-router.put("/:request_id/name", workspaceEditable, updateRequestName);
-router.put("/:request_id/content", workspaceEditable, updateRequestContent);
+router.patch("/:request_id/name", workspaceEditable, updateRequestName);
+router.patch("/:request_id/content", workspaceEditable, updateRequestContent);
 router.put("/:request_id/move", workspaceEditable, moveRequest);
 
 // Create routes

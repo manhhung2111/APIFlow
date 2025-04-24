@@ -1,0 +1,31 @@
+services:
+  mongodb:
+    image: bitnami/mongodb:8.0.8-debian-12-r0
+    container_name: mongodb-apiflow
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGODB_ROOT_USER: root
+      MONGODB_ROOT_PASSWORD: 123456
+      MONGODB_DATABASE: APIFlow
+      MONGODB_REPLICA_SET_MODE: primary
+      MONGODB_REPLICA_SET_NAME: rs0
+      MONGODB_REPLICA_SET_KEY: 123456
+
+
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq-apiflow
+    restart: unless-stopped
+    ports:
+      - "5672:5672"     
+      - "15672:15672"     
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+volumes:
+  mongodb_data:

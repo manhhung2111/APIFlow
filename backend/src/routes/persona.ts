@@ -21,7 +21,7 @@ router.get("/:persona_id", workspaceViewable, getPersonaById);
 
 // Edit routes
 router.put("/:persona_id", workspaceEditable, updatePersona);
-router.put("/:persona_id/name", workspaceEditable, updatePersonaName);
+router.patch("/:persona_id/name", workspaceEditable, updatePersonaName);
 
 // Create routes
 router.post("/", workspaceEditable, createNewPersona);

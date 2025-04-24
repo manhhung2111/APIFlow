@@ -29,6 +29,8 @@ const port = process.env.SERVER_PORT || 8080;
 const db_username = process.env.DB_USERNAME;
 const db_password = process.env.DB_PASSWORD;
 const db_name = process.env.DB_NAME;
+const db_host = process.env.DB_HOST;
+const db_port = process.env.DB_PORT;
 
 // Config CORS
 app.use((cors as (options: cors.CorsOptions) => express.RequestHandler)({
@@ -83,7 +85,7 @@ app.use("/personas", PersonaRoute);
 	try {
 		// Connect to database
 		await mongoose.connect(
-			`mongodb+srv://${db_username}:${db_password}@hongkong-1.x4eds.mongodb.net/${db_name}`,
+			`mongodb://${db_host}:${db_port}/${db_name}`, {user: db_username, pass: db_password, directConnection: true, authSource: "admin"}
 		).then(() => {
 			logger.info(`Connect to database successfully.`);
 		});

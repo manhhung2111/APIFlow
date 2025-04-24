@@ -122,8 +122,8 @@ export default class ImporterService {
 				}
 			});
 		} catch (error) {
-			logger.error((error as Error).message);
-			// throw new Error((error as Error).message);
+			// logger.error((error as Error).message);
+			throw new Error((error as Error).message);
 		}
 	}
 
@@ -132,6 +132,7 @@ export default class ImporterService {
 		try {
 			return await amqp.connect(process.env.RABBITMQ_CONNECTION_STRING || 'amqp://localhost');
 		} catch (error) {
+			console.log(error)
 			throw new Error((error as Error).message);
 		}
 	}
