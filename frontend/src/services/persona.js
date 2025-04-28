@@ -48,7 +48,7 @@ export default class PersonaService{
 				workspace_id: persona.workspace_id,
 			}
 
-			return await axios.put(`/personas/${persona._id}/name`, data);
+			return await axios.patch(`/personas/${persona._id}/name`, data);
 		} catch (error) {
 			throw new Error(error.message || 'Save example failed');
 		}

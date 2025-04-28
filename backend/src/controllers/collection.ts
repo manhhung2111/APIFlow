@@ -336,7 +336,8 @@ export const importCollection = async (request: Request, response: Response) => 
             const data = file.buffer.toString("utf8");
             const message = {
                 user_id: Client.viewer._id.toString(),
-                data: JSON.parse(data)
+                data: JSON.parse(data),
+                socket_id: HTMLInput.inputInline("socket_id")
             }
 
             await ImporterService.pushMessage(message);

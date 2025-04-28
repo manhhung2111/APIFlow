@@ -90,7 +90,7 @@ export default class ExampleService{
 				workspace_id: example.workspace_id,
 			}
 
-			return await axios.put(`/examples/${example._id}/name`, data);
+			return await axios.patch(`/examples/${example._id}/name`, data);
 		} catch (error) {
 			throw new Error(error.message || 'Save example name failed');
 		}

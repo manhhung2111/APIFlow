@@ -241,9 +241,9 @@ export default function CollectionPage(){
 						{activeCollection.name}
 					</div>
 					<div className="side">
-						{workspace?.can?.full_access && <Button color="default" variant="text" icon={<NodeIndexOutlined />} onClick={handleEmbed}>
+						{/* {workspace?.can?.full_access && <Button color="default" variant="text" icon={<NodeIndexOutlined />} onClick={handleEmbed}>
 							Embed Requests
-						</Button>}
+						</Button>} */}
 						{workspace?.can?.editable && <>
 							<Button color="default" variant="text" icon={<SaveOutlined/>} onClick={handleSave}>
 								Save

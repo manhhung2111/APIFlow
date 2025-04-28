@@ -1,3 +1,4 @@
+import Client from "@dev/client";
 import {Express} from "express";
 import http from "http";
 import { Server } from 'socket.io';
@@ -17,7 +18,8 @@ export default class SocketIO {
 		this.io.on('connection', (socket) => {
 			const socketId = socket.id;
 
-			console.log('Socket.io connected...');
+			console.log('Socket.io connected...', socketId);
+			// Client.socketId = socketId;
 
 			socket.on("disconnect", () => {
 				console.log("Client disconnected");
@@ -27,7 +29,7 @@ export default class SocketIO {
 		return server;
 	}
 
-	static emit(event: string, message: any) {
-		this.io.emit(event, message);
+	static emit(event: string, message: any, socketId: any) {
+		this.io.to(socketId).emit(event, message);
 	}
 }

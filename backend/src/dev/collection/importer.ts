@@ -8,6 +8,8 @@ import {DBExample} from "@dev/example";
 import UUID from "@utils/uuid";
 import Client from "@dev/client";
 import {HTMLInput} from "@ap/core";
+import HuggingFaceEmbeddingService from "@services/ai/hugging.face";
+import logger from "@ap/utils/logger";
 
 export default class DBCollectionImporter {
     private static user_id: string = "";
@@ -102,6 +104,7 @@ export default class DBCollectionImporter {
 
             return [[], [], []];
         } catch (error) {
+            logger.error((error as Error).message);
             throw new Error((error as Error).message);
         }
     }
@@ -138,6 +141,7 @@ export default class DBCollectionImporter {
                 if (data.request) {
                     request.object.method = data.request.method;
                     request.object.content = data.request.description;
+                    // request.object.embedding = await HuggingFaceEmbeddingService.embedText(data.request.description);
 
                     if (data?.request?.auth) {
                         if (data.request.auth.type == "jwt") {

@@ -6,6 +6,7 @@ export default class Client{
 
 	public static authenticated: boolean = false;
 	public static viewer: HydratedDocument<DUser>;
+	public static socketId: string;
 
 	public static async authenticate(user_id: string){
 		if (!user_id) return false;

@@ -88,7 +88,7 @@ export default class ImporterService {
 								error: -1,
 								data: {},
 								message: "We don’t recognize/support this format."
-							});
+							}, messageContent.socket_id);
 							return;
 						}
 					}
@@ -103,7 +103,8 @@ export default class ImporterService {
 					await session.commitTransaction();
 
 					channel.ack(message);
-
+					//@ts-ignore
+					const collectionName = collection.name;
 					SocketIO.emit("collection.import", {
 						error: 0,
 						data: {
@@ -112,9 +113,10 @@ export default class ImporterService {
 							requests,
 							examples
 						},
-						message: "Import collection "
-					});
+						message: `Import ${collectionName} collection successfully!`
+					}, messageContent.socket_id);
 				} catch (error) {
+					logger.error(error);
 					channel.nack(message, false, false);
 					await session.abortTransaction();
 				} finally {

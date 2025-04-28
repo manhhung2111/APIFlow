@@ -70,7 +70,7 @@ export default class RequestService {
 				workspace_id: request.workspace_id,
 			}
 
-			return await axios.put(`/requests/${request._id}/name`, data);
+			return await axios.patch(`/requests/${request._id}/name`, data);
 		} catch (error) {
 			throw new Error(error.message || 'Save request failed');
 		}
@@ -83,7 +83,7 @@ export default class RequestService {
 				workspace_id: request.workspace_id,
 			}
 
-			return await axios.put(`/requests/${request._id}/content`, data);
+			return await axios.patch(`/requests/${request._id}/content`, data);
 		} catch (error) {
 			throw new Error(error.message || 'Save request failed');
 		}

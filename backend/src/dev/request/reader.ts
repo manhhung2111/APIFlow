@@ -7,6 +7,7 @@ import UUID from "@utils/uuid";
 import {RequestServiceReader} from "@services/request";
 import {Code, HTMLInput, Validation} from "@ap/core";
 import BackblazeService from "@services/backblaze";
+import HuggingFaceEmbeddingService from "@services/ai/hugging.face";
 
 export default class Reader extends DBReader<DRequest>{
 	constructor(obj: HydratedDocument<DRequest> | null | undefined){
@@ -83,6 +84,7 @@ export default class Reader extends DBReader<DRequest>{
 
 	public async readContent(){
 		this._obj.content = HTMLInput.inputEditor("content");
+		this._obj.embedding = await HuggingFaceEmbeddingService.embedText(this._obj.content);
 	}
 
 	public async duplicate(old_request: DBRequest){

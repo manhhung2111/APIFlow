@@ -26,10 +26,16 @@ export default function WorkspaceContextProvider(props){
 
 	const [variables, setVariables] = useState([]);
 	const [activeMenuKey, setActiveMenuKey] = useState(1);
+	const [socketId, setSocketId] = useState("");
 
 	useEffect(() => {
 		const socket = io("http://localhost:8080");
-
+		
+		socket.on("connect", () => {
+			setSocketId(socket.id);
+		});
+		
+		
 		socket.on("collection.import", (data) => {
 			setCollections(prev => [...prev, data?.data?.collection || []]);
 			setFolders(prev => [...prev, ...data?.data?.folders || []]);
@@ -158,7 +164,7 @@ export default function WorkspaceContextProvider(props){
 			variables, setVariables,
 			examples, setExamples,
 			personas, setPersonas,
-			activePersona, setActivePersona
+			activePersona, setActivePersona, socketId
 		}}>
 			{children}
 		</WorkspaceContext.Provider>

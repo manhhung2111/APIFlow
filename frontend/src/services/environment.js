@@ -45,7 +45,7 @@ export default class EnvironmentService{
 				workspace_id: environment.workspace_id,
 			}
 
-			return await axios.put(`/environments/${environment._id}/name`, data);
+			return await axios.patch(`/environments/${environment._id}/name`, data);
 		} catch (error) {
 			throw new Error(error.message || 'Save example failed');
 		}

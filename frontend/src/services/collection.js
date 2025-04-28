@@ -87,11 +87,12 @@ export default class CollectionService{
 		}
 	}
 
-	static async import(file, workspace_id){
+	static async import(file, workspace_id, socketId){
 		try {
 			const formData = new FormData();
 			formData.append("file", file);
 			formData.append("workspace_id", workspace_id);
+			formData.append("socket_id", socketId);
 
 			return await axios.post(`/collections/import`, formData);
 		} catch (error) {
