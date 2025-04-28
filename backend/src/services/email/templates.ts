@@ -41,9 +41,9 @@ export const VERIFICATION_EMAIL_TEMPLATE = `
   </div>
   <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <p>Hello,</p>
-    <p>Thank you for signing up! Your verification code is:</p>
+    <p>Thank you for signing up! Click the link below to complete the signup process:</p>
     <div style="text-align: center; margin: 30px 0;">
-      <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: rgb(31, 80, 154);">{verificationCode}</span>
+      <a href="http://localhost:3000/register/verification?code={verificationCode}">Verify my account</a>
     </div>
     <p>Enter this code on the verification page to complete your registration.</p>
     <p>This code will expire in <strong>5 minutes</strong> for security reasons.</p>

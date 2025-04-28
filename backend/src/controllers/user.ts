@@ -10,6 +10,10 @@ import DBPasswordResetToken from "@dev/password/password";
 import EmailService from "@services/email";
 import DBPasswordResetTokenLoader from "@dev/password/loader";
 import { sha256 } from 'js-sha256';
+import DraftUserModel from "@models/draft.user";
+import bcrypt from "bcrypt";
+import { DBDraftUser, DBDraftUserLoader } from "@dev/draftuser";
+import { log } from "winston";
 
 export const loginUser = async (request: Request, response: Response) => {
     try {
@@ -56,13 +60,18 @@ export const loginUser = async (request: Request, response: Response) => {
 
 export const registerUser = async (request: Request, response: Response) => {
     try {
-        const user = await DBUser.initialize() as DBUser;
+        let draftUser = await DBDraftUser.initialize() as DBDraftUser;
+        await draftUser.reader().read();
+        
+        await draftUser.save();
 
-        await user.reader().read();
+        // const realUser = await DBUser.initialize() as DBUser;
+        //     realUser.object!.email = draftUser.object!.email;
+        //     realUser.object!.password = draftUser.object!.password;
 
-        await user.save();
+        //     await realUser.save();
 
-        await EmailService.sendVerificationEmail(user.object!.email, user.object!.verification_token);
+        await EmailService.sendVerificationEmail(draftUser.object!.email, draftUser.object!.verification_token);
 
         response.status(201).json(Code.success("Register new account successfully!"));
     } catch (error) {
@@ -255,6 +264,8 @@ export const loginGoogleUser = async (request: Request, response: Response) => {
         let userRelease: any;
         let cookies_key = "";
 
+        console.log(user.object);
+        
         if (!user || !user.object) {
             const newUser = await DBUser.initialize() as DBUser;
             if (!newUser || !newUser.object) {
@@ -264,7 +275,6 @@ export const loginGoogleUser = async (request: Request, response: Response) => {
             newUser.object.google_id = sub;
             newUser.object.name = name;
             newUser.object.email = email!;
-            newUser.object.is_verified = true;
 
             await newUser.save();
 
@@ -321,20 +331,33 @@ export const verifyEmail = async (request: Request, response: Response) => {
     logger.info("[Controller] Verify email");
     try {
         const code = HTMLInput.inputInline("code");
-        const user = await DBUserLoader.byVerifiedToken(code);
+        const user = await DBDraftUserLoader.byVerifiedToken(code);
         if (user && user.object) {
             if (user.object.verification_token_expiry * 1000 < Date.now()) {
                 response.status(400).json(Code.error("Verification token expired"));
                 return;
             }
 
-            user.object.is_verified = true;
-            await user.save();
+            const realUser = await DBUser.initialize() as DBUser;
+            realUser.object!.email = user.object.email;
+            realUser.object!.password = user.object.password;
+
+            await realUser.save();
+            
+            await DraftUserModel.deleteMany({email: user.object.email});
 
             response.status(201).json(Code.success("User verified successfully"));
+            return;
         }
+
+        response.status(400).json(Code.error("User not found"));
     } catch (error) {
         logger.error((error as Error).stack);
         response.status(500).json(Code.error((error as Error).message));
     }
+}
+
+const hashPassword = async (password: string) => {
+    let salt = await bcrypt.genSalt(10);
+    return await bcrypt.hash(password, salt);
 }

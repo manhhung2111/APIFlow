@@ -33,16 +33,16 @@ export default function RegisterPage() {
         }
     }
 
-    async function onVerify(values) {
-        const response = await UserService.verifyEmail(values["code"]);
+    // async function onVerify(values) {
+    //     const response = await UserService.verifyEmail(values["code"]);
 
-        if (response.code === 0){
-            toast.success(response.message);
-            navigate("/login")
-        } else {
-            toast.error(response.message);
-        }
-    }
+    //     if (response.code === 0){
+    //         toast.success(response.message);
+    //         navigate("/login")
+    //     } else {
+    //         toast.error(response.message);
+    //     }
+    // }
 
     const login = useGoogleLogin({
         onSuccess: async(credentialResponse) => {
@@ -163,25 +163,9 @@ export default function RegisterPage() {
                 </Button>
                 <p className="signup-message">Already have an account? <NavLink to="/login" className='link'>Sign in</NavLink></p>
             </Form>}
-            {verifyingEmail === true && <Form
-                name="trigger"
-                layout="vertical"
-                autoComplete="off"
-                onFinish={onVerify}
-                className="register-form right-section"
-                requiredMark={false}
-            >
-                <h1>Verify your email</h1>
-                <p className="verify">Enter the 6-digit code sent to your email</p>
-                <Form.Item
-                    hasFeedback
-                    name="code"
-                    className="form-input"
-                >
-                    <Input.OTP length={6}/>
-                </Form.Item>
-                <button className="submit-btn" type="submit">Verify</button>
-            </Form>}
+            {verifyingEmail === true && <div className="right-section register-form">
+                <div className="successful-msg">Check your email to complete registration. An verify email was sent to your email ✅</div>
+            </div>}
         </div>
     );
 }

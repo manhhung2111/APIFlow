@@ -25,6 +25,7 @@ import DocumentationPage from "@pages/documentation/documentation.jsx";
 import PersonaPage from "@pages/persona/persona.jsx";
 import ForgotPasswordPage from "@pages/authentication/forgot.password.jsx";
 import ResetPasswordPage from "@pages/authentication/reset.password.jsx";
+import RegisterVerificationPage from '@pages/authentication/register.verification';
 
 function App(){
 	return (
@@ -50,6 +51,7 @@ function App(){
 				<Route path="/reset-password"
 					   element={<PublicRoute redirectPath={"/"}><ResetPasswordPage/></PublicRoute>}/>
 				<Route path="/login" element={<PublicRoute redirectPath={"/"}><LoginPage/></PublicRoute>}/>
+				<Route path="/register/verification" element={<PublicRoute redirectPath={"/"}><RegisterVerificationPage/></PublicRoute>}/>
 				<Route path="/register" element={<PublicRoute redirectPath={"/"}><RegisterPage/></PublicRoute>}/>
 				<Route path="/forgot-password"
 					   element={<PublicRoute redirectPath={"/"}><ForgotPasswordPage/></PublicRoute>}/>

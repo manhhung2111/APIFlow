@@ -3,12 +3,12 @@ import {HydratedDocument} from "mongoose";
 import {DBReader} from "@ap/db";
 import {Code, HTMLInput, Validation} from "@ap/core";
 import {DBUserLoader} from "@dev/user";
-import {DUser} from "@db-schemas";
+import {DDraftUser, DUser} from "@db-schemas";
 import TokenGenerator from "@utils/token.generator";
 import {sha256} from "js-sha256";
 
-export default class Reader extends DBReader<DUser>{
-	constructor(obj: HydratedDocument<DUser> | null | undefined){
+export default class Reader extends DBReader<DDraftUser>{
+	constructor(obj: HydratedDocument<DDraftUser> | null | undefined){
 		super(obj);
 	}
 
@@ -32,7 +32,9 @@ export default class Reader extends DBReader<DUser>{
 
 		this._obj.email = email;
 		this._obj.password = await this.hashPassword(password);
-		this._obj.name = name;
+        
+        this._obj.verification_token = TokenGenerator.generateOTP();
+        this._obj.verification_token_expiry = Math.floor(Date.now() / 1000) + 5 * 60;
 	}
 
 

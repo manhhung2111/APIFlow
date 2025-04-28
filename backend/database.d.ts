@@ -7,6 +7,16 @@ export interface DUser {
     github_id?: string,
     remember_token?: string,
 
+    data: object | {},
+
+    created_at: number,
+    updated_at: number,
+}
+
+export interface DDraftUser {
+    email: string,
+    password: string,
+
     is_verified: boolean,
     verification_token: string,
     verification_token_expiry: number,
