@@ -66,9 +66,9 @@ export default class DBCollectionExporter extends DBComp<DCollection> {
 
         return {
             "name": request.name,
-            "description": request.content,
             "event": this.getScripts(request.scripts),
             "request": {
+                "description": request.content,
                 ...(requestAuth !== null && {"auth": requestAuth}),
                 "method": request.method,
                 "header": RequestUtils.buildHeaders(request.headers),
@@ -174,7 +174,6 @@ export default class DBCollectionExporter extends DBComp<DCollection> {
         const rootRequests: any[] = [];
         requests.forEach((request: any) => {
             if (request.folder_id && foldersMap.has(request.folder_id)) {
-                console.log("in");
                 // @ts-ignore
                 foldersMap.get(request.folder_id).children.push(requestsMap.get(request._id.toString()));
             } else {

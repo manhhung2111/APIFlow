@@ -30,6 +30,7 @@ export default class DBCollectionImporter {
             const requestsRelease = [...b, ...d];
             const examplesRelease = [...c, ...e];
 
+            throw Error("I dont know");
             return {
                 collection: collectionRelease,
                 folders: foldersRelease,
@@ -141,7 +142,9 @@ export default class DBCollectionImporter {
                 if (data.request) {
                     request.object.method = data.request.method;
                     request.object.content = data.request.description;
-                    // request.object.embedding = await HuggingFaceEmbeddingService.embedText(data.request.description);
+                    if (request.object.content && request.object.content.length > 0) {
+                        request.object.embedding = await HuggingFaceEmbeddingService.embedText(data.request.description);
+                    }
 
                     if (data?.request?.auth) {
                         if (data.request.auth.type == "jwt") {

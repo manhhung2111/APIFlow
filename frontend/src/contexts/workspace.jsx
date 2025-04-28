@@ -37,11 +37,16 @@ export default function WorkspaceContextProvider(props){
 		
 		
 		socket.on("collection.import", (data) => {
-			setCollections(prev => [...prev, data?.data?.collection || []]);
-			setFolders(prev => [...prev, ...data?.data?.folders || []]);
-			setRequests(prev => [...prev, ...data?.data?.requests || []]);
-			setExamples(prev => [...prev, ...data?.data?.examples || []]);
-			toast.success(data?.message);
+			// toast.info("Collection import event");
+			if (data.error == 0) {
+				setCollections(prev => [...prev, data?.data?.collection || []]);
+				setFolders(prev => [...prev, ...data?.data?.folders || []]);
+				setRequests(prev => [...prev, ...data?.data?.requests || []]);
+				setExamples(prev => [...prev, ...data?.data?.examples || []]);
+				toast.success(data?.message);
+			} else {
+				toast.error(data?.message);
+			}
 		})
 
 		return () => {

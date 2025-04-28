@@ -84,8 +84,13 @@ app.use("/personas", PersonaRoute);
 (async function () {
 	try {
 		// Connect to database
+		// await mongoose.connect(
+		// 	`mongodb://${db_host}:${db_port}/${db_name}`, {user: db_username, pass: db_password, directConnection: true, authSource: "admin"}
+		// ).then(() => {
+		// 	logger.info(`Connect to database successfully.`);
+		// });
 		await mongoose.connect(
-			`mongodb://${db_host}:${db_port}/${db_name}`, {user: db_username, pass: db_password, directConnection: true, authSource: "admin"}
+			`mongodb+srv://${db_username}:${db_password}@hongkong-1.x4eds.mongodb.net/${db_name}`,
 		).then(() => {
 			logger.info(`Connect to database successfully.`);
 		});

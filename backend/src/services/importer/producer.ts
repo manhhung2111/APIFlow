@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import logger from "@utils/logger";
 import {DBCollectionImporter} from "@dev/collection";
 import SocketIO from "@ap/core/socket";
+import { log } from "node:console";
 
 export default class ImporterService {
 	private static EXCHANGE = {
@@ -17,7 +18,7 @@ export default class ImporterService {
 	}
 
 	private static RETRY_MESSAGE_TTL = 5 * 1000;
-	private static MAX_RETRY = 3;
+	private static MAX_RETRY = 1;
 
 	public static async pushMessage(message: any) {
 		try {
@@ -81,9 +82,10 @@ export default class ImporterService {
 					if (message.properties.headers && message.properties.headers["x-death"] && message.properties.headers["x-death"].length != 0) {
 						const deathHeader = message.properties.headers["x-death"] || [];
 						const workRejects = deathHeader.find((x: any) => x.queue === this.QUEUE.work);
-						if (workRejects && workRejects.count > 3) {
-							channel.ack(message);
 
+						if (workRejects && workRejects.count > this.MAX_RETRY) {
+							channel.ack(message);
+							
 							SocketIO.emit("collection.import", {
 								error: -1,
 								data: {},
