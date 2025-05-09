@@ -65,7 +65,7 @@ export default function WorkspacesPage(){
 			{workspaces && workspaces.length > 0 && <div className="workspace-table-items">
 				<div className="table-header">
 					<div className="name">Workspace name</div>
-					<div className="creator">
+						<div className="creator">
 						Created by
 					</div>
 					<div className="collaborators">
@@ -76,8 +76,8 @@ export default function WorkspacesPage(){
 					</div>
 				</div>
 				{workspaces && workspaces.length > 0 && workspaces.map((workspace, index) => {
-					const creator = getUser(user?._id, users);
-					const collaborators = getCollaborators(user?._id, workspace.editors, workspace.commenters, workspace.viewers, users);
+					const creator = getUser(workspace?.user_id, users);
+					const collaborators = getCollaborators(workspace?.user_id, workspace.editors, workspace.commenters, workspace.viewers, users);
 
 					const content = stripHTML(workspace.content);
 					return <Item name={workspace.name} creator={creator} collaborators={collaborators} content={content}

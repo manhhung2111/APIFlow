@@ -6,9 +6,11 @@ import WorkspaceService from "@services/workspace.js";
 import {toast} from "react-toastify";
 import TimeUtils from "@utils/time.js";
 import AppMarkdownEditor from "@components/app/editor/markdown.edtior.jsx";
+import {AppContext} from "@contexts/app.jsx";
 
 export default function WorkspaceDisplayOverview(){
 	const {workspace, setWorkspace} = useContext(WorkspaceContext);
+	const {user} = useContext(AppContext);
 	const {workspace_id} = useParams();
 
 	const [name, setName] = useState(workspace.name || "");
@@ -73,7 +75,7 @@ export default function WorkspaceDisplayOverview(){
 			<div className="sidebar">
 				<div className="row">
 					<h5>Create by</h5>
-					<p>Hoang Manh Hung</p>
+					<p>{user?.email}</p>
 				</div>
 				<div className="row">
 					<h5>Created at</h5>

@@ -5,9 +5,11 @@ import {useContext} from "react";
 import {WorkspaceContext} from "@contexts/workspace.jsx";
 import TimeUtils from "@utils/time.js";
 import AppMarkdownEditor from "@components/app/editor/markdown.edtior.jsx";
+import {AppContext} from "@contexts/app.jsx";
 
 export default function CollectionDisplayOverview({collection, name, setName, content, setContent}){
 	const {workspace} = useContext(WorkspaceContext);
+	const {user} = useContext(AppContext);
 
 	return (
 		<div className="collection-display-overview">
@@ -29,7 +31,7 @@ export default function CollectionDisplayOverview({collection, name, setName, co
 			<div className="sidebar">
 				<div className="row">
 					<h5>Create by</h5>
-					<p>Hoang Manh Hung</p>
+					<p>{user?.email}</p>
 				</div>
 				<div className="row">
 					<h5>Created at</h5>

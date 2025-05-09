@@ -101,13 +101,21 @@ export default class RequestService {
             await this.saveEnvironments();
 
             const startTime = performance.now();
-            console.log(url);
-            const response = await axios({
-                method: this._method,
-                url: url,
-                headers: headers,
-                data: this._method === "GET" ? undefined : body,
-            });
+            let response: any = null;
+            try {
+                response = await axios({
+                    method: this._method,
+                    url: url,
+                    headers: headers,
+                    data: this._method === "GET" ? undefined : body,
+                });
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                    response = error.response;
+                } else {
+                    throw error;
+                }
+            }
 
             const endTime = performance.now();
             const duration = endTime - startTime;

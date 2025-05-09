@@ -97,8 +97,6 @@ export const getWorkspaceById = async (request: Request, response: Response) => 
             sameSite: "strict",
         });
 
-        console.log(`Requests: ${requests_compact.length}`);
-
         response.status(200).json(Code.success(`Get workspace-${workspace_id} successfully.`, {
             workspace: workspace.release(),
             collections: collections_compact,

@@ -22,11 +22,11 @@ const AppInputUser = ({value, setValue}) => {
 	}, []);
 
 	const handleChange = (text) => {
-		const extractedUsernames = [...new Set(text.match(/@(\w+)/g)?.map(user => user.slice(1)) || [])];
+		const extractedEmails = [...new Set(text.match(/@([\w.-]+@[\w.-]+\.\w+)/g)?.map(e => e.slice(1)) || [])];
 
 		// Map usernames to their corresponding _id values
-		const selectedUserIds = extractedUsernames
-			.map(username => users.find(user => user.email === username)?._id)
+		const selectedUserIds = extractedEmails
+			.map(email => users.find(user => user.email === email)?._id)
 			.filter(Boolean); // Remove null/undefined values
 
 		// Update state with the list of user IDs
@@ -46,13 +46,13 @@ const AppInputUser = ({value, setValue}) => {
 	return (
 		<Mentions
 			style={{width: '100%',}}
-			options={filteredUsers.map(({email, name, username}) => ({
-				key: username,
-				value: username,
+			options={filteredUsers.map(({email, _id}) => ({
+				key: _id,
+				value: email,
 				className: 'antd-demo-dynamic-option',
 				label: (
 					<>
-						<span>{email}</span> - <span>{username}</span>
+						<span>{email}</span>
 					</>
 				),
 			}))}

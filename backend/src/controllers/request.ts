@@ -206,7 +206,7 @@ export const sendRequest = async (request: Request, response: Response) => {
     } catch (error) {
         if (axios.isAxiosError(error)) {
             const axios_error = error as AxiosError;
-            response.status(axios_error.response?.status || 404).json(Code.success(axios_error.message, {
+            response.status(400).json(Code.success(axios_error.message, {
                 "response": {
                     "status": axios_error.response?.status,
                     "body": axios_error.response?.data || {},
