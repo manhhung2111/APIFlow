@@ -279,6 +279,15 @@ export const getCollectionAssociatedWithData = async (request: Request, response
         const folders = await DBFolderLoader.byCollection(collection.object!);
         const requests = await DBRequestLoader.byCollection(collection.object!);
         const examples = await DBExampleLoader.byCollection(collection.object!);
+        for (let request of requests) {
+            if (request.object!.embedding && request.object!.embedding.length > 0) {
+                continue;
+            }
+            const text = `${request.object!.content}`
+            request.object!.embedding = await HuggingFaceEmbeddingService.embedText(text);
+
+            await request.save();
+        }
 
         const folders_release = folders.map(folder => folder.release());
         const requests_release = requests.map(request => request.release());
@@ -419,11 +428,12 @@ export const searchRequests = async (request: Request, response: Response) => {
             "folders": folders,
             "requests": requests,
         }
-        let request = await DBRequest.searchVector(query);
+        let requestSearch = await DBRequest.searchVector(query);
         let context = "{}";
-        if (request != null) {
-            request["link"] = `#request-${request._id}`;
-            context = JSON.stringify(request);
+        if (requestSearch != null) {
+            requestSearch["link"] = `#request-${requestSearch._id}`;
+            context = JSON.stringify(requestSearch);
+            logger.info(context);
         }
 
         let result = await GoogleGeminiService.classifyQuery(JSON.stringify(document), context, query, history);

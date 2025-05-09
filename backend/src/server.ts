@@ -21,6 +21,7 @@ import {HTMLInput} from "@ap/core";
 import logger from "@utils/logger";
 import ImporterService from "@services/importer/producer";
 import SocketIO from "@ap/core/socket";
+import HuggingFaceEmbeddingService from "@services/ai/hugging.face";
 
 
 dotenv.config();
@@ -102,6 +103,8 @@ app.use("/personas", PersonaRoute);
 		await ImporterService.consumeMessage().catch(err => {
 			logger.error(err)
 		});
+
+		HuggingFaceEmbeddingService.initialize();
 	} catch (error) {
 		logger.error((error as Error).stack);
 	}
