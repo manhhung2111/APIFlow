@@ -16,9 +16,11 @@ import PasswordAuthorization from "@assets/images/password.authorization.svg";
 import QuickReference from "@assets/images/quick.reference.svg";
 import WorkspaceService from "@services/workspace.js";
 import {toast} from "react-toastify";
+import AppUserAvatar from "@components/app/avatar/avatar.jsx";
+import AppUserAvatarGroup from "@components/app/avatar/avatar.group.jsx";
 
 export default function HomePage(){
-	let {workspaces, setWorkspaces, user} = useContext(AppContext);
+	let {workspaces, setWorkspaces, user, users} = useContext(AppContext);
 
 	useEffect(() => {
 		const fetchData = async() => {
@@ -68,6 +70,8 @@ export default function HomePage(){
 						{workspaces.length > 0 &&
 							<div className="workspace-list">
 								{workspaces.map(workspace => {
+									const collaborators = getCollaborators(workspace?.user_id, workspace.editors, workspace.commenters, workspace.viewers, users);
+
 									return (
 										<NavLink className="list-item" to={`/workspace/${workspace._id}`}
 												 key={workspace._id}>
@@ -75,6 +79,9 @@ export default function HomePage(){
 												<UserOutlined/>
 											</div>
 											<p>{workspace.name}</p>
+											<div style={{marginLeft: "auto"}} className="avatar">
+												<AppUserAvatarGroup usernames={collaborators}/>
+											</div>
 										</NavLink>
 									)
 								})}
@@ -133,4 +140,23 @@ export default function HomePage(){
 			</div>
 		</div>
 	)
+}
+
+const getUser = (user_id, users) => {
+	for (let i = 0 ; i < users.length ; i++) {
+		if(users[i]._id == user_id){
+			return users[i].email;
+		}
+	}
+
+	return "";
+}
+
+const getCollaborators = (user_id, editors, commenters, viewers, users) => {
+	const mergedList = [...new Set([user_id, ...editors, ...commenters, ...viewers])];
+	const result = users
+		.filter(user => mergedList.includes(user._id))
+		.map(user => user.email);
+
+	return result;
 }

@@ -8,9 +8,10 @@ import {AppContext} from "@contexts/app.jsx";
 import UserService from "@services/user.js";
 import {toast} from "react-toastify";
 import UserAccountSettings from "@components/user/account.settings.jsx";
+import AppUserAvatar from "@components/app/avatar/avatar.jsx";
 
 export default function SuperHeaderSide(){
-	const {setUser} = useContext(AppContext);
+	const {setUser, user} = useContext(AppContext);
 	const navigate = useNavigate();
 
 	const [open, setOpen] = useState(false);
@@ -56,7 +57,10 @@ export default function SuperHeaderSide(){
 					items
 				}}
 			>
-				<Avatar style={{ backgroundColor: '#1F509A' }} icon={<UserOutlined/>} size={"small"}/>
+				{/*<Avatar style={{ backgroundColor: '#1F509A' }} icon={<UserOutlined/>} size={"small"}/>*/}
+				<div>
+					<AppUserAvatar username={user?.email} showName={false}/>
+				</div>
 			</Dropdown>
 			<UserAccountSettings open={open} setOpen={setOpen} />
 		</div>

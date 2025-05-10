@@ -1,11 +1,11 @@
 import {Avatar, Tooltip} from "antd";
 
-export default function AppUserAvatar({username, email = ""}){
+export default function AppUserAvatar({username, showName}){
 
 	const color = stringToColor(username);
 	return (
 		<div className="app-user-avatar">
-			<Tooltip title={username} placement="top">
+			{showName && <Tooltip title={username} placement="top">
 				<Avatar
 					style={{
 						backgroundColor: color,
@@ -15,20 +15,25 @@ export default function AppUserAvatar({username, email = ""}){
 				>
 					{username.charAt(0).toUpperCase()}
 				</Avatar>
-			</Tooltip>
-
+			</Tooltip>}
+			{!showName && <Avatar
+				style={{
+					backgroundColor: color,
+					verticalAlign: 'middle',
+				}}
+				size="small"
+			>
+				{username.charAt(0).toUpperCase()}
+			</Avatar>}
 		</div>
 	)
 }
 
-const stringToColor = (str) => {
+var stringToColor = (string, saturation = 100, lightness = 75) => {
 	let hash = 0;
-	for (let i = 0 ; i < str.length ; i++) {
-		hash = str.charCodeAt(i) + ((hash << 5) - hash);
+	for (let i = 0; i < string.length; i++) {
+		hash = string.charCodeAt(i) + ((hash << 5) - hash);
+		hash = hash & hash;
 	}
-	let color = "#";
-	for (let i = 0 ; i < 3 ; i++) {
-		color += ("00" + ((hash >> (i * 8)) & 0xff).toString(16)).slice(-2);
-	}
-	return color;
-};
+	return `hsl(${(hash % 360)}, ${saturation}%, ${lightness}%)`;
+}
