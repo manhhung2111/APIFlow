@@ -191,7 +191,10 @@ export const verifyUser = async (request: Request, response: Response) => {
                     continue;
                 }
 
-                workspaces.push(workspace.releaseCompact());
+                const workspaceRelease = workspace.release();
+                if (workspaceRelease.can.viewable) {
+                    workspaces.push(workspaceRelease);
+                }
             }
         }
 

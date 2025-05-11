@@ -68,14 +68,12 @@
 
 
     & > .navigation {
-
-      //height: 100vh;
       .documentation-navigation {
-        position: sticky !important;
-        top: 0;
-        z-index: 1000;
         background: white;
 
+        //& > .ant-affix {
+        //  position: relative !important;
+        //}
         .ant-anchor-ink.ant-anchor-ink-visible {
           display: none;
         }

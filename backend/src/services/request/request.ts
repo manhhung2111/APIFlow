@@ -86,11 +86,15 @@ export default class RequestService {
                 .setGlobals(this.global_env!)
                 .setCollectionVariables(this.collection!);
 
-            await this.runPreRequestScripts(this.collection!.object!.scripts.pre_request);
-            if (this.folder) {
+            if (this.collection!.object!.scripts.pre_request && this.collection!.object!.scripts.pre_request.length > 0) {
+                await this.runPreRequestScripts(this.collection!.object!.scripts.pre_request);
+            }
+            if (this.folder && this.folder.object!.scripts.pre_request && this.folder.object!.scripts.pre_request.length > 0) {
                 await this.runPreRequestScripts(this.folder.object!.scripts.pre_request);
             }
-            await this.runPreRequestScripts(this._scripts.pre_request || "");
+            if (this._scripts.pre_request && this._scripts.pre_request.length > 0) {
+                await this.runPreRequestScripts(this._scripts.pre_request);
+            }
 
             await this.readEnvironments();
 
@@ -115,6 +119,10 @@ export default class RequestService {
                 } else {
                     throw error;
                 }
+            }
+
+            if (!response) {
+                throw new Error("Couldn't send a request");
             }
 
             const endTime = performance.now();
@@ -241,10 +249,9 @@ export default class RequestService {
             headers["Authorization"] = "Bearer " + token;
         } else if (this._authorization.type == Authorization.APIKeyAuth) {
             if (this._authorization.data.add_to == "Header") {
-                headers[this._authorization.data.key] = this._authorization.data.value;
+                headers[this._authorization.data.key] = this.replaceEnvVariables(this._authorization.data.value);
             }
         }
-
 
         return headers;
     }
@@ -312,20 +319,16 @@ export default class RequestService {
 
         // Get globals variable and active variable
         const globalEnv = await DBEnvironmentLoader.globalsEnvByWorkspace(request.object!.workspace_id.toString());
-        if (!globalEnv.good()) {
-            return;
-        }
-        this.global_env = globalEnv
-
-        if (HTMLInput.inputInline("active_environment") == "-1" || HTMLInput.inputInt("active_environment") == -1) {
-            return;
-        }
-        let activeEnv = await DBEnvironment.initialize(HTMLInput.inputInline("active_environment")) as DBEnvironment;
-        if (!activeEnv.good()) {
-            return;
+        if (globalEnv.good()) {
+            this.global_env = globalEnv
         }
 
-        this.active_env = activeEnv;
+        if (!(HTMLInput.inputInline("active_environment") == "-1" || HTMLInput.inputInt("active_environment") == -1)) {
+            let activeEnv = await DBEnvironment.initialize(HTMLInput.inputInline("active_environment")) as DBEnvironment;
+            if (activeEnv.good()) {
+                this.active_env = activeEnv;
+            }
+        }
 
         // Read persona
         if (HTMLInput.inputInline("active_persona") == "-1" || HTMLInput.inputInt("active_persona") == -1) {

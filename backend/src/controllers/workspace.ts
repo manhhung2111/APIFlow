@@ -238,7 +238,10 @@ export const getRecentWorkspaces = async (request: Request, response: Response) 
         if (!HTMLInput.cookies(cookies_key)) {
             const workspaces_loader = await DBWorkspaceLoader.mine();
             for (let i = 0; i < Math.min(5, workspaces_loader.length); i++) {
-                workspaces.push(workspaces_loader[i].release());
+                const workspace = workspaces_loader[i].release();
+                if (workspace.can.viewable) {
+                    workspaces.push();
+                }
             }
         } else {
             const recent_workspace_ids = HTMLInput.cookies(cookies_key) ? JSON.parse(HTMLInput.cookies(cookies_key)) : [];
@@ -248,7 +251,10 @@ export const getRecentWorkspaces = async (request: Request, response: Response) 
                     continue;
                 }
 
-                workspaces.push(workspace.release());
+                const workspaceRelease = workspace.release();
+                if (workspaceRelease.can.viewable) {
+                    workspaces.push(workspaceRelease);
+                }
             }
         }
 

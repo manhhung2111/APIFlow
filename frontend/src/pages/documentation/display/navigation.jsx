@@ -89,6 +89,7 @@ export default function DocumentationNavigation({collection, folders, requests})
 	return (<div className="documentation-navigation">
 		<Anchor
 			replace
+			affix={false}
 			items={generateAnchors()}
 		/>
 	</div>)
