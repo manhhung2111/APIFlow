@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {Code, HTMLInput} from "@ap/core";
-import {DBRequest as DBRequest, DBRequestLoader} from "@dev/request";
+import {DBRequest as DBRequest, DBRequestFTS, DBRequestLoader} from "@dev/request";
 import mongoose from "mongoose";
 import {DBWorkspace} from "@dev/workspace";
 import logger from "@utils/logger";
@@ -18,6 +18,8 @@ export const createNewRequest = async (request: Request, response: Response) => 
         await request.reader().read();
 
         await request.save();
+
+        await DBRequestFTS.indexDocument(request.release());
 
         response.status(201).json(Code.success("Create new request successfully!"));
     } catch (error) {
@@ -49,6 +51,9 @@ export const deleteRequest = async (request: Request, response: Response) => {
         await request.on().deleted(session);
 
         await session.commitTransaction();
+
+        await DBRequestFTS.deleteDocument(request.release());
+
         response.status(200).json(Code.success(`Delete request \"${request.getField("name")}\" successfully.`));
     } catch (error) {
         await session.abortTransaction();
@@ -86,6 +91,8 @@ export const duplicateRequest = async (request: Request, response: Response) => 
         new_request.object!.folder_id = old_request.object!.folder_id;
 
         await new_request.save(session);
+        await DBRequestFTS.indexDocument(new_request.release());
+
 
         const examples = await new_request.on().duplicated(old_request);
         await DBExample.insertMany(examples.map(example => example.object!), session);
@@ -274,6 +281,8 @@ export const updateRequestName = async (request: Request, response: Response) =>
 
         await request.save();
 
+        await DBRequestFTS.updateDocument(request.release());
+
         response.status(201).json(Code.success("Update request name successfully!", {request: request.release()}));
     } catch (error) {
         logger.error((error as Error).stack);
@@ -300,6 +309,8 @@ export const updateRequestContent = async (request: Request, response: Response)
         await request.reader().readContent();
 
         await request.save();
+
+        await DBRequestFTS.updateDocument(request.release());
 
         response.status(201).json(Code.success("Update request content successfully!", {request: request.release()}));
     } catch (error) {

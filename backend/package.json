@@ -16,6 +16,7 @@
     "@babel/core": "^7.26.0",
     "@babel/node": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
+    "@elastic/elasticsearch": "^8.15.0",
     "@google/generative-ai": "^0.24.0",
     "@huggingface/transformers": "^3.5.1",
     "@langchain/community": "^0.3.42",

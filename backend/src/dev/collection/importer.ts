@@ -2,7 +2,7 @@ import {ClientSession} from "mongoose";
 import {DBCollection} from "@dev/collection/index";
 import {Authorization} from "@services/authorization";
 import {DBFolder} from "@dev/folder";
-import {DBRequest} from "@dev/request";
+import {DBRequest, DBRequestFTS} from "@dev/request";
 import {RequestBody} from "@services/request";
 import {DBExample} from "@dev/example";
 import UUID from "@utils/uuid";
@@ -227,6 +227,10 @@ export default class DBCollectionImporter {
             if (requests && requests.length > 0) {
                 const documents = requests.map(request => request.object!);
                 await DBRequest.insertMany(documents, session);
+
+                const requestsFTS = requests.map(request => request.releaseFTS());
+                await DBRequestFTS.bulkIndexDocuments(requestsFTS);
+
                 console.log(`✅ Inserted ${requests.length} requests in bulk.`);
 
                 return [requests.map(request => request.releaseCompact()), exampleReleases];

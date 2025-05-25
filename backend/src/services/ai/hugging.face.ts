@@ -5,11 +5,12 @@ import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddin
 export default class HuggingFaceEmbeddingService {
     private static _model: HuggingFaceTransformersEmbeddings | null = null;
 
-    public static initialize() {
-        if (this._model != null) return;
-        this._model = new HuggingFaceTransformersEmbeddings({
-            model: "Xenova/all-MiniLM-L6-v2",
-        });
+    static {
+        if (this._model == null) {
+            this._model = new HuggingFaceTransformersEmbeddings({
+                model: "Xenova/all-MiniLM-L6-v2",
+            });
+        }
     }
 
     public static async embedText(text: string) {

@@ -86,7 +86,7 @@ app.use("/personas", PersonaRoute);
 	try {
 		// Connect to database
 		await mongoose.connect(
-			`mongodb://${db_host}:${db_port}/${db_name}`, {user: db_username, pass: db_password, directConnection: true, authSource: "admin"}
+			`mongodb://${db_host}:${db_port}/${db_name}`, {user: db_username, pass: db_password, directConnection: true, authSource: "admin", connectTimeoutMS: 1000}
 		).then(() => {
 			logger.info(`Connect to database successfully.`);
 		});
@@ -101,10 +101,8 @@ app.use("/personas", PersonaRoute);
 		});
 
 		await ImporterService.consumeMessage().catch(err => {
-			logger.error(err)
+			logger.error(err.message)
 		});
-
-		HuggingFaceEmbeddingService.initialize();
 	} catch (error) {
 		logger.error((error as Error).stack);
 	}

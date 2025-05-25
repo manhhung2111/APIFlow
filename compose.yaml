@@ -26,6 +26,18 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
-
+  elasticsearch:
+      image: elasticsearch:8.15.0
+      container_name: elasticsearch-apiflow
+      restart: unless-stopped
+      ports:
+        - "9200:9200"
+      environment:
+        - "discovery.type=single-node"
+        - "xpack.security.enabled=false"
+        - "xpack.license.self_generated.type=trial"
+      volumes:
+        - elasticsearch-data:/usr/share/elasticsearch/data
 volumes:
   mongodb_data:
+  elasticsearch-data:

@@ -20,6 +20,10 @@ export default class DBRequest extends DBModel<DRequest> {
         return this.export(["_id", "user_id", "workspace_id", "collection_id", "folder_id", "name", "method", "created_at", "updated_at"]);
     }
 
+    releaseFTS() {
+        return this.export(["_id", "user_id", "workspace_id", "name", "content", "method", "url", "created_at", "updated_at"]);
+    }
+
     reader() {
         return new DBRequestReader(this.object);
     }

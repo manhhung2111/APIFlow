@@ -10,6 +10,8 @@ import {
     searchUsers, verifyEmail,
     verifyUser
 } from "@controllers/user";
+import authentication from "@middleware/authentication";
+import SearchController from "@controllers/search";
 
 const router = express.Router();
 
@@ -27,6 +29,8 @@ router.post("/password/forgot", forgotPassword);
 router.post("/password/reset", resetPassword);
 router.post("/google-auth", loginGoogleUser);
 router.post("/verify-email", verifyEmail);
+
+router.post("/search", authentication, SearchController.search);
 
 
 export default router;
